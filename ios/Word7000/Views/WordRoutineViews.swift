@@ -589,6 +589,10 @@ struct RoutineSummaryView: View {
                 RoutineCatLine(text: CatQuips.studyDone(reachedGoal: reachedGoal || model.goalDone, source: model.catLines),
                         mood: summary.caught == 0 ? .cheer : .smug)
                     .entrance(4)
+                if AppRuntime.labOnboarding, model.settings.pushAsked != true {
+                    ReminderAskCard()
+                        .entrance(4)
+                }
                 if account.configured, !account.isPermanent {
                     GuestKeepCard(count: routine.cardIds.count) { signInOpen = true }
                         .entrance(4)
@@ -634,5 +638,51 @@ struct RoutineSummaryView: View {
         .frame(maxWidth: .infinity)
         .padding(.vertical, 16)
         .background(Palette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+    }
+}
+
+/// WordCat Next: after a words routine, until it has been asked, the
+/// learner picks a time for the daily reminder; only then does the system
+/// ask about notifications (master asks as the app opens).
+struct ReminderAskCard: View {
+    @Environment(AppModel.self) private var model
+    @State private var time = Calendar.current.date(bySettingHour: 20, minute: 0, second: 0, of: Date()) ?? Date()
+    @State private var answered = false
+
+    var body: some View {
+        if !answered {
+            VStack(alignment: .leading, spacing: 12) {
+                Label(L.t("明天幾點提醒你？", "When should I remind you?"), systemImage: "bell.badge.fill")
+                    .font(.title3.weight(.bold))
+                    .foregroundStyle(Palette.ink)
+                DatePicker(L.t("每天", "Every day at"), selection: $time, displayedComponents: .hourAndMinute)
+                    .font(.headline)
+                    .accessibilityIdentifier("reminder-time")
+                Button(action: set) {
+                    Text(L.t("每天這個時間提醒我", "Remind me at this time")).font(.headline).frame(maxWidth: .infinity)
+                }
+                .prominentAction()
+                .accessibilityIdentifier("reminder-set")
+                Button(L.t("先不用", "Not now")) {
+                    withAnimation { answered = true }
+                }
+                .font(.subheadline.weight(.semibold))
+                .frame(maxWidth: .infinity, minHeight: 36)
+                .accessibilityIdentifier("reminder-later")
+            }
+            .padding(16)
+            .background(Palette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .transition(.opacity)
+        }
+    }
+
+    private func set() {
+        let parts = Calendar.current.dateComponents([.hour, .minute], from: time)
+        let minute = (parts.hour ?? 20) * 60 + (parts.minute ?? 0)
+        model.settings.reminderMinute = minute
+        model.setReminderEnabled(true)
+        Usage.log("reminder_time", "\(minute)")
+        withAnimation { answered = true }
+        Task { await PushRegistration.shared.askOnce(model) }
     }
 }

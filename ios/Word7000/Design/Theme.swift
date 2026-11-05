@@ -525,6 +525,10 @@ enum AppRuntime {
     /// conversation and ends with using one of today's words. UI tests of
     /// the stage itself start straight on its first turn.
     static let speakingRoutine = !uiTesting || ProcessInfo.processInfo.arguments.contains("-uiTestingSpeakingRoutine")
+    /// WordCat Next: the first launch asks about the exam and which pillar
+    /// comes first, and checks the level with a short adaptive test. UI tests
+    /// of the older welcome keep its three scenes.
+    static let labOnboarding = !uiTesting || ProcessInfo.processInfo.arguments.contains("-uiTestingLabOnboarding")
 }
 
 extension View {

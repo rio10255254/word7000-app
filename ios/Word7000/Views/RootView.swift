@@ -161,6 +161,9 @@ struct RootView: View {
         // developer's announcements reach every learner from the start.
         .task {
             try? await Task.sleep(for: .seconds(1))
+            // WordCat Next tries asking after the first words routine instead,
+            // once a time is picked (ReminderAskCard).
+            guard !AppRuntime.labOnboarding else { return }
             await PushRegistration.shared.askOnce(model)
         }
         .onChange(of: PracticeLaunch.shared.requested) { _, _ in openRequestedPractice() }

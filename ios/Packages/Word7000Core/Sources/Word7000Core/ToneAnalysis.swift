@@ -57,6 +57,12 @@ public enum ToneAnalysis {
     /// The tone whose shape is nearest, and by how much it beat the next
     /// nearest (0 = a toss-up).
     public static func classify(_ contour: [Double]) -> (tone: Int, margin: Double) {
+        let distances = toneDistances(contour).sorted { $0.1 < $1.1 }
+        return (distances[0].0, distances[1].1 - distances[0].1)
+    }
+
+    /// How far a contour is from each tone's shape (1–4).
+    static func toneDistances(_ contour: [Double]) -> [(Int, Double)] {
         let points = resample(contour, to: 5)
         // Height and movement both count: a falling tone and a high level one
         // start alike, and only the movement tells them apart.
@@ -65,13 +71,27 @@ public enum ToneAnalysis {
             let sum = zip(a, b).reduce(0.0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }
             return (sum / Double(max(a.count, 1))).squareRoot()
         }
-        let distances = (1...4).map { tone -> (Int, Double) in
+        return (1...4).map { tone -> (Int, Double) in
             let template = shape(of: tone)
             let level = rms(points, template)
             let movement = rms(steps(points), steps(template))
             return (tone, level + 2 * movement)
-        }.sorted { $0.1 < $1.1 }
-        return (distances[0].0, distances[1].1 - distances[0].1)
+        }
+    }
+
+    /// The tone heard for a syllable that should have `expected`: that tone,
+    /// unless another fits the pitch clearly better (by `slipMargin`). Judged
+    /// against the tone it should be rather than between the two nearest, so a
+    /// wrong tone is caught even when two other tones fit about as well.
+    public static func judge(_ contour: [Double], expected: Int) -> Int? {
+        let distances = toneDistances(contour)
+        guard let best = distances.min(by: { $0.1 < $1.1 }) else { return nil }
+        guard let fit = distances.first(where: { $0.0 == expected })?.1 else {
+            // The neutral tone is never judged; say what it sounded like only when clear.
+            let (tone, margin) = classify(contour)
+            return margin >= clearMargin ? tone : nil
+        }
+        return fit - best.1 >= slipMargin ? best.0 : expected
     }
 
     /// A syllable written with another tone: "ma" + 3 → "mǎ".
@@ -154,6 +174,9 @@ public enum ToneAnalysis {
 
     /// How far ahead the nearest tone must be to count as heard.
     public static let clearMargin = 0.45
+    /// How much better another tone must fit than the one asked for to count
+    /// as a slip.
+    public static let slipMargin = 0.3
 
     /// Measures each syllable of a take. `spans` are where each syllable
     /// falls, in seconds (nil where it is not known); `expected` the tones
@@ -176,8 +199,7 @@ public enum ToneAnalysis {
             // The ends of a syllable are its least steady part.
             let trim = frames.count >= 8 ? frames.count / 8 : 0
             let contour = Array(frames.dropFirst(trim).dropLast(trim)).map(scale)
-            let (heard, margin) = classify(contour)
-            return Syllable(expected: tone, heard: margin >= clearMargin ? heard : nil, contour: resample(contour, to: 12))
+            return Syllable(expected: tone, heard: judge(contour, expected: tone), contour: resample(contour, to: 12))
         }
     }
 

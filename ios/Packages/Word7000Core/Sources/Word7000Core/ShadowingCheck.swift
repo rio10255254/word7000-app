@@ -33,6 +33,8 @@ public struct ShadowingCheck: Equatable, Sendable {
     /// 0...1: a heard unit counts fully, a tone slip half.
     public let score: Double
     public var passed: Bool { score >= Self.passMark }
+    /// Every word (character) came across as written, tones included.
+    public var perfect: Bool { scoredCount > 0 && heardCount == scoredCount }
     public var heardCount: Int { units.filter { $0.mark == .heard }.count }
     public var toneCount: Int { units.filter { if case .tone = $0.mark { true } else { false } }.count }
     public var scoredCount: Int { units.filter(\.scored).count }

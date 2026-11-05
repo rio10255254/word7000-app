@@ -94,6 +94,13 @@ struct ClozeSessionView: View {
                     .entrance(0, distance: 10)
                     .id(round.index)
 
+            }
+            .padding(.bottom, 16)
+        }
+        .scrollDismissesKeyboard(.never)
+        // The hint and the answer box sit on the buttons, right above the keyboard.
+        .safeAreaInset(edge: .bottom) {
+            VStack(spacing: 10) {
                 if let message = ClozeCard.message(for: word, attempt: attempt) {
                     Text(message.text)
                         .font(.subheadline.weight(.semibold))
@@ -130,11 +137,11 @@ struct ClozeSessionView: View {
                         .stroke(focused ? Palette.accent.opacity(0.45) : .clear, lineWidth: 2)
                 )
                 .accessibilityIdentifier("cloze-input")
+                actions(word, attempt)
             }
-            .padding(.bottom, 16)
+            .padding(.top, 8)
+            .background { Palette.background.overlay { PaperGrain() }.ignoresSafeArea() }
         }
-        .scrollDismissesKeyboard(.never)
-        .safeAreaInset(edge: .bottom) { actions(word, attempt) }
     }
 
     private func actions(_ word: WordEntry, _ attempt: ClozeAttempt) -> some View {
@@ -166,8 +173,7 @@ struct ClozeSessionView: View {
                 .accessibilityIdentifier("cloze-next")
             }
         }
-        .padding(.vertical, 8)
-        .background { Palette.background.overlay { PaperGrain() } }
+        .padding(.bottom, 8)
     }
 
     // MARK: Flow

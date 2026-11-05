@@ -200,6 +200,8 @@ struct AppSnapshot: Codable, Sendable {
     var settings: AppSettings
     var studySession: StudySession?
     var sessionDay: String?
+    /// WordCat Next (3.x) only; a 2.x build ignores and drops it.
+    var wordRoutine: WordRoutine? = nil
 }
 
 struct Persistence: Sendable {

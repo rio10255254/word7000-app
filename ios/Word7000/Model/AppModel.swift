@@ -57,6 +57,11 @@ final class AppModel {
 
     // Study session state survives switching tabs.
     private(set) var studySession: StudySession?
+    /// WordCat Next: the flip cards of a "today's words" session followed by
+    /// spot checks. See `activeRoutine` for the one that belongs to the
+    /// current session.
+    private(set) var wordRoutine: WordRoutine?
+    @ObservationIgnored private var examPoolCache: (key: String, pool: ExamPool)?
     private(set) var storageFailed = false
     private(set) var libraryRevision = 0
     private(set) var deletedSetUndo: CustomVocabSet?
@@ -193,6 +198,7 @@ final class AppModel {
                              settings: settings, persistence: persistence)
         if snapshot?.sessionDay == model.today, let saved = snapshot?.studySession {
             model.restoreStudySession(saved)
+            model.wordRoutine = snapshot?.wordRoutine
         }
         if let cached = persistence.load(RemoteContent.self, from: "remote-content.json"), !AppRuntime.uiTesting {
             model.applyRemoteContent(cached)
@@ -566,7 +572,10 @@ final class AppModel {
     }
 
     var primaryActionTitle: String {
-        goalDone ? L.extraAction : progress.studiedToday > 0 ? L.continueAction : L.primaryAction
+        if routinePending, let routine = activeRoutine {
+            return routine.step == .exam ? L.t("繼續考考看", "Continue the quiz") : L.t("繼續拼字", "Continue spelling")
+        }
+        return goalDone ? L.extraAction : progress.studiedToday > 0 ? L.continueAction : L.primaryAction
     }
 
     func refreshToday() {
@@ -605,7 +614,7 @@ final class AppModel {
     /// The current session, or a fresh one when there is none or the bank or
     /// filters changed since it was built.
     func ensureStudySession() {
-        if let session = studySession, session.sourceKey == studySourceKey, !session.isComplete { return }
+        if let session = studySession, session.sourceKey == studySourceKey, !session.isComplete || routinePending { return }
         startStudySession()
     }
 
@@ -635,6 +644,14 @@ final class AppModel {
         let queue = LearningEngine.buildStudyQueue(words: candidates, state: progress, today: today,
                                                   limit: limit ?? (onlyIds == nil ? nextSessionLimit : max(1, candidates.count)))
         studySession = StudySession(cardIds: queue.map(\.id), sourceKey: studySourceKey)
+        wordRoutine = onlyIds == nil && studyMode == .english && AppRuntime.wordRoutine
+            ? WordRoutine(cardIds: queue.map(\.id),
+                          stagesBefore: Dictionary(queue.compactMap { word -> (String, Int)? in
+                              guard let saved = progress.words[word.id], saved.status != .new else { return nil }
+                              return (word.id, LearningEngine.reviewStage(saved))
+                          }, uniquingKeysWith: { first, _ in first }),
+                          sourceKey: studySourceKey, day: today)
+            : nil
         studyUndoStack = []
         scheduleSave()
         Usage.log("study_session", usageScope)
@@ -848,6 +865,96 @@ final class AppModel {
         Usage.log("cloze_answer", "\(studyMode.rawValue).\(outcome.rawValue)")
     }
 
+    // MARK: Words routine (WordCat Next)
+
+    /// The routine of the current flip cards: same day, same source and the
+    /// same cards. Anything that replaces the session leaves the routine behind.
+    var activeRoutine: WordRoutine? {
+        guard let routine = wordRoutine, let session = studySession, routine.day == today,
+              routine.sourceKey == session.sourceKey else { return nil }
+        var seen = Set<String>()
+        guard routine.cardIds == session.cardIds.filter({ seen.insert($0).inserted }) else { return nil }
+        return routine
+    }
+
+    /// The flip cards are done and their checks are still to come.
+    var routinePending: Bool {
+        guard let routine = activeRoutine, studySession?.isComplete == true else { return false }
+        return routine.step != .done
+    }
+
+    /// What the Today card says while checks wait.
+    var routineHeroLine: String? {
+        guard routinePending, let routine = activeRoutine else { return nil }
+        if routine.step == .exam {
+            let done = routine.examIds.count - routine.examLeft.count
+            return L.t("翻卡完成・考考看 \(done)/\(routine.examIds.count)", "Cards done · quiz \(done)/\(routine.examIds.count)")
+        }
+        return L.t("翻卡完成・接下來拼字", "Cards done · spelling next")
+    }
+
+    /// After the flip cards: picks today's checks from the cards marked known.
+    func planRoutineChecks() {
+        guard var routine = activeRoutine, routine.step == .flip, let session = studySession, session.isComplete else { return }
+        routine.planChecks(knownIds: session.knownIds, unsureIds: session.reviewIds,
+                           canSpell: { [self] id in word(id: id).flatMap { Cloze.sentence(for: $0) } != nil },
+                           canExam: { [self] id in
+                               guard let word = word(id: id), Cloze.sentence(for: word) != nil else { return false }
+                               let text = Spelling.normalized(word.word)
+                               return text.count >= 2 && text.allSatisfy(\.isLetter)
+                           })
+        wordRoutine = routine
+        scheduleSave()
+    }
+
+    /// One spot check: a spelling (`exam` false) or an exam question.
+    func recordRoutineCheck(wordId: String, outcome: ClozeRound.Outcome, exam: Bool) {
+        guard var routine = activeRoutine else { return }
+        refreshToday()
+        let changed = LearningEngine.applyCheck(progress, wordId: wordId, today: today,
+                                                wasNew: routine.wasNew(wordId), outcome: outcome)
+        progress = recordActivity(in: changed) { counters in
+            if outcome == .missed { counters.quizWrong += 1 } else { counters.quizCorrect += 1 }
+            if studyMode == .english { counters.englishActions += 1 } else { counters.chineseActions += 1 }
+        }
+        if exam { routine.recordExam(wordId, correct: outcome != .missed) } else { routine.recordSpell(wordId, outcome: outcome) }
+        wordRoutine = routine
+        scheduleSave()
+        Usage.log("routine_check", "\(exam ? "exam" : "spell").\(outcome.rawValue)")
+    }
+
+    /// Ends the current check step (spelling, then the exam questions).
+    func advanceRoutine() {
+        guard var routine = activeRoutine else { return }
+        switch routine.step {
+        case .spell: routine.finishSpell()
+        case .exam: routine.finishExam()
+        case .flip, .done: return
+        }
+        wordRoutine = routine
+        scheduleSave()
+        if routine.step == .done { Usage.log("routine_done", studyMode.rawValue) }
+    }
+
+    /// Leaves the rest of today's checks.
+    func skipRoutineChecks() {
+        guard var routine = activeRoutine else { return }
+        routine.skipChecks()
+        wordRoutine = routine
+        scheduleSave()
+    }
+
+    /// The built-in words prepared for picking exam options, built once off
+    /// the main thread.
+    func examPool() async -> ExamPool {
+        let key = "\(studyMode.rawValue)|\(contentRevision)|\(coreWords.count)"
+        if let cached = examPoolCache, cached.key == key { return cached.pool }
+        let words = coreWords
+        let pool = await Task.detached(priority: .userInitiated) { ExamPool(words) }.value
+        examPoolCache = (key, pool)
+        return pool
+    }
+
     /// Speaking practice counts as activity but does not change word progress.
     func recordSpeaking(completed: Bool) {
         refreshToday()
@@ -972,7 +1079,8 @@ final class AppModel {
         if keep { savedLearning = (syncedProgress, customSets) }
         let snapshot = AppSnapshot(progress: keep ? syncedProgress : savedLearning.progress,
                                    customSets: keep ? customSets : savedLearning.customSets,
-                                   settings: settings, studySession: keep ? studySession : nil, sessionDay: today)
+                                   settings: settings, studySession: keep ? studySession : nil, sessionDay: today,
+                                   wordRoutine: keep ? wordRoutine : nil)
         persistence.store.enqueue(snapshot, to: "snapshot.json") { [weak self] saved in
             Task { @MainActor in self?.storageFailed = !saved }
         }

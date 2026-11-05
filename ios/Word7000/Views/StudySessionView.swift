@@ -53,9 +53,21 @@ struct StudySessionView: View {
                     if session.total == 0 {
                         MascotMessage(mood: .cheer, title: L.nothingToStudy, text: L.nothingToStudyText)
                     } else if session.isComplete {
-                        SessionSummary(session: session, reachedGoal: reachedGoalHere, done: { dismiss() },
-                                       again: { model.startStudySession() }, startQuiz: startQuiz)
+                        // WordCat Next: today's words go on to spot checks
+                        // before the summary.
+                        if let routine = model.activeRoutine, routine.step != .done {
+                            RoutineChecksView(routine: routine)
+                        } else if let routine = model.activeRoutine {
+                            RoutineSummaryView(routine: routine, reachedGoal: reachedGoalHere, done: { dismiss() },
+                                               again: { model.startStudySession() })
+                        } else {
+                            SessionSummary(session: session, reachedGoal: reachedGoalHere, done: { dismiss() },
+                                           again: { model.startStudySession() }, startQuiz: startQuiz)
+                        }
                     } else if let cardId = session.currentCardId, let word = model.word(id: cardId) {
+                        if let routine = model.activeRoutine {
+                            RoutineStepStrip(routine: routine, flipped: (session.done, session.total))
+                        }
                         BuddyProgressBar(fraction: Double(session.done) / Double(max(1, session.total)),
                                          mood: buddyMood, hop: buddyHop, remark: buddyRemark)
                         GeometryReader { proxy in
@@ -152,6 +164,8 @@ struct StudySessionView: View {
                     }
                 }
                 ToolbarItemGroup(placement: .topBarTrailing) {
+                  // The spot checks and their summary have no cards to show or undo.
+                  if !(model.studySession?.isComplete == true && model.activeRoutine != nil) {
                     if model.studyMode == .chinese {
                         // Three small icons fit beside the count on every
                         // iPhone; the labels stay for VoiceOver.
@@ -178,6 +192,7 @@ struct StudySessionView: View {
                         .disabled(!model.canUndoStudy || committing)
                         .accessibilityLabel(L.undo)
                         .accessibilityIdentifier("study-undo")
+                  }
                 }
             }
         }
@@ -757,7 +772,7 @@ struct ConfettiBurst: View {
 }
 
 /// After a guest's round: what they just did is not kept unless they sign in.
-private struct GuestKeepCard: View {
+struct GuestKeepCard: View {
     var count: Int
     var signIn: () -> Void
 

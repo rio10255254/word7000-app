@@ -518,6 +518,9 @@ enum AppRuntime {
     /// Screenshot tests of the cat's chat, memory and study tip, which need
     /// the online AI: sample content stands in for it.
     static let catShowcase = ProcessInfo.processInfo.arguments.contains("-uiTestingCatShowcase")
+    /// WordCat Next: today's words end with spot checks. Off under UI tests
+    /// written for the flip cards alone, unless a test asks for it.
+    static let wordRoutine = !uiTesting || ProcessInfo.processInfo.arguments.contains("-uiTestingRoutine")
 }
 
 extension View {

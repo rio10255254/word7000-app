@@ -87,9 +87,14 @@ struct ClozeSessionView: View {
                                  hop: solves + misses,
                                  remark: nil)
 
-                card(word, sentence, attempt)
+                ClozeCard(word: word, sentence: sentence, attempt: attempt, input: input,
+                          comeBack: comeBack, secondLook: round.isSecondLook)
+                    .shake(trigger: misses, enabled: !reduceMotion)
+                    .pulse(trigger: solves, scale: 1.02, enabled: !reduceMotion)
+                    .entrance(0, distance: 10)
+                    .id(round.index)
 
-                if let message = message(word, attempt) {
+                if let message = ClozeCard.message(for: word, attempt: attempt) {
                     Text(message.text)
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(message.tint)
@@ -127,168 +132,6 @@ struct ClozeSessionView: View {
         }
         .scrollDismissesKeyboard(.never)
         .safeAreaInset(edge: .bottom) { actions(word, attempt) }
-    }
-
-    /// The question card: the Chinese sentence, then the English one with
-    /// the blank. It floods green when solved.
-    private func card(_ word: WordEntry, _ sentence: Cloze.Sentence, _ attempt: ClozeAttempt) -> some View {
-        let shape = RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous)
-        return VStack(alignment: .leading, spacing: 0) {
-            VStack(alignment: .leading, spacing: 10) {
-                HStack(spacing: 8) {
-                    if round.isSecondLook {
-                        Label(L.t("再考一次", "Once more"), systemImage: "arrow.counterclockwise")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Palette.review)
-                    }
-                    Spacer(minLength: 0)
-                    if attempt.solved, let comeBack {
-                        Text(comeBack)
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Palette.known)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 4)
-                            .background(Palette.known.opacity(0.16), in: Capsule())
-                            .popIn(delay: 0.15)
-                            .accessibilityIdentifier("cloze-comes-back")
-                    }
-                }
-                chineseSentence(word)
-                    .font(.title3)
-                    .accessibilityIdentifier("cloze-chinese")
-                if Cloze.cue(for: word) == nil {
-                    // No marked part: say which word is wanted.
-                    Text(ChineseDisplay.conciseMeaning(word.meaningZh))
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Palette.accent)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 4)
-                        .background(Palette.accent.opacity(0.12), in: Capsule())
-                }
-                if !word.partOfSpeech.isEmpty {
-                    Text(word.partOfSpeech)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
-            .padding(18)
-            .frame(maxWidth: .infinity, alignment: .leading)
-
-            Divider().padding(.horizontal, 18)
-
-            HStack(alignment: .top) {
-                englishSentence(sentence, attempt)
-                    .font(.title3)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .accessibilityIdentifier("cloze-sentence")
-                if attempt.solved {
-                    SpeakButton(text: word.example)
-                }
-            }
-            .padding(18)
-        }
-        .background {
-            shape.fill(Palette.surface)
-                .overlay(shape.fill(attempt.solved ? Palette.known.opacity(0.16) : .clear))
-        }
-        .overlay(shape.stroke(border(attempt), lineWidth: 2))
-        .overlay(alignment: .topLeading) {
-            if attempt.solved {
-                Image(systemName: "checkmark.seal.fill")
-                    .font(.system(size: 34, weight: .bold))
-                    .foregroundStyle(Palette.known)
-                    .rotationEffect(.degrees(-12))
-                    .offset(x: -8, y: -14)
-                    .popIn(delay: 0)
-                    .accessibilityHidden(true)
-            }
-        }
-        .animation(reduceMotion ? nil : Motion.reveal, value: attempt.solved)
-        .shake(trigger: misses, enabled: !reduceMotion)
-        .pulse(trigger: solves, scale: 1.02, enabled: !reduceMotion)
-        .entrance(0, distance: 10)
-        .id(round.index)
-    }
-
-    /// The translation with the word's part marked like a highlighter.
-    private func chineseSentence(_ word: WordEntry) -> Text {
-        guard let cue = Cloze.cue(for: word) else { return Text(word.exampleZh) }
-        var marked = AttributedString(cue.cue)
-        marked.backgroundColor = Palette.review.opacity(0.35)
-        marked.foregroundColor = Palette.ink
-        return Text(AttributedString(cue.before) + marked + AttributedString(cue.after))
-    }
-
-    /// The English sentence; each blank shows what is typed, the letters
-    /// given, the answer to copy, or the answer once solved.
-    private func englishSentence(_ sentence: Cloze.Sentence, _ attempt: ClozeAttempt) -> Text {
-        var text = AttributedString()
-        for piece in sentence.pieces {
-            switch piece {
-            case .text(let part):
-                text += AttributedString(part)
-            case .blank:
-                text += blank(sentence.answer, attempt)
-            }
-        }
-        return Text(text)
-    }
-
-    private func blank(_ answer: String, _ attempt: ClozeAttempt) -> AttributedString {
-        let nbsp = "\u{00A0}"
-        let content: String
-        var tint = Palette.ink
-        var fill = Palette.accent.opacity(0.12)
-        if attempt.solved {
-            content = answer
-            tint = Palette.known
-            fill = Palette.known.opacity(0.2)
-        } else if attempt.answerShown {
-            // The answer to copy, faint until it is typed.
-            content = input.trimmed.isEmpty ? answer : input.trimmed
-            tint = input.trimmed.isEmpty ? Palette.tertiaryLabel : Palette.ink
-        } else if !input.trimmed.isEmpty {
-            content = input.trimmed
-        } else {
-            content = Spelling.pattern(answer, revealed: attempt.lettersShown)
-                .replacingOccurrences(of: " ", with: nbsp)
-            tint = Palette.secondaryLabel
-        }
-        var blank = AttributedString(nbsp + content + nbsp)
-        blank.foregroundColor = tint
-        blank.backgroundColor = fill
-        blank.underlineStyle = Text.LineStyle.single
-        return blank
-    }
-
-    private func border(_ attempt: ClozeAttempt) -> Color {
-        if attempt.solved { return Palette.known }
-        if let verdict = attempt.lastVerdict, !verdict.isCorrect { return Palette.miss.opacity(0.6) }
-        return .clear
-    }
-
-    /// What to say after a try that was not right, or when the answer is up.
-    private func message(_ word: WordEntry, _ attempt: ClozeAttempt) -> (text: String, tint: Color)? {
-        guard !attempt.solved else { return nil }
-        if attempt.answerShown {
-            return (L.t("看一下答案，自己打一次。", "Look at the answer, then type it yourself."), Palette.review)
-        }
-        guard let verdict = attempt.lastVerdict else { return nil }
-        let wanted = Cloze.cue(for: word)?.cue ?? ChineseDisplay.conciseMeaning(word.meaningZh)
-        switch verdict {
-        case .correct:
-            return nil
-        case .otherForm:
-            return (L.t("字對了！但這句要用另一個形式。", "Right word, but this sentence needs another form of it."), Palette.review)
-        case .almost:
-            return (L.t("差一個字母，再看一下。", "One letter off. Look again."), Palette.review)
-        case .otherWord(let other, let meaning):
-            let gloss = ChineseDisplay.conciseMeaning(meaning)
-            return (L.t("\(other) 是「\(gloss)」。「\(wanted)」是哪個字？",
-                        "\(other) means \u{201C}\(gloss)\u{201D}. Which word is \u{201C}\(wanted)\u{201D}?"), Palette.miss)
-        case .wrong:
-            return (L.t("不是這個字。再想想「\(wanted)」。", "Not that one. Think of \u{201C}\(wanted)\u{201D} again."), Palette.miss)
-        }
     }
 
     private func actions(_ word: WordEntry, _ attempt: ClozeAttempt) -> some View {
@@ -385,13 +228,8 @@ struct ClozeSessionView: View {
     }
 
     private func comeBackLabel(_ wordId: String, after preview: ClozeRound) -> String {
-        if preview.comesBack(wordId) { return L.t("等一下再考你", "Back in a few questions") }
         let days = Cloze.daysUntil(LearningEngine.reviewDueDate(model.progress(for: wordId)), today: model.today) ?? 0
-        switch days {
-        case 0: return L.t("今天稍後再複習", "Again later today")
-        case 1: return L.t("明天見", "See you tomorrow")
-        default: return L.t("\(days) 天後見", "Back in \(days) days")
-        }
+        return ClozeCard.comeBackLabel(days: days, inThisRound: preview.comesBack(wordId))
     }
 
     // MARK: Results

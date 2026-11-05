@@ -293,7 +293,7 @@ struct TodayView: View {
                 .minimumScaleFactor(0.75)
                 .foregroundStyle(Self.cream)
                 .contentTransition(.opacity)
-            Text(L.todayPlan(due: plan.review, fresh: plan.fresh))
+            Text(model.routineHeroLine ?? L.todayPlan(due: plan.review, fresh: plan.fresh))
                 .font(m.tall ? .subheadline : .footnote)
                 .foregroundStyle(Self.cream.opacity(0.85))
             HStack(spacing: 6) {
@@ -396,8 +396,8 @@ struct TodayView: View {
             .shadow(color: PremiumSurface.umber.opacity(0.3), radius: 10, y: 5)
         }
         .buttonStyle(SoftPressStyle())
-        .disabled(model.studyPlan.total == 0)
-        .opacity(model.studyPlan.total == 0 ? 0.55 : 1)
+        .disabled(model.studyPlan.total == 0 && !model.routinePending)
+        .opacity(model.studyPlan.total == 0 && !model.routinePending ? 0.55 : 1)
         // A new learner who hasn't finished a round yet: this is where to start.
         .overlay(alignment: .topTrailing) {
             if model.settings.guideActive == true, model.progress.lastStudyDate == nil, !AppRuntime.catShowcase {

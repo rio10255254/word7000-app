@@ -2,7 +2,7 @@
 // Fills in the App Store version page in App Store Connect from the repo, so
 // only what the API cannot do is left by hand: the version, its build, the
 // app name and subtitle, store text and screenshots in zh-Hant and en-US,
-// the review notes, and the subscription group's English name. It does not
+// the review notes, and the subscription group's name in both languages. It does not
 // submit anything for review, change prices or availability, or touch the
 // App Privacy answers. Running it again brings the page back in line with
 // the repo; screenshots are only replaced when they differ.
@@ -24,7 +24,8 @@ const { ASC_KEY_ID: keyId, ASC_ISSUER_ID: issuer, ASC_PRIVATE_KEY: privateKey } 
 const SUPPORT_URL = 'https://word7000-app.rio10255254.workers.dev/support.html';
 const PRIVACY_URL = 'https://word7000-app.rio10255254.workers.dev/privacy.html';
 const SCREENSHOT_TYPE = 'APP_IPHONE_67'; // 6.9" iPhone screenshots (1320 × 2868) go in this set
-const GROUP_NAME_EN = 'WordCat Premium';
+// The subscription group's name as subscribers see it in Settings.
+const GROUP_NAMES = { 'zh-Hant': '單字貓 Premium', 'en-US': 'WordCat Premium' };
 
 // ---- App Store Connect API -------------------------------------------------
 const base64url = (data) => Buffer.from(data).toString('base64url');
@@ -236,15 +237,19 @@ await step('審查備註', async () => {
   }
 });
 
-// ---- Subscription group's English name ------------------------------------------
-say('\n## 訂閱群組');
-await step('訂閱群組英文名稱', async () => {
+// ---- Subscription group's name ---------------------------------------------------
+say('\n## 訂閱群組名稱');
+await step('訂閱群組名稱', async () => {
   for (const group of (await get(`/v1/apps/${app.id}/subscriptionGroups?limit=10`)).data) {
     const names = (await get(`/v1/subscriptionGroups/${group.id}/subscriptionGroupLocalizations?limit=20`)).data;
-    if (names.some((n) => n.attributes.locale === 'en-US')) { skip(`${group.attributes.referenceName}：已有英文名稱`); continue; }
-    await api('POST', '/v1/subscriptionGroupLocalizations', { data: { type: 'subscriptionGroupLocalizations', attributes: { locale: 'en-US', name: GROUP_NAME_EN },
-      relationships: { subscriptionGroup: { data: { type: 'subscriptionGroups', id: group.id } } } } });
-    done(`${group.attributes.referenceName}：新增英文名稱「${GROUP_NAME_EN}」`);
+    for (const [locale, name] of Object.entries(GROUP_NAMES)) {
+      const row = names.find((n) => n.attributes.locale === locale);
+      if (row?.attributes.name === name) { skip(`${locale}：已是「${name}」（${row.attributes.state}）`); continue; }
+      if (row) await api('PATCH', `/v1/subscriptionGroupLocalizations/${row.id}`, { data: { type: 'subscriptionGroupLocalizations', id: row.id, attributes: { name } } });
+      else await api('POST', '/v1/subscriptionGroupLocalizations', { data: { type: 'subscriptionGroupLocalizations', attributes: { locale, name },
+        relationships: { subscriptionGroup: { data: { type: 'subscriptionGroups', id: group.id } } } } });
+      done(`${locale}：${row ? `「${row.attributes.name}」改成` : '新增'}「${name}」，跟 ${versionString} 一起送審`);
+    }
   }
 });
 

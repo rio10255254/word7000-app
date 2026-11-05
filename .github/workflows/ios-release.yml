@@ -99,7 +99,7 @@ jobs:
             --group "${GROUP:-Wordcat Public Testing 1}" --wait-minutes 2
 
   release:
-    if: inputs.operation != 'testflight-submit' && inputs.operation != 'subscriptions-status' && inputs.operation != 'beta-status'
+    if: inputs.operation != 'testflight-submit' && inputs.operation != 'subscriptions-status' && inputs.operation != 'beta-status' && inputs.operation != 'store-readiness'
     runs-on: ${{ inputs.operation == 'native-testflight' && 'macos-15' || 'ubuntu-latest' }}
     timeout-minutes: 120
     env:

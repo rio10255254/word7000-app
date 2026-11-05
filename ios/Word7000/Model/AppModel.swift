@@ -807,6 +807,47 @@ final class AppModel {
         scheduleSave()
     }
 
+    // MARK: Fill in the blank
+
+    /// A round of fill-in-the-blank questions, from the words a study session
+    /// would pick (due reviews and new words at the learner's level), keeping
+    /// those whose example sentence has the word in it. Learners of English
+    /// only: the sentences are English.
+    func clozeRound(seed: String) -> (round: ClozeRound, words: [WordEntry]) {
+        refreshToday()
+        guard studyMode == .english else { return (ClozeRound(entries: []), []) }
+        let candidates = studyCandidates.filter { Cloze.sentence(for: $0) != nil }
+        let queue = LearningEngine.buildStudyQueue(words: candidates, state: progress, today: today,
+                                                  limit: nextSessionLimit, seed: seed)
+        let entries = queue.map { word in
+            let saved = progress.words[word.id]
+            return ClozeRound.Entry(wordId: word.id, isNew: (saved?.status ?? .new) == .new,
+                                    stage: LearningEngine.reviewStage(saved))
+        }
+        Usage.log("cloze_round", usageScope)
+        return (ClozeRound(entries: entries), queue)
+    }
+
+    /// How a fill-in-the-blank word went. Right straight away counts as
+    /// known, so a new word the learner already had skips the short waits;
+    /// right with a little help counts as a right quiz answer; a miss sends
+    /// the word back to review.
+    func recordClozeAnswer(wordId: String, outcome: ClozeRound.Outcome) {
+        refreshToday()
+        let changed: ProgressState
+        switch outcome {
+        case .knew: changed = LearningEngine.markKnown(progress, wordId: wordId, today: today)
+        case .gotIt: changed = LearningEngine.markQuizCorrect(progress, wordId: wordId, today: today)
+        case .missed: changed = LearningEngine.markReview(progress, wordId: wordId, today: today)
+        }
+        progress = recordActivity(in: changed) { counters in
+            if outcome == .missed { counters.quizWrong += 1 } else { counters.quizCorrect += 1 }
+            if studyMode == .english { counters.englishActions += 1 } else { counters.chineseActions += 1 }
+        }
+        scheduleSave()
+        Usage.log("cloze_answer", "\(studyMode.rawValue).\(outcome.rawValue)")
+    }
+
     /// Speaking practice counts as activity but does not change word progress.
     func recordSpeaking(completed: Bool) {
         refreshToday()

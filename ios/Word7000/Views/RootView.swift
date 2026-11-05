@@ -15,6 +15,8 @@ enum Activity: Identifiable, Hashable {
     case spelling
     case exam
     case scan
+    /// WordCat Next: today's round as fill-in-the-blank questions.
+    case cloze
 
     var id: Self { self }
 }
@@ -116,6 +118,8 @@ struct RootView: View {
                 })
             case .scan:
                 ScanView(onStudy: { switchTo(.study) })
+            case .cloze:
+                ClozeSessionView()
             }
         }
         .sheet(isPresented: Binding(get: { model.styleChoiceDue && activity == nil && !welcomeOpen && !signInForScan

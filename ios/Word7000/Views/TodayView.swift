@@ -572,6 +572,16 @@ struct TodayView: View {
 
     // MARK: Practice
 
+    /// WordCat Next: today's round as fill-in-the-blank questions, full width
+    /// above the others while it is being tried out. Learners of English only.
+    private var clozeTile: PracticeTileItem? {
+        guard model.studyMode == .english else { return nil }
+        return PracticeTileItem(id: "today-cloze", icon: "text.cursor", tint: Palette.accent,
+                                title: L.t("挖空練習", "Fill in the blank"),
+                                detail: L.t("看中文，把句子裡的字打出來", "Read the Chinese, type the missing word"),
+                                badge: L.t("新", "New")) { start(.cloze) }
+    }
+
     /// The words still shaky, as a full-width tile above the others.
     private var reviewTile: PracticeTileItem? {
         guard model.stats.review > 0 else { return nil }
@@ -624,6 +634,9 @@ struct TodayView: View {
             Text(L.practice)
                 .font(.display(m.compact ? .headline : .title3, weight: .bold))
                 .padding(.leading, 4)
+            if let cloze = clozeTile {
+                tile(cloze, tallCard: false, m, fill: fill, order: 1)
+            }
             if let review = reviewTile {
                 tile(review, tallCard: false, m, fill: fill, order: 1)
             }

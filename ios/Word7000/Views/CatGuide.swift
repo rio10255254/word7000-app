@@ -48,7 +48,7 @@ enum GuideStep: String, CaseIterable, Sendable {
         case .spelling: self = .spelling
         case .scan: self = .scan
         case .exam: self = .exam
-        case .study: return nil
+        case .study, .cloze: return nil
         }
     }
 

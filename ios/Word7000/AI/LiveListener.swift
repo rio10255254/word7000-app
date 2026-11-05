@@ -60,7 +60,16 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
     var listening: Bool { state == .listening }
     var busy: Bool { state == .requesting || state == .listening || state == .finishing }
 
-    @ObservationIgnored private let engine = AVAudioEngine()
+    /// Made afresh for each take, once the audio session records: an engine
+    /// whose microphone input was first touched while the session only
+    /// played (after the model sentence) has no input, and live listening
+    /// then fell back to recording plainly, with text only at the end.
+    @ObservationIgnored private var engine = AVAudioEngine()
+    @ObservationIgnored private var tapInstalled = false
+    /// For the usage report: how this take was listened to.
+    @ObservationIgnored private var path = "engine"
+    /// For test phones: "engine" (live) or "rec-…" (recorded plainly, and why).
+    var takePath: String { path }
     @ObservationIgnored private var request: SFSpeechAudioBufferRecognitionRequest?
     @ObservationIgnored private var task: SFSpeechRecognitionTask?
     @ObservationIgnored private var file: URL?
@@ -181,9 +190,11 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
                 }
                 self.recognizerUsed = feed != nil ? (legacy ? "both" : "new") : (legacy ? "old" : "none")
                 do {
+                    self.path = "engine"
                     try self.begin(hints: hints, id: id, feed: feed, legacy: legacy)
                 } catch {
                     // No live audio here: record plainly and turn it into text afterwards.
+                    self.path = (error as? ListenError) == .noInput ? "rec-noinput" : "rec-\((error as NSError).code)"
                     self.abandonLive()
                     try self.beginRecorder(id: id)
                 }
@@ -310,6 +321,10 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
     /// `feed`, when set, takes the audio for the newer recognizer; otherwise
     /// the older one listens, where it can on the device.
     private func begin(hints: [String], id: UUID, feed: ((AVAudioPCMBuffer) -> Void)?, legacy: Bool) throws {
+        // Never reuse an engine across takes or session changes.
+        if engine.isRunning { engine.stop() }
+        engine = AVAudioEngine()
+        tapInstalled = false
         let input = engine.inputNode
         let format = input.outputFormat(forBus: 0)
         guard format.sampleRate > 0, format.channelCount > 0 else { throw ListenError.noInput }
@@ -345,6 +360,7 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         }
 
         let store = self.store
+        tapInstalled = true
         input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
             recognitionRequest?.append(buffer)
             feed?(buffer)
@@ -570,12 +586,17 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         isFinal = true
         level = 0
         state = .ready
+        Usage.log("speech_take", "\(language.prefix(2)).\(recognizerUsed).\(path).n\(Self.bucket(newUpdates)).o\(Self.bucket(oldUpdates)).l\(Self.bucket(liveUpdates)).t\(text.isEmpty ? 0 : 1)")
         WordAudioSession.release()
     }
 
+    private static func bucket(_ count: Int) -> String { count == 0 ? "0" : count <= 3 ? "1-3" : "4p" }
+
     private func stopEngine() {
         if engine.isRunning { engine.stop() }
-        engine.inputNode.removeTap(onBus: 0)
+        // Only an engine that listened is touched: asking for its input
+        // makes one, with whatever the audio session is doing right now.
+        if tapInstalled { engine.inputNode.removeTap(onBus: 0); tapInstalled = false }
     }
 
     func togglePlayback() {

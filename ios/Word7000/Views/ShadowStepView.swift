@@ -467,7 +467,7 @@ struct ShadowStepView: View {
     /// while speaking (live colouring needs those answers).
     private var diagnostics: String {
         let used = ["new": "新版", "old": "舊版", "both": "新版＋舊版"][listener.recognizerUsed] ?? "無"
-        return "辨識：\(used)・即時 \(listener.liveUpdates) 次（新 \(listener.newUpdates)／舊 \(listener.oldUpdates)）"
+        return "辨識：\(used)・\(listener.takePath)・即時 \(listener.liveUpdates) 次（新 \(listener.newUpdates)／舊 \(listener.oldUpdates)）"
     }
 
     private func legend(_ color: Color, _ text: String) -> some View {

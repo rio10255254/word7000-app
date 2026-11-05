@@ -178,6 +178,19 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
     /// One fetch per language for the whole app; once there, live text is used.
     private static var installing: Set<String> = []
 
+    /// At launch: fetches the live model for the study language if this
+    /// iPhone can have it, so it is there before the first practice.
+    static func prepareLiveModel(language: String) {
+        guard #available(iOS 26.0, *), !installing.contains(language) else { return }
+        installing.insert(language)
+        Task {
+            if await StreamingTranscription.availability(language: language) == .downloadable {
+                _ = await StreamingTranscription.install(language: language)
+            }
+            installing.remove(language)
+        }
+    }
+
     private func installLiveModel(language: String) {
         guard #available(iOS 26.0, *), !Self.installing.contains(language) else { return }
         Self.installing.insert(language)

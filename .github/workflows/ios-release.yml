@@ -21,9 +21,9 @@ on:
         type: boolean
         default: false
       testflight_group:
-        description: 'native-testflight only: TestFlight group the build is added to once Apple has processed it (empty: none)'
+        description: 'native-testflight only: TestFlight group the build is added to once Apple has processed it (empty: none). This is the research line (3.x): its builds go to WordCat Lab, never to the public testers.'
         type: string
-        default: 'Wordcat Public Testing 1'
+        default: 'WordCat Lab'
       what_to_test:
         description: 'native-testflight only: "What to Test" for testers (Traditional Chinese; optional)'
         type: string
@@ -62,6 +62,22 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      # This branch is the research line (3.x). Its builds go to the WordCat Lab
+      # group; the public testers only get the 2.x line from master.
+      - name: Keep the research line out of the public testers' group
+        if: inputs.operation == 'native-testflight' || inputs.operation == 'testflight-submit'
+        env:
+          GROUP: ${{ inputs.testflight_group }}
+        run: |
+          set -euo pipefail
+          VERSION="$(node -p 'require("./ios/Release/app.json").expo.version')"
+          case "$VERSION" in
+            2.*) ;;
+            *) if [ "$GROUP" = "Wordcat Public Testing 1" ]; then
+                 echo "::error::$VERSION is the research line. Send it to the WordCat Lab group; the public testers get the 2.x line from master."
+                 exit 1
+               fi ;;
+          esac
       - name: Subscriptions and free trial in App Store Connect (read-only)
         if: inputs.operation == 'subscriptions-status'
         env:
@@ -96,7 +112,7 @@ jobs:
           test -n "$BUILD" || { echo "::error::submit_build is required"; exit 1; }
           VERSION="$(node -p 'require("./ios/Release/app.json").expo.version')"
           node scripts/testflight-distribute.mjs --bundle com.rio.word7000 --version "$VERSION" --build "$BUILD" \
-            --group "${GROUP:-Wordcat Public Testing 1}" --wait-minutes 2
+            --group "${GROUP:-WordCat Lab}" --create-group yes --wait-minutes 2
 
   release:
     if: inputs.operation != 'testflight-submit' && inputs.operation != 'subscriptions-status' && inputs.operation != 'beta-status' && inputs.operation != 'store-readiness'
@@ -131,6 +147,23 @@ jobs:
           pod --version
 
       - run: npm ci
+
+      # This branch is the research line (3.x). Its builds go to the WordCat Lab
+      # group; the public testers only get the 2.x line from master.
+      - name: Keep the research line out of the public testers' group
+        if: inputs.operation == 'native-testflight' || inputs.operation == 'testflight-submit'
+        env:
+          GROUP: ${{ inputs.testflight_group }}
+        run: |
+          set -euo pipefail
+          VERSION="$(node -p 'require("./ios/Release/app.json").expo.version')"
+          case "$VERSION" in
+            2.*) ;;
+            *) if [ "$GROUP" = "Wordcat Public Testing 1" ]; then
+                 echo "::error::$VERSION is the research line. Send it to the WordCat Lab group; the public testers get the 2.x line from master."
+                 exit 1
+               fi ;;
+          esac
 
       # A release should never carry a change that breaks the tests.
       - run: npm run typecheck
@@ -307,7 +340,7 @@ jobs:
           VERSION=$(node -p 'require("./ios/Release/app.json").expo.version')
           BUILD=$(node -p 'require(process.argv[1])[0].appBuildVersion' "$RUNNER_TEMP/native-build.json")
           node scripts/testflight-distribute.mjs --bundle com.rio.word7000 --version "$VERSION" --build "$BUILD" \
-            --group "$GROUP" --notes-zh "$NOTES_ZH" --notes-en "$NOTES_EN" --wait-minutes 45
+            --group "$GROUP" --create-group yes --notes-zh "$NOTES_ZH" --notes-en "$NOTES_EN" --wait-minutes 45
 
       - name: Save the native release verification receipt
         if: always() && inputs.operation == 'native-testflight'

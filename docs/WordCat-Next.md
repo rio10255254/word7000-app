@@ -16,8 +16,11 @@
   這也讓 `master` 送審、上架 2.0.x 完全不受影響。
 - **發研發版到 TestFlight**：GitHub Actions → `iOS release` → Run workflow，
   「Use workflow from」選這個分支，operation 選 `native-testflight`。
-- **TestFlight 群組**：建議另開一個群組（例如「WordCat Lab」）專門收研發版。兩條線都發給同一個群組的話，
-  測試者手機可能會跟著「最新上傳的那一版」在新舊介面之間跳來跳去。
+- **TestFlight 群組**：研發版發給 `WordCat Lab` 群組。這個分支的發布流程預設就是它，群組不存在時會自動建立，
+  而且 3.x 的建置發給公開群組（`Wordcat Public Testing 1`）會直接失敗。
+- 兩條線的完整規則寫在 `CLAUDE.md` 的「兩條版本線」，每個對話一開始都會讀到，以那裡為準。
+- **換線**：Apple 只要核准過某個版本，之後上傳的版本號都必須比它高。3.0 一被 App Store 核准，2.x 就傳不上去了，
+  所以研發版上架那一刻，就是把研發分支合進 `master`、只剩一條線的時候。
 
 ### 不自動上線
 
@@ -216,12 +219,11 @@ App 本來就是 100% 原生 SwiftUI。`master` 另外保留了一份舊 React N
 
 **已決定（2026-11-05）**
 
-1. 同一個 App、兩條主線：`master` 是 2.0.x，這個分支是 3.0.0，兩邊都可以各自發 TestFlight，這個分支不合併回 `master`。
+1. 同一個 App、兩條主線：`master` 是 2.0.x，這個分支是 3.0.0，兩邊都可以各自發 TestFlight，這個分支不合併回 `master`（換線時除外）。
 2. 新的學習規則只寫 Swift（`Word7000Core`）。
+3. 研發版發給新的 `WordCat Lab` TestFlight 群組。
 
 **待決定**
 
-1. **研發版發給哪個 TestFlight 群組？** 建議另開「WordCat Lab」群組，想讓誰試新版就把誰加進去；
-   也可以直接發給現有的「Wordcat Public Testing 1」，但測試者可能會在新舊介面之間跳。
-2. **研發版要多記哪些數字？** 現有事件已經有：打開 App、開始一輪學習、完成程度測驗、各種作答、付費頁等。
+1. **研發版要多記哪些數字？** 現有事件已經有：打開 App、開始一輪學習、完成程度測驗、各種作答、付費頁等。
    研發版要補：開 App 到第一題的秒數、完成一輪、通知同意，並讓 3.0 的事件分得出來（例如事件的 detail 加上版本標記）。

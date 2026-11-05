@@ -181,7 +181,7 @@ struct ClozeCard: View {
 
 /// A line from the cat, big enough to read at a glance: the cat's face and
 /// a bubble. Used in place of small captions to say what to do.
-struct CatLine: View {
+struct RoutineCatLine: View {
     var text: String
     var mood: Mascot.Mood = .happy
 

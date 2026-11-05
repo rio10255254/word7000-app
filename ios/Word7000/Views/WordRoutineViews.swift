@@ -183,7 +183,7 @@ struct RoutineSpellView: View {
             VStack(spacing: 16) {
                 RoutineStepStrip(routine: model.activeRoutine ?? routine)
                     .padding(.top, 4)
-                CatLine(text: catLine(word, attempt), mood: attempt.solved ? (attempt.outcome == .missed ? .encourage : .cheer) : .thinking)
+                RoutineCatLine(text: catLine(word, attempt), mood: attempt.solved ? (attempt.outcome == .missed ? .encourage : .cheer) : .thinking)
                 ClozeCard(word: word, sentence: sentence, attempt: attempt, input: input, comeBack: comeBack)
                     .shake(trigger: misses, enabled: !reduceMotion)
                     .pulse(trigger: solves, scale: 1.02, enabled: !reduceMotion)
@@ -353,7 +353,7 @@ struct RoutineExamView: View {
             VStack(spacing: 16) {
                 RoutineStepStrip(routine: model.activeRoutine ?? routine)
                     .padding(.top, 4)
-                CatLine(text: catLine(question), mood: chosen == nil ? .thinking : chosen == question.answerIndex ? .cheer : .encourage)
+                RoutineCatLine(text: catLine(question), mood: chosen == nil ? .thinking : chosen == question.answerIndex ? .cheer : .encourage)
                 VStack(alignment: .leading, spacing: 14) {
                     sentence(question)
                         .font(.title2)
@@ -549,7 +549,7 @@ struct RoutineSummaryView: View {
                     .entrance(3)
                     .accessibilityIdentifier("routine-caught")
                 }
-                CatLine(text: CatQuips.studyDone(reachedGoal: reachedGoal || model.goalDone, source: model.catLines),
+                RoutineCatLine(text: CatQuips.studyDone(reachedGoal: reachedGoal || model.goalDone, source: model.catLines),
                         mood: summary.caught == 0 ? .cheer : .smug)
                     .entrance(4)
                 if account.configured, !account.isPermanent {

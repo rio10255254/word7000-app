@@ -112,4 +112,22 @@ final class HomeTests: XCTestCase {
         let quiet = ProgressState(words: ["w1": WordProgress(status: .mastered, lastStudied: "2026-11-08", stage: 3)])
         XCTAssertFalse(ExamRound.weeklyDue(words: words, state: quiet, today: "2026-11-08"), "too few words for a quiz")
     }
+
+    // MARK: The calendar in Me
+
+    func testTheCalendarEndsWithThisWeekAndLeavesTheRestOfItEmpty() {
+        let weeks = ActivityCalendar.weeks(3, today: "2026-11-05", analytics: analytics(studied: ["2026-11-05", "2026-10-20"]))
+        XCTAssertEqual(weeks.count, 3)
+        XCTAssertTrue(weeks.allSatisfy { $0.count == 7 })
+        XCTAssertEqual(weeks[2][3], 3, "Thursday is today, with three answers")
+        XCTAssertNil(weeks[2][4], "Friday has not come yet")
+        XCTAssertEqual(weeks[0][1], 3, "two weeks ago Tuesday")
+        XCTAssertEqual(weeks[1].compactMap { $0 }.reduce(0, +), 0)
+    }
+
+    func testDaysThisYearAndShades() {
+        XCTAssertEqual(ActivityCalendar.activeDays(inYearOf: "2026-11-05", analytics: analytics(studied: ["2026-01-01", "2026-11-05", "2025-12-31"])), 2)
+        XCTAssertEqual(ActivityCalendar.activeDays(inYearOf: "2026-11-05", analytics: nil), 0)
+        XCTAssertEqual([0, 1, 12, 30, 80].map(ActivityCalendar.shade), [0, 1, 2, 3, 4])
+    }
 }

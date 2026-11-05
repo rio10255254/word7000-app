@@ -74,4 +74,16 @@ extension AppModel {
         Usage.log("speaking_word_use", used ? "used" : "skipped")
         if used { recordSpeaking(completed: true) }
     }
+
+    /// Today's words and speaking are both done and the stamp not shown yet.
+    var dayCompleteDue: Bool {
+        guard AppRuntime.dayComplete, goalDone, speakingDoneToday || !homeShowsSpeaking else { return false }
+        return settings.dayCompleteShownOn != today
+    }
+
+    func noteDayCompleteShown() {
+        settings.dayCompleteShownOn = today
+        scheduleSave()
+        Usage.log("day_complete", "\(progress.streak)")
+    }
 }

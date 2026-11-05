@@ -529,6 +529,8 @@ enum AppRuntime {
     /// comes first, and checks the level with a short adaptive test. UI tests
     /// of the older welcome keep its three scenes.
     static let labOnboarding = !uiTesting || ProcessInfo.processInfo.arguments.contains("-uiTestingLabOnboarding")
+    /// WordCat Next: a stamp when today's words and speaking are both done.
+    static let dayComplete = !uiTesting || ProcessInfo.processInfo.arguments.contains("-uiTestingDayComplete")
 }
 
 extension View {

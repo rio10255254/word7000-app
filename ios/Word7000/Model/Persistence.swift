@@ -71,6 +71,8 @@ struct AppSettings: Codable, Equatable, Sendable {
     var homeLead: Pillar?
     /// WordCat Next: the speaking card on the home page (nil: shown).
     var homeShowsSpeaking: Bool?
+    /// WordCat Next: the day today's stamp was last shown.
+    var dayCompleteShownOn: String?
 
     var speakingHistoryOwnerKey: String {
         Self.speakingHistoryKey(ownerId: localOwnerId, anonymous: localOwnerIsAnonymous)

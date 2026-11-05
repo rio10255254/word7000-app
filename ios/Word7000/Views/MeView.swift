@@ -5,7 +5,9 @@ import Word7000Core
 struct MeView: View {
     @Environment(AppModel.self) private var model
     @Environment(PlusModel.self) private var plus
+    @Environment(AccountModel.self) private var account
     @State private var historyOpen = false
+    @State private var signInOpen = false
     private let dailyTargetOptions = [10, 20, 30, 50]
 
     var body: some View {
@@ -26,6 +28,27 @@ struct MeView: View {
                         }
                         .accessibilityIdentifier("me-streak-protection")
                     }
+                }
+
+                // WordCat Next: a guest's progress lives only on this phone; say so plainly.
+                if account.configured, !account.isPermanent, stats.mastered + stats.review > 0 {
+                    Section {
+                        GuestKeepCard(count: stats.mastered + stats.review) { signInOpen = true }
+                            .accessibilityIdentifier("me-guest-warning")
+                    }
+                }
+
+                // WordCat Next: the weeks as squares, darker on busier days.
+                Section {
+                    ActivityCalendarView(weeks: ActivityCalendar.weeks(20, today: model.today, analytics: model.progress.analytics))
+                        .padding(.vertical, 4)
+                        .listRowBackground(StyledRowBackground(paper: .graph))
+                } header: {
+                    Text(L.t("最近 20 週", "The last 20 weeks"))
+                } footer: {
+                    Text(L.t("今年學了 \(ActivityCalendar.activeDays(inYearOf: model.today, analytics: model.progress.analytics)) 天",
+                             "\(ActivityCalendar.activeDays(inYearOf: model.today, analytics: model.progress.analytics)) days this year"))
+                        .accessibilityIdentifier("me-year-days")
                 }
 
                 LevelEstimateSection()
@@ -64,16 +87,17 @@ struct MeView: View {
         .warmList()
         .navigationTitle(L.tabMe)
         .navigationDestination(isPresented: $historyOpen) { HistoryView() }
+        .sheet(isPresented: $signInOpen) { SignInSheet(reason: .general) }
         .catTip(.me)
     }
 
     private var streakProtectionText: String {
         guard let ready = model.streakProtectionReadyOn else {
-            return L.t("連勝保護已就緒，漏學 1 天不會中斷", "Streak protection on: one missed day is covered")
+            return L.t("貓罐頭在你這：漏學 1 天，牠會幫你保住紀錄", "The cat's can is ready: one missed day is covered")
         }
         let parts = ready.split(separator: "-").compactMap { Int($0) }
         let date = parts.count == 3 ? "\(parts[1])/\(parts[2])" : ready
-        return L.t("連勝保護 \(date) 起可再使用", "Streak protection returns on \(date)")
+        return L.t("貓罐頭 \(date) 回來", "The cat's can is back on \(date)")
     }
 }
 
@@ -203,6 +227,14 @@ struct SettingsView: View {
                         SettingsLabel(L.autoReveal, icon: (model.settings.studyAutoReveal ?? false) ? "eye.fill" : "eye.slash.fill", tint: .teal)
                     }
                     .accessibilityIdentifier("settings-auto-reveal")
+                    // WordCat Next: the speaking card on the home page.
+                    Toggle(isOn: Binding(
+                        get: { model.homeShowsSpeaking },
+                        set: { model.settings.homeShowsSpeaking = $0 }
+                    )) {
+                        SettingsLabel(L.t("首頁顯示口說", "Speaking on the home page"), icon: "mic.fill", tint: TodayView.speakingTint)
+                    }
+                    .accessibilityIdentifier("settings-home-speaking")
                 } header: {
                     Text(L.t("學習", "Learning"))
                 } footer: {
@@ -662,6 +694,47 @@ private struct PlusManageSheet: ViewModifier {
             content.manageSubscriptionsSheet(isPresented: $isPresented, subscriptionGroupID: groupID)
         } else {
             content.manageSubscriptionsSheet(isPresented: $isPresented)
+        }
+    }
+}
+
+/// WordCat Next: the last weeks as a grid of squares, one column a week
+/// (Monday on top), darker the more was practised that day.
+struct ActivityCalendarView: View {
+    var weeks: [[Int?]]
+
+    var body: some View {
+        let active = weeks.joined().compactMap { $0 }.filter { $0 > 0 }.count
+        GeometryReader { proxy in
+            let gap: CGFloat = 3
+            let side = max(4, min(16, (proxy.size.width - gap * CGFloat(max(0, weeks.count - 1))) / CGFloat(max(1, weeks.count))))
+            HStack(alignment: .top, spacing: gap) {
+                ForEach(Array(weeks.enumerated()), id: \.offset) { _, week in
+                    VStack(spacing: gap) {
+                        ForEach(Array(week.enumerated()), id: \.offset) { _, actions in
+                            RoundedRectangle(cornerRadius: 3, style: .continuous)
+                                .fill(color(actions))
+                                .frame(width: side, height: side)
+                        }
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .center)
+        }
+        .frame(height: 7 * 16 + 6 * 3)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(L.t("最近 20 週學了 \(active) 天", "\(active) days in the last 20 weeks"))
+        .accessibilityIdentifier("me-calendar")
+    }
+
+    private func color(_ actions: Int?) -> Color {
+        guard let actions else { return .clear }
+        switch ActivityCalendar.shade(actions) {
+        case 0: return Palette.fill
+        case 1: return Palette.known.opacity(0.35)
+        case 2: return Palette.known.opacity(0.6)
+        case 3: return Palette.known.opacity(0.85)
+        default: return Palette.known
         }
     }
 }

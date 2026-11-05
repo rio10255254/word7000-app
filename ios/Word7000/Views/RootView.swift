@@ -44,6 +44,8 @@ struct RootView: View {
     @State private var plansAfterRecap = false
     @State private var welcomeOpen = false
     @State private var studyAfterWelcome = false
+    /// WordCat Next: today's stamp, once words and speaking are done.
+    @State private var dayCompleteOpen = false
 
     var body: some View {
         TabView(selection: $tab) {
@@ -96,7 +98,10 @@ struct RootView: View {
             if let new, let step = GuideStep(activity: new) { model.noteTried(step) }
         }
         .fullScreenCover(item: $activity, onDismiss: {
-            guard let next = pendingActivity else { openRequestedPractice(); return }
+            guard let next = pendingActivity else {
+                if model.dayCompleteDue { dayCompleteOpen = true } else { openRequestedPractice() }
+                return
+            }
             pendingActivity = nil
             activity = next
         }) { activity in
@@ -130,6 +135,13 @@ struct RootView: View {
                     switchTo(.study)
                 })
             }
+        }
+        .fullScreenCover(isPresented: $dayCompleteOpen, onDismiss: openRequestedPractice) {
+            DayCompleteView()
+        }
+        .task {
+            // The screenshot tests show the stamp straight away.
+            if ProcessInfo.processInfo.arguments.contains("-uiTestingDayCompleteNow") { dayCompleteOpen = true }
         }
         .sheet(isPresented: Binding(get: { model.styleChoiceDue && activity == nil && !welcomeOpen && !signInForScan
                                            && plus.paywallReason == nil && !plus.trialRecapPending },
@@ -202,7 +214,7 @@ struct RootView: View {
             UpdateWindow.shared.show(required, style: model.settings.appStyle ?? .standard,
                                      scheme: model.settings.theme.colorScheme)
         }
-        .fullScreenCover(item: Binding(get: { (updateGate.required == nil && activity == nil && !welcomeOpen && plus.paywallReason == nil && !plus.trialRecapPending
+        .fullScreenCover(item: Binding(get: { (updateGate.required == nil && activity == nil && !welcomeOpen && !dayCompleteOpen && plus.paywallReason == nil && !plus.trialRecapPending
                                      && !model.styleChoiceDue && !signInForScan) ? announcements.current : nil },
                              set: { if $0 == nil, let shown = announcements.current { announcements.markSeen(shown) } }),
                onDismiss: {

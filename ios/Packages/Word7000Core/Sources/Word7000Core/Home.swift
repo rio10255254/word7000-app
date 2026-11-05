@@ -178,3 +178,40 @@ public enum ExamRound {
         }
     }
 }
+
+/// WordCat Next: the learner's days as a calendar of squares for Me, the
+/// way a year of practice looks at a glance.
+public enum ActivityCalendar {
+    /// The last `weeks` weeks, Monday to Sunday, the current one last: each
+    /// day's practice actions, nil for the days still to come this week.
+    public static func weeks(_ weeks: Int, today: String, analytics: LearningAnalyticsState?) -> [[Int?]] {
+        guard weeks > 0, let number = DayMath.dayNumber(today), let weekday = WeekStamps.weekdayIndex(today) else { return [] }
+        let analytics = analytics ?? LearningAnalyticsState()
+        let monday = number - weekday
+        return (0..<weeks).map { week in
+            let start = monday - 7 * (weeks - 1 - week)
+            return (0..<7).map { offset in
+                let day = start + offset
+                guard day <= number else { return nil }
+                return analytics.day(DayMath.string(fromDayNumber: day)).practiceActions
+            }
+        }
+    }
+
+    /// Days this calendar year with any practice.
+    public static func activeDays(inYearOf today: String, analytics: LearningAnalyticsState?) -> Int {
+        guard let analytics, let end = DayMath.dayNumber(today), let start = DayMath.dayNumber("\(today.prefix(4))-01-01") else { return 0 }
+        return (start...end).filter { analytics.day(DayMath.string(fromDayNumber: $0)).practiceActions > 0 }.count
+    }
+
+    /// How dark a day's square is, 0 (nothing) to 4.
+    public static func shade(_ actions: Int) -> Int {
+        switch actions {
+        case ...0: 0
+        case 1..<10: 1
+        case 10..<25: 2
+        case 25..<50: 3
+        default: 4
+        }
+    }
+}

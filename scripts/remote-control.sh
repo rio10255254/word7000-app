@@ -36,6 +36,34 @@ status)
   say "|---|---|---|---|---|"
   body_of "$reply" | jq -r '.[] | "| \(.app_version) | \(.app_build // "-") | \(.installs) | \(.seen_last_7_days) | \(.push_devices) |"' | while read -r line; do say "$line"; done
   say ""
+  say "## 📲 每支手機"
+  say ""
+  say "從 2.0.2 (9) 起回報型號；更舊的版本不會出現在這裡（上表仍會算到）。"
+  say ""
+  reply=$(call -X POST "$rest/rpc/app_device_list" -d '{}')
+  if [ "$(code_of "$reply")" = "200" ]; then
+    # Model identifiers as people know them; an unknown one is shown as it is.
+    names='{"iPhone12,1":"iPhone 11","iPhone12,3":"iPhone 11 Pro","iPhone12,5":"iPhone 11 Pro Max","iPhone12,8":"iPhone SE (第 2 代)",
+      "iPhone13,1":"iPhone 12 mini","iPhone13,2":"iPhone 12","iPhone13,3":"iPhone 12 Pro","iPhone13,4":"iPhone 12 Pro Max",
+      "iPhone14,2":"iPhone 13 Pro","iPhone14,3":"iPhone 13 Pro Max","iPhone14,4":"iPhone 13 mini","iPhone14,5":"iPhone 13",
+      "iPhone14,6":"iPhone SE (第 3 代)","iPhone14,7":"iPhone 14","iPhone14,8":"iPhone 14 Plus","iPhone15,2":"iPhone 14 Pro",
+      "iPhone15,3":"iPhone 14 Pro Max","iPhone15,4":"iPhone 15","iPhone15,5":"iPhone 15 Plus","iPhone16,1":"iPhone 15 Pro",
+      "iPhone16,2":"iPhone 15 Pro Max","iPhone17,1":"iPhone 16 Pro","iPhone17,2":"iPhone 16 Pro Max","iPhone17,3":"iPhone 16",
+      "iPhone17,4":"iPhone 16 Plus","iPhone17,5":"iPhone 16e","iPhone18,1":"iPhone 17 Pro","iPhone18,2":"iPhone 17 Pro Max",
+      "iPhone18,3":"iPhone 17","iPhone18,4":"iPhone Air"}'
+    count=$(body_of "$reply" | jq length)
+    say "共 $count 支。"
+    say ""
+    say "| 型號 | 代號 | iOS | App | 帳號 | 語言 | 最後開啟（UTC） | 第一次（UTC） |"
+    say "|---|---|---|---|---|---|---|---|"
+    body_of "$reply" | jq -r --argjson names "$names" '.[] | "| \($names[.model] // .model) | \(.model) | \(.os_version // "-") | \(.app_version)\(if .app_build then " (\(.app_build))" else "" end) | \(if .account == "guest" then "訪客" else "Apple" end) | \(.language) | \(.last_seen[0:16]) | \(.first_seen[0:10]) |"' | while read -r line; do say "$line"; done
+    say ""
+    say "依型號："
+    body_of "$reply" | jq -r --argjson names "$names" 'group_by($names[.model] // .model) | sort_by(-length) | .[] | "- \($names[.[0].model] // .[0].model)：\(length) 支"' | while read -r line; do say "$line"; done
+  else
+    say "- 還沒有每支手機的資料（資料庫更新後才有）"
+  fi
+  say ""
   say "## 🔔 登記推播的手機"
   say ""
   say "權杖只列最後 6 碼；最後登記時間是手機上次打開 App、把權杖送上來的時間。"

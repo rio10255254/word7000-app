@@ -8,7 +8,7 @@
 name: Native iOS
 # A full manual run is named so a release can recognise it and reuse it for
 # identical source (see ios-release.yml) instead of testing the same code again.
-run-name: "${{ inputs.checks && format('Native iOS: {0} checks', inputs.checks) || github.event.head_commit.message }}"
+run-name: "${{ inputs.tests && format('Native iOS: {0}', inputs.tests) || inputs.checks && format('Native iOS: {0} checks', inputs.checks) || github.event.head_commit.message }}"
 
 on:
   # Not on master: a merge there would start the full run on all five Macs the
@@ -45,12 +45,16 @@ on:
         type: choice
         options: ['all', '27']
         default: 'all'
+      tests:
+        description: 'Only these UI tests, for what a change touches (comma-separated, e.g. SpeakingCoachTests,LayoutTests/testMainScreensFitThisPhone); empty: as checks says'
+        type: string
+        default: ''
 
 permissions:
   contents: read
 
 concurrency:
-  group: ios-native-${{ github.ref }}-${{ inputs.checks || 'all' }}-${{ inputs.ios || 'all' }}
+  group: ios-native-${{ github.ref }}-${{ inputs.checks || 'all' }}-${{ inputs.ios || 'all' }}-${{ inputs.tests }}
   cancel-in-progress: true
 
 jobs:
@@ -67,7 +71,7 @@ jobs:
         # tests), runs whole (shard 0), so the full check is five jobs: the account's
         # limit of five macOS jobs at a time, all starting together. Other checks
         # run whole too.
-        include: ${{ fromJSON(inputs.ios == '27' && ((inputs.checks == '' || inputs.checks == 'all') && '[{"ios":27,"xcode":27,"runner":"xcode-27","shard":1},{"ios":27,"xcode":27,"runner":"xcode-27","shard":2}]' || '[{"ios":27,"xcode":27,"runner":"xcode-27","shard":0}]') || ((inputs.checks == '' || inputs.checks == 'all') && '[{"ios":18,"xcode":26,"runner":"macos-15","shard":0},{"ios":26,"xcode":26,"runner":"macos-15","shard":1},{"ios":26,"xcode":26,"runner":"macos-15","shard":2},{"ios":27,"xcode":27,"runner":"xcode-27","shard":1},{"ios":27,"xcode":27,"runner":"xcode-27","shard":2}]' || '[{"ios":18,"xcode":26,"runner":"macos-15","shard":0},{"ios":26,"xcode":26,"runner":"macos-15","shard":0},{"ios":27,"xcode":27,"runner":"xcode-27","shard":0}]')) }}
+        include: ${{ fromJSON(inputs.ios == '27' && (((inputs.checks == '' || inputs.checks == 'all') && inputs.tests == '') && '[{"ios":27,"xcode":27,"runner":"xcode-27","shard":1},{"ios":27,"xcode":27,"runner":"xcode-27","shard":2}]' || '[{"ios":27,"xcode":27,"runner":"xcode-27","shard":0}]') || (((inputs.checks == '' || inputs.checks == 'all') && inputs.tests == '') && '[{"ios":18,"xcode":26,"runner":"macos-15","shard":0},{"ios":26,"xcode":26,"runner":"macos-15","shard":1},{"ios":26,"xcode":26,"runner":"macos-15","shard":2},{"ios":27,"xcode":27,"runner":"xcode-27","shard":1},{"ios":27,"xcode":27,"runner":"xcode-27","shard":2}]' || '[{"ios":18,"xcode":26,"runner":"macos-15","shard":0},{"ios":26,"xcode":26,"runner":"macos-15","shard":0},{"ios":27,"xcode":27,"runner":"xcode-27","shard":0}]')) }}
     runs-on: ${{ matrix.runner }}
     # One half of the full check takes about 55 minutes with build and setup;
     # the whole walk-through in one job ran past 90 (run 369), so the limit stays generous.
@@ -166,6 +170,7 @@ jobs:
         env:
           CHECKS: ${{ inputs.checks }}
           SHARD: ${{ matrix.shard }}
+          TESTS: ${{ inputs.tests }}
         run: |
           if [ "$CHECKS" = "compile" ]; then
             set +e
@@ -177,6 +182,13 @@ jobs:
           fi
           xcrun simctl boot "$SIMULATOR_UDID" || true
           xcrun simctl bootstatus "$SIMULATOR_UDID" -b
+          # A fresh simulator shows the keyboard's slide-to-type introduction the
+          # first time a keyboard opens; it covers the keyboard and hides what a
+          # text field holds from the tests. Typing works the same without it.
+          for domain in com.apple.Preferences com.apple.keyboard.preferences; do
+            xcrun simctl spawn "$SIMULATOR_UDID" defaults write "$domain" DidShowContinuousPathIntroduction -bool true || true
+            xcrun simctl spawn "$SIMULATOR_UDID" defaults write "$domain" KeyboardContinuousPathEnabled -bool false || true
+          done
           xcrun simctl status_bar "$SIMULATOR_UDID" override --time "9:41" --batteryState charged --batteryLevel 100 --cellularBars 4 || true
           swift ios/Tests/create-scan-photos.swift "$RUNNER_TEMP/scan-fixtures"
           xcrun simctl launch "$SIMULATOR_UDID" com.apple.mobileslideshow || true
@@ -191,6 +203,16 @@ jobs:
             TEST_SELECTION=(-only-testing:Word7000UITests/AppStoreScreenshotTests)
           elif [ "$CHECKS" = "polish" ]; then
             TEST_SELECTION=(-only-testing:Word7000UITests/SpeakingCoachTests/testEditorialNotesAreReachableInBothLanguages -only-testing:Word7000UITests/SpeakingCoachTests/testAISettingsDisableSuggestionsButKeepRecordingAndText -only-testing:Word7000UITests/SpeakingCoachTests/testWithoutDeviceAICheckingLeadsToPremiumAndPracticeContinues -only-testing:Word7000UITests/SpeakingCoachTests/testRecordingTurnsIntoTextThenChecksWithExplicitFixture -only-testing:Word7000UITests/SpeakingCoachTests/testNativeRecorderPermissionTimerPlaybackAndCleanup -only-testing:Word7000UITests/ScreenshotTests/testHistoryEmptyState -only-testing:Word7000UITests/ScreenshotTests/testLightScreens)
+          fi
+          # Named tests: only what a change touches.
+          if [ -n "$TESTS" ]; then
+            TEST_SELECTION=()
+            IFS=',' read -ra NAMED <<< "$TESTS"
+            for t in "${NAMED[@]}"; do
+              t="$(echo "$t" | xargs)"
+              [[ "$t" =~ ^[A-Za-z0-9_]+(/[A-Za-z0-9_]+)?$ ]] || { echo "::error::'$t' is not a test class or Class/testMethod"; exit 1; }
+              TEST_SELECTION+=(-only-testing:Word7000UITests/$t)
+            done
           fi
           # The two halves of the full check: the first names its test classes, the
           # second runs everything else, so a new test class is never left out.
@@ -281,7 +303,7 @@ jobs:
 
   publish-screenshots:
     needs: native
-    if: always() && github.event_name != 'pull_request' && (inputs.checks == '' || inputs.checks == 'all')
+    if: always() && github.event_name != 'pull_request' && (inputs.checks == '' || inputs.checks == 'all') && inputs.tests == ''
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -393,6 +415,10 @@ jobs:
             echo "::group::$TYPE on iOS $MAJOR"
             xcrun simctl boot "$UDID"
             xcrun simctl bootstatus "$UDID" -b > /dev/null
+            for domain in com.apple.Preferences com.apple.keyboard.preferences; do
+              xcrun simctl spawn "$UDID" defaults write "$domain" DidShowContinuousPathIntroduction -bool true || true
+              xcrun simctl spawn "$UDID" defaults write "$domain" KeyboardContinuousPathEnabled -bool false || true
+            done
             xcrun simctl status_bar "$UDID" override --time "9:41" --batteryState charged --batteryLevel 100 --cellularBars 4 || true
             rm -rf "$HOME/word7000-screenshots"
             xcodebuild test-without-building -project ios/Word7000.xcodeproj -scheme Word7000 \

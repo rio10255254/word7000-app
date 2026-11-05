@@ -99,7 +99,7 @@ struct PracticeView: View {
     private func row(_ id: String, icon: String, tint: Color, title: String, detail: String, locked: Bool = false,
                      action: @escaping () -> Void) -> some View {
         let paper = Self.papers[id] ?? (.ivory, 0)
-        Button(action: action) {
+        return Button(action: action) {
             HStack(spacing: 14) {
                 Image(systemName: icon)
                     .font(.system(size: 22, weight: .bold))

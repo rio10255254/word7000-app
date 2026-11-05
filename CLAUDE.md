@@ -37,6 +37,7 @@
 
 **發 TestFlight**
 
+- **研發線目前不發 TestFlight。** 要等正式線的 2.0.2 (8) 送審、上架告一段落，而且使用者明確說可以，才發第一個 3.x。
 - GitHub Actions → `iOS release` → Run workflow，「Use workflow from」選要發的那條線的分支，operation 選 `native-testflight`。
 - 正式線發給 `Wordcat Public Testing 1`；研發線發給 `WordCat Lab`（研發分支的發布流程預設就是它，群組不存在時會自動建立，並擋住 3.x 發給公開群組）。
 - 送 App Store 審核只用正式線的 2.x 建置，直到換線。

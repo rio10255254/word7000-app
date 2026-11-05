@@ -11,8 +11,12 @@ name: Native iOS
 run-name: "${{ inputs.checks && format('Native iOS: {0} checks', inputs.checks) || github.event.head_commit.message }}"
 
 on:
+  # Not on master: a merge there would start the full run on all five Macs the
+  # account may use at once and hold up a TestFlight release for an hour,
+  # for source a pull request run has already tested. Run it from Actions
+  # (checks: all) when a full test of master is wanted.
   push:
-    branches: ['master', 'native/**']
+    branches: ['native/**']
     paths:
       - 'ios/**'
       - 'src/data/words.ts'

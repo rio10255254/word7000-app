@@ -678,9 +678,11 @@ struct SpeakingSessionView: View {
         let gloss = model.studyMode != .chinese
         return turns.enumerated().flatMap { item -> [SpeakingListenView.Line] in
             let card = SpeakingScenarios.card(item.element, mode: mode)
-            return [SpeakingListenView.Line(id: item.offset * 2, text: card.question, gloss: card.questionGloss ?? "", mine: false),
+            return [SpeakingListenView.Line(id: item.offset * 2, text: card.question, gloss: card.questionGloss ?? "", mine: false,
+                                            role: item.element.role.practised(mode == .english ? .chinese : .english)),
                     SpeakingListenView.Line(id: item.offset * 2 + 1, text: shadowSentence(card),
-                                            gloss: ShadowingCheck.sentence(from: card.referenceTranslation, chinese: gloss), mine: true)]
+                                            gloss: ShadowingCheck.sentence(from: card.referenceTranslation, chinese: gloss), mine: true,
+                                            role: L.t("我", "Me"))]
         }
     }
 

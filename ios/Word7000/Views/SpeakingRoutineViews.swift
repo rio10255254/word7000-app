@@ -62,8 +62,11 @@ struct SpeakingStepStrip: View {
     }
 }
 
-/// The first step: the whole conversation of the stage, read aloud line by
-/// line, the English big and the translation under it.
+/// The first step: the whole conversation of the stage as a chat room.
+/// The other person writes from the left with their face and name, the
+/// learner's lines arrive on the right; each line appears as it is read
+/// aloud, after a moment of "typing", and the play key sits where a chat's
+/// input bar would.
 struct SpeakingListenView: View {
     struct Line: Identifiable, Equatable {
         let id: Int
@@ -71,6 +74,8 @@ struct SpeakingListenView: View {
         let gloss: String
         /// Said by the learner's side (on the right).
         let mine: Bool
+        /// Who says it: the role (a waiter, the doctor), or "me".
+        var role: String = ""
     }
 
     @Environment(AppModel.self) private var model
@@ -80,47 +85,164 @@ struct SpeakingListenView: View {
     var language: String
     var onDone: () -> Void
 
+    @State private var shown = 0
+    @State private var typing = false
     @State private var playing: Int?
     @State private var playTask: Task<Void, Never>?
     @State private var played = false
 
+    private var partner: String { lines.first { !$0.mine }?.role ?? "" }
+
     var body: some View {
-        VStack(spacing: 14) {
-            RoutineCatLine(text: L.t("\(title)\n先聽一遍他們怎麼說。", "\(title)\nFirst, listen to how it goes."),
-                           mood: played ? .happy : .thinking)
+        VStack(spacing: 0) {
+            chatHeader
             ScrollViewReader { proxy in
                 ScrollView {
-                    VStack(spacing: 10) {
-                        ForEach(lines) { line in
-                            bubble(line).id(line.id)
+                    VStack(spacing: 12) {
+                        Text(L.t("先聽一遍他們怎麼說", "First, listen to how it goes"))
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(Palette.secondaryLabel)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 5)
+                            .background(Palette.fill, in: Capsule())
+                            .padding(.top, 8)
+                        ForEach(lines.prefix(shown)) { line in
+                            bubble(line)
+                                .id(line.id)
+                                .transition(reduceMotion ? .opacity : .asymmetric(insertion: .move(edge: .bottom).combined(with: .opacity), removal: .opacity))
                         }
+                        if typing { typingBubble.id("typing").transition(.opacity) }
                     }
-                    .padding(.vertical, 4)
+                    .padding(.horizontal, 4)
+                    .padding(.bottom, 12)
                 }
+                .onChange(of: shown) { _, _ in scrollToEnd(proxy) }
+                .onChange(of: typing) { _, _ in scrollToEnd(proxy) }
                 .onChange(of: playing) { _, now in
                     guard let now else { return }
                     withAnimation(reduceMotion ? nil : .easeOut(duration: 0.3)) { proxy.scrollTo(now, anchor: .center) }
                 }
             }
-            VStack(spacing: 6) {
-                Button(action: togglePlayback) {
-                    Image(systemName: playTask == nil ? (played ? "arrow.counterclockwise" : "play.fill") : "stop.fill")
-                        .font(.system(size: 34, weight: .bold))
-                        .foregroundStyle(.white)
-                        .contentTransition(.symbolEffect(.replace))
-                        .frame(width: 88, height: 88)
-                        .background(Circle().fill(Palette.accent))
-                        .shadow(color: Palette.accent.opacity(0.35), radius: 10, y: 5)
-                }
-                .buttonStyle(SoftPressStyle())
-                .accessibilityLabel(playTask == nil ? L.t("播放對話", "Play the conversation") : L.t("停止", "Stop"))
-                .accessibilityIdentifier("speaking-listen-play")
-                Text(playTask == nil ? (played ? L.t("再聽一次", "Again") : L.t("播放對話", "Play it")) : L.t("播放中…", "Playing…"))
-                    .font(.headline)
-                    .foregroundStyle(Palette.accent)
+            inputBar
+        }
+        .task {
+            // Read aloud by itself, as the stage's lines always were (Settings → Reading voice).
+            guard !AppRuntime.uiTesting, model.settings.speech?.autoReadQuestions ?? true else {
+                shown = lines.count
+                return
             }
+            try? await Task.sleep(for: .milliseconds(500))
+            if playTask == nil, !played { togglePlayback() }
+        }
+        .onDisappear { stopPlayback() }
+    }
+
+    /// Who the learner is talking to, like the top of a chat.
+    private var chatHeader: some View {
+        HStack(spacing: 10) {
+            avatar(partner, size: 40)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(partner.isEmpty ? title : partner)
+                    .font(.display(.headline, weight: .bold))
+                    .foregroundStyle(Palette.ink)
+                Text(title)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Palette.secondaryLabel)
+                    .lineLimit(1)
+            }
+            Spacer(minLength: 0)
+            if playTask != nil {
+                Label(L.t("對話中", "Talking"), systemImage: "waveform")
+                    .font(.caption.weight(.bold))
+                    .foregroundStyle(TodayView.speakingTint)
+                    .symbolEffect(.variableColor.iterative, isActive: !reduceMotion)
+            }
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .background { PremiumSurface(radius: 18) }
+    }
+
+    private func avatar(_ name: String, size: CGFloat) -> some View {
+        Text(String(name.prefix(1)))
+            .font(.system(size: size * 0.42, weight: .heavy))
+            .foregroundStyle(.white)
+            .frame(width: size, height: size)
+            .background(Circle().fill(LinearGradient(colors: [Palette.review.opacity(0.85), Palette.accent], startPoint: .topLeading, endPoint: .bottomTrailing)))
+            .overlay(Circle().strokeBorder(.white.opacity(0.7), lineWidth: 2))
+            .accessibilityHidden(true)
+    }
+
+    private func bubble(_ line: Line) -> some View {
+        let speaking = playing == line.id
+        let shape = UnevenRoundedRectangle(topLeadingRadius: line.mine ? 20 : 6, bottomLeadingRadius: 20,
+                                           bottomTrailingRadius: 20, topTrailingRadius: line.mine ? 6 : 20, style: .continuous)
+        return HStack(alignment: .top, spacing: 8) {
+            if line.mine { Spacer(minLength: 44) } else { avatar(line.role, size: 32) }
+            VStack(alignment: .leading, spacing: 4) {
+                Text(line.text)
+                    .font(.title3.weight(.semibold))
+                    .foregroundStyle(line.mine ? .white : Palette.ink)
+                if !line.gloss.isEmpty {
+                    Text(line.gloss)
+                        .font(.subheadline)
+                        .foregroundStyle(line.mine ? Color.white.opacity(0.85) : Palette.secondaryLabel)
+                }
+            }
+            .multilineTextAlignment(.leading)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 11)
+            .background {
+                shape.fill(line.mine ? TodayView.speakingTint : Palette.surface)
+                    .shadow(color: .black.opacity(0.08), radius: 3, y: 2)
+            }
+            .overlay { shape.strokeBorder(speaking ? Palette.accent : .clear, lineWidth: 2) }
+            .scaleEffect(speaking && !reduceMotion ? 1.02 : 1)
+            .animation(reduceMotion ? nil : Motion.press, value: speaking)
+            if !line.mine { Spacer(minLength: 44) }
+        }
+        .accessibilityElement(children: .combine)
+    }
+
+    /// The other person typing: three dots.
+    private var typingBubble: some View {
+        HStack(alignment: .top, spacing: 8) {
+            avatar(partner, size: 32)
+            HStack(spacing: 5) {
+                ForEach(0..<3, id: \.self) { dot in
+                    Circle()
+                        .fill(Palette.tertiaryLabel)
+                        .frame(width: 8, height: 8)
+                        .phaseAnimator([0.3, 1.0]) { content, phase in content.opacity(phase) } animation: { _ in
+                            .easeInOut(duration: 0.45).delay(Double(dot) * 0.15)
+                        }
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .background(Palette.surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+            Spacer(minLength: 0)
+        }
+    }
+
+    /// Where a chat's input bar would be: play it again, or go on.
+    private var inputBar: some View {
+        HStack(spacing: 12) {
+            Button(action: togglePlayback) {
+                Image(systemName: playTask == nil ? (played ? "arrow.counterclockwise" : "play.fill") : "stop.fill")
+                    .font(.system(size: 22, weight: .bold))
+                    .foregroundStyle(.white)
+                    .contentTransition(.symbolEffect(.replace))
+                    .frame(width: 56, height: 56)
+                    .background(Circle().fill(Palette.accent))
+                    .shadow(color: Palette.accent.opacity(0.35), radius: 6, y: 3)
+            }
+            .buttonStyle(SoftPressStyle())
+            .accessibilityLabel(playTask == nil ? L.t("播放對話", "Play the conversation") : L.t("停止", "Stop"))
+            .accessibilityIdentifier("speaking-listen-play")
             Button {
                 stopPlayback()
+                shown = lines.count
                 onDone()
             } label: {
                 HStack(spacing: 8) {
@@ -131,65 +253,45 @@ struct SpeakingListenView: View {
                 .frame(maxWidth: .infinity)
             }
             .prominentAction(tint: TodayView.speakingTint)
-            .padding(.bottom, 4)
             .accessibilityIdentifier("speaking-listen-done")
         }
-        .task {
-            // Read aloud by itself, as the stage's lines always were (Settings → Reading voice).
-            guard !AppRuntime.uiTesting, model.settings.speech?.autoReadQuestions ?? true else { return }
-            try? await Task.sleep(for: .milliseconds(700))
-            if playTask == nil, !played { togglePlayback() }
-        }
-        .onDisappear { stopPlayback() }
+        .padding(.top, 10)
+        .padding(.bottom, 4)
     }
 
-    private func bubble(_ line: Line) -> some View {
-        let speaking = playing == line.id
-        return HStack {
-            if line.mine { Spacer(minLength: 36) }
-            VStack(alignment: .leading, spacing: 4) {
-                Text(line.text)
-                    .font(.title3.weight(.semibold))
-                    .foregroundStyle(Palette.ink)
-                if !line.gloss.isEmpty {
-                    Text(line.gloss)
-                        .font(.subheadline)
-                        .foregroundStyle(Palette.secondaryLabel)
-                }
-            }
-            .multilineTextAlignment(.leading)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 12)
-            .background(line.mine ? TodayView.speakingTint.opacity(0.16) : Palette.surface,
-                        in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-            .overlay {
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .strokeBorder(speaking ? Palette.accent : .clear, lineWidth: 2)
-            }
-            .scaleEffect(speaking && !reduceMotion ? 1.02 : 1)
-            .animation(reduceMotion ? nil : Motion.press, value: speaking)
-            if !line.mine { Spacer(minLength: 36) }
-        }
-        .accessibilityElement(children: .combine)
+    private func scrollToEnd(_ proxy: ScrollViewProxy) {
+        let last: AnyHashable = typing ? AnyHashable("typing") : AnyHashable(lines.prefix(shown).last?.id ?? 0)
+        withAnimation(reduceMotion ? nil : .easeOut(duration: 0.3)) { proxy.scrollTo(last, anchor: .bottom) }
     }
 
     private func togglePlayback() {
         if playTask != nil { stopPlayback(); return }
         let preferences = model.settings.speech ?? SpeechPreferences()
+        let replay = shown >= lines.count
         playTask = Task { @MainActor in
-            for line in lines {
+            for (index, line) in lines.enumerated() {
                 guard !Task.isCancelled else { break }
+                if !replay, index >= shown {
+                    // The other person types for a moment before their line arrives.
+                    if !line.mine, !reduceMotion {
+                        withAnimation { typing = true }
+                        try? await Task.sleep(for: .milliseconds(700))
+                        guard !Task.isCancelled else { break }
+                        withAnimation { typing = false }
+                    }
+                    withAnimation(reduceMotion ? nil : .spring(duration: 0.35)) { shown = index + 1 }
+                }
                 playing = line.id
                 Speaker.shared.speak(line.text, language: language, preferences: preferences)
-                // Until the line has been said (or stopped), then a breath.
                 for _ in 0..<200 {
                     do { try await Task.sleep(for: .milliseconds(150)) } catch { break }
                     if Speaker.shared.activeText != line.text { break }
                 }
                 guard !Task.isCancelled else { break }
-                try? await Task.sleep(for: .milliseconds(350))
+                try? await Task.sleep(for: .milliseconds(300))
             }
             if !Task.isCancelled { played = true }
+            typing = false
             playing = nil
             playTask = nil
         }
@@ -199,7 +301,9 @@ struct SpeakingListenView: View {
         playTask?.cancel()
         playTask = nil
         playing = nil
+        typing = false
         Speaker.shared.stop()
+        shown = lines.count
     }
 }
 

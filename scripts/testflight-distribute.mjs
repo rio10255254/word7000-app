@@ -90,10 +90,16 @@ if (!group && args['create-group'] === 'yes') {
   if (process.env.GITHUB_ACTIONS) console.log(`::notice::Created the TestFlight group "${args.group}". Add testers, or turn on its public link, in App Store Connect.`);
 }
 if (!group) throw new Error(`No TestFlight group named "${args.group}"`);
-// Adding a build the group already has is fine.
-await api('POST', `/v1/betaGroups/${group.id}/relationships/builds`, { data: [{ type: 'builds', id: build.id }] })
-  .catch((error) => { if (error.status !== 409) throw error; });
-console.log(`Added to "${args.group}".`);
+if (group.attributes.isInternalGroup && group.attributes.hasAccessToAllBuilds) {
+  // An internal group with access to all builds already has it; Apple refuses
+  // to add a build to one by hand (422 "Cannot add internal group to a build").
+  console.log(`"${args.group}" is an internal group with access to all builds: it has this build already.`);
+} else {
+  // Adding a build the group already has is fine.
+  await api('POST', `/v1/betaGroups/${group.id}/relationships/builds`, { data: [{ type: 'builds', id: build.id }] })
+    .catch((error) => { if (error.status !== 409) throw error; });
+  console.log(`Added to "${args.group}".`);
+}
 
 // 4. External groups need Beta App Review; later builds of an approved
 // version usually pass at once. Already submitted is fine.

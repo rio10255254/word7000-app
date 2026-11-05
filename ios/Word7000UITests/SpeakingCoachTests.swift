@@ -397,12 +397,22 @@ final class SpeakingCoachTests: XCTestCase {
         settle(answer)
         answer.typeText(text)
         // The accessibility value can lag the final keyboard event on older
-        // simulators. Keep the exact-text assertion; never retry the keystroke.
-        // Read the value itself until it matches: a predicate expectation on
-        // the element can miss an update that a fresh read sees.
-        let deadline = Date().addingTimeInterval(6)
-        while answer.value as? String != text, Date() < deadline { Thread.sleep(forTimeInterval: 0.25) }
+        // simulators. Read the value itself until it matches: a predicate
+        // expectation on the element can miss an update that a fresh read sees.
+        waitForValue(text, of: answer)
+        // The iOS 18 simulator can also drop the last keystrokes outright
+        // ("I practice dai"). Type only what is missing, never the whole text
+        // again, so nothing can be doubled; the exact-text assertion stays.
+        if let typed = answer.value as? String, typed != text, text.hasPrefix(typed) {
+            answer.typeText(String(text.dropFirst(typed.count)))
+            waitForValue(text, of: answer)
+        }
         XCTAssertEqual(answer.value as? String, text)
+    }
+
+    private func waitForValue(_ text: String, of element: XCUIElement) {
+        let deadline = Date().addingTimeInterval(6)
+        while element.value as? String != text, Date() < deadline { Thread.sleep(forTimeInterval: 0.25) }
     }
 
     /// Waits for the notepad to stop moving (the page scrolls it above the

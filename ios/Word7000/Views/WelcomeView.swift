@@ -21,17 +21,34 @@ struct WelcomeView: View {
     @State private var picked: Int?
     @State private var vocabulary: PreparedVocabulary?
     @State private var testSeed = UUID().uuidString
-    var finish: (_ mode: StudyMode, _ target: Int, _ knownIds: [String], _ practice: Bool) -> Void
+    /// WordCat Next: who the learner is and what they want, and the words
+    /// spelled after the level test.
+    @State private var profile = LearnerProfile()
+    @State private var spellWords: [WordEntry] = []
+    @State private var spellIndex = 0
+    @State private var spellAttempt: ClozeAttempt?
+    @State private var spellInput = ""
+    @State private var spellOutcomes: [String: ClozeRound.Outcome] = [:]
+    @State private var spellMisses = 0
+    @State private var thinkingLines = 0
+    @FocusState private var spellFocused: Bool
+    var finish: (_ mode: StudyMode, _ target: Int, _ knownIds: [String], _ learningIds: [String], _ practice: Bool) -> Void
 
-    enum Step: Int, CaseIterable { case hello, exam, goal, lead, words, test, result }
+    enum Step: Int, CaseIterable { case hello, stage, exam, focus, goal, words, testIntro, test, spell, thinking, result }
 
-    /// The scenes in order. WordCat Next asks about the exam (learners of
-    /// English) and which pillar comes first, then tests the level; the
+    /// The scenes in order. WordCat Next gets to know the learner of English
+    /// (school, exam, what to get better at, how much a day), tests the
+    /// level by meanings and then by spelling, and ends with a plan; the
     /// older welcome has three scenes.
     private var flow: [Step] {
         guard AppRuntime.labOnboarding else { return [.hello, .goal, .words] }
-        return mode == .english ? [.hello, .exam, .goal, .lead, .test, .result] : [.hello, .goal, .lead, .test, .result]
+        return mode == .english
+            ? [.hello, .stage, .exam, .focus, .goal, .testIntro, .test, .spell, .thinking, .result]
+            : [.hello, .focus, .goal, .testIntro, .test, .thinking, .result]
     }
+
+    /// Scenes that cannot be gone back from: a test under way, the result.
+    private var lockedSteps: Set<Step> { [.hello, .test, .spell, .thinking, .result] }
 
     private var position: Int { flow.firstIndex(of: step) ?? 0 }
 
@@ -52,11 +69,15 @@ struct WelcomeView: View {
                     Group {
                         switch step {
                         case .hello: hello
+                        case .stage: stageQuestion
                         case .exam: examQuestion
+                        case .focus: focusQuestion
                         case .goal: goal
-                        case .lead: leadQuestion
                         case .words: words
+                        case .testIntro: testIntro
                         case .test: placementTest
+                        case .spell: spellCheck
+                        case .thinking: thinking
                         case .result: result
                         }
                     }
@@ -111,8 +132,8 @@ struct WelcomeView: View {
                     .contentShape(Rectangle())
             }
             // No going back from the result, or into a test already under way.
-            .opacity(step == .hello || step == .result ? 0 : 1)
-            .disabled(step == .hello || step == .result)
+            .opacity(lockedSteps.contains(step) ? 0 : 1)
+            .disabled(lockedSteps.contains(step))
             .accessibilityLabel(text("上一步", "Back"))
             Spacer()
             HStack(spacing: 6) {
@@ -173,6 +194,7 @@ struct WelcomeView: View {
         test = PlacementTest()
         question = nil
         vocabulary = nil
+        profile = LearnerProfile()
         advance()
     }
 
@@ -223,14 +245,14 @@ struct WelcomeView: View {
                 }
             }
             VStack(spacing: 10) {
-                Button { finish(mode, target, Array(known), true) } label: {
+                Button { finish(mode, target, Array(known), [], true) } label: {
                     Label(text("開始，先背 5 個", "Start with 5 words"), systemImage: "arrow.right")
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                 }
                 .prominentAction()
                 .accessibilityIdentifier("welcome-start")
-                Button(text("先逛逛字庫", "Look around first")) { finish(mode, target, Array(known), false) }
+                Button(text("先逛逛字庫", "Look around first")) { finish(mode, target, Array(known), [], false) }
                     .font(.subheadline.weight(.semibold))
                     .frame(minHeight: 44)
                     .accessibilityIdentifier("welcome-skip")
@@ -275,31 +297,128 @@ struct WelcomeView: View {
         }
     }
 
-    // MARK: WordCat Next: which pillar first
+    // MARK: WordCat Next: who you are
 
-    private var leadQuestion: some View {
+    private static let stages: [(stage: LearnerProfile.Stage, icon: String, zh: String, en: String)] = [
+        (.juniorHigh, "backpack.fill", "國中生", "Junior high"), (.senior1, "1.circle.fill", "高一", "Senior high, year 1"),
+        (.senior2, "2.circle.fill", "高二", "Senior high, year 2"), (.senior3, "3.circle.fill", "高三", "Senior high, year 3"),
+        (.university, "building.columns.fill", "大學生", "University"), (.working, "briefcase.fill", "上班族", "Working"),
+    ]
+
+    private var stageQuestion: some View {
         VStack(spacing: 18) {
             CatLine(mood: .happy, hop: hop,
-                    text: text("想先練單字，還是先練口說？兩個每天都會有，先選的排在今天的路最前面。",
-                               "Words first, or speaking? You'll get both every day; the one you pick comes first on today's path."))
-            HStack(spacing: 14) {
-                PillarChoice(icon: "rectangle.on.rectangle.angled", title: text("先背單字", "Words first"),
-                             detail: text("翻卡・拼字・考考看", "Cards, spelling, quiz"), tint: Palette.accent,
-                             selected: model.settings.homeLead != .speaking) { lead(.words) }
-                    .accessibilityIdentifier("welcome-lead-words")
-                PillarChoice(icon: "mic.fill", title: text("先練口說", "Speaking first"),
-                             detail: text("聽・跟讀・回答", "Listen, repeat, answer"), tint: TodayView.speakingTint,
-                             selected: model.settings.homeLead == .speaking) { lead(.speaking) }
-                    .accessibilityIdentifier("welcome-lead-speaking")
+                    text: text("先認識一下：你現在是？我會從適合你的程度開始考。", "First, who are you? I'll start the test at your level."))
+            LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
+                ForEach(Self.stages, id: \.stage) { item in
+                    TileChoice(icon: item.icon, title: text(item.zh, item.en), selected: profile.stage == item.stage) {
+                        withAnimation(reduceMotion ? nil : Motion.pop) { profile.stage = item.stage }
+                        // The exam most at this stage prepare for, and a test that starts nearer their level.
+                        if let suggested = WelcomeExam(rawValue: item.stage.suggestedExam) {
+                            exam = suggested
+                            CatMemory.shared.examDate = suggested.date(after: Date())
+                        }
+                        test = PlacementTest(start: item.stage.testStart)
+                        question = nil
+                        Task {
+                            try? await Task.sleep(for: .milliseconds(reduceMotion ? 100 : 350))
+                            advance()
+                        }
+                    }
+                    .accessibilityIdentifier("welcome-stage-\(item.stage.rawValue)")
+                }
             }
         }
     }
 
-    private func lead(_ pillar: Pillar) {
-        withAnimation(reduceMotion ? nil : Motion.pop) { model.settings.homeLead = pillar }
-        Task {
-            try? await Task.sleep(for: .milliseconds(reduceMotion ? 100 : 350))
-            advance()
+    // MARK: WordCat Next: what to get better at
+
+    private static let focuses: [(focus: LearnerProfile.Focus, icon: String, zh: String, zhDetail: String, en: String, enDetail: String)] = [
+        (.vocabulary, "books.vertical.fill", "單字量", "每天多學一點新字", "More words", "A few more new words a day"),
+        (.spelling, "pencil.line", "拼字", "翻卡後多抽幾個字拼給我看", "Spelling", "More words to spell after the cards"),
+        (.exam, "checklist", "考試題型", "多做學測題型的題目", "Exam questions", "More exam-style questions"),
+        (.speaking, "mic.fill", "口說", "每天先練口說", "Speaking", "Speaking first every day"),
+    ]
+
+    private var focusQuestion: some View {
+        VStack(spacing: 18) {
+            CatLine(mood: .thinking, hop: hop,
+                    text: text("最想加強什麼？最多選兩個，我照這個排你每天的路線。", "What do you most want to get better at? Pick up to two; I'll plan your days around it."))
+            VStack(spacing: 12) {
+                ForEach(Self.focuses, id: \.focus) { item in
+                    ChoiceCard(icon: item.icon, title: text(item.zh, item.en), detail: text(item.zhDetail, item.enDetail),
+                               selected: profile.focus.contains(item.focus)) {
+                        withAnimation(reduceMotion ? nil : Motion.pop) { profile.toggle(item.focus) }
+                    }
+                    .accessibilityIdentifier("welcome-focus-\(item.focus.rawValue)")
+                }
+            }
+            Button {
+                model.settings.homeLead = profile.lead
+                target = profile.suggestedTarget
+                advance()
+            } label: {
+                Label(profile.focus.isEmpty ? text("都可以，下一步", "Anything, next") : text("下一步", "Next"), systemImage: "arrow.right")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+            }
+            .prominentAction()
+            .accessibilityIdentifier("welcome-focus-next")
+        }
+        .sensoryFeedback(.selection, trigger: profile.focus)
+    }
+
+    // MARK: WordCat Next: before the test
+
+    private var testIntro: some View {
+        VStack(spacing: 22) {
+            Mascot(mood: .smug, size: 104, hop: hop).popIn()
+            Text(text("最後，兩分鐘小測驗", "Last, a two-minute check"))
+                .font(.display(.title2, weight: .bold))
+                .multilineTextAlignment(.center)
+            VStack(alignment: .leading, spacing: 14) {
+                introRow("eye.fill", text("看字選意思", "Pick the meaning"),
+                         text("答對我就出難一點，答錯就簡單一點", "Right, and the next is harder; wrong, and it is easier"))
+                if mode == .english {
+                    introRow("pencil.line", text("拼 3 個字", "Spell three words"),
+                             text("認得不代表拼得出來，我要看你寫", "Knowing a word is not spelling it"))
+                }
+                introRow("map.fill", text("排出你的路線", "Your plan"),
+                         text("從第幾章開始、每天練什麼", "Where to start and what to practise"))
+            }
+            .padding(18)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background { HomeSurface(radius: 22) }
+            VStack(spacing: 10) {
+                Button { advance() } label: {
+                    Label(text("開始測驗", "Start the check"), systemImage: "arrow.right")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                }
+                .prominentAction()
+                .accessibilityIdentifier("welcome-test-start")
+                Button(text("跳過，從第 1 章開始", "Skip it and start at chapter 1")) {
+                    test = PlacementTest()
+                    go(.thinking)
+                }
+                .font(.subheadline.weight(.semibold))
+                .frame(minHeight: 44)
+                .accessibilityIdentifier("welcome-test-intro-skip")
+            }
+        }
+    }
+
+    private func introRow(_ icon: String, _ title: String, _ detail: String) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: icon)
+                .font(.headline)
+                .foregroundStyle(.white)
+                .frame(width: 36, height: 36)
+                .background(Palette.accent.gradient, in: Circle())
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title).font(.headline).foregroundStyle(Palette.ink)
+                Text(detail).font(.subheadline).foregroundStyle(.secondary)
+            }
         }
     }
 
@@ -308,7 +427,7 @@ struct WelcomeView: View {
     private var placementTest: some View {
         VStack(spacing: 18) {
             CatLine(mood: picked == nil ? .thinking : question.map { picked == $0.answerIndex } == true ? .cheer : .encourage, hop: hop,
-                    text: text("這個字是什麼意思？不知道就選「不知道」，不扣分。", "What does this word mean? Pick \u{201C}Don't know\u{201D} if you don't; it costs nothing."))
+                    text: testLine)
             if let question {
                 VStack(spacing: 6) {
                     Text(text("第 \(question.level) 章・Core \(question.level)", "Chapter \(question.level) · Core \(question.level)"))
@@ -364,7 +483,7 @@ struct WelcomeView: View {
             }
             Button(text("跳過測驗，從第 1 章開始", "Skip the test and start at chapter 1")) {
                 test = PlacementTest()
-                go(.result)
+                go(.thinking)
             }
             .font(.subheadline.weight(.semibold))
             .frame(minHeight: 44)
@@ -375,6 +494,18 @@ struct WelcomeView: View {
             guard let new, let question else { return nil }
             return new == question.answerIndex ? .success : .error
         }
+    }
+
+    /// The cat follows the test as it moves: harder after a right answer,
+    /// easier after a miss, as the level is found.
+    private var testLine: String {
+        guard let last = test.answers.last else {
+            return text("這個字是什麼意思？不知道就選「不知道」，不扣分。", "What does this word mean? Pick \u{201C}Don't know\u{201D} if you don't; it costs nothing.")
+        }
+        if test.turns >= 2 { return text("差不多抓到你的程度了，再幾題。", "I've nearly got your level. A few more.") }
+        return last.knew
+            ? text("不錯喔，下一個難一點。", "Nice. The next one is harder.")
+            : text("沒關係，換簡單一點的。", "That's fine. An easier one.")
     }
 
     private func optionFill(_ index: Int, _ question: PlacementQuestion) -> Color {
@@ -410,7 +541,7 @@ struct WelcomeView: View {
             }
             return
         }
-        go(.result)
+        advance()
     }
 
     /// An answer (nil: don't know): shown for a moment, then the next word.
@@ -429,19 +560,201 @@ struct WelcomeView: View {
     private func advanceTest() {
         if test.isFinished {
             Usage.log("placement_test", "\(mode.rawValue).\(test.asked).\(test.startChapter)")
-            go(.result)
+            advance()
         } else {
             nextQuestion()
         }
     }
 
+    // MARK: WordCat Next: three words to spell
+
+    private var spellCheck: some View {
+        VStack(spacing: 16) {
+            if spellWords.indices.contains(spellIndex), let attempt = spellAttempt,
+               let sentence = Cloze.sentence(for: spellWords[spellIndex]) {
+                let word = spellWords[spellIndex]
+                CatLine(mood: attempt.solved ? .cheer : spellMisses > 0 ? .encourage : .thinking, hop: hop,
+                        text: spellLine(word, attempt))
+                Text(text("拼字 \(spellIndex + 1)/\(spellWords.count)", "Spelling \(spellIndex + 1)/\(spellWords.count)"))
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(Palette.accent)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 5)
+                    .background(Palette.accent.opacity(0.12), in: Capsule())
+                    .accessibilityIdentifier("welcome-spell-position")
+                ClozeCard(word: word, sentence: sentence, attempt: attempt, input: spellInput, comeBack: nil)
+                    .id(word.id)
+                TextField(text("輸入英文單字", "Type the English word"), text: Binding(
+                    get: { spellInput },
+                    set: { if !attempt.solved && !attempt.answerShown { spellInput = $0 } }
+                ))
+                .font(.title.weight(.semibold))
+                .multilineTextAlignment(.center)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .keyboardType(.asciiCapable)
+                .submitLabel(.done)
+                .focused($spellFocused)
+                .onSubmit { checkSpelling() }
+                .padding(.vertical, 12)
+                .padding(.horizontal, 16)
+                .background(Palette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .stroke(spellFocused ? Palette.accent.opacity(0.45) : .clear, lineWidth: 2))
+                .accessibilityIdentifier("welcome-spell-input")
+                ButtonRow {
+                    Button { giveUpSpelling() } label: {
+                        Text(text("不會", "Don't know")).font(.headline).frame(maxWidth: .infinity)
+                    }
+                    .secondaryAction()
+                    .disabled(attempt.solved || attempt.answerShown)
+                    .accessibilityIdentifier("welcome-spell-unknown")
+                    Button { checkSpelling() } label: {
+                        Text(text("檢查", "Check")).font(.headline).frame(maxWidth: .infinity)
+                    }
+                    .prominentAction()
+                    .disabled(spellInput.trimmed.isEmpty || attempt.solved || attempt.answerShown)
+                    .accessibilityIdentifier("welcome-spell-check")
+                }
+            } else {
+                ProgressView().frame(minHeight: 200)
+            }
+        }
+        .onAppear {
+            guard spellAttempt == nil else { return }
+            let words = model.englishCoreWords
+            spellWords = test.spellingWords(from: words, count: 3, seed: testSeed)
+            spellOutcomes = [:]
+            loadSpelling(0)
+        }
+        .sensoryFeedback(trigger: spellAttempt?.solved) { _, solved in solved == true ? .success : nil }
+        .sensoryFeedback(.error, trigger: spellMisses)
+    }
+
+    private func spellLine(_ word: WordEntry, _ attempt: ClozeAttempt) -> String {
+        if attempt.solved { return attempt.outcome == .knew ? text("拼對了！", "Spot on!") : text("對了，差一點點。", "Right, nearly.") }
+        if attempt.answerShown { return text("是「\(attempt.answer)」，記一下。", "It's \u{201C}\(attempt.answer)\u{201D}. Remember it.") }
+        if spellMisses > 0 { return text("不太對，再試一次。", "Not quite. Try again.") }
+        let cue = Cloze.cue(for: word)?.cue ?? ChineseDisplay.conciseMeaning(word.meaningZh)
+        return text("「\(cue)」英文怎麼拼？", "How do you spell \u{201C}\(cue)\u{201D}?")
+    }
+
+    private func loadSpelling(_ index: Int) {
+        spellIndex = index
+        spellInput = ""
+        spellMisses = 0
+        guard spellWords.indices.contains(index), let sentence = Cloze.sentence(for: spellWords[index]) else {
+            spellAttempt = nil
+            advance()
+            return
+        }
+        spellAttempt = ClozeAttempt(answer: sentence.answer)
+        Task {
+            try? await Task.sleep(for: .milliseconds(350))
+            spellFocused = true
+        }
+    }
+
+    /// Two tries: a slip the first time is fine, a second miss shows the word.
+    private func checkSpelling() {
+        guard var attempt = spellAttempt, !attempt.solved, !attempt.answerShown, !spellInput.trimmed.isEmpty else { return }
+        attempt.submit(spellInput)
+        if attempt.solved {
+            withAnimation(reduceMotion ? nil : Motion.pop) { spellAttempt = attempt }
+            finishSpelling(attempt.outcome ?? .missed)
+        } else if attempt.misses >= 2 {
+            while attempt.nextHelp != nil { attempt.takeHelp() }
+            withAnimation(reduceMotion ? nil : Motion.reveal) { spellAttempt = attempt }
+            spellMisses += 1
+            finishSpelling(.missed)
+        } else {
+            withAnimation(reduceMotion ? nil : Motion.reveal) { spellAttempt = attempt }
+            spellMisses += 1
+            spellInput = ""
+        }
+    }
+
+    private func giveUpSpelling() {
+        guard var attempt = spellAttempt, !attempt.solved else { return }
+        while attempt.nextHelp != nil { attempt.takeHelp() }
+        withAnimation(reduceMotion ? nil : Motion.reveal) { spellAttempt = attempt }
+        finishSpelling(.missed)
+    }
+
+    private func finishSpelling(_ outcome: ClozeRound.Outcome) {
+        let word = spellWords[spellIndex]
+        spellOutcomes[word.id] = outcome
+        let index = spellIndex
+        Task {
+            try? await Task.sleep(for: .milliseconds(outcome == .missed ? 1400 : 700))
+            guard spellIndex == index else { return }
+            if index + 1 < spellWords.count {
+                withAnimation(reduceMotion ? nil : Motion.reveal) { loadSpelling(index + 1) }
+            } else {
+                profile.recordSpelling(Array(spellOutcomes.values))
+                spellFocused = false
+                advance()
+            }
+        }
+    }
+
+    // MARK: WordCat Next: the cat works it out
+
+    private var thinking: some View {
+        let lines = mode == .english
+            ? [text("看你認得哪些字", "Which words you know"), text("看你拼得出幾個", "How many you can spell"), text("排好你每天的路線", "Planning your days")]
+            : [text("看你認得哪些字", "Which words you know"), text("排好你每天的路線", "Planning your days")]
+        return VStack(spacing: 26) {
+            Mascot(mood: .thinking, size: 120, hop: hop).popIn()
+            Text(text("傻貓在算……", "Silly Cat is working it out…"))
+                .font(.display(.title2, weight: .bold))
+            VStack(alignment: .leading, spacing: 14) {
+                ForEach(Array(lines.enumerated()), id: \.offset) { index, line in
+                    HStack(spacing: 12) {
+                        ZStack {
+                            if index < thinkingLines {
+                                Image(systemName: "checkmark.circle.fill").foregroundStyle(Palette.known)
+                                    .transition(.scale.combined(with: .opacity))
+                            } else {
+                                ProgressView().controlSize(.small)
+                            }
+                        }
+                        .font(.title3)
+                        .frame(width: 26)
+                        Text(line)
+                            .font(.headline)
+                            .foregroundStyle(index < thinkingLines ? Palette.ink : Palette.secondaryLabel)
+                    }
+                }
+            }
+            .padding(20)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background { HomeSurface(radius: 22) }
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("welcome-thinking")
+        .task {
+            thinkingLines = 0
+            let pause: Duration = reduceMotion || AppRuntime.uiTesting ? .milliseconds(250) : .milliseconds(750)
+            for count in 1...lines.count {
+                try? await Task.sleep(for: pause)
+                withAnimation(reduceMotion ? nil : Motion.pop) { thinkingLines = count }
+            }
+            try? await Task.sleep(for: pause)
+            advance()
+        }
+    }
+
     // MARK: WordCat Next: the result
+
+    private var plan: PersonalPlan {
+        PersonalPlan(test: test, profile: profile, target: target, daysToExam: CatMemory.shared.daysToExam)
+    }
 
     private var result: some View {
         let estimate = test.estimatedKnownWords
-        let chapter = test.answers.isEmpty ? 1 : test.startChapter
+        let plan = plan
         let shares = test.answers.isEmpty ? Array(repeating: 0.0, count: PlacementTest.topLevel) : test.levelShares
-        let reach = CatMemory.shared.daysToExam.map { PlacementTest.chaptersReached(from: chapter, wordsPerDay: target, days: $0) }
         return VStack(spacing: 18) {
             if !test.answers.isEmpty {
                 VStack(spacing: 2) {
@@ -458,24 +771,31 @@ struct WelcomeView: View {
                     }
                     .accessibilityElement(children: .combine)
                     .accessibilityIdentifier("welcome-result-estimate")
+                    if let spelling = profile.spelling {
+                        Text(spellingVerdict(spelling))
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                            .accessibilityIdentifier("welcome-result-spelling")
+                    }
                 }
                 .popIn()
             } else {
                 Mascot(mood: .happy, size: 96, hop: hop).popIn()
             }
-            ResultShelf(shares: shares, current: chapter - 1)
+            ResultShelf(shares: shares, current: plan.startChapter - 1)
                 .entrance(1)
-            CatLine(mood: .cheer, hop: hop, text: resultLine(chapter: chapter, reach: reach))
+            planCard(plan)
                 .entrance(2)
             VStack(spacing: 10) {
-                Button { finish(mode, target, test.knownIds, true) } label: {
+                Button { complete(practice: true) } label: {
                     Label(text("開始今天的單字", "Start today's words"), systemImage: "arrow.right")
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                 }
                 .prominentAction()
                 .accessibilityIdentifier("welcome-start")
-                Button(text("先逛逛字庫", "Look around first")) { finish(mode, target, test.knownIds, false) }
+                Button(text("先逛逛", "Look around first")) { complete(practice: false) }
                     .font(.subheadline.weight(.semibold))
                     .frame(minHeight: 44)
                     .accessibilityIdentifier("welcome-skip")
@@ -486,12 +806,65 @@ struct WelcomeView: View {
         .accessibilityIdentifier("welcome-result")
     }
 
-    private func resultLine(chapter: Int, reach: Int?) -> String {
-        let start = text("從第 \(chapter) 章開始。", "We start at chapter \(chapter).")
-        guard let reach, let exam, exam.date(after: Date()) != nil else {
-            return start + text("每天 \(target) 個，認得的字我就不再考你。", " \(target) a day; the ones you know, I won't ask again.")
+    private func spellingVerdict(_ spelling: Double) -> String {
+        switch spelling {
+        case ..<0.34: text("認得不少，但拼字要多練：先從低一章開始。", "You know plenty, but spelling needs work: we start a chapter lower.")
+        case ..<0.8: text("拼字還可以，我會多抽幾個給你寫。", "Spelling is fair; I'll ask you to spell a few more.")
+        default: text("拼字很穩，抽查會少一點。", "Your spelling is solid; fewer checks.")
         }
-        return start + text("每天 \(target) 個，\(exam.title)前可以讀到第 \(reach) 章。", " At \(target) a day you'll reach chapter \(reach) before the \(exam.title).")
+    }
+
+    /// The plan in the learner's own numbers, each line from an answer they gave.
+    private func planCard(_ plan: PersonalPlan) -> some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text(text("你的學習路線", "Your plan"))
+                .font(.display(.title3, weight: .heavy))
+                .foregroundStyle(Palette.ink)
+            planRow("book.fill", text("從第 \(plan.startChapter) 章開始", "Start at chapter \(plan.startChapter)"),
+                    text("太簡單的字直接跳過", "Words too easy for you are skipped"))
+            planRow("plus.circle.fill", text("每天 \(plan.newPerDay) 個新字", "\(plan.newPerDay) new words a day"),
+                    text("加上該複習的字", "plus the words due again"))
+            if mode == .english {
+                planRow("pencil.line", text("翻卡後拼 \(plan.spellChecks) 個、考 \(plan.examChecks) 題", "Then spell \(plan.spellChecks) and answer \(plan.examChecks)"),
+                        text("拼字穩了就少抽，滑掉了就多抽", "Fewer when spelling holds, more when it slips"))
+            }
+            planRow(plan.lead == .speaking ? "mic.fill" : "rectangle.on.rectangle.angled",
+                    plan.lead == .speaking ? text("每天先練口說", "Speaking first each day") : text("單字先，口說後", "Words first, then speaking"),
+                    text("兩個每天都有", "Both, every day"))
+            if let reach = plan.reachChapter, let exam, exam.date(after: Date()) != nil {
+                planRow("graduationcap.fill", text("\(exam.title)前讀到第 \(reach) 章", "Chapter \(reach) by the \(exam.title)"),
+                        text("照這個速度", "at this pace"))
+                    .accessibilityIdentifier("welcome-plan-reach")
+            }
+        }
+        .padding(18)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background { HomeSurface(radius: 22) }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("welcome-plan")
+    }
+
+    private func planRow(_ icon: String, _ title: String, _ detail: String) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: icon)
+                .font(.headline)
+                .foregroundStyle(Palette.accent)
+                .frame(width: 28)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(title).font(.headline).foregroundStyle(Palette.ink)
+                Text(detail).font(.footnote).foregroundStyle(.secondary)
+            }
+        }
+        .accessibilityElement(children: .combine)
+    }
+
+    /// Saves what was learned about the learner and starts. Words missed in
+    /// the spelling start as words being learned.
+    private func complete(practice: Bool) {
+        model.settings.learnerProfile = profile
+        model.settings.homeLead = profile.lead
+        let learning = spellOutcomes.filter { $0.value == .missed }.map(\.key)
+        finish(mode, target, test.knownIds, learning, practice)
     }
 }
 
@@ -800,40 +1173,35 @@ private struct ChoiceCard: View {
     }
 }
 
-/// Words or speaking first, as two tall cards.
-private struct PillarChoice: View {
+/// A short answer as a square tile, two to a row.
+private struct TileChoice: View {
     var icon: String
     var title: String
-    var detail: String
-    var tint: Color
     var selected: Bool
     var action: () -> Void
 
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 12) {
+            VStack(spacing: 10) {
                 Image(systemName: icon)
-                    .font(.system(size: 28, weight: .bold))
+                    .font(.system(size: 24, weight: .bold))
                     .foregroundStyle(.white)
-                    .frame(width: 68, height: 68)
-                    .background(tint.gradient, in: Circle())
+                    .frame(width: 52, height: 52)
+                    .background(Palette.accent.gradient, in: Circle())
                 Text(title)
-                    .font(.display(.title3, weight: .bold))
+                    .font(.display(.headline, weight: .bold))
                     .foregroundStyle(Palette.ink)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
-                Text(detail)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.8)
             }
-            .padding(.vertical, 22)
-            .padding(.horizontal, 10)
-            .frame(maxWidth: .infinity, minHeight: 190)
-            .background { HomeSurface(radius: 24) }
+            .padding(.vertical, 18)
+            .padding(.horizontal, 8)
+            .frame(maxWidth: .infinity, minHeight: 128)
+            .background { HomeSurface(radius: 22) }
             .overlay {
-                RoundedRectangle(cornerRadius: 24, style: .continuous)
-                    .strokeBorder(selected ? tint : .clear, lineWidth: 3)
+                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                    .strokeBorder(selected ? Palette.accent : .clear, lineWidth: 2.5)
             }
             .contentShape(Rectangle())
         }

@@ -28,11 +28,20 @@ public enum Placement {
     /// The words the learner said they know, marked known on sight. Not
     /// study: the day's goal and the streak are left as they were, and a
     /// word already met is left alone.
-    public static func apply(knownIds: [String], to state: ProgressState, today: String) -> ProgressState {
+    ///
+    /// WordCat Next: `learningIds` are words recognised but not spelled on
+    /// the first launch; they start as words being learned, due today, so
+    /// the first cards bring them back and the level estimate counts them as
+    /// not known yet.
+    public static func apply(knownIds: [String], learningIds: [String] = [], to state: ProgressState, today: String) -> ProgressState {
         var result = state
-        for id in knownIds where result.progress(for: id).status == .new {
+        for id in knownIds where result.progress(for: id).status == .new && !learningIds.contains(id) {
             let graded = LearningEngine.markKnown(result, wordId: id, today: today)
             result.words[id] = graded.words[id]
+        }
+        for id in learningIds where result.progress(for: id).status == .new {
+            let marked = LearningEngine.markReview(result, wordId: id, today: today)
+            result.words[id] = marked.words[id]
         }
         return result
     }

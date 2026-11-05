@@ -50,7 +50,10 @@ public struct WordRoutine: Codable, Equatable, Sendable {
     /// After the flip cards: picks the words to check. `canSpell` and
     /// `canExam` say whether a word can be asked that way (it has an example
     /// sentence with the word in it, and enough look-alike words to choose from).
+    /// `maxSpell` and `maxExam` come from the learner's profile
+    /// (`LearnerProfile.spellChecks`, `examChecks`).
     public mutating func planChecks(knownIds: [String], unsureIds: [String],
+                                    maxSpell: Int = WordRoutine.maxSpell, maxExam: Int = WordRoutine.maxExam,
                                     canSpell: (String) -> Bool, canExam: (String) -> Bool) {
         guard step == .flip else { return }
         self.knownIds = knownIds
@@ -61,8 +64,8 @@ public struct WordRoutine: Codable, Equatable, Sendable {
         // New words first: they are the ones the flip card alone vouches for.
         spellIds = young.filter(canSpell)
             .sorted { (stagesBefore[$0] ?? -1, order[$0] ?? 0) < (stagesBefore[$1] ?? -1, order[$1] ?? 0) }
-            .prefix(Self.maxSpell).map { $0 }
-        examIds = old.filter(canExam).sorted { (order[$0] ?? 0) < (order[$1] ?? 0) }.prefix(Self.maxExam).map { $0 }
+            .prefix(max(0, maxSpell)).map { $0 }
+        examIds = old.filter(canExam).sorted { (order[$0] ?? 0) < (order[$1] ?? 0) }.prefix(max(0, maxExam)).map { $0 }
         step = !spellIds.isEmpty ? .spell : !examIds.isEmpty ? .exam : .done
     }
 

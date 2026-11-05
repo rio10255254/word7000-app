@@ -168,12 +168,12 @@ struct RootView: View {
                 activity = .study
             } else { openRequestedPractice() }
         }) {
-            WelcomeView { mode, target, knownIds, practice in
+            WelcomeView { mode, target, knownIds, learningIds, practice in
                 model.settings.onboardingComplete = true
                 model.settings.guideActive = true
                 model.setStudyMode(mode)
                 model.setDailyTarget(target)
-                model.applyPlacement(knownIds: knownIds)
+                model.applyPlacement(knownIds: knownIds, learningIds: learningIds)
                 if practice { model.startStudySession(limit: 5) }
                 studyAfterWelcome = practice
                 if !practice { tab = .words }

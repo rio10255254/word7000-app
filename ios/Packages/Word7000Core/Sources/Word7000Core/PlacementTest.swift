@@ -31,6 +31,12 @@ public struct PlacementTest: Equatable, Sendable {
 
     public init() {}
 
+    /// A test that starts in `chapter`: from what the learner said about
+    /// school, so it reaches their level in fewer questions.
+    public init(start chapter: Int) {
+        level = min(Self.topLevel, max(1, chapter))
+    }
+
     public var asked: Int { answers.count }
 
     public var isFinished: Bool {
@@ -98,6 +104,25 @@ public struct PlacementTest: Equatable, Sendable {
                 : word.word.count <= 12 && word.word.allSatisfy(\.isLetter)
         }
         return SeededRandom.shuffle(candidates, seed: "\(seed):placement-test:\(level)").first
+    }
+
+    /// After the meanings, a few words to spell: from the chapter the test
+    /// settled on, single words with a sentence to blank and a Chinese cue,
+    /// none of them already asked.
+    public func spellingWords(from words: [WordEntry], count: Int = 3, seed: String) -> [WordEntry] {
+        let asked = Set(answers.map(\.wordId))
+        let chapter = answers.isEmpty ? 1 : startChapter
+        for level in [chapter, chapter - 1, chapter + 1, 1] where (1...Self.topLevel).contains(level) {
+            let candidates = words.filter { word in
+                LearningEngine.coreLevel(word.group) == level && !asked.contains(word.id)
+                    && word.word.count <= 10 && word.word.allSatisfy(\.isLetter)
+                    && Cloze.sentence(for: word) != nil && Cloze.cue(for: word) != nil
+            }
+            if candidates.count >= count {
+                return Array(SeededRandom.shuffle(candidates, seed: "\(seed):placement-spelling").prefix(count))
+            }
+        }
+        return []
     }
 
     /// How many chapters `wordsPerDay` new words a day covers in `days`.

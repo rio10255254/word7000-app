@@ -73,6 +73,10 @@ struct AppSettings: Codable, Equatable, Sendable {
     var homeShowsSpeaking: Bool?
     /// WordCat Next: the day today's stamp was last shown.
     var dayCompleteShownOn: String?
+    /// WordCat Next: what the first launch learned about the learner (school,
+    /// what they want to get better at, how well they spell), used to shape
+    /// each day's checks. Only added to; an older build drops it.
+    var learnerProfile: LearnerProfile?
 
     var speakingHistoryOwnerKey: String {
         Self.speakingHistoryKey(ownerId: localOwnerId, anonymous: localOwnerIsAnonymous)

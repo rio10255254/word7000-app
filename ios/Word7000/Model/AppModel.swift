@@ -593,10 +593,11 @@ final class AppModel {
 
     /// The words the learner said they know on the first launch count as
     /// known on sight, so new words start near their level.
-    func applyPlacement(knownIds: [String]) {
-        guard !knownIds.isEmpty else { return }
+    /// WordCat Next: words recognised but not spelled start as words being learned.
+    func applyPlacement(knownIds: [String], learningIds: [String] = []) {
+        guard !knownIds.isEmpty || !learningIds.isEmpty else { return }
         refreshToday()
-        progress = Placement.apply(knownIds: knownIds, to: progress, today: today)
+        progress = Placement.apply(knownIds: knownIds, learningIds: learningIds, to: progress, today: today)
         scheduleSave()
         Usage.log("placement", studyMode.rawValue)
     }
@@ -900,7 +901,9 @@ final class AppModel {
     /// After the flip cards: picks today's checks from the cards marked known.
     func planRoutineChecks() {
         guard var routine = activeRoutine, routine.step == .flip, let session = studySession, session.isComplete else { return }
+        let profile = settings.learnerProfile ?? LearnerProfile()
         routine.planChecks(knownIds: session.knownIds, unsureIds: session.reviewIds,
+                           maxSpell: profile.spellChecks, maxExam: profile.examChecks,
                            canSpell: { [self] id in word(id: id).flatMap { Cloze.sentence(for: $0) } != nil },
                            canExam: { [self] id in
                                guard let word = word(id: id), Cloze.sentence(for: word) != nil else { return false }
@@ -931,7 +934,13 @@ final class AppModel {
     func advanceRoutine() {
         guard var routine = activeRoutine else { return }
         switch routine.step {
-        case .spell: routine.finishSpell()
+        case .spell:
+            routine.finishSpell()
+            // The spelling score follows every routine, so tomorrow's checks
+            // grow when spelling slips and shrink when it is solid.
+            var profile = settings.learnerProfile ?? LearnerProfile()
+            profile.recordSpelling(Array(routine.spellResults.values))
+            settings.learnerProfile = profile
         case .exam: routine.finishExam()
         case .flip, .done: return
         }

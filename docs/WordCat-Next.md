@@ -240,7 +240,7 @@ App 本來就是 100% 原生 SwiftUI。`master` 另外保留了一份舊 React N
 
 1. 同一個 App、兩條主線：`master` 是 2.0.x，這個分支是 3.0.0，兩邊都可以各自發 TestFlight，這個分支不合併回 `master`（換線時除外）。
 2. 新的學習規則只寫 Swift（`Word7000Core`）。
-3. 研發版發給新的 `WordCat Lab` TestFlight 群組。
+3. 研發版發給新的 `WordCat Lab` TestFlight 群組，但要等正式線 2.0.2 (8) 送審上架告一段落、使用者說可以才發第一個 3.x。
 
 **待決定**
 

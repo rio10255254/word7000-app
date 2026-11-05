@@ -74,6 +74,9 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
     @ObservationIgnored private var lastChange = Date()
     @ObservationIgnored private var lastVoice = Date()
     @ObservationIgnored private var loudSince: Date?
+    /// How loud this voice is, so its pauses count as quiet even in a
+    /// noisy room; 0 until a voice was heard.
+    @ObservationIgnored private var voicePeak: Float = 0
     /// The room's own level, learned from the quietest moments; -1 until measured.
     @ObservationIgnored private var noiseFloor: Float = -1
     /// Apple's newer recognizer has this language on the phone: it listens live.
@@ -421,10 +424,15 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         noiseFloor += (level - noiseFloor) * (level < noiseFloor ? 0.5 : 0.003)
         let threshold = min(0.8, max(0.28, noiseFloor + 0.16))
         let now = Date()
-        guard level > threshold else { loudSince = nil; return }
+        // Once the voice is known, well below it (about 15 dB) is a pause,
+        // even where the room itself is loud.
+        voicePeak = max(voicePeak * 0.998, heardVoice ? level : 0)
+        let voiced = max(threshold, voicePeak - 0.3)
+        guard level > voiced else { loudSince = nil; return }
         if loudSince == nil { loudSince = now }
         if heardVoice || now.timeIntervalSince(loudSince ?? now) >= 0.06 {
             heardVoice = true
+            voicePeak = max(voicePeak, level)
             lastVoice = now
         }
     }
@@ -617,7 +625,7 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         file = nil
         store.reset(rate: 0)
         text = ""; segments = []; isFinal = false; hasRecording = false; seconds = 0
-        heardVoice = false; loudSince = nil; noiseFloor = -1; liveUpdates = 0
+        heardVoice = false; loudSince = nil; noiseFloor = -1; voicePeak = 0; liveUpdates = 0
         newText = ""; newSegments = []; oldText = ""; oldSegments = []; newUpdates = 0; oldUpdates = 0
         message = nil; level = 0; state = .idle
         if hadAudio { WordAudioSession.release() }

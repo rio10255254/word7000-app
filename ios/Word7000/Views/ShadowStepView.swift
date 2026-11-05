@@ -208,7 +208,11 @@ struct ShadowStepView: View {
                 guard listener.listening else { return }
                 let complete = check.map { $0.heardCount == $0.scoredCount && $0.scoredCount > 0 } ?? false
                 if complete, listener.quietFor > 0.35 { listener.stop(); return }
-                if listener.heardVoice, listener.silentFor > 1.2 { listener.stop(); return }
+                // The last character was reached, though some were missed on the way.
+                let lastScored = check?.units.last(where: \.scored)
+                let reachedEnd = lastScored.map { $0.mark != nil && $0.mark != .missed } ?? false
+                if reachedEnd, listener.quietFor > 0.6 { listener.stop(); return }
+                if listener.heardVoice, listener.silentFor > 1.0 { listener.stop(); return }
                 if listener.support == .live, !listener.text.isEmpty, listener.quietFor > 2.5 { listener.stop(); return }
                 if !listener.heardVoice, listener.text.isEmpty, listener.seconds > 8 { listener.stop(); return }
                 if listener.seconds > 30 { listener.stop(); return }

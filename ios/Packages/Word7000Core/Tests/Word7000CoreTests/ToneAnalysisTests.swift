@@ -109,4 +109,20 @@ final class ToneSlipTests: XCTestCase {
         XCTAssertTrue(slipped.passed)
         XCTAssertEqual(check.withToneSlips([:]), check)
     }
+
+    func testSentencePinyinReadsWithLatinPunctuation() {
+        XCTAssertEqual(ChineseDisplay.readablePinyin("zhè biān qǐng， zhè shì cài dān. yào xiān diǎn yǐn liào ma？"),
+                       "zhè biān qǐng, zhè shì cài dān. yào xiān diǎn yǐn liào ma?")
+        XCTAssertEqual(ChineseDisplay.readablePinyin("nǐ hǎo，wǒ jiào「xiǎo māo」。"), "nǐ hǎo, wǒ jiào \u{201C}xiǎo māo\u{201D}.")
+        XCTAssertEqual(ChineseDisplay.readablePinyin("qī diǎn 7:30 jiàn"), "qī diǎn 7:30 jiàn")
+        XCTAssertEqual(ChineseDisplay.readablePinyin(""), "")
+    }
+
+    func testEveryCharacterHasItsToneAsSaid() {
+        let check = ShadowingCheck(target: "我要一杯冰紅茶。", chinese: true)
+        let scored = check.units.filter(\.scored)
+        let tones = ToneAnalysis.spokenTones(characters: scored.map(\.text), syllables: scored.map(\.pinyin))
+        // 一 before a first tone is said in the fourth.
+        XCTAssertEqual(tones, [3, 4, 4, 1, 1, 2, 2])
+    }
 }

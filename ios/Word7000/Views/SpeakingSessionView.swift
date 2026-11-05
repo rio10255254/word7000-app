@@ -168,7 +168,12 @@ struct SpeakingSessionView: View {
         .onChange(of: model.settings.activeBankId) { _, _ in if scenarioRef == nil { start(.words) } }
         .onChange(of: model.studyMode) { _, _ in start(source) }
         .onChange(of: model.settings.speakingFilter) { _, _ in clearCoach() }
-        .onChange(of: model.speakingHistoryOwnerKey) { _, _ in start() }
+        // Another learner starts afresh. The same learner signing in (a guest
+        // linking Apple to subscribe, which keeps its history) carries on with
+        // the answer they were writing.
+        .onChange(of: model.speakingHistoryOwnerKey) { old, new in
+            if Self.sameLearner(old, new) { historyOwnerKey = new } else { start() }
+        }
         .onDisappear { coachSession.cancel(); Speaker.shared.stop() }
         .sensoryFeedback(.success, trigger: attempted) { _, new in new && (model.settings.hapticsEnabled ?? true) }
         // Each new item is read aloud once (Settings → Reading voice): in a
@@ -302,6 +307,14 @@ struct SpeakingSessionView: View {
 
     /// Starts a stage: the one given, or the next on the tab last used (the
     /// scenario path's next stage, or a set of words).
+    /// The history moved with the learner (Persistence.setLocalOwner): a local
+    /// guest given an id, or a guest linked to an account with the same id.
+    static func sameLearner(_ old: String, _ new: String) -> Bool {
+        if old == "guest" { return new.hasPrefix("guest:") }
+        guard old.hasPrefix("guest:"), new.hasPrefix("account:") else { return false }
+        return old.dropFirst("guest:".count) == new.dropFirst("account:".count)
+    }
+
     private func start(_ requested: Source? = nil) {
         clearCoach()
         Speaker.shared.stop()
@@ -491,7 +504,7 @@ struct SpeakingSessionView: View {
                     TranslatableQuestion(
                         caption: scenarioRef == nil ? nil : turns[index].role.practised(mode),
                         question: card.question,
-                        pinyin: model.studyMode == .chinese ? ChineseDisplay.sentencePinyin(card.question) : "",
+                        pinyin: model.studyMode == .chinese ? ChineseDisplay.readablePinyin(ChineseDisplay.sentencePinyin(card.question)) : "",
                         translation: card.questionGloss,
                         language: speakLanguage,
                         showsHint: !translationTried,

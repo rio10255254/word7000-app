@@ -156,8 +156,10 @@ for (const group of groups) {
   say(`\n### 群組：${group.attributes.referenceName}`);
   const gls = (await tryApi(`/v1/subscriptionGroups/${group.id}/subscriptionGroupLocalizations?limit=20`)).data ?? [];
   for (const locale of ['zh-Hant', 'en-US']) {
-    const l = gls.find((x) => x.attributes.locale === locale);
-    l ? ok(`群組顯示名稱（${lang(locale)}）：${l.attributes.name}${l.attributes.customAppName ? `，App 名稱「${l.attributes.customAppName}」` : ''}（${l.attributes.state ?? '?'}）`) : bad(`群組還沒有${lang(locale)}的顯示名稱`);
+    // An approved name and the edit waiting for review are two rows of one language.
+    const rows = gls.filter((x) => x.attributes.locale === locale);
+    if (!rows.length) bad(`群組還沒有${lang(locale)}的顯示名稱`);
+    for (const l of rows) ok(`群組顯示名稱（${lang(locale)}）：${l.attributes.name}${l.attributes.customAppName ? `，App 名稱「${l.attributes.customAppName}」` : ''}（${l.attributes.state ?? '?'}）`);
   }
   const subs = (await tryApi(`/v1/subscriptionGroups/${group.id}/subscriptions?limit=20`)).data ?? [];
   for (const sub of subs) {

@@ -14,7 +14,7 @@ on:
       operation:
         description: 'native-testflight: native SwiftUI build to TestFlight. The React Native operations (build-testflight, ota-update) were removed with the React Native app.'
         type: choice
-        options: ['native-testflight', 'testflight-submit', 'subscriptions-status', 'beta-status']
+        options: ['native-testflight', 'testflight-submit', 'subscriptions-status', 'beta-status', 'store-readiness']
         default: 'native-testflight'
       full_validation:
         description: 'native-testflight only: wait for a passed full Native iOS run of this source before uploading. Off by default; turn it on when a full test is wanted.'
@@ -54,7 +54,7 @@ jobs:
   # An uploaded build into the TestFlight group and Beta App Review, for a
   # release run that could not submit it while another build was in review.
   testflight-submit:
-    if: inputs.operation == 'testflight-submit' || inputs.operation == 'subscriptions-status' || inputs.operation == 'beta-status'
+    if: inputs.operation == 'testflight-submit' || inputs.operation == 'subscriptions-status' || inputs.operation == 'beta-status' || inputs.operation == 'store-readiness'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -76,6 +76,13 @@ jobs:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: node scripts/asc-beta-status.mjs --bundle com.rio.word7000
+      - name: What App Store Connect still needs before App Review (read-only)
+        if: inputs.operation == 'store-readiness'
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: node scripts/asc-store-readiness.mjs --bundle com.rio.word7000 --version "$(node -p 'require("./ios/Release/app.json").expo.version')"
       - name: Add to the group and submit for Beta App Review
         if: inputs.operation == 'testflight-submit'
         env:

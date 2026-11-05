@@ -53,6 +53,9 @@ final class RoutineTests: XCTestCase {
                 input.typeText("apple\n")
                 XCTAssertTrue(app.staticTexts["routine-message"].waitForExistence(timeout: 5))
                 snap(app, "routine-4-spell-another-word")
+                // The keyboard stays up after a try, the cursor after the text.
+                let focused = XCTNSPredicateExpectation(predicate: NSPredicate(format: "hasKeyboardFocus == true"), object: input)
+                XCTAssertEqual(XCTWaiter.wait(for: [focused], timeout: 3), .completed, "the keyboard stays up after a try")
                 input.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 8))
             }
             input.tap()

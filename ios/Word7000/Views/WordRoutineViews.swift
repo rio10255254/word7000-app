@@ -212,7 +212,10 @@ struct RoutineSpellView: View {
                 .keyboardType(.asciiCapable)
                 .submitLabel(attempt.solved ? .next : .done)
                 .focused($focused)
-                .onSubmit { attempt.solved ? next() : check() }
+                .onSubmit {
+                    attempt.solved ? next() : check()
+                    keepKeyboard()
+                }
                 .padding(.vertical, 16)
                 .padding(.horizontal, 16)
                 .background(Palette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
@@ -282,6 +285,15 @@ struct RoutineSpellView: View {
             return
         }
         attempt = ClozeAttempt(answer: sentence.answer)
+    }
+
+    /// Return resigns the field; it is focused again so the keyboard stays
+    /// up for the next try and the next word.
+    private func keepKeyboard() {
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(80))
+            if wordId != nil { focused = true }
+        }
     }
 
     private func takeHelp() {

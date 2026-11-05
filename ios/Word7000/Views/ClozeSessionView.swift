@@ -118,7 +118,10 @@ struct ClozeSessionView: View {
                 .keyboardType(.asciiCapable)
                 .submitLabel(attempt.solved ? .next : .done)
                 .focused($focused)
-                .onSubmit { attempt.solved ? next() : check() }
+                .onSubmit {
+                    attempt.solved ? next() : check()
+                    keepKeyboard()
+                }
                 .padding(.vertical, 14)
                 .padding(.horizontal, 16)
                 .background(Palette.surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
@@ -189,6 +192,15 @@ struct ClozeSessionView: View {
         comeBack = nil
         finishesRound = false
         attempt = currentWord.flatMap { Cloze.sentence(for: $0) }.map { ClozeAttempt(answer: $0.answer) }
+    }
+
+    /// Return resigns the field; it is focused again so the keyboard stays
+    /// up for the next try and the next word.
+    private func keepKeyboard() {
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(80))
+            if !round.isComplete { focused = true }
+        }
     }
 
     private func takeHelp() {

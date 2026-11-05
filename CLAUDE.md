@@ -41,6 +41,12 @@
 - 改版本要同時改 `ios/Release/app.json` 的 `version` 和 `ios/Word7000.xcodeproj/project.pbxproj` 的四個 `MARKETING_VERSION`。
 - 建置號碼是每個版本各自從 1 開始（`scripts/next-build-number.mjs`），兩條線不會互搶。
 
+**例外（2026-11-05 使用者決定）：研發版以 2.0.2 (12) 發給內部測試群組**
+
+- 研發分支目前的版本號是 2.0.2（不是 3.x），只發給 App Store Connect 的**內部**測試群組，讓使用者實測。
+- **研發線的 2.0.2 建置（12 及之後研發分支發的號碼）永遠不送 App Store 審核。** 2.0.2 送審只用正式線 `master` 發的建置（例如 (11)）；正式線之後的 2.0.2 建置號碼會從 13 開始（`scripts/next-build-number.mjs` 自動往上數）。
+- 研發版要發給外部群組（`WordCat Lab`）或改回 3.x，要等使用者說。
+
 **發 TestFlight**
 
 - **研發線目前不發 TestFlight。** 要等正式線的 2.0.2 (8) 送審、上架告一段落，而且使用者明確說可以，才發第一個 3.x。

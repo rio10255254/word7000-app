@@ -15,53 +15,6 @@ enum SpeakingStep: Int, Comparable {
     static func < (a: SpeakingStep, b: SpeakingStep) -> Bool { a.rawValue < b.rawValue }
 }
 
-/// The four steps of a speaking stage, as chips.
-struct SpeakingStepStrip: View {
-    var step: SpeakingStep
-
-    private enum ChipState { case done, now, later }
-
-    var body: some View {
-        HStack(spacing: 5) {
-            chip("ear", L.t("聽", "Listen"), state(.listen))
-            chip("repeat", L.t("跟讀", "Repeat"), state(.shadow))
-            chip("bubble.left", L.t("回答", "Answer"), state(.answer))
-            chip("sparkles", L.t("用今天的字", "Use a word"), state(.useWord))
-        }
-        .frame(maxWidth: .infinity)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(L.t("聽、跟讀、回答、用今天的字", "Listen, repeat, answer, use today's word"))
-        .accessibilityIdentifier("speaking-steps")
-    }
-
-    /// Repeating and answering take turns through the stage, so neither is
-    /// ticked until the turns are over.
-    private func state(_ chip: SpeakingStep) -> ChipState {
-        if chip == step { return .now }
-        switch (chip, step) {
-        case (.listen, _): return step > .listen ? .done : .later
-        case (.shadow, .answer), (.answer, .shadow): return .later
-        default: return chip < step ? .done : .later
-        }
-    }
-
-    private func chip(_ icon: String, _ title: String, _ state: ChipState) -> some View {
-        HStack(spacing: 4) {
-            Image(systemName: state == .done ? "checkmark" : icon)
-                .font(.caption.weight(.heavy))
-            Text(title)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-        }
-        .font(.subheadline.weight(.bold))
-        .foregroundStyle(state == .now ? Color.white : state == .done ? Palette.known : Palette.secondaryLabel)
-        .padding(.horizontal, 9)
-        .padding(.vertical, 7)
-        .frame(maxWidth: .infinity)
-        .background(state == .now ? TodayView.speakingTint : state == .done ? Palette.known.opacity(0.16) : Palette.fill, in: Capsule())
-    }
-}
-
 /// The first step: the whole conversation of the stage as a chat room.
 /// The other person writes from the left with their face and name, the
 /// learner's lines arrive on the right; each line appears as it is read

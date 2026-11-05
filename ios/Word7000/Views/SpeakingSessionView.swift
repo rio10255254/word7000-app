@@ -101,11 +101,10 @@ struct SpeakingSessionView: View {
         NavigationStack {
             VStack(spacing: 12) {
                 // Hidden on a finished stage, where it would only compete with the result.
-                if started, index < count || count == 0 { trackPicker }
-                if let step = routineStep, step != .done {
-                    SpeakingStepStrip(step: step)
-                        .transition(.opacity)
-                }
+                // WordCat Next: scenarios and word practice are chosen in the
+                // Practice tab, and the stage's place shows in the title, so the
+                // top stays clear.
+                if started, index < count || count == 0, !AppRuntime.speakingRoutine { trackPicker }
                 Group {
                     if !started {
                         ProgressView()

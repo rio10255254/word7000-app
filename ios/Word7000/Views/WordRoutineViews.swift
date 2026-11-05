@@ -7,58 +7,62 @@ import Word7000Core
 // questions for the older ones, and one summary. Big type throughout, and the
 // cat says what to do instead of small captions.
 
-/// The steps of today's words as chips: cards, spelling, quiz.
+/// Where today's words are, in one quiet line: a bar in three parts
+/// (cards, spelling, quiz) and the step with its count.
 struct RoutineStepStrip: View {
     var routine: WordRoutine
     /// While the cards are being flipped: how far along.
     var flipped: (done: Int, total: Int)?
 
-    private enum ChipState { case done, now, later }
-
     var body: some View {
-        HStack(spacing: 6) {
-            chip(icon: "rectangle.on.rectangle.angled", title: L.t("翻卡", "Cards"),
-                 state: routine.step == .flip ? .now : .done,
-                 count: routine.step == .flip ? flipped.map { "\($0.done)/\($0.total)" } : nil)
-            // Before the checks are picked, both may still come.
-            if routine.step == .flip || !routine.spellIds.isEmpty {
-                arrow
-                chip(icon: "pencil.line", title: L.t("拼字", "Spell"),
-                     state: routine.step == .spell ? .now : routine.step == .flip ? .later : .done,
-                     count: routine.step == .spell ? "\(routine.spellResults.count)/\(routine.spellIds.count)" : nil)
+        let parts = segments
+        HStack(spacing: 10) {
+            HStack(spacing: 4) {
+                ForEach(Array(parts.enumerated()), id: \.offset) { _, fill in
+                    GeometryReader { proxy in
+                        Capsule().fill(Palette.fill)
+                            .overlay(alignment: .leading) {
+                                Capsule().fill(Palette.accent).frame(width: proxy.size.width * fill)
+                            }
+                    }
+                    .frame(height: 8)
+                }
             }
-            if routine.step == .flip || !routine.examIds.isEmpty {
-                arrow
-                chip(icon: "checklist", title: L.t("考考看", "Quiz"),
-                     state: routine.step == .exam ? .now : routine.step == .done ? .done : .later,
-                     count: routine.step == .exam ? "\(routine.examResults.count)/\(routine.examIds.count)" : nil)
-            }
+            Text(label)
+                .font(.subheadline.weight(.bold))
+                .foregroundStyle(Palette.secondaryLabel)
+                .monospacedDigit()
+                .lineLimit(1)
+                .fixedSize()
         }
         .frame(maxWidth: .infinity)
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(label)
         .accessibilityIdentifier("routine-steps")
     }
 
-    private var arrow: some View {
-        Image(systemName: "chevron.right")
-            .font(.caption.weight(.bold))
-            .foregroundStyle(Palette.tertiaryLabel)
-            .accessibilityHidden(true)
+    /// How full each part is: cards, then spelling and the quiz when they come.
+    private var segments: [Double] {
+        let flip: Double = routine.step == .flip ? flipped.map { Double($0.done) / Double(max(1, $0.total)) } ?? 0 : 1
+        var parts = [flip]
+        if routine.step == .flip || !routine.spellIds.isEmpty {
+            parts.append(routine.step == .spell ? Double(routine.spellResults.count) / Double(max(1, routine.spellIds.count))
+                         : routine.step == .flip ? 0 : 1)
+        }
+        if routine.step == .flip || !routine.examIds.isEmpty {
+            parts.append(routine.step == .exam ? Double(routine.examResults.count) / Double(max(1, routine.examIds.count))
+                         : routine.step == .done ? 1 : 0)
+        }
+        return parts
     }
 
-    private func chip(icon: String, title: String, state: ChipState, count: String?) -> some View {
-        HStack(spacing: 5) {
-            Image(systemName: state == .done ? "checkmark" : icon)
-            Text(count.map { "\(title) \($0)" } ?? title)
-                .monospacedDigit()
+    private var label: String {
+        switch routine.step {
+        case .flip: return flipped.map { L.t("翻卡 \($0.done)/\($0.total)", "Cards \($0.done)/\($0.total)") } ?? L.t("翻卡", "Cards")
+        case .spell: return L.t("拼字 \(routine.spellResults.count)/\(routine.spellIds.count)", "Spelling \(routine.spellResults.count)/\(routine.spellIds.count)")
+        case .exam: return L.t("考考看 \(routine.examResults.count)/\(routine.examIds.count)", "Quiz \(routine.examResults.count)/\(routine.examIds.count)")
+        case .done: return L.t("完成", "Done")
         }
-        .font(.subheadline.weight(.bold))
-        .lineLimit(1)
-        .minimumScaleFactor(0.8)
-        .foregroundStyle(state == .now ? Color.white : state == .done ? Palette.known : Palette.secondaryLabel)
-        .padding(.horizontal, 11)
-        .padding(.vertical, 7)
-        .background(state == .now ? Palette.accent : state == .done ? Palette.known.opacity(0.16) : Palette.fill, in: Capsule())
     }
 }
 

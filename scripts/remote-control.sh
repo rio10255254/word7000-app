@@ -36,6 +36,16 @@ status)
   say "|---|---|---|---|---|"
   body_of "$reply" | jq -r '.[] | "| \(.app_version) | \(.app_build // "-") | \(.installs) | \(.seen_last_7_days) | \(.push_devices) |"' | while read -r line; do say "$line"; done
   say ""
+  say "## 🔔 登記推播的手機"
+  say ""
+  say "權杖只列最後 6 碼；最後登記時間是手機上次打開 App、把權杖送上來的時間。"
+  say ""
+  say "| 權杖 | 版本 | 對象 | 語言 | 測試機 | 最後登記（UTC） |"
+  say "|---|---|---|---|---|---|"
+  reply=$(call "$rest/push_devices?select=token,app_version,app_build,audience,language,tester,updated_at&order=updated_at.desc&limit=50")
+  [ "$(code_of "$reply")" = "200" ] || { echo "::error::$(body_of "$reply")"; exit 1; }
+  body_of "$reply" | jq -r '.[] | "| …\(.token[-6:]) | \(.app_version // "舊版")\(if .app_build then " (\(.app_build))" else "" end) | \(.audience) | \(.language) | \(if .tester then "是" else "" end) | \(.updated_at[0:16]) |"' | while read -r line; do say "$line"; done
+  say ""
   say "## 📣 目前在線上的公告"
   reply=$(call "$rest/announcements?select=created_at,audience,title_zh,below_version,below_build,ends_at,push,pushed_at&active=eq.true&or=(ends_at.is.null,ends_at.gt.$now)&order=created_at.desc")
   body_of "$reply" | jq -r 'if length == 0 then "- 沒有" else .[] | "- **\(.title_zh)**：對象 \(.audience)\(if .below_version then "，只給 \(.below_version)\(if .below_build then " (\(.below_build))" else "" end) 以前" else "" end)；\(if .ends_at then "到 \(.ends_at[0:16]) UTC" else "直到下架" end)\(if .push then "；推播 \(if .pushed_at then "已送出" else "未送出" end)" else "" end)" end' | while read -r line; do say "$line"; done

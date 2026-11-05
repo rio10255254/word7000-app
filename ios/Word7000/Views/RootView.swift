@@ -144,6 +144,12 @@ struct RootView: View {
             }
         }
         .task { welcomeOpen = model.settings.onboardingComplete != true; openRequestedPractice() }
+        // Notifications are asked for once, as soon as the app opens, so the
+        // developer's announcements reach every learner from the start.
+        .task {
+            try? await Task.sleep(for: .seconds(1))
+            await PushRegistration.shared.askOnce(model)
+        }
         .onChange(of: PracticeLaunch.shared.requested) { _, _ in openRequestedPractice() }
         .task { await IntelligenceSettings.shared.refreshPolicy() }
         // The speech model for spoken answers arrives before the first take.

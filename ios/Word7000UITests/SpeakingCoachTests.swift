@@ -479,10 +479,16 @@ final class SpeakingCoachTests: XCTestCase {
 
     private func weeklySpeakingCount(_ app: XCUIApplication) -> String {
         app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
-        let count = app.descendants(matching: .any)["me-week-speaking"].firstMatch
-        reveal(count, in: app)
-        XCTAssertFalse(count.label.isEmpty)
-        return count.label
+        // WordCat Next: the week's counts are in the full history, a tap from Me.
+        let history = app.buttons["me-history"]
+        reveal(history, in: app)
+        history.tap()
+        let count = app.descendants(matching: .any)["history-selected-speaking"].firstMatch
+        XCTAssertTrue(count.waitForExistence(timeout: 5))
+        let label = count.label
+        XCTAssertFalse(label.isEmpty)
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        return label
     }
 
     private func wait(_ element: XCUIElement, matching predicate: String,

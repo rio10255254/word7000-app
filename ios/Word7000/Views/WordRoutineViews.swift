@@ -7,8 +7,9 @@ import Word7000Core
 // questions for the older ones, and one summary. Big type throughout, and the
 // cat says what to do instead of small captions.
 
-/// Where today's words are, in one quiet line: a bar in three parts
-/// (cards, spelling, quiz) and the step with its count.
+/// Where today's words are: "Step 2 of 3 · Spelling 1/6" above a bar of
+/// equal parts, one per step. Steps done are green, the step under way fills
+/// in the accent, the ones to come are empty.
 struct RoutineStepStrip: View {
     var routine: WordRoutine
     /// While the cards are being flipped: how far along.
@@ -16,28 +17,35 @@ struct RoutineStepStrip: View {
 
     var body: some View {
         let parts = segments
-        HStack(spacing: 10) {
-            HStack(spacing: 4) {
-                ForEach(Array(parts.enumerated()), id: \.offset) { _, fill in
+        let current = parts.firstIndex { $0 < 1 } ?? max(0, parts.count - 1)
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 6) {
+                Text(L.t("第 \(current + 1) 步，共 \(parts.count) 步", "Step \(current + 1) of \(parts.count)"))
+                    .foregroundStyle(Palette.secondaryLabel)
+                Text("·").foregroundStyle(Palette.tertiaryLabel)
+                Text(label).foregroundStyle(Palette.accent)
+            }
+            .font(.subheadline.weight(.bold))
+            .monospacedDigit()
+            .lineLimit(1)
+            .minimumScaleFactor(0.8)
+            HStack(spacing: 6) {
+                ForEach(Array(parts.enumerated()), id: \.offset) { index, fill in
                     GeometryReader { proxy in
                         Capsule().fill(Palette.fill)
                             .overlay(alignment: .leading) {
-                                Capsule().fill(Palette.accent).frame(width: proxy.size.width * fill)
+                                Capsule().fill(fill >= 1 && index != current ? Palette.known : Palette.accent)
+                                    .frame(width: max(fill > 0 ? 8 : 0, proxy.size.width * fill))
                             }
                     }
                     .frame(height: 8)
+                    .frame(maxWidth: .infinity)
                 }
             }
-            Text(label)
-                .font(.subheadline.weight(.bold))
-                .foregroundStyle(Palette.secondaryLabel)
-                .monospacedDigit()
-                .lineLimit(1)
-                .fixedSize()
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(label)
+        .accessibilityLabel(L.t("第 \(current + 1) 步，共 \(parts.count) 步，", "Step \(current + 1) of \(parts.count), ") + label)
         .accessibilityIdentifier("routine-steps")
     }
 

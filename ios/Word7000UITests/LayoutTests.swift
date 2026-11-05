@@ -93,22 +93,14 @@ final class LayoutTests: XCTestCase {
         sheet.buttons["完成"].tap()
         XCTAssertTrue(sheet.waitForNonExistence(timeout: 5), "The study scope did not close")
 
-        mascot.tap()
-        let chinese = app.buttons["today-language-zh"]
-        XCTAssertTrue(chinese.isHittable)
-        chinese.tap()
+        // WordCat Next: the language is chosen in Settings, not on Today.
         // Learning Chinese: the interface turns English, and spelling becomes
-        // writing the Chinese (characters or pinyin), so the tile stays.
-        let selected = NSPredicate(format: "isSelected == true")
-        expectation(for: selected, evaluatedWith: app.buttons["today-language-zh"])
-        waitForExpectations(timeout: 5)
-        XCTAssertTrue(app.buttons["today-spelling"].waitForExistence(timeout: 5), "Writing practice should stay when learning Chinese")
-        snap(app, "layout-switched-to-chinese")
-
-        app.buttons["today-language-en"].tap()
-        expectation(for: selected, evaluatedWith: app.buttons["today-language-en"])
-        waitForExpectations(timeout: 5)
-        XCTAssertTrue(app.buttons["today-spelling"].waitForExistence(timeout: 5))
+        // writing the Chinese (characters or pinyin), so the step stays.
+        app.terminate()
+        let chinese = launch(["-uiTestingChineseMode"])
+        XCTAssertFalse(chinese.buttons["today-language-zh"].exists)
+        XCTAssertTrue(chinese.buttons["today-spelling"].waitForExistence(timeout: 5), "Writing practice should stay when learning Chinese")
+        snap(chinese, "layout-switched-to-chinese")
     }
 
     /// Plays with the companion: a tap, a drag, and a press and hold. None of
@@ -215,7 +207,7 @@ final class LayoutTests: XCTestCase {
         let window = app.windows.firstMatch.frame
         let tabBar = app.tabBars.firstMatch
         let bottom = tabBar.exists ? tabBar.frame.minY : window.maxY
-        let ids = ["today-language-en", "today-language-zh", "today-start"] + tiles
+        let ids = ["today-start"] + tiles
 
         var frames: [String: CGRect] = [:]
         for id in ids {

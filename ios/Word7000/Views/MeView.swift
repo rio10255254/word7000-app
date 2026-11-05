@@ -44,31 +44,26 @@ struct MeView: View {
                 Section {
                     ActivityCalendarView(weeks: ActivityCalendar.weeks(weekCount, today: model.today, analytics: model.progress.analytics))
                         .padding(.vertical, 4)
-                } header: {
-                    Text(L.t("最近 \(weekCount) 週", "The last \(weekCount) weeks"))
-                } footer: {
-                    Text(L.t("今年學了 \(ActivityCalendar.activeDays(inYearOf: model.today, analytics: model.progress.analytics)) 天",
-                             "\(ActivityCalendar.activeDays(inYearOf: model.today, analytics: model.progress.analytics)) days this year"))
-                        .accessibilityIdentifier("me-year-days")
-                }
-
-                LevelEstimateSection()
-
-                Section {
-                    HistoryActivityChart(activity: model.activity(days: 7), chartHeight: 120, compact: true)
-                        .listRowBackground(StyledRowBackground(paper: .graph))
+                    // The days in detail, and the week's counts, are one tap away.
                     Button { historyOpen = true } label: {
                         ActionRow(icon: "chart.bar.xaxis", tint: Palette.accent, title: L.t("完整學習紀錄", "Full history"))
                     }
                     .tint(.primary)
                     .accessibilityIdentifier("me-history")
                 } header: {
-                    Text(L.thisWeek)
+                    Text(L.t("最近 \(weekCount) 週", "The last \(weekCount) weeks"))
                 } footer: {
-                    if let accuracy = model.quizAccuracy {
-                        Text(L.quizAccuracy(accuracy.percent, correct: accuracy.correct, total: accuracy.total))
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(L.t("今年學了 \(ActivityCalendar.activeDays(inYearOf: model.today, analytics: model.progress.analytics)) 天",
+                                 "\(ActivityCalendar.activeDays(inYearOf: model.today, analytics: model.progress.analytics)) days this year"))
+                            .accessibilityIdentifier("me-year-days")
+                        if let accuracy = model.quizAccuracy {
+                            Text(L.quizAccuracy(accuracy.percent, correct: accuracy.correct, total: accuracy.total))
+                        }
                     }
                 }
+
+                LevelEstimateSection()
 
                 AIInsightsSection()
     

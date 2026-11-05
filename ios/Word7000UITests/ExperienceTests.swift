@@ -220,11 +220,11 @@ final class ExperienceTests: XCTestCase {
         app.navigationBars.buttons.element(boundBy: 0).tap()
 
         app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
-        // The week sits under the twenty weeks; on a small phone it starts below the fold.
-        let week = app.descendants(matching: .any)["me-week-strip"].firstMatch
-        XCTAssertTrue(app.descendants(matching: .any)["me-year-days"].firstMatch.waitForExistence(timeout: 5))
-        for _ in 0..<4 where !week.exists { app.swipeUp() }
-        XCTAssertTrue(week.waitForExistence(timeout: 5))
+        // WordCat Next: the weeks as squares; today's practice fills a square.
+        let calendar = app.descendants(matching: .any)["me-calendar"].firstMatch
+        for _ in 0..<4 where !calendar.exists { app.swipeUp() }
+        XCTAssertTrue(calendar.waitForExistence(timeout: 5))
+        XCTAssertTrue(calendar.label.contains("學了 1 天") || calendar.label.hasPrefix("1 days"), calendar.label)
         snapshot(app, "polish-me-week")
     }
 

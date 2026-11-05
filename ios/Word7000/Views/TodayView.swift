@@ -182,17 +182,14 @@ struct TodayView: View {
 
     // MARK: Header
 
-    /// The greeting and the days to the exam (or the date); the language,
-    /// the streak and the words mastered as small chips.
+    /// The greeting and the days to the exam (or the date); the streak and
+    /// the words mastered as two small pills.
     private var header: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack(alignment: .firstTextBaseline) {
-                Text(greeting)
-                    .font(.display(.title, weight: .bold))
-                    .lineLimit(1)
-                Spacer(minLength: 8)
-                languageSwitch
-            }
+            // The language is chosen in Settings: it is not an everyday switch.
+            Text(greeting)
+                .font(.display(.title, weight: .bold))
+                .lineLimit(1)
             HStack(spacing: 8) {
                 HStack(spacing: 4) {
                     Image(systemName: memory.daysToExam == nil ? daySymbol : "graduationcap.fill")
@@ -232,7 +229,13 @@ struct TodayView: View {
                 .foregroundStyle(Palette.ink)
                 .padding(.horizontal, 12)
                 .frame(minHeight: 38)
-                .background { PremiumSurface(radius: 19) }
+                .background {
+                    // A pill in either style: square boxes looked stiff in the collage.
+                    Capsule().fill(Palette.surface)
+                        .overlay { PaperGrain(opacity: 0.4).clipShape(Capsule()) }
+                        .overlay { Capsule().strokeBorder(Collage.ink.opacity(0.14), lineWidth: 1) }
+                        .shadow(color: .black.opacity(0.06), radius: 3, y: 1)
+                }
                 .contentShape(Capsule())
         }
         .buttonStyle(SoftPressStyle())
@@ -240,37 +243,6 @@ struct TodayView: View {
         .accessibilityLabel(label)
         .accessibilityAddTraits(.isButton)
         .accessibilityIdentifier(id)
-    }
-
-    /// Which language is being learned, switched in one tap.
-    private var languageSwitch: some View {
-        HStack(spacing: 2) {
-            ForEach([StudyMode.english, StudyMode.chinese], id: \.self) { mode in
-                let selected = model.studyMode == mode
-                Button {
-                    guard !selected else { return }
-                    withAnimation(reduceMotion ? nil : Motion.reveal) { model.setStudyMode(mode) }
-                } label: {
-                    Text(mode == .english ? "EN" : "中")
-                        .font(.footnote.weight(.bold))
-                        .foregroundStyle(selected ? Color.white : Color.secondary)
-                        .frame(minWidth: 34, minHeight: 30)
-                        .background(selected ? Palette.accent : Color.clear, in: Capsule())
-                        .contentShape(Capsule())
-                }
-                .buttonStyle(SoftPressStyle())
-                .accessibilityLabel(mode == .english ? L.t("學英文", "Learn English") : L.t("學中文", "Learn Chinese"))
-                .accessibilityAddTraits(selected ? .isSelected : [])
-                .accessibilityIdentifier(mode == .english ? "today-language-en" : "today-language-zh")
-            }
-        }
-        .padding(3)
-        .background { PremiumSurface(radius: 18) }
-        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
-        .fixedSize()
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel(L.t("學習語言", "Learning language"))
-        .accessibilityIdentifier("today-language")
     }
 
     // MARK: Today's steps

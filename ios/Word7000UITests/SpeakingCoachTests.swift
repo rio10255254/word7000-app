@@ -394,8 +394,10 @@ final class SpeakingCoachTests: XCTestCase {
         if !answer.exists { tap(app.buttons["coach-type-instead"], in: app) }
         XCTAssertTrue(answer.waitForExistence(timeout: 5))
         if !app.keyboards.firstMatch.waitForExistence(timeout: 2) { answer.tap() }
+        dismissKeyboardIntroduction(app)
         settle(answer)
         answer.typeText(text)
+        dismissKeyboardIntroduction(app)
         // The accessibility value can lag the final keyboard event on older
         // simulators. Read the value itself until it matches: a predicate
         // expectation on the element can miss an update that a fresh read sees.
@@ -403,7 +405,9 @@ final class SpeakingCoachTests: XCTestCase {
         // The iOS 18 simulator can also drop the last keystrokes outright
         // ("I practice dai"). Type only what is missing, never the whole text
         // again, so nothing can be doubled; the exact-text assertion stays.
-        if let typed = answer.value as? String, typed != text, text.hasPrefix(typed) {
+        // An empty read is not a dropped take: the field can read empty while
+        // something covers the keyboard.
+        if let typed = answer.value as? String, !typed.isEmpty, typed != text, text.hasPrefix(typed) {
             answer.typeText(String(text.dropFirst(typed.count)))
             waitForValue(text, of: answer)
         }
@@ -413,6 +417,17 @@ final class SpeakingCoachTests: XCTestCase {
     private func waitForValue(_ text: String, of element: XCUIElement) {
         let deadline = Date().addingTimeInterval(6)
         while element.value as? String != text, Date() < deadline { Thread.sleep(forTimeInterval: 0.25) }
+    }
+
+    /// A fresh simulator introduces slide-to-type the first time a keyboard
+    /// opens, over the keyboard; it is closed before typing. (CI also turns it
+    /// off before the tests run.)
+    private func dismissKeyboardIntroduction(_ app: XCUIApplication) {
+        let intro = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Speed up your typing'")).firstMatch
+        guard intro.waitForExistence(timeout: 0.5) else { return }
+        let next = app.buttons.matching(NSPredicate(format: "identifier == '' AND label IN %@", ["Continue", "繼續"])).firstMatch
+        if next.exists { next.tap() }
+        wait(intro, matching: "exists == false")
     }
 
     /// Waits for the notepad to stop moving (the page scrolls it above the

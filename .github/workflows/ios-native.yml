@@ -182,6 +182,13 @@ jobs:
           fi
           xcrun simctl boot "$SIMULATOR_UDID" || true
           xcrun simctl bootstatus "$SIMULATOR_UDID" -b
+          # A fresh simulator shows the keyboard's slide-to-type introduction the
+          # first time a keyboard opens; it covers the keyboard and hides what a
+          # text field holds from the tests. Typing works the same without it.
+          for domain in com.apple.Preferences com.apple.keyboard.preferences; do
+            xcrun simctl spawn "$SIMULATOR_UDID" defaults write "$domain" DidShowContinuousPathIntroduction -bool true || true
+            xcrun simctl spawn "$SIMULATOR_UDID" defaults write "$domain" KeyboardContinuousPathEnabled -bool false || true
+          done
           xcrun simctl status_bar "$SIMULATOR_UDID" override --time "9:41" --batteryState charged --batteryLevel 100 --cellularBars 4 || true
           swift ios/Tests/create-scan-photos.swift "$RUNNER_TEMP/scan-fixtures"
           xcrun simctl launch "$SIMULATOR_UDID" com.apple.mobileslideshow || true
@@ -408,6 +415,10 @@ jobs:
             echo "::group::$TYPE on iOS $MAJOR"
             xcrun simctl boot "$UDID"
             xcrun simctl bootstatus "$UDID" -b > /dev/null
+            for domain in com.apple.Preferences com.apple.keyboard.preferences; do
+              xcrun simctl spawn "$UDID" defaults write "$domain" DidShowContinuousPathIntroduction -bool true || true
+              xcrun simctl spawn "$UDID" defaults write "$domain" KeyboardContinuousPathEnabled -bool false || true
+            done
             xcrun simctl status_bar "$UDID" override --time "9:41" --batteryState charged --batteryLevel 100 --cellularBars 4 || true
             rm -rf "$HOME/word7000-screenshots"
             xcodebuild test-without-building -project ios/Word7000.xcodeproj -scheme Word7000 \

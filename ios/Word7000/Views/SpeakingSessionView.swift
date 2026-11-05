@@ -47,6 +47,12 @@ struct SpeakingSessionView: View {
     @State private var shadowedThisWord = false
     /// How the stage went, once it is over.
     @State private var stageResult: SpeakingPath.Result?
+    /// WordCat Next: the whole conversation has been heard (or there was
+    /// nothing to hear first).
+    @State private var listened = true
+    /// WordCat Next: today's words offered once the turns are over; empty
+    /// when there are none or the step is done.
+    @State private var wordChoices: [String] = []
     @State private var bannerShown = false
     @State private var coachAnswer = ""
     @State private var coachTranscriptNeedsReview = false
@@ -96,11 +102,25 @@ struct SpeakingSessionView: View {
             VStack(spacing: 12) {
                 // Hidden on a finished stage, where it would only compete with the result.
                 if started, index < count || count == 0 { trackPicker }
+                if let step = routineStep, step != .done {
+                    SpeakingStepStrip(step: step)
+                        .transition(.opacity)
+                }
                 Group {
                     if !started {
                         ProgressView()
                     } else if count == 0 {
                         emptyScope
+                    } else if !listened, scenarioRef != nil {
+                        SpeakingListenView(title: stageTitle, lines: listenLines, language: speakLanguage) {
+                            bannerShown = true
+                            withAnimation(reduceMotion ? nil : Motion.reveal) { listened = true }
+                        }
+                    } else if index >= count, !wordChoices.isEmpty {
+                        UseTodaysWordView(place: scenarioPlace, wordIds: wordChoices) { wordId, used in
+                            model.recordTodaysWordUse(wordId: wordId, used: used)
+                            withAnimation(reduceMotion ? nil : Motion.reveal) { wordChoices = [] }
+                        }
                     } else if index >= count {
                         finished
                     } else {
@@ -178,8 +198,8 @@ struct SpeakingSessionView: View {
         .sensoryFeedback(.success, trigger: attempted) { _, new in new && (model.settings.hapticsEnabled ?? true) }
         // Each new item is read aloud once (Settings → Reading voice): in a
         // role-play, what the other person says, then the reply to say after it.
-        .task(id: "\(started)-\(index)-\(count)-\(shadowing)-\(String(describing: source))") {
-            guard started, index < count, !AppRuntime.uiTesting,
+        .task(id: "\(started)-\(listened)-\(index)-\(count)-\(shadowing)-\(String(describing: source))") {
+            guard started, listened, index < count, !AppRuntime.uiTesting,
                   model.settings.speech?.autoReadQuestions ?? true else { return }
             // The stage's opening banner goes first.
             do { try await Task.sleep(for: .milliseconds(index == 0 && shadowing ? 1500 : 450)) } catch { return }
@@ -354,6 +374,8 @@ struct SpeakingSessionView: View {
         shadowedThisWord = false
         stageResult = nil
         bannerShown = false
+        listened = !(AppRuntime.speakingRoutine && scenarioRef != nil)
+        wordChoices = []
         started = true
     }
 
@@ -634,7 +656,38 @@ struct SpeakingSessionView: View {
             let result = SpeakingPath.Result(words: count, shadowed: shadowed, answered: answered)
             model.finishSpeakingStage(scenarioRef.map(SpeakingScenarios.key), result: result)
             stageResult = result
+            // WordCat Next: a cleared stage ends with one of today's words.
+            if AppRuntime.speakingRoutine, scenarioRef != nil, result.cleared {
+                wordChoices = model.todaysWordChoices()
+            }
         }
+    }
+
+    /// WordCat Next: where a scenario stage is, for its step chips; nil for
+    /// word practice.
+    private var routineStep: SpeakingStep? {
+        guard AppRuntime.speakingRoutine, started, scenarioRef != nil, count > 0 else { return nil }
+        if !listened { return .listen }
+        if index < count { return shadowing ? .shadow : .answer }
+        return wordChoices.isEmpty ? .done : .useWord
+    }
+
+    /// The stage's whole conversation, for the listening step: each line from
+    /// the other person, then the reply.
+    private var listenLines: [SpeakingListenView.Line] {
+        let gloss = model.studyMode != .chinese
+        return turns.enumerated().flatMap { item -> [SpeakingListenView.Line] in
+            let card = SpeakingScenarios.card(item.element, mode: mode)
+            return [SpeakingListenView.Line(id: item.offset * 2, text: card.question, gloss: card.questionGloss ?? "", mine: false),
+                    SpeakingListenView.Line(id: item.offset * 2 + 1, text: shadowSentence(card),
+                                            gloss: ShadowingCheck.sentence(from: card.referenceTranslation, chinese: gloss), mine: true)]
+        }
+    }
+
+    /// The scenario's name, for "say it at the café".
+    private var scenarioPlace: String {
+        guard let ref = scenarioRef, let scenario = SpeakingScenarios.scenario(ref) else { return "" }
+        return L.t(scenario.title.zh, scenario.title.en)
     }
 
     private var finished: some View {

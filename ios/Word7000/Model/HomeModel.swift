@@ -57,4 +57,21 @@ extension AppModel {
     func noteExamRound(_ kind: ExamRoundKind, asked: Int, right: Int) {
         Usage.log("exam_round", "\(kind.rawValue).\(asked).\(right)")
     }
+
+    /// The words to offer at the end of a speaking stage: today's, those
+    /// marked known in today's cards first. Learners of English.
+    func todaysWordChoices() -> [String] {
+        guard studyMode == .english else { return [] }
+        refreshToday()
+        let preferred = wordRoutine?.day == today ? (wordRoutine?.cardIds ?? []) : []
+        // Words whose example has them in it, so the example can show how.
+        let words = vocabularyWords.filter { Cloze.sentence(for: $0) != nil }
+        return TodaysWordUse.pick(words: words, state: progress, today: today, preferred: preferred)
+    }
+
+    /// Today's word said in a sentence at the end of a speaking stage (or skipped).
+    func recordTodaysWordUse(wordId: String?, used: Bool) {
+        Usage.log("speaking_word_use", used ? "used" : "skipped")
+        if used { recordSpeaking(completed: true) }
+    }
 }

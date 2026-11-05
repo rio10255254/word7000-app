@@ -521,6 +521,10 @@ enum AppRuntime {
     /// WordCat Next: today's words end with spot checks. Off under UI tests
     /// written for the flip cards alone, unless a test asks for it.
     static let wordRoutine = !uiTesting || ProcessInfo.processInfo.arguments.contains("-uiTestingRoutine")
+    /// WordCat Next: a speaking stage opens with listening to the whole
+    /// conversation and ends with using one of today's words. UI tests of
+    /// the stage itself start straight on its first turn.
+    static let speakingRoutine = !uiTesting || ProcessInfo.processInfo.arguments.contains("-uiTestingSpeakingRoutine")
 }
 
 extension View {

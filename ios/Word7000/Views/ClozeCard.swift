@@ -198,6 +198,7 @@ struct RoutineCatLine: View {
                 .padding(.vertical, 10)
                 .background(MascotBubble.cream, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                 .shadow(color: .black.opacity(0.08), radius: 6, y: 3)
+                .environment(\.colorScheme, .light)
             Spacer(minLength: 0)
         }
         .accessibilityElement(children: .combine)

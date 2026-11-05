@@ -7,11 +7,31 @@ final class TourTests: XCTestCase {
     override func setUp() { continueAfterFailure = true }
 
     private var n = 0
+    private var prefix = "tour"
 
-    func testEveryPage() {
+    func testEveryPage() { tour(["-uiTestingLight"]) }
+
+    /// The way the testers see it at night: dark, in the collage.
+    func testEveryPageDarkCollage() {
+        prefix = "tour-dark"
+        tour(["-uiTestingDark", "-uiTestingCollage"])
+    }
+
+    /// The cat's chat in the dark: its cream bubbles keep dark text.
+    func testCatChatDarkCollage() {
+        prefix = "tour-dark"
         let app = XCUIApplication()
-        app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingSampleProgress", "-uiTestingFakePlans",
-                               "-uiTestingRoutine", "-uiTestingSpeakingRoutine", "-uiTestingDayComplete"]
+        app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingDark", "-uiTestingCollage", "-uiTestingCatShowcase"]
+        app.launch()
+        XCTAssertTrue(app.descendants(matching: .any)["mascot-chat-input"].waitForExistence(timeout: 10))
+        sleep(2)
+        snap(app, "cat-chat")
+    }
+
+    private func tour(_ look: [String]) {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingFakePlans",
+                               "-uiTestingRoutine", "-uiTestingSpeakingRoutine", "-uiTestingDayComplete"] + look
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
         sleep(2)
@@ -95,7 +115,7 @@ final class TourTests: XCTestCase {
         if let home = ProcessInfo.processInfo.environment["SIMULATOR_HOST_HOME"] {
             let directory = URL(fileURLWithPath: home).appendingPathComponent("word7000-screenshots")
             try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-            try? screenshot.pngRepresentation.write(to: directory.appendingPathComponent(String(format: "tour-%02d-%@.png", n, name)))
+            try? screenshot.pngRepresentation.write(to: directory.appendingPathComponent(String(format: "%@-%02d-%@.png", prefix, n, name)))
         }
     }
 }

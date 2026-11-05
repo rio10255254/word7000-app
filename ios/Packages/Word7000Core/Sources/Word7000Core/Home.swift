@@ -198,6 +198,22 @@ public enum ActivityCalendar {
         }
     }
 
+    /// How many weeks the calendar shows: back to the week of the first
+    /// practice, at least `fewest` so a new learner's calendar is not a wall
+    /// of empty squares, at most `most`.
+    public static func weekCount(today: String, analytics: LearningAnalyticsState?, fewest: Int = 8, most: Int = 20) -> Int {
+        guard let analytics, let number = DayMath.dayNumber(today), let weekday = WeekStamps.weekdayIndex(today) else { return fewest }
+        let first = analytics.days.keys
+            .filter { analytics.day($0).practiceActions > 0 }
+            .compactMap(DayMath.dayNumber)
+            .filter { $0 <= number }
+            .min()
+        guard let first else { return fewest }
+        let monday = number - weekday
+        let span = monday >= first ? (monday - first + 6) / 7 + 1 : 1
+        return min(most, max(fewest, span))
+    }
+
     /// Days this calendar year with any practice.
     public static func activeDays(inYearOf today: String, analytics: LearningAnalyticsState?) -> Int {
         guard let analytics, let end = DayMath.dayNumber(today), let start = DayMath.dayNumber("\(today.prefix(4))-01-01") else { return 0 }

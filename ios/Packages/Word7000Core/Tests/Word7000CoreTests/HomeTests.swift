@@ -125,6 +125,15 @@ final class HomeTests: XCTestCase {
         XCTAssertEqual(weeks[1].compactMap { $0 }.reduce(0, +), 0)
     }
 
+    func testTheCalendarReachesBackToTheFirstWeekBetweenEightAndTwentyWeeks() {
+        XCTAssertEqual(ActivityCalendar.weekCount(today: "2026-11-05", analytics: nil), 8)
+        XCTAssertEqual(ActivityCalendar.weekCount(today: "2026-11-05", analytics: analytics(studied: ["2026-11-04", "2026-11-05"])), 8)
+        // 2026-08-03 is a Monday, 13 weeks before this week's Monday (11-02): 14 weeks.
+        XCTAssertEqual(ActivityCalendar.weekCount(today: "2026-11-05", analytics: analytics(studied: ["2026-08-03"])), 14)
+        XCTAssertEqual(ActivityCalendar.weekCount(today: "2026-11-05", analytics: analytics(studied: ["2026-08-09"])), 14, "the Sunday of that week")
+        XCTAssertEqual(ActivityCalendar.weekCount(today: "2026-11-05", analytics: analytics(studied: ["2025-01-01"])), 20)
+    }
+
     func testDaysThisYearAndShades() {
         XCTAssertEqual(ActivityCalendar.activeDays(inYearOf: "2026-11-05", analytics: analytics(studied: ["2026-01-01", "2026-11-05", "2025-12-31"])), 2)
         XCTAssertEqual(ActivityCalendar.activeDays(inYearOf: "2026-11-05", analytics: nil), 0)

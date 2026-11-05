@@ -88,17 +88,18 @@ struct PracticeView: View {
             .padding(.leading, 4)
     }
 
-    /// Each row is cut from its own paper and laid down by hand, as the
-    /// practice tiles on master's Today were.
-    private static let papers: [String: (PaperKind, Double)] = [
-        "practice-missed": (.ruled, -0.6), "practice-spell": (.sage, 0.5), "practice-exam-style": (.graph, -0.4),
-        "practice-meaning": (.mustard, 0.6), "practice-mock": (.peach, -0.5), "practice-scenarios": (.peach, 0.4),
-        "practice-word-speaking": (.sage, -0.5),
+    /// Every row on the same plain paper, laid down a little by hand: one
+    /// colour per row was too busy, and ruled or graph paper ran lines
+    /// through the text.
+    private static let tilts: [String: Double] = [
+        "practice-missed": -0.5, "practice-spell": 0.4, "practice-exam-style": -0.3,
+        "practice-meaning": 0.5, "practice-mock": -0.4, "practice-scenarios": 0.4,
+        "practice-word-speaking": -0.4,
     ]
 
     private func row(_ id: String, icon: String, tint: Color, title: String, detail: String, locked: Bool = false,
                      action: @escaping () -> Void) -> some View {
-        let paper = Self.papers[id] ?? (.ivory, 0)
+        let tilt = Self.tilts[id] ?? 0
         return Button(action: action) {
             HStack(spacing: 14) {
                 Image(systemName: icon)
@@ -125,8 +126,8 @@ struct PracticeView: View {
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 12)
-            .background { PracticePaper(paper: paper.0, taped: id == "practice-missed" || id == "practice-scenarios") }
-            .rotationEffect(.degrees(paper.1))
+            .background { PracticePaper(paper: .ivory) }
+            .rotationEffect(.degrees(tilt))
             .contentShape(Rectangle())
         }
         .buttonStyle(SoftPressStyle())
@@ -139,13 +140,11 @@ struct PracticeView: View {
 private struct PracticePaper: View {
     @Environment(\.appStyle) private var appStyle
     var paper: PaperKind
-    var taped = false
 
     var body: some View {
         if appStyle == .collage {
             PaperSurface(kind: paper)
                 .clipShape(TornEdgeShape(edges: [.bottom], depth: 3, seed: 5))
-                .overlay(alignment: .top) { if taped { TapeStrip(width: 52, angle: -5).offset(y: -9) } }
                 .shadow(color: .black.opacity(0.07), radius: 3, y: 2)
         } else {
             PremiumSurface(radius: 20)

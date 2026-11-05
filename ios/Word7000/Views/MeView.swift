@@ -39,12 +39,13 @@ struct MeView: View {
                 }
 
                 // WordCat Next: the weeks as squares, darker on busier days.
+                // Back to the week of the first practice, eight to twenty weeks.
+                let weekCount = ActivityCalendar.weekCount(today: model.today, analytics: model.progress.analytics)
                 Section {
-                    ActivityCalendarView(weeks: ActivityCalendar.weeks(20, today: model.today, analytics: model.progress.analytics))
+                    ActivityCalendarView(weeks: ActivityCalendar.weeks(weekCount, today: model.today, analytics: model.progress.analytics))
                         .padding(.vertical, 4)
-                        .listRowBackground(StyledRowBackground(paper: .graph))
                 } header: {
-                    Text(L.t("最近 20 週", "The last 20 weeks"))
+                    Text(L.t("最近 \(weekCount) 週", "The last \(weekCount) weeks"))
                 } footer: {
                     Text(L.t("今年學了 \(ActivityCalendar.activeDays(inYearOf: model.today, analytics: model.progress.analytics)) 天",
                              "\(ActivityCalendar.activeDays(inYearOf: model.today, analytics: model.progress.analytics)) days this year"))
@@ -705,25 +706,22 @@ struct ActivityCalendarView: View {
 
     var body: some View {
         let active = weeks.joined().compactMap { $0 }.filter { $0 > 0 }.count
-        GeometryReader { proxy in
-            let gap: CGFloat = 3
-            let side = max(4, min(16, (proxy.size.width - gap * CGFloat(max(0, weeks.count - 1))) / CGFloat(max(1, weeks.count))))
-            HStack(alignment: .top, spacing: gap) {
-                ForEach(Array(weeks.enumerated()), id: \.offset) { _, week in
-                    VStack(spacing: gap) {
-                        ForEach(Array(week.enumerated()), id: \.offset) { _, actions in
-                            RoundedRectangle(cornerRadius: 3, style: .continuous)
-                                .fill(color(actions))
-                                .frame(width: side, height: side)
-                        }
+        // Squares as wide as the weeks allow: bigger when there are fewer weeks.
+        HStack(alignment: .top, spacing: 3) {
+            ForEach(Array(weeks.enumerated()), id: \.offset) { _, week in
+                VStack(spacing: 3) {
+                    ForEach(Array(week.enumerated()), id: \.offset) { _, actions in
+                        RoundedRectangle(cornerRadius: 4, style: .continuous)
+                            .fill(color(actions))
+                            .aspectRatio(1, contentMode: .fit)
                     }
                 }
+                .frame(maxWidth: 26)
             }
-            .frame(maxWidth: .infinity, alignment: .center)
         }
-        .frame(height: 7 * 16 + 6 * 3)
+        .frame(maxWidth: .infinity)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(L.t("最近 20 週學了 \(active) 天", "\(active) days in the last 20 weeks"))
+        .accessibilityLabel(L.t("最近 \(weeks.count) 週學了 \(active) 天", "\(active) days in the last \(weeks.count) weeks"))
         .accessibilityIdentifier("me-calendar")
     }
 

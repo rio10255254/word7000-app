@@ -205,32 +205,44 @@ struct RoutineSpellView: View {
                         .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 8)))
                         .accessibilityIdentifier("routine-message")
                 }
-                TextField(L.t("輸入英文單字", "Type the English word"), text: Binding(
-                    get: { input },
-                    set: { if !attempt.solved { input = $0 } }
-                ))
-                .font(.title.weight(.semibold))
-                .multilineTextAlignment(.center)
-                .textInputAutocapitalization(.never)
-                .autocorrectionDisabled()
-                .keyboardType(.asciiCapable)
-                .submitLabel(attempt.solved ? .next : .done)
-                .focused($focused)
-                .onSubmit {
-                    attempt.solved ? next() : check()
-                    keepKeyboard()
-                }
-                .padding(.vertical, 16)
-                .padding(.horizontal, 16)
-                .background(Palette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .stroke(focused ? Palette.accent.opacity(0.45) : .clear, lineWidth: 2))
-                .accessibilityIdentifier("routine-input")
             }
             .padding(.bottom, 16)
         }
         .scrollDismissesKeyboard(.never)
-        .safeAreaInset(edge: .bottom) { actions(attempt) }
+        // The answer box sits on the buttons, right above the keyboard, so
+        // it is never pushed under them.
+        .safeAreaInset(edge: .bottom) {
+            VStack(spacing: 10) {
+                inputField(attempt)
+                actions(attempt)
+            }
+            .padding(.top, 8)
+            .background { Palette.background.overlay { PaperGrain() }.ignoresSafeArea() }
+        }
+    }
+
+    private func inputField(_ attempt: ClozeAttempt) -> some View {
+        TextField(L.t("輸入英文單字", "Type the English word"), text: Binding(
+            get: { input },
+            set: { if !attempt.solved { input = $0 } }
+        ))
+        .font(.title.weight(.semibold))
+        .multilineTextAlignment(.center)
+        .textInputAutocapitalization(.never)
+        .autocorrectionDisabled()
+        .keyboardType(.asciiCapable)
+        .submitLabel(attempt.solved ? .next : .done)
+        .focused($focused)
+        .onSubmit {
+            attempt.solved ? next() : check()
+            keepKeyboard()
+        }
+        .padding(.vertical, 12)
+        .padding(.horizontal, 16)
+        .background(Palette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous)
+            .stroke(focused ? Palette.accent.opacity(0.45) : .clear, lineWidth: 2))
+        .accessibilityIdentifier("routine-input")
     }
 
     /// The cat asks with the Chinese cue, never the word itself.
@@ -273,8 +285,7 @@ struct RoutineSpellView: View {
                 .accessibilityIdentifier("routine-next")
             }
         }
-        .padding(.vertical, 8)
-        .background { Palette.background.overlay { PaperGrain() } }
+        .padding(.bottom, 8)
     }
 
     private func load(_ id: String?) {

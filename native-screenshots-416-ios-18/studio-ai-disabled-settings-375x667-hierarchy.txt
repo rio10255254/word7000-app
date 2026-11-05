@@ -1,0 +1,155 @@
+Attributes: Application, 0x112bfa1a0, pid: 7605, label: 'WordCat'
+Element subtree:
+ →Application, 0x112bfa1a0, pid: 7605, label: 'WordCat'
+    Window (Main), 0x112bdb760, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x112bcf3f0, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x112bdf800, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x112be0b60, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x112bfa4e0, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x112be9d30, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x112e68ab0, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x112e68bd0, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x112e68cf0, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x112e68e10, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x112eb0810, {{0.0, 0.0}, {375.0, 667.0}}
+                          Other, 0x112eb0930, {{0.0, 0.0}, {375.0, 667.0}}
+                            NavigationBar, 0x112eb0a50, {{0.0, 20.0}, {375.0, 44.0}}, identifier: 'AI and recording'
+                              Button, 0x112e5e3f0, {{0.0, 20.0}, {93.5, 44.0}}, label: 'Settings'
+                              StaticText, 0x112e5e510, {{118.0, 32.0}, {139.0, 20.5}}, label: 'AI and recording'
+                            Other, 0x112e5e630, {{0.0, 0.0}, {375.0, 667.0}}
+                              Other, 0x112bcc980, {{0.0, 0.0}, {375.0, 667.0}}
+                                Other, 0x112bccaa0, {{0.0, 0.0}, {375.0, 667.0}}
+                                  Other, 0x112bccbc0, {{0.0, 0.0}, {375.0, 667.0}}
+                                    Image, 0x112bccce0, {{0.0, 0.0}, {375.0, 667.0}}, label: 'PaperGrain'
+                                    CollectionView, 0x112bcce00, {{0.0, 0.0}, {375.0, 667.0}}
+                                      Other, 0x112bccf20, {{-16.0, -1270.0}, {407.0, 1671.0}}
+                                      Cell, 0x112bcd040, {{16.0, 99.0}, {343.0, 44.0}}
+                                        Other, 0x112bcd160, {{16.0, 99.0}, {343.0, 44.0}}
+                                          Other, 0x112bd8540, {{16.0, 99.0}, {343.0, 44.0}}
+                                            Other, 0x112bd8660, {{16.0, 99.0}, {343.0, 44.0}}
+                                              Image, 0x112bd8780, {{16.0, 99.0}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x112bd88a0, {{16.0, 99.0}, {343.0, 44.0}}
+                                          Other, 0x112bd89c0, {{16.0, 99.0}, {343.0, 44.0}}
+                                            Other, 0x112bd8ae0, {{16.0, 99.0}, {343.0, 44.0}}
+                                              Switch, 0x112bd8c00, {{16.0, 99.0}, {343.0, 44.0}}, identifier: 'settings-ai-toggle', label: 'AI suggestions', value: 0
+                                                StaticText, 0x112bd8d20, {{32.0, 110.8}, {112.5, 20.5}}, label: 'AI suggestions'
+                                                Switch, 0x112bd8e40, {{294.0, 105.5}, {51.0, 31.0}}, value: 0
+                                      Cell, 0x112bd8f60, {{16.0, 143.0}, {343.0, 44.0}}
+                                        Other, 0x112bd9080, {{16.0, 143.0}, {343.0, 44.0}}
+                                          Other, 0x112bd91a0, {{16.0, 143.0}, {343.0, 44.0}}
+                                            Other, 0x112bd92c0, {{16.0, 143.0}, {343.0, 44.0}}
+                                              Image, 0x112bd93e0, {{16.0, 143.0}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x112bd9500, {{16.0, 143.0}, {343.0, 44.0}}
+                                          Other, 0x112bd9620, {{16.0, 143.0}, {343.0, 44.0}}
+                                            Other, 0x112bd9800, {{16.0, 143.0}, {343.0, 44.0}}
+                                              Switch, 0x112bd9920, {{16.0, 143.0}, {343.0, 44.0}}, identifier: 'settings-cloud-ai-toggle', label: 'Online AI (Claude)', value: 1, Disabled
+                                                StaticText, 0x112bd9a40, {{32.0, 154.8}, {138.0, 20.5}}, label: 'Online AI (Claude)', Disabled
+                                                Switch, 0x112bd9b60, {{294.0, 149.5}, {51.0, 31.0}}, value: 1, Disabled
+                                      Other, 0x112bd9c80, {{32.0, 142.5}, {327.0, 0.5}}
+                                      Cell, 0x112bd9da0, {{16.0, 187.0}, {343.0, 44.0}}
+                                        Other, 0x112bd9ec0, {{16.0, 187.0}, {343.0, 44.0}}
+                                          Other, 0x112bd9fe0, {{16.0, 187.0}, {343.0, 44.0}}
+                                            Other, 0x112bda100, {{16.0, 187.0}, {343.0, 44.0}}
+                                              Image, 0x112bda220, {{16.0, 187.0}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x112bda340, {{16.0, 187.0}, {343.0, 44.0}}
+                                          Other, 0x112bda460, {{16.0, 187.0}, {343.0, 44.0}}
+                                            Other, 0x112bda580, {{16.0, 187.0}, {343.0, 44.0}}
+                                              StaticText, 0x112bda6a0, {{32.0, 198.8}, {68.5, 20.5}}, label: 'Online AI'
+                                              StaticText, 0x112bcc140, {{16.0, 187.0}, {343.0, 44.0}}, identifier: 'settings-cloud-ai-status', label: 'Online AI, Off'
+                                      Other, 0x112bcc260, {{32.0, 186.5}, {327.0, 0.5}}
+                                      Cell, 0x112bcc380, {{16.0, 231.0}, {343.0, 44.0}}
+                                        Other, 0x112bcc4a0, {{16.0, 231.0}, {343.0, 44.0}}
+                                          Other, 0x112bcc5c0, {{16.0, 231.0}, {343.0, 44.0}}
+                                            Other, 0x112bcc6e0, {{16.0, 231.0}, {343.0, 44.0}}
+                                              Image, 0x112bf8880, {{16.0, 231.0}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x112bf89a0, {{16.0, 231.0}, {343.0, 44.0}}
+                                          Other, 0x112bf8ac0, {{16.0, 231.0}, {343.0, 44.0}}
+                                            Other, 0x112bf8be0, {{16.0, 231.0}, {343.0, 44.0}}
+                                              StaticText, 0x112bf8d00, {{32.0, 242.8}, {121.5, 20.5}}, label: 'Speaking coach'
+                                              StaticText, 0x112bf8e20, {{16.0, 231.0}, {343.0, 44.0}}, identifier: 'settings-ai-status', label: 'Speaking coach, Currently off'
+                                      Other, 0x112bf8f40, {{32.0, 230.5}, {327.0, 0.5}}
+                                      Cell, 0x112bf9060, {{16.0, 275.0}, {343.0, 44.0}}
+                                        Other, 0x112bd1cb0, {{16.0, 275.0}, {343.0, 44.0}}
+                                          Other, 0x112bd1dd0, {{16.0, 275.0}, {343.0, 44.0}}
+                                            Other, 0x112bd1ef0, {{16.0, 275.0}, {343.0, 44.0}}
+                                              Image, 0x112bd2010, {{16.0, 275.0}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x112bd2130, {{16.0, 275.0}, {343.0, 44.0}}
+                                          Other, 0x112bd2250, {{16.0, 275.0}, {343.0, 44.0}}
+                                            Other, 0x112bd2370, {{16.0, 275.0}, {343.0, 44.0}}
+                                              StaticText, 0x112bd2490, {{32.0, 286.8}, {123.0, 20.5}}, label: 'Scan assistance'
+                                              StaticText, 0x112bd25b0, {{16.0, 275.0}, {343.0, 44.0}}, label: 'Scan assistance, Unavailable'
+                                      Other, 0x112bd26d0, {{32.0, 274.5}, {327.0, 0.5}}
+                                      Cell, 0x112bd27f0, {{16.0, 319.0}, {343.0, 82.0}}
+                                        Other, 0x112bd2910, {{16.0, 319.0}, {343.0, 82.0}}
+                                        Other, 0x112bd2a30, {{16.0, 319.0}, {343.0, 82.0}}
+                                          Other, 0x112bd2b50, {{16.0, 319.0}, {343.0, 82.0}}
+                                            Other, 0x112bd2c70, {{16.0, 319.0}, {343.0, 82.0}}
+                                              StaticText, 0x112bd2d90, {{16.0, 319.0}, {343.0, 82.0}}, label: 'Online AI is Anthropic's Claude (Premium). Scan assistance uses on-device AI when it can't connect. Turning it off leaves words and practice as they are.'
+                                      Other, 0x112bd2eb0, {{-16.0, 401.0}, {407.0, 231.5}}
+                                      Cell, 0x112bd2fd0, {{16.0, 418.5}, {343.0, 44.0}}
+                                        Other, 0x112bd30f0, {{16.0, 418.5}, {343.0, 44.0}}
+                                          Other, 0x112bd3210, {{16.0, 418.5}, {343.0, 44.0}}
+                                            Other, 0x112bd3330, {{16.0, 418.5}, {343.0, 44.0}}
+                                              Image, 0x112bd3450, {{16.0, 418.5}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x112bd3570, {{16.0, 418.5}, {343.0, 44.0}}
+                                          Other, 0x112bd3690, {{16.0, 418.5}, {343.0, 44.0}}
+                                            Other, 0x112bd37b0, {{16.0, 418.5}, {343.0, 44.0}}
+                                              StaticText, 0x112bd38d0, {{32.0, 430.2}, {91.0, 20.5}}, label: 'Microphone'
+                                              StaticText, 0x112bd39f0, {{16.0, 418.5}, {343.0, 44.0}}, label: 'Microphone, Not requested'
+                                      Cell, 0x112bd3b10, {{16.0, 462.5}, {343.0, 64.5}}
+                                        Other, 0x112bd3c30, {{16.0, 462.5}, {343.0, 64.5}}
+                                          Other, 0x112bd3d50, {{16.0, 462.5}, {343.0, 64.5}}
+                                            Other, 0x112bd3e70, {{16.0, 462.5}, {343.0, 64.5}}
+                                              Image, 0x112bd3f90, {{16.0, 462.5}, {343.0, 64.5}}, label: 'PaperGrain'
+                                        Other, 0x112bd40b0, {{16.0, 462.5}, {343.0, 64.5}}
+                                          Other, 0x112bd41d0, {{16.0, 462.5}, {343.0, 64.5}}
+                                            Other, 0x112bd42f0, {{16.0, 462.5}, {343.0, 64.5}}
+                                              StaticText, 0x112bd4410, {{32.0, 484.5}, {151.5, 20.5}}, label: 'Offline transcription'
+                                              StaticText, 0x112bd4530, {{16.0, 462.5}, {343.0, 64.5}}, label: 'Offline transcription, Device or language unsupported'
+                                      Other, 0x112bd4650, {{32.0, 462.0}, {327.0, 0.5}}
+                                      Cell, 0x112bd4770, {{16.0, 527.0}, {343.0, 44.0}}
+                                        Other, 0x112bd4890, {{16.0, 527.0}, {343.0, 44.0}}
+                                          Other, 0x112bd49b0, {{16.0, 527.0}, {343.0, 44.0}}
+                                            Other, 0x112bd4ad0, {{16.0, 527.0}, {343.0, 44.0}}
+                                              Image, 0x112bd4bf0, {{16.0, 527.0}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x112bd4d10, {{16.0, 527.0}, {343.0, 44.0}}
+                                          Other, 0x112bd4e30, {{16.0, 527.0}, {343.0, 44.0}}
+                                            Other, 0x112bd4f50, {{16.0, 527.0}, {343.0, 44.0}}
+                                              Button, 0x112bd5070, {{16.0, 527.0}, {343.0, 44.0}}, label: 'Check again'
+                                                Image, 0x112bd5190, {{36.5, 537.5}, {19.0, 23.5}}, identifier: 'arrow.clockwise', label: 'Refresh'
+                                                StaticText, 0x112bd52b0, {{36.5, 537.5}, {133.5, 23.5}}, label: 'Check again'
+                                      Other, 0x112bd53d0, {{32.0, 526.5}, {327.0, 0.5}}
+                                      Cell, 0x112bd54f0, {{16.0, 571.0}, {343.0, 44.0}}
+                                        Other, 0x112bd5610, {{16.0, 571.0}, {343.0, 44.0}}
+                                          Other, 0x112bd5730, {{16.0, 571.0}, {343.0, 44.0}}
+                                            Other, 0x112bd5850, {{16.0, 571.0}, {343.0, 44.0}}
+                                              Image, 0x112bd5970, {{16.0, 571.0}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x112bd5a90, {{16.0, 571.0}, {343.0, 44.0}}
+                                          Other, 0x112bd5bb0, {{16.0, 571.0}, {343.0, 44.0}}
+                                            Other, 0x112bd5cd0, {{16.0, 571.0}, {343.0, 44.0}}
+                                              Button, 0x112bd5df0, {{16.0, 571.0}, {343.0, 44.0}}, label: 'Open System Settings'
+                                      Other, 0x112bd5f10, {{76.0, 570.5}, {283.0, 0.5}}
+                                      Other, 0x112bd6030, {{-16.0, 632.5}, {407.0, 1721.5}}
+                                      Cell, 0x112bd6150, {{16.0, 632.5}, {343.0, 39.0}}
+                                        Other, 0x112bd6270, {{16.0, 632.5}, {343.0, 39.0}}
+                                        Other, 0x112bd6390, {{16.0, 632.5}, {343.0, 39.0}}
+                                          Other, 0x112bd64b0, {{16.0, 632.5}, {343.0, 39.0}}
+                                            Other, 0x112bd65d0, {{16.0, 632.5}, {343.0, 39.0}}
+                                              StaticText, 0x112bd66f0, {{16.0, 632.5}, {343.0, 39.0}}, label: 'Privacy'
+                                      Other, 0x112bd6810, {{342.0, 64.0}, {30.0, 554.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                        Other, 0x112bd6930, {{369.0, 67.0}, {3.0, 342.0}}
+                                      Other, 0x112bd6a50, {{342.0, 64.0}, {30.0, 554.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                        Other, 0x112bd6b70, {{369.0, 67.0}, {3.0, 342.0}}
+                TabBar, 0x112bd6c90, {{0.0, 618.0}, {375.0, 49.0}}, label: 'Tab Bar'
+                  Button, 0x112bd6db0, {{2.0, 619.0}, {90.0, 48.0}}, identifier: 'sun.max.fill', label: 'Today'
+                  Button, 0x112bd6ed0, {{96.0, 619.0}, {90.0, 48.0}}, identifier: 'dumbbell.fill', label: 'Practice'
+                  Button, 0x112bd6ff0, {{190.0, 619.0}, {89.0, 48.0}}, identifier: 'books.vertical.fill', label: 'Words'
+                  Button, 0x112bd7110, {{283.0, 619.0}, {90.0, 48.0}}, identifier: 'person.crop.circle.fill', label: 'Me', Selected
+                    Image, 0x112bd7230, {{314.0, 622.5}, {27.5, 27.5}}, identifier: 'person.crop.circle.fill', label: 'account'
+Path to element:
+ →Application, 0x112bfa1a0, pid: 7605, label: 'WordCat'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x112bb5ef0, pid: 7605, label: 'WordCat'
+  }

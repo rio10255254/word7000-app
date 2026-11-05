@@ -1,0 +1,49 @@
+Timestamp               Ty Process[PID:TID]
+2026-11-05 12:30:09.111 Df Photos[6119:50bc3] [com.apple.xpc:connection] [0x104fecf90] Re-initialization successful; calling out to event handler with XPC_ERROR_CONNECTION_INTERRUPTED
+2026-11-05 12:30:31.847 Df PhotosPosterProvider[3975:4181] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-05 12:30:31.885 Df PhotosFileProvider[70234:2c50f] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-05 12:30:31.887 Df PhotosFileProvider[70234:2c50f] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-05 12:30:32.001 Df PhotosFileProvider[6364:5c2f] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-05 12:30:32.002 Df PhotosFileProvider[6364:5c2f] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-05 12:30:32.046 Df PhotosReliveWidget[6270:5af2] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-05 12:30:32.068 Df PhotosReliveWidget[6270:5af2] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-05 12:30:32.068 Df PhotosFileProvider[6384:5c6b] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-05 12:30:32.069 Df PhotosFileProvider[6384:5c6b] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-05 12:30:32.095 Df PhotosPosterProvider[3975:4181] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-05 12:30:47.435 Df Photos[6119:5943] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-05 12:30:47.435 Df Photos[6119:5943] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-05 12:30:47.436 Df Photos[6119:5943] [com.apple.photos.backend:MyPhotoStream] Clearing cached PLPhotoSharingHelper state
+2026-11-05 12:30:47.438 A  Photos[6119:5943] (Accounts) accounts/accounts-with-types-sync
+2026-11-05 12:30:47.439 Df Photos[6119:5943] [com.apple.xpc:connection] [0x104c663a0] activating connection: mach=true listener=false peer=false name=com.apple.accountsd.accountmanager
+2026-11-05 12:30:47.442 A  Photos[6119:52873] (CoreFoundation) Loading Preferences From User Session CFPrefsD
+2026-11-05 12:30:47.443 Df Photos[6119:5943] [com.apple.photos.backend:Backend] No primaryAppleAccount
+2026-11-05 12:30:47.487 Df Photos[6119:5943] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000354c210> Received PXDataSourceManagerChangedDataSource
+2026-11-05 12:30:47.488 Df Photos[6119:5943] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000354c210> Re-Prepare Counts
+2026-11-05 12:30:47.489 Df Photos[6119:5943] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000354c210> ⎡ Will Prepare Asset Type Counts
+2026-11-05 12:30:47.489 Df Photos[6119:5943] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000354c210> Is Prepared:1 (preparing:1 || usable:0)
+2026-11-05 12:30:47.490 Df Photos[6119:5308f] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000354c210> ⎜ Prepare Asset Type Counts success:YES
+2026-11-05 12:30:47.526 Df Photos[6119:5943] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003525340> Received PXDataSourceManagerChangedDataSource
+2026-11-05 12:30:47.527 Df Photos[6119:5943] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003525340> Re-Prepare Counts
+2026-11-05 12:30:47.527 Df Photos[6119:5943] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003525340> ⎡ Will Prepare Asset Type Counts
+2026-11-05 12:30:47.528 Df Photos[6119:5943] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003525340> Is Prepared:1 (preparing:1 || usable:0)
+2026-11-05 12:30:47.528 Df Photos[6119:5308f] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003525340> ⎜ Prepare Asset Type Counts success:YES
+2026-11-05 12:30:47.785 Df Photos[6119:5943] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000354c210> ⎣ Did Prepare Asset Type Counts
+2026-11-05 12:30:47.786 Df Photos[6119:5943] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003525340> ⎣ Did Prepare Asset Type Counts
+2026-11-05 12:30:49.962 Df Photos[6119:52873] (CoreVideo) pool 0x600003542c00 being deallocated [0 in use, 2 free] _targetBufferCountsBitfield 0x0
+2026-11-05 12:30:49.962 Df Photos[6119:52873] (CoreVideo) pool 0x0 being deallocated [0 in use, 0 free] _targetBufferCountsBitfield 0x0
+2026-11-05 12:30:50.428 Df Photos[6119:5943] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000354c210> Received PXDataSourceManagerChangedDataSource
+2026-11-05 12:30:50.428 Df Photos[6119:5943] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000354c210> Re-Prepare Counts
+2026-11-05 12:30:50.428 Df Photos[6119:5943] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000354c210> ⎡ Will Prepare Asset Type Counts
+2026-11-05 12:30:50.429 Df Photos[6119:5943] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000354c210> Is Prepared:1 (preparing:1 || usable:0)
+2026-11-05 12:30:50.429 Df Photos[6119:5308f] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000354c210> ⎜ Prepare Asset Type Counts success:YES
+2026-11-05 12:30:50.431 Df Photos[6119:5943] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003525340> Received PXDataSourceManagerChangedDataSource
+2026-11-05 12:30:50.431 Df Photos[6119:5943] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003525340> Re-Prepare Counts
+2026-11-05 12:30:50.431 Df Photos[6119:5943] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003525340> ⎡ Will Prepare Asset Type Counts
+2026-11-05 12:30:50.431 Df Photos[6119:5943] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003525340> Is Prepared:1 (preparing:1 || usable:0)
+2026-11-05 12:30:50.432 Df Photos[6119:5943] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000354c210> ⎣ Did Prepare Asset Type Counts
+2026-11-05 12:30:50.434 Df Photos[6119:52873] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003525340> ⎜ Prepare Asset Type Counts success:YES
+2026-11-05 12:30:50.725 Df Photos[6119:5943] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003525340> ⎣ Did Prepare Asset Type Counts
+2026-11-05 12:31:32.462 Df Photos[6119:54256] [com.apple.xpc:connection] [0x104c663a0] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-11-05 12:31:32.464 Df Photos[6119:54256] [com.apple.accounts:core] "The connection to ACDAccountStore was invalidated."
+2026-11-05 12:33:14.008 Df Photos[6119:55f77] [com.apple.photos.ui:UI] PXNetworkStatusMonitor { type:none isConstrained:NO isExpensive:NO } status:unsatisfied reason:notAvailable
+2026-11-05 12:33:14.594 Df Photos[6119:55f77] [com.apple.photos.ui:UI] PXNetworkStatusMonitor { type:wired isConstrained:NO isExpensive:NO } status:satisfied

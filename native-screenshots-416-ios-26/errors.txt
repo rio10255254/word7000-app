@@ -1,0 +1,2 @@
+/Users/runner/work/word7000-app/word7000-app/ios/Word7000UITests/ScreenshotTests.swift:42: error: -[Word7000UITests.ScreenshotTests testStyleChooserAppearsOnceAndApplies] : XCTAssertTrue failed
+/Users/runner/work/word7000-app/word7000-app/ios/Word7000UITests/SpeakingCoachTests.swift:483: error: -[Word7000UITests.SpeakingCoachTests testMockSuccessTypingCheckAndProgressInLightEnglishUI] : XCTAssertTrue failed

@@ -1,0 +1,170 @@
+Attributes: Application, 0x101b8d710, pid: 54558, label: 'WordCat'
+Element subtree:
+ →Application, 0x101b8d710, pid: 54558, label: 'WordCat'
+    Window (Main), 0x101bd9350, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x101bd2cf0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x101bd0b50, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x101bd7ef0, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x101bd8cf0, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x101bcfad0, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x101bd3110, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x101bdaf10, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x101bdb030, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x101bdb150, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x101bdb270, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x101bdb390, {{0.0, 0.0}, {402.0, 874.0}}
+                            NavigationBar, 0x101bdb4b0, {{0.0, 62.0}, {402.0, 106.0}}, identifier: '我'
+                              StaticText, 0x101bdb5d0, {{16.0, 119.7}, {32.3, 40.7}}, label: '我'
+                            Other, 0x101bdb6f0, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x101bdb810, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x101bdb930, {{0.0, 0.0}, {402.0, 874.0}}
+                                  Other, 0x101bdba50, {{0.0, 0.0}, {402.0, 874.0}}
+                                    Image, 0x101bdbb70, {{0.0, 0.0}, {402.0, 874.0}}, label: 'PaperGrain'
+                                    CollectionView, 0x101bdbc90, {{0.0, 0.0}, {402.0, 874.0}}
+                                      Other, 0x101bdbdb0, {{-16.0, -1580.0}, {434.0, 2056.3}}
+                                      Other, 0x101bdbed0, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x101bdbff0, {{0.0, 0.0}, {402.0, 170.8}}
+                                        Other, 0x101bdc110, {{0.0, 726.2}, {402.0, 147.8}}
+                                      Other, 0x1019e0660, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x101972a90, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Image, 0x1019b12b0, {{-120.0, 731.0}, {642.0, 286.0}}, identifier: 'AdditionalDimmingOverlay'
+                                          Other, 0x1019af990, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x101af3730, {{0.0, 726.2}, {402.0, 147.8}}
+                                          Other, 0x106f5e6d0, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x106f5e980, {{0.0, 726.2}, {402.0, 147.8}}
+                                            Other, 0x106f60810, {{0.0, 726.2}, {402.0, 147.8}}
+                                      Cell, 0x106f61870, {{16.0, 168.0}, {370.0, 278.7}}
+                                        Other, 0x106f5d2d0, {{16.0, 168.0}, {370.0, 278.7}}
+                                          Other, 0x106f61c90, {{16.0, 168.0}, {370.0, 278.7}}
+                                            Other, 0x101af4740, {{16.0, 168.0}, {370.0, 278.7}}
+                                              Image, 0x101bdc230, {{16.0, 168.0}, {370.0, 278.7}}, label: 'PaperGrain'
+                                        Other, 0x101bdc350, {{16.0, 168.0}, {370.0, 278.7}}
+                                          Other, 0x101bdc470, {{16.0, 168.0}, {370.0, 278.7}}
+                                            Other, 0x101bdc590, {{16.0, 168.0}, {370.0, 278.7}}
+                                              Button, 0x101bdc6b0, {{29.8, 188.8}, {60.5, 60.5}}, identifier: 'me-mascot', label: '傻貓'
+                                                Other, 0x101bdc7d0, {{29.8, 188.8}, {60.5, 60.5}}
+                                              StaticText, 0x1019b0a50, {{100.0, 197.8}, {76.7, 24.0}}, label: '我的學習'
+                                              StaticText, 0x1019b3f30, {{189.7, 203.2}, {45.3, 13.3}}, label: '試用 7 天'
+                                              Image, 0x1019b4050, {{107.3, 225.0}, {9.7, 16.0}}, identifier: 'iphone', label: 'iphone'
+                                              StaticText, 0x1019b4170, {{107.3, 225.0}, {158.3, 16.0}}, label: '進度保存在這支 iPhone'
+                                              StaticText, 0x1019b4290, {{32.0, 261.0}, {338.0, 37.0}}, identifier: 'me-level', label: 'Lv.1、單字新手、再 44 字升級'
+                                                StaticText, 0x1019b43b0, {{41.0, 264.0}, {30.3, 18.0}}, label: 'Lv.1'
+                                                StaticText, 0x1019b44d0, {{88.3, 263.5}, {62.7, 19.0}}, label: '單字新手'
+                                                StaticText, 0x1019b45f0, {{300.0, 265.8}, {70.0, 14.3}}, label: '再 44 字升級'
+                                                Other, 0x1019b4710, {{32.0, 292.0}, {338.0, 6.0}}
+                                              StaticText, 0x1019b4830, {{64.2, 312.0}, {48.0, 47.7}}, label: '1、連續天數'
+                                                StaticText, 0x1019b4950, {{80.2, 312.0}, {16.0, 31.3}}, label: '1'
+                                                StaticText, 0x1019b4a70, {{64.2, 345.3}, {48.0, 14.3}}, label: '連續天數'
+                                              StaticText, 0x1019b4b90, {{189.0, 312.0}, {24.0, 47.7}}, label: '6、已會'
+                                                StaticText, 0x1019b4cb0, {{193.0, 312.0}, {16.0, 31.3}}, label: '6'
+                                                StaticText, 0x1019b4dd0, {{189.0, 345.3}, {24.0, 14.3}}, label: '已會'
+                                              StaticText, 0x1019b4ef0, {{295.8, 312.0}, {36.0, 47.7}}, label: '0、複習中'
+                                                StaticText, 0x1019b5010, {{305.8, 312.0}, {16.0, 31.3}}, label: '0'
+                                                StaticText, 0x1019b5130, {{295.8, 345.3}, {36.0, 14.3}}, label: '複習中'
+                                              Button, 0x1019b5250, {{32.0, 373.7}, {338.0, 50.0}}, identifier: 'me-plus', label: '升級 Premium'
+                                                Image, 0x1019b5370, {{32.0, 373.7}, {338.0, 50.0}}, label: 'PaperGrain'
+                                                Image, 0x1019b5490, {{135.3, 387.7}, {18.0, 22.0}}, identifier: 'sparkles', label: '閃光'
+                                                StaticText, 0x1019b55b0, {{32.0, 373.7}, {338.0, 50.0}}, label: '升級 Premium'
+                                      Cell, 0x1019b56d0, {{16.0, 446.7}, {370.0, 29.7}}
+                                        Other, 0x1019b57f0, {{16.0, 446.7}, {370.0, 29.7}}
+                                        Other, 0x101bdc8f0, {{16.0, 446.7}, {370.0, 29.7}}
+                                          Other, 0x101bdca10, {{16.0, 446.7}, {370.0, 29.7}}
+                                            Other, 0x101bdcb30, {{16.0, 446.7}, {370.0, 29.7}}
+                                              Image, 0x101bdcc50, {{32.0, 455.0}, {14.0, 15.0}}, identifier: 'me-streak-protection', label: 'shield.lefthalf.filled'
+                                              StaticText, 0x101bdcd70, {{16.0, 446.7}, {370.0, 29.7}}, identifier: 'me-streak-protection', label: '貓罐頭在你這：漏學 1 天，牠會幫你保住紀錄'
+                                      Other, 0x101bdce90, {{-16.0, 476.3}, {434.0, 298.0}}
+                                      Cell, 0x101bdcfb0, {{16.0, 476.3}, {370.0, 40.3}}
+                                        Other, 0x101bdd0d0, {{16.0, 476.3}, {370.0, 40.3}}
+                                        Other, 0x101bdd1f0, {{16.0, 476.3}, {370.0, 40.3}}
+                                          Other, 0x101bdd310, {{16.0, 476.3}, {370.0, 40.3}}
+                                            Other, 0x101bdd430, {{16.0, 476.3}, {370.0, 40.3}}
+                                              StaticText, 0x101bdd550, {{16.0, 476.3}, {370.0, 40.3}}, label: '最近 20 週'
+                                      Cell, 0x101bdd670, {{16.0, 516.7}, {370.0, 168.0}}
+                                        Other, 0x101bdd790, {{16.0, 516.7}, {370.0, 168.0}}
+                                          Other, 0x101bdd8b0, {{16.0, 516.7}, {370.0, 168.0}}
+                                            Other, 0x101bdd9d0, {{16.0, 516.7}, {370.0, 168.0}}
+                                              Image, 0x101bddaf0, {{16.0, 516.7}, {370.0, 168.0}}, label: 'PaperGrain'
+                                        Other, 0x101bddc10, {{16.0, 516.7}, {370.0, 168.0}}
+                                          Other, 0x101bddd30, {{16.0, 516.7}, {370.0, 168.0}}
+                                            Other, 0x101bdde50, {{16.0, 516.7}, {370.0, 168.0}}
+                                              Other, 0x101bddf70, {{16.0, 516.7}, {370.0, 168.0}}, identifier: 'me-calendar', label: '最近 20 週學了 1 天'
+                                      Cell, 0x101bde090, {{16.0, 684.7}, {370.0, 60.0}}
+                                        Other, 0x101bde1b0, {{16.0, 684.7}, {370.0, 60.0}}
+                                          Other, 0x101bde2d0, {{16.0, 684.7}, {370.0, 60.0}}
+                                            Other, 0x101bde3f0, {{16.0, 684.7}, {370.0, 60.0}}
+                                              Image, 0x101bde510, {{16.0, 684.7}, {370.0, 60.0}}, label: 'PaperGrain'
+                                        Other, 0x101bde630, {{16.0, 684.7}, {370.0, 60.0}}
+                                          Other, 0x101bde750, {{16.0, 684.7}, {370.0, 60.0}}
+                                            Other, 0x101bde870, {{16.0, 684.7}, {370.0, 60.0}}
+                                              Button, 0x101bde990, {{16.0, 684.7}, {370.0, 60.0}}, identifier: 'me-history', label: '完整學習紀錄'
+                                                Image, 0x101bdeab0, {{38.3, 707.7}, {17.3, 14.0}}, identifier: 'chart.bar.xaxis', label: 'chart.bar.xaxis'
+                                                StaticText, 0x101bdebd0, {{74.0, 704.5}, {101.3, 20.3}}, label: '完整學習紀錄'
+                                                Image, 0x101bdecf0, {{362.7, 709.0}, {6.7, 11.7}}, identifier: 'chevron.right', label: '往前'
+                                      Other, 0x101bdee10, {{32.0, 683.7}, {338.0, 1.0}}
+                                      Cell, 0x101bdef30, {{16.0, 744.7}, {370.0, 29.7}}
+                                        Other, 0x101bdf050, {{16.0, 744.7}, {370.0, 29.7}}
+                                        Other, 0x101bdf170, {{16.0, 744.7}, {370.0, 29.7}}
+                                          Other, 0x101bdf290, {{16.0, 744.7}, {370.0, 29.7}}
+                                            Other, 0x101bdf3b0, {{16.0, 744.7}, {370.0, 29.7}}
+                                              StaticText, 0x101bdf4d0, {{16.0, 744.7}, {370.0, 29.7}}, identifier: 'me-year-days', label: '今年學了 1 天'
+                                      Other, 0x101bdf5f0, {{-16.0, 774.3}, {434.0, 132.0}}
+                                      Cell, 0x101bdf710, {{16.0, 774.3}, {370.0, 40.3}}
+                                        Other, 0x101bdf830, {{16.0, 774.3}, {370.0, 40.3}}
+                                        Other, 0x101bdf950, {{16.0, 774.3}, {370.0, 40.3}}
+                                          Other, 0x101bdfa70, {{16.0, 774.3}, {370.0, 40.3}}
+                                            Other, 0x101bdfb90, {{16.0, 774.3}, {370.0, 40.3}}
+                                              StaticText, 0x101bdfcb0, {{16.0, 774.3}, {370.0, 40.3}}, identifier: 'me-level-estimate', label: '傻貓估你的程度'
+                                      Cell, 0x101bdfdd0, {{16.0, 814.7}, {370.0, 74.0}}
+                                        Other, 0x101bdfef0, {{16.0, 814.7}, {370.0, 74.0}}
+                                          Other, 0x101be0010, {{16.0, 814.7}, {370.0, 74.0}}
+                                            Other, 0x101be0130, {{16.0, 814.7}, {370.0, 74.0}}
+                                              Image, 0x101be0250, {{16.0, 814.7}, {370.0, 74.0}}, label: 'PaperGrain'
+                                        Other, 0x101be0370, {{16.0, 814.7}, {370.0, 74.0}}
+                                          Other, 0x101be0490, {{16.0, 814.7}, {370.0, 74.0}}
+                                            Other, 0x101be05b0, {{16.0, 814.7}, {370.0, 74.0}}
+                                              Other, 0x101be06d0, {{33.9, 837.8}, {29.7, 25.2}}, identifier: 'me-level-estimate'
+                                              StaticText, 0x101be07f0, {{16.0, 814.7}, {370.0, 74.0}}, identifier: 'me-level-estimate', label: '再多學幾個字，我就看得出你的程度。'
+                                      Other, 0x101be0910, {{369.0, 116.0}, {30.0, 675.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                        Other, 0x101be0a30, {{396.0, 781.0}, {3.0, 7.0}}
+                                      Other, 0x101be0b50, {{369.0, 116.0}, {30.0, 675.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                        Other, 0x101be0c70, {{396.0, 781.0}, {3.0, 7.0}}
+                            Other, 0x101be0d90, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x101be0eb0, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x101be0fd0, {{0.0, 791.0}, {402.0, 83.0}}
+                  Other, 0x101be10f0, {{0.0, 0.0}, {402.0, 874.0}}
+                    TabBar, 0x101be1210, {{0.0, 791.0}, {402.0, 83.0}}, label: 'Tab Bar'
+                      Other, 0x101be1330, {{21.0, 791.0}, {360.0, 62.0}}
+                        Other, 0x101be1450, {{21.0, 791.0}, {98.0, 54.0}}
+                        Other, 0x101be1570, {{21.0, 791.0}, {360.0, 62.0}}
+                          Button, 0x101be1690, {{25.0, 795.0}, {98.0, 54.0}}, identifier: 'sun.max.fill', label: '今天'
+                            Image, 0x101be17b0, {{60.0, 800.0}, {29.0, 29.3}}, identifier: 'sun.max.fill', label: 'brightness higher'
+                          Button, 0x101be18d0, {{109.7, 795.0}, {98.0, 54.0}}, identifier: 'dumbbell.fill', label: '練習'
+                            Image, 0x101be19f0, {{141.7, 804.3}, {35.0, 21.0}}, identifier: 'dumbbell.fill', label: 'dumbbell.fill'
+                          Button, 0x101be1b10, {{194.3, 795.0}, {98.0, 54.0}}, identifier: 'books.vertical.fill', label: '單字'
+                            Image, 0x101be1c30, {{226.3, 800.0}, {33.3, 29.3}}, identifier: 'books.vertical.fill', label: 'Bookshelf'
+                          Button, 0x101be1d50, {{279.0, 795.0}, {98.0, 54.0}}, identifier: 'person.crop.circle.fill', label: '我', Selected
+                            Image, 0x101be1e70, {{314.0, 801.3}, {27.3, 27.3}}, identifier: 'person.crop.circle.fill', label: 'account'
+                        Other, 0x101be1f90, {{279.0, 795.0}, {98.0, 54.0}}
+                          Other, 0x101be20b0, {{279.0, 795.0}, {98.0, 54.0}}
+                            Other, 0x101be21d0, {{279.0, 795.0}, {98.0, 54.0}}
+                            Other, 0x101be22f0, {{279.0, 795.0}, {98.0, 54.0}}
+                              Other, 0x101be2410, {{279.0, 795.0}, {98.0, 54.0}}
+                                Other, 0x101be2530, {{279.0, 795.0}, {98.0, 54.0}}
+                                  Other, 0x101be2650, {{279.0, 795.0}, {98.0, 54.0}}
+                                Other, 0x1019b5910, {{279.0, 795.0}, {98.0, 54.0}}
+                              Other, 0x1019b5a30, {{279.0, 795.0}, {98.0, 54.0}}
+                  Other, 0x1019b5b50, {{0.0, 791.0}, {402.0, 83.0}}
+                    Other, 0x1019b5c70, {{0.0, 791.0}, {402.0, 83.0}}
+                      Other, 0x1019b5d90, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x1019b5eb0, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x1019b5fd0, {{0.0, 791.0}, {402.0, 83.0}}
+                            Other, 0x1019b60f0, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x1019b6210, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x101aef610, {{0.0, 791.0}, {402.0, 83.0}}
+Path to element:
+ →Application, 0x101b8d710, pid: 54558, label: 'WordCat'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x1019fa3d0, pid: 54558, label: 'WordCat'
+  }

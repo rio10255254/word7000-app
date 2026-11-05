@@ -1,0 +1,96 @@
+Attributes: Application, 0x112c17990, pid: 52180, label: 'WordCat'
+Element subtree:
+ →Application, 0x112c17990, pid: 52180, label: 'WordCat'
+    Window (Main), 0x112e0d300, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x112ee5d70, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x112ee5e90, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x112eb0c50, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x112e52190, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x112eaadb0, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x112eaaed0, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x112e1ed00, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x112e1ee20, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x112ea6e00, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x112ea6f20, {{0.0, 0.0}, {375.0, 667.0}}
+                          Other, 0x112ee69d0, {{0.0, 0.0}, {375.0, 667.0}}
+                            NavigationBar, 0x112ee6af0, {{0.0, 20.0}, {375.0, 98.0}}, identifier: 'Me'
+                              StaticText, 0x112ebe3b0, {{16.0, 64.0}, {58.5, 48.0}}, label: 'Me'
+                            Other, 0x112ebe4d0, {{0.0, 0.0}, {375.0, 667.0}}
+                              Other, 0x112ea7980, {{0.0, 0.0}, {375.0, 667.0}}
+                                Other, 0x112ea7aa0, {{0.0, 0.0}, {375.0, 667.0}}
+                                  Other, 0x112ec6560, {{0.0, 0.0}, {375.0, 667.0}}
+                                    Image, 0x112ec6680, {{0.0, 0.0}, {375.0, 667.0}}, label: 'PaperGrain'
+                                    CollectionView, 0x112ed47d0, {{0.0, 0.0}, {375.0, 667.0}}
+                                      Other, 0x112ed48f0, {{-16.0, -1216.0}, {407.0, 1715.0}}
+                                      Cell, 0x112eaa150, {{16.0, 118.0}, {343.0, 318.0}}
+                                        Other, 0x112eaa270, {{16.0, 118.0}, {343.0, 318.0}}
+                                          Other, 0x112dcc7c0, {{16.0, 118.0}, {343.0, 318.0}}
+                                            Other, 0x112dcc8e0, {{16.0, 118.0}, {343.0, 318.0}}
+                                              Image, 0x112d30c10, {{16.0, 118.0}, {343.0, 318.0}}, label: 'PaperGrain'
+                                        Other, 0x112d30d30, {{16.0, 118.0}, {343.0, 318.0}}
+                                          Other, 0x112dc5890, {{16.0, 118.0}, {343.0, 318.0}}
+                                            Other, 0x112c54920, {{16.0, 118.0}, {343.0, 318.0}}
+                                              Button, 0x112c54100, {{29.8, 145.3}, {60.5, 60.5}}, identifier: 'me-mascot', label: 'Silly Cat'
+                                                Other, 0x112c52820, {{29.8, 145.3}, {60.5, 60.5}}
+                                              StaticText, 0x112c53480, {{100.0, 137.0}, {140.5, 28.5}}, label: 'My learning'
+                                              StaticText, 0x112c55160, {{246.5, 138.0}, {96.5, 26.5}}, label: 'Premium member'
+                                              Image, 0x112c55280, {{111.5, 180.0}, {14.5, 24.0}}, identifier: 'iphone', label: 'iphone'
+                                              StaticText, 0x112c610d0, {{111.5, 169.5}, {211.5, 44.5}}, label: 'Progress is saved on this iPhone'
+                                              StaticText, 0x112c611f0, {{32.0, 228.0}, {311.0, 44.5}}, identifier: 'me-level', label: 'Lv.1, Word rookie, 3 to go'
+                                                StaticText, 0x112c36cb0, {{41.0, 231.0}, {41.5, 25.5}}, label: 'Lv.1'
+                                                StaticText, 0x112c36dd0, {{99.5, 230.0}, {142.0, 27.5}}, label: 'Word rookie'
+                                                StaticText, 0x112c370d0, {{286.0, 233.0}, {57.0, 21.5}}, label: '3 to go'
+                                                Other, 0x112c371f0, {{32.0, 266.5}, {311.0, 6.0}}
+                                              StaticText, 0x112c56830, {{40.9, 286.5}, {85.5, 55.0}}, label: '2, Day streak'
+                                                StaticText, 0x112c56950, {{75.7, 286.5}, {16.0, 31.5}}, label: '2'
+                                                StaticText, 0x112c56a70, {{40.9, 320.0}, {85.5, 21.5}}, label: 'Day streak'
+                                              StaticText, 0x112c56b90, {{160.0, 286.5}, {55.0, 55.0}}, label: '47, Known'
+                                                StaticText, 0x112c56cb0, {{171.8, 286.5}, {31.5, 31.5}}, label: '47'
+                                                StaticText, 0x112c56dd0, {{160.0, 320.0}, {55.0, 21.5}}, label: 'Known'
+                                              StaticText, 0x112c56ef0, {{250.3, 286.5}, {82.0, 55.0}}, label: '8, Reviewing'
+                                                StaticText, 0x112c57010, {{283.3, 286.5}, {16.0, 31.5}}, label: '8'
+                                                StaticText, 0x112c57130, {{250.3, 320.0}, {82.0, 21.5}}, label: 'Reviewing'
+                                              Button, 0x112c57250, {{32.0, 355.5}, {311.0, 61.5}}, identifier: 'me-plus', label: 'Manage subscription'
+                                                Image, 0x112c57370, {{32.0, 355.5}, {311.0, 61.5}}, label: 'PaperGrain'
+                                                Image, 0x112c57490, {{66.5, 371.0}, {25.0, 30.5}}, identifier: 'sparkles', label: 'Sparkle'
+                                                StaticText, 0x112c575b0, {{32.0, 355.5}, {311.0, 61.5}}, label: 'Manage subscription'
+                                      Cell, 0x112c1d860, {{16.0, 436.0}, {343.0, 63.0}}
+                                        Other, 0x112c1d980, {{16.0, 436.0}, {343.0, 63.0}}
+                                        Other, 0x112c1daa0, {{16.0, 436.0}, {343.0, 63.0}}
+                                          Other, 0x112c1dbc0, {{16.0, 436.0}, {343.0, 63.0}}
+                                            Other, 0x112c1dce0, {{16.0, 436.0}, {343.0, 63.0}}
+                                              Image, 0x112c1de00, {{34.5, 444.0}, {15.5, 19.0}}, identifier: 'me-streak-protection', label: 'shield.lefthalf.filled'
+                                              StaticText, 0x112c1df20, {{16.0, 436.0}, {343.0, 63.0}}, identifier: 'me-streak-protection', label: 'The cat's can is ready: one missed day is covered'
+                                      Other, 0x112c1e040, {{-16.0, 499.0}, {407.0, 267.5}}
+                                      Cell, 0x112c1e160, {{16.0, 499.0}, {343.0, 46.0}}
+                                        Other, 0x112c5fcc0, {{16.0, 499.0}, {343.0, 46.0}}
+                                        Other, 0x112c5fde0, {{16.0, 499.0}, {343.0, 46.0}}
+                                          Other, 0x112c5ff00, {{16.0, 499.0}, {343.0, 46.0}}
+                                            Other, 0x112c60020, {{16.0, 499.0}, {343.0, 46.0}}
+                                              StaticText, 0x112c60140, {{16.0, 499.0}, {343.0, 46.0}}, label: 'The last 20 weeks'
+                                      Cell, 0x112c60260, {{16.0, 545.0}, {343.0, 160.0}}
+                                        Other, 0x112c60380, {{16.0, 545.0}, {343.0, 160.0}}
+                                          Other, 0x112c604a0, {{16.0, 545.0}, {343.0, 160.0}}
+                                            Other, 0x112c605c0, {{16.0, 545.0}, {343.0, 160.0}}
+                                              Image, 0x112c1cba0, {{16.0, 545.0}, {343.0, 160.0}}, label: 'PaperGrain'
+                                        Other, 0x112c1ccc0, {{16.0, 545.0}, {343.0, 160.0}}
+                                          Other, 0x112c1cde0, {{16.0, 545.0}, {343.0, 160.0}}
+                                            Other, 0x112c1cf00, {{16.0, 545.0}, {343.0, 160.0}}
+                                              Other, 0x112c1d020, {{16.0, 545.0}, {343.0, 160.0}}, identifier: 'me-calendar', label: '0 days in the last 20 weeks'
+                                      Other, 0x112c1d140, {{342.0, 118.0}, {30.0, 500.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                        Other, 0x112c1b700, {{369.0, 608.0}, {3.0, 7.0}}
+                                      Other, 0x112c1b820, {{342.0, 118.0}, {30.0, 500.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                        Other, 0x112c1b940, {{369.0, 608.0}, {3.0, 7.0}}
+                TabBar, 0x112c1ba60, {{0.0, 618.0}, {375.0, 49.0}}, label: 'Tab Bar'
+                  Button, 0x112c1bb80, {{2.0, 619.0}, {90.0, 48.0}}, identifier: 'sun.max.fill', label: 'Today'
+                  Button, 0x112c1bca0, {{96.0, 619.0}, {90.0, 48.0}}, identifier: 'dumbbell.fill', label: 'Practice'
+                  Button, 0x112c1bdc0, {{190.0, 619.0}, {89.0, 48.0}}, identifier: 'books.vertical.fill', label: 'Words'
+                  Button, 0x112c1bee0, {{283.0, 619.0}, {90.0, 48.0}}, identifier: 'person.crop.circle.fill', label: 'Me', Selected
+                    Image, 0x112c1c000, {{314.0, 622.5}, {27.5, 27.5}}, identifier: 'person.crop.circle.fill', label: 'account'
+Path to element:
+ →Application, 0x112c17990, pid: 52180, label: 'WordCat'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x112dc59b0, pid: 52180, label: 'WordCat'
+  }

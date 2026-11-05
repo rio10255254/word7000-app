@@ -1,0 +1,3 @@
+/Users/runner/work/word7000-app/word7000-app/ios/Word7000UITests/AppStoreScreenshotTests.swift:80: error: -[Word7000UITests.AppStoreScreenshotTests testStoreEnglish] : XCTAssertTrue failed - Attributes: Application, 0x1138b0780, pid: 31652, label: 'WordCat'
+/Users/runner/work/word7000-app/word7000-app/ios/Word7000UITests/ExperienceTests.swift:223: error: -[Word7000UITests.ExperienceTests testFinishingASetShowsTheSummaryAndWordProgress] : XCTAssertTrue failed
+/Users/runner/work/word7000-app/word7000-app/ios/Word7000UITests/SpeakingRoutineTests.swift:25: error: -[Word7000UITests.SpeakingRoutineTests testListenRepeatAnswerThenTodaysWord] : XCTAssertTrue failed

@@ -1,0 +1,96 @@
+Timestamp               Ty Process[PID:TID]
+2026-11-05 12:21:06.163 Df Photos[6746:3a33f] [com.apple.chrono:ChronoServices] chrono widget service (service-side) connection activated
+2026-11-05 12:21:06.825 Df PhotosReliveWidget[6826:f32c] [com.apple.BoardServices:XPCErrors] [S:2] Alloc XPCServiceListener:6826:com.apple.mobileslideshow.PhotosReliveWidget:804A1482-FCCA-4A5B-856D-878EEE01DCBB
+2026-11-05 12:21:06.828 Df PhotosReliveWidget[6826:f32c] [com.apple.xpc:connection] [0x103306bc0] activating connection: mach=false listener=false peer=true name=com.apple.mobileslideshow.PhotosReliveWidget.peer[2932].0x103306bc0
+2026-11-05 12:21:06.901 Df PhotosReliveWidget[6826:f32c] [com.apple.chrono:timeline] Batch begin (ti-a5c11d) - locale: en_US (fixed en_US)
+2026-11-05 12:21:06.902 Df PhotosReliveWidget[6826:f32c] [com.apple.chrono:timeline] intent = nil
+2026-11-05 12:21:06.903 Df PhotosReliveWidget[6826:f32c] [com.apple.chrono:timeline] Request began for com.apple.mobileslideshow.PhotosReliveWidget:systemSmall:(noIntent) - to archive: /Users/runner/Library/Developer/CoreSimulator/Devices/B7CD7ED2-0DFF-42FE-A30F-21CD2E3D3D2C/data/tmp/com.apple.chrono/NSIRD_chronod_aNsClI/systemSmall----164.33w-164.33h-27.94r-1VTNgEwDUstZ1uS6fX0#4whja22jdasM+9uwBap5KvY=.chrono-timeline
+2026-11-05 12:21:06.906 Df PhotosReliveWidget[6826:642c] [com.apple.chrono:timeline] Request ended for com.apple.mobileslideshow.PhotosReliveWidget:systemSmall:(noIntent) - error: Error Domain=CHSErrorDomain Code=1103 "Intent configuration is required but was not provided." UserInfo={NSDebugDescription=Intent configuration is required but was not provided.}
+2026-11-05 12:21:06.906 Df PhotosReliveWidget[6826:642c] [com.apple.chrono:timeline] Batch end (ti-a5c11d) - failure: Error Domain=CHSErrorDomain Code=1103 "Intent configuration is required but was not provided." UserInfo={NSDebugDescription=Intent configuration is required but was not provided.}
+2026-11-05 12:21:06.985 Df PhotosReliveWidget[6826:f32c] [com.apple.chrono:timeline] Batch begin (ti-d7815d) - locale: en_US (fixed en_US)
+2026-11-05 12:21:06.985 Df PhotosReliveWidget[6826:f32c] [com.apple.chrono:timeline] intent = nil
+2026-11-05 12:21:06.985 Df PhotosReliveWidget[6826:f32c] [com.apple.chrono:timeline] Request began for com.apple.mobileslideshow.PhotosReliveWidget:systemSmall:(noIntent) - to archive: /Users/runner/Library/Developer/CoreSimulator/Devices/B7CD7ED2-0DFF-42FE-A30F-21CD2E3D3D2C/data/tmp/com.apple.chrono/NSIRD_chronod_bwBVdp/systemSmall----164.33w-164.33h-27.94r-1VTNgEwDUstZ1uS6fX0#4whja22jdasM+9uwBap5KvY=.chrono-timeline
+2026-11-05 12:21:06.985 Df PhotosReliveWidget[6826:642c] [com.apple.chrono:timeline] Request ended for com.apple.mobileslideshow.PhotosReliveWidget:systemSmall:(noIntent) - error: Error Domain=CHSErrorDomain Code=1103 "Intent configuration is required but was not provided." UserInfo={NSDebugDescription=Intent configuration is required but was not provided.}
+2026-11-05 12:21:06.985 Df PhotosReliveWidget[6826:642c] [com.apple.chrono:timeline] Batch end (ti-d7815d) - failure: Error Domain=CHSErrorDomain Code=1103 "Intent configuration is required but was not provided." UserInfo={NSDebugDescription=Intent configuration is required but was not provided.}
+2026-11-05 12:21:09.288 Df Photos[6746:3a33f] [com.apple.chrono:Subscriptions] [extensions] Resubscribing to server if necessary
+2026-11-05 12:21:18.511 Df Photos[6746:3a33f] [com.apple.chrono:Subscriptions] [extensions] No server subscription necessary.
+2026-11-05 12:21:18.738 Df Photos[6746:62ba] [com.apple.photos.ui:Memories] CHSTimelineController reloadTimeline completed for widget kind com.apple.mobileslideshow.PhotosReliveWidget
+2026-11-05 12:21:18.907 Df PhotosReliveWidget[6826:3aab3] [com.apple.xpc:connection] [0x103306bc0] invalidated because the client process (pid 2932) either cancelled the connection or exited
+2026-11-05 12:21:18.908 E  PhotosReliveWidget[6826:3aab3] [com.apple.BoardServices:XPCErrors] [S:2] Error received: Connection invalidated.
+2026-11-05 12:21:53.977 Df Photos[6746:3a33f] [com.apple.chrono:Subscriptions] [remoteDevices] Resubscribing to server if necessary
+2026-11-05 12:22:07.625 Df Photos[6746:3a33f] [com.apple.chrono:Subscriptions] [remoteDevices] No server subscription necessary.
+2026-11-05 12:22:10.102 Df Photos[6746:3a33f] [com.apple.chrono:Subscriptions] [timelineEntryRelevance] Resubscribing to server if necessary
+2026-11-05 12:22:10.975 Df Photos[6746:3a33f] [com.apple.chrono:Subscriptions] [timelineEntryRelevance] No server subscription necessary.
+2026-11-05 12:22:11.006 Df Photos[6746:3a33f] [com.apple.chrono:Subscriptions] [widgetRelevance] Resubscribing to server if necessary
+2026-11-05 12:22:11.007 Df Photos[6746:3a33f] [com.apple.chrono:Subscriptions] [widgetRelevance] No server subscription necessary.
+2026-11-05 12:22:12.228 Df Photos[6746:62ba] [com.apple.photos.ui:Memories] Calling reloadTimeline on CHSTimelineController for widget kind com.apple.mobileslideshow.PhotosReliveWidget.collections
+2026-11-05 12:22:16.713 Df Photos[6746:62ba] [com.apple.photos.ui:Memories] CHSTimelineController reloadTimeline completed for widget kind com.apple.mobileslideshow.PhotosReliveWidget.collections
+2026-11-05 12:22:41.140 Df Photos[6746:6294] [com.apple.photos.ui:ContentPrivacyUI] [SystemAuthenticationObserver] Scheduling async authentication type update
+2026-11-05 12:22:41.562 Df Photos[6746:38eac] [com.apple.photos.ui:ContentPrivacyUI] [SystemAuthenticationObserver] Performing authentication type update in background
+2026-11-05 12:22:44.159 Df Photos[6746:38eac] [com.apple.photos.ui:ContentPrivacyUI] [SystemAuthenticationObserver] Calculating authentication type
+2026-11-05 12:22:47.562 Df Photos[6746:38eac] [com.apple.LocalAuthentication:Client] LA logging set up for this process.
+2026-11-05 12:22:47.564 Df Photos[6746:38eac] [com.apple.LocalAuthentication:Client,LAContext] Creating LAContext new cid:1
+2026-11-05 12:22:49.469 Df Photos[6746:641b] [com.apple.photos.backend:CacheMetricsCollector] PLCacheMetricsCollectorClient initialized for system Library
+2026-11-05 12:23:35.256 Df Photos[6746:6294] [com.apple.photos.ui:ContentPrivacyUI] PrivacyController [recentlydeleted]: Smart album 'Recently Deleted' just changed privacy sensitivity to YES
+2026-11-05 12:24:09.274 Df PhotosFileProvider[6912:653c] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-05 12:24:11.032 Df PhotosFileProvider[6912:653c] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-05 12:24:12.218 Df PhotosFileProvider[6902:6523] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-05 12:24:12.219 Df PhotosFileProvider[6902:6523] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-05 12:24:38.948 Df Photos[6746:38eac] [com.apple.xpc:connection] [0x10094ef70] activating connection: mach=true listener=false peer=false name=com.apple.CoreAuthentication.daemon
+2026-11-05 12:24:42.768 Df Photos[6746:6294] [com.apple.photos.ui:UI] [UndoActionsInvalidator] Initializing
+2026-11-05 12:26:13.232 E  Photos[6746:641b] [com.apple.appintents:Metadata] Failed to refresh AppShortcut parameters with error: Error Domain=LNConnectionErrorDomain Code=1002 "LNConnectionErrorCodeRequestTimeout" UserInfo={NSLocalizedDescription=LNConnectionErrorCodeRequestTimeout}
+2026-11-05 12:26:18.429 A  Photos[6746:62b8] (SyncedDefaults) kvs/get-object
+2026-11-05 12:26:20.178 Df Photos[6746:40536] [com.apple.photos.backend:PhotoKit] FeatureAvailability - availability was nil, initing new
+2026-11-05 12:26:26.158 A  Photos[6746:62b8] (SyncedDefaults) kvs/get-object
+2026-11-05 12:26:26.870 Df Photos[6746:40536] [com.apple.xpc:connection] [0x100a04c90] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-11-05 12:26:26.870 Df Photos[6746:40536] [com.apple.xpc:connection] [0x10090d7b0] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-11-05 12:26:26.871 Df Photos[6746:40536] [com.apple.accounts:core] "The connection to ACDAccountStore was invalidated."
+2026-11-05 12:26:26.871 Df Photos[6746:40536] [com.apple.accounts:core] "The connection to ACDAccountStore was invalidated."
+2026-11-05 12:26:29.374 Df Photos[6746:6294] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-05 12:26:29.402 Df Photos[6746:6294] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-05 12:26:29.403 A  Photos[6746:62b8] (SyncedDefaults) kvs/get-object
+2026-11-05 12:26:29.465 Df Photos[6746:6294] [com.apple.photos.backend:PhotoSharing] PLAccountStore did change; invalidating sharedStreamsEnabled
+2026-11-05 12:26:30.642 Df Photos[6746:6294] [com.apple.photos.backend:MyPhotoStream] Clearing cached PLPhotoSharingHelper state
+2026-11-05 12:26:30.995 A  Photos[6746:38eaa] (Accounts) accounts/accounts-with-types-sync
+2026-11-05 12:26:31.623 A  Photos[6746:62b8] (SyncedDefaults) kvs/get-object
+2026-11-05 12:26:32.006 Df Photos[6746:3dfd0] [com.apple.xpc:connection] [0x100a8d490] activating connection: mach=true listener=false peer=false name=com.apple.mobileassetd.v2
+2026-11-05 12:26:32.034 Df Photos[6746:3dfd0] [com.apple.MobileAsset:V2] Creating client/daemon connection: D92DE307-0B03-4192-A3AF-E6E6D5A3BDF4
+2026-11-05 12:26:32.047 Df Photos[6746:38eaa] [com.apple.xpc:connection] [0x100a74fb0] activating connection: mach=true listener=false peer=false name=com.apple.accountsd.accountmanager
+2026-11-05 12:26:32.941 A  Photos[6746:62b8] (SyncedDefaults) kvs/set-object
+2026-11-05 12:26:48.792 Df Photos[6746:38eaa] [com.apple.photos.backend:Backend] No primaryAppleAccount
+2026-11-05 12:27:15.134 A  Photos[6746:62b8] (SyncedDefaults) kvs/set-object
+2026-11-05 12:27:22.205 Df Photos[6746:40536] [com.apple.MobileAsset:V2] Got the query meta data reply for: com.apple.MobileAsset.MediaSupport, response: 2
+2026-11-05 12:27:36.415 Df Photos[6746:6294] [com.apple.photos.backend:PhotoSharing] Determining if Shared Albums enabled: Found (null) with:
+isEnabledForSharedStreams: NO
+isProvisionedForDataclass: NO
+isEDUMode: NO
+isLockdownMode: NO
+2026-11-05 12:27:38.097 Df Photos[6746:6294] [com.apple.photos.backend:PhotoSharing] sharedStreamsEnabled: NO
+2026-11-05 12:27:41.516 Df Photos[6746:40536] [com.apple.photos.ui:UI] PXMediaTypeInfoManager - Query returned no asset! Error: (null)
+2026-11-05 12:28:12.157 Df Photos[6746:40536] [com.apple.xpc:connection] [0x100a74fb0] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-11-05 12:28:12.168 Df Photos[6746:40536] [com.apple.accounts:core] "The connection to ACDAccountStore was invalidated."
+2026-11-05 12:29:39.223 Df Photos[6746:62b9] [com.apple.xpc:connection] [0x10090d730] activating connection: mach=true listener=false peer=false name=com.apple.photoanalysisd
+2026-11-05 12:29:39.304 A  Photos[6746:62b8] (SyncedDefaults) kvs/set-object
+2026-11-05 12:29:44.073 Df Photos[6746:443fb] [com.apple.xpc:connection] [0x10090d730] Re-initialization successful; calling out to event handler with XPC_ERROR_CONNECTION_INTERRUPTED
+2026-11-05 12:29:44.616 E  Photos[6746:443fb] (PhotoLibraryServices) Photo analysis client XPC connection interrupted
+2026-11-05 12:29:44.787 E  Photos[6746:62b9] [com.apple.photos.ui:UI] PXAnalyticsFeatureUsageCountDestination - recordFeatureUsageCounts failed. Error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.photoanalysisd" UserInfo={NSDebugDescription=connection to service named com.apple.photoanalysisd}
+2026-11-05 12:29:45.454 A  Photos[6746:62b8] (SyncedDefaults) kvs/set-object
+2026-11-05 12:29:45.652 Df Photos[6746:43e3d] [com.apple.iCloudQuota:core] -[ICQOfferManager _getOfferForBundleIdentifier:options:offerContext:completion:]
+2026-11-05 12:29:45.679 A  Photos[6746:43e3d] (Accounts) accounts/accounts-with-types-sync
+2026-11-05 12:29:46.136 Df Photos[6746:43e3d] [com.apple.xpc:connection] [0x100b7f690] activating connection: mach=true listener=false peer=false name=com.apple.accountsd.accountmanager
+2026-11-05 12:29:53.552 Df Photos[6746:43e3d] [com.apple.photos.ui:UserStatus] <PXCloudQuotaOfferProvider:0x600002918a80> Did get current cloud offer:-
+2026-11-05 12:29:54.333 Df Photos[6746:443fb] [com.apple.MobileAsset:V2] Got the download meta data reply for com.apple.MobileAsset.MediaSupport, response: 0 (MADownloadSuccessful)
+2026-11-05 12:29:56.124 A  Photos[6746:6294] (Accounts) accounts/accounts-with-types-sync
+2026-11-05 12:29:56.251 Df Photos[6746:43e3d] [com.apple.iCloudQuota:core] -[ICQOfferManager _getOfferForBundleIdentifier:options:offerContext:completion:]
+2026-11-05 12:29:56.508 A  Photos[6746:43e3d] (Accounts) accounts/accounts-with-types-sync
+2026-11-05 12:29:57.396 Df Photos[6746:43e3d] [com.apple.photos.ui:UserStatus] <PXCloudQuotaPremiumOfferProvider:0x6000029191f0> Did get current cloud premium offer:-
+2026-11-05 12:29:57.761 Df Photos[6746:6294] [com.apple.iCloudQuota:banner] shouldShowBanner: 0 considering needsBanner: 0 hasBanner: 0 specReason: (null) didDismissInSession: 0 currentDate: Thu Nov  5 12:29:55 2026 supressInterval: 0.000000
+2026-11-05 12:29:58.297 A  PhotosPosterProvider[4695:43e2a] (CoreFoundation) Updating Key-Value Observers Of Preferences
+2026-11-05 12:29:59.098 Df Photos[6746:62b9] [com.apple.xpc:connection] [0x100ab00b0] activating connection: mach=true listener=false peer=false name=com.apple.parsecd
+2026-11-05 12:29:59.850 Df Photos[6746:62b9] (CoreParsec) requesting bag
+2026-11-05 12:30:01.991 Df Photos[6746:62b9] [com.apple.photos.ui.search:SearchUIParsecAnalytics] Reporting queryID: 1 feedback: <SFSearchViewAppearFeedback: 0x60000178b480> (time: 11347399737)
+2026-11-05 12:30:01.992 Df Photos[6746:62b9] [com.apple.photos.ui.search:SearchUIParsecAnalytics] Reporting Photos app launched
+2026-11-05 12:30:02.106 Df Photos[6746:62b9] [com.apple.photos.ui.search:SearchUIParsecAnalytics] Reporting queryID: 1 feedback: <SFSearchViewDisappearFeedback: 0x6000003e46c0> (time: 82957625947)
+2026-11-05 12:30:02.106 Df Photos[6746:62b9] [com.apple.photos.ui.search:SearchUIParsecAnalytics] Reporting Photos app was backgrounded
+2026-11-05 12:30:56.741 Df Photos[6746:443f6] [com.apple.xpc:connection] [0x100b7f690] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-11-05 12:30:58.892 Df Photos[6746:44407] [com.apple.accounts:core] "The connection to ACDAccountStore was invalidated."

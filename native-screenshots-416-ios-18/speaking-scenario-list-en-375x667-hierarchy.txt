@@ -1,0 +1,305 @@
+Attributes: Application, 0x1139fe700, pid: 44949, label: 'WordCat'
+Element subtree:
+ →Application, 0x1139fe700, pid: 44949, label: 'WordCat'
+    Window (Main), 0x1139fe2e0, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x1139fc120, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x1139fef60, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x1139fb6a0, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x1139fdec0, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x1139ff080, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x1139ff1a0, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x1139ff2c0, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x1139ff3e0, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x1139ff500, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x1139ff620, {{0.0, 0.0}, {375.0, 667.0}}
+                          Image, 0x1139ff740, {{0.0, 0.0}, {375.0, 667.0}}, label: 'PaperGrain'
+                          ScrollView, 0x1139ff860, {{0.0, 0.0}, {375.0, 667.0}}
+                            Other, 0x1139ff980, {{0.0, 20.0}, {375.0, 639.5}}
+                              StaticText, 0x1139ffaa0, {{16.0, 28.0}, {151.0, 33.5}}, label: 'Afternoon!'
+                              Other, 0x1139ffbc0, {{283.0, 32.0}, {76.0, 36.0}}, identifier: 'today-language', label: 'Learning language'
+                                Image, 0x1139ffce0, {{283.0, 32.0}, {76.0, 36.0}}, label: 'PaperGrain'
+                                Button, 0x1139ffe00, {{286.0, 35.0}, {34.0, 30.0}}, identifier: 'today-language-en', label: 'Learn English'
+                                Button, 0x112a7de80, {{322.0, 35.0}, {34.0, 30.0}}, identifier: 'today-language-zh', label: 'Learn Chinese', Selected
+                              Image, 0x112a7da60, {{17.5, 86.5}, {17.0, 17.0}}, identifier: 'sun.max.fill', label: 'Brightness Higher'
+                              StaticText, 0x112adcfa0, {{40.0, 86.0}, {77.5, 18.0}}, label: 'Thu, Nov 5'
+                              Button, 0x112a8aab0, {{218.0, 76.0}, {55.5, 38.0}}, identifier: 'today-streak', label: '2-day streak'
+                                Button, 0x112a8abd0, {{218.0, 76.0}, {55.5, 38.0}}, label: '2'
+                                  Image, 0x112a8acf0, {{218.0, 76.0}, {55.5, 38.0}}, label: 'PaperGrain'
+                                  Image, 0x112a8ae10, {{231.5, 85.5}, {15.0, 19.0}}, identifier: 'flame.fill', label: 'Flame'
+                                  StaticText, 0x112a8af30, {{252.0, 84.8}, {9.5, 20.5}}, label: '2'
+                              Button, 0x112a8b050, {{281.5, 76.0}, {77.5, 38.0}}, identifier: 'today-shelf', label: '47 words mastered'
+                                Button, 0x112a8b170, {{281.5, 76.0}, {77.5, 38.0}}, label: '47'
+                                  Image, 0x112a8b290, {{281.5, 76.0}, {77.5, 38.0}}, label: 'PaperGrain'
+                                  Image, 0x112a8b3b0, {{295.5, 85.5}, {23.5, 19.0}}, identifier: 'books.vertical.fill', label: 'Bookshelf'
+                                  StaticText, 0x112a8b4d0, {{325.0, 84.8}, {22.0, 20.5}}, label: '47'
+                              StaticText, 0x112a8b5f0, {{36.0, 188.0}, {189.0, 18.0}}, label: 'Today's words · chapter 1'
+                              Button, 0x112a8b710, {{272.2, 113.2}, {75.6, 75.6}}, identifier: 'today-mascot', label: 'Silly Cat'
+                                Other, 0x112a8b830, {{272.2, 113.2}, {75.6, 75.6}}
+                              Other, 0x112a8b950, {{114.9, 197.4}, {145.3, 145.3}}, label: '7 of 20 words today'
+                                Other, 0x112a8ba70, {{114.9, 197.4}, {145.3, 145.3}}, value: 35%
+                                Image, 0x112a8bb90, {{164.0, 250.5}, {46.5, 39.5}}, identifier: 'rectangle.on.rectangle.angled', label: 'Study Cards'
+                                StaticText, 0x112a8bcb0, {{173.2, 300.2}, {28.5, 14.5}}, label: '7/20'
+                              StaticText, 0x112a8bdd0, {{90.8, 334.0}, {193.5, 33.5}}, label: 'Flip the cards'
+                              StaticText, 0x112a8bef0, {{113.8, 373.5}, {147.5, 20.5}}, label: '7 to review · 6 new'
+                              Button, 0x112a8c010, {{48.2, 404.2}, {47.5, 65.3}}, identifier: 'today-node-cards', label: 'Cards'
+                                Image, 0x112a8c130, {{60.1, 417.7}, {24.3, 20.5}}, identifier: 'rectangle.on.rectangle.angled', label: 'Study Cards'
+                                StaticText, 0x112a8c250, {{53.2, 455.0}, {37.0, 14.5}}, label: 'Cards'
+                              Button, 0x112a8c370, {{127.0, 406.0}, {44.0, 63.5}}, identifier: 'today-spelling', label: 'Write'
+                                Image, 0x112a8c490, {{139.0, 419.5}, {18.5, 17.5}}, identifier: 'pencil.line', label: 'pencil.line'
+                                StaticText, 0x112a8c5b0, {{132.0, 455.0}, {34.0, 14.5}}, label: 'Write'
+                              Button, 0x112a8c6d0, {{204.5, 406.0}, {44.0, 63.5}}, identifier: 'today-quiz', label: 'Quiz'
+                                Image, 0x112a8c7f0, {{217.0, 420.0}, {19.0, 16.5}}, identifier: 'checklist', label: 'checklist'
+                                StaticText, 0x112a79b50, {{212.0, 455.0}, {28.5, 14.5}}, label: 'Quiz'
+                              Button, 0x112a79c70, {{281.5, 406.0}, {44.0, 63.5}}, identifier: 'today-speaking', label: 'Speak'
+                                Image, 0x112a79d90, {{297.0, 419.0}, {13.5, 18.0}}, identifier: 'mic.fill', label: 'Microphone'
+                                StaticText, 0x112a79eb0, {{284.0, 455.0}, {39.0, 14.5}}, label: 'Speak'
+                              Button, 0x112a79fd0, {{36.0, 481.5}, {303.0, 52.0}}, identifier: 'today-start', label: 'Keep flipping'
+                                StaticText, 0x112a7a0f0, {{107.0, 495.5}, {128.5, 24.0}}, label: 'Keep flipping'
+                                Image, 0x112a7a210, {{246.0, 499.5}, {19.5, 16.5}}, identifier: 'arrow.right', label: 'Right'
+                              Button, 0x112a7a330, {{16.0, 567.5}, {343.0, 76.0}}, identifier: 'today-review', label: 'Missed words, 8 still shaky'
+                                Image, 0x112a7a450, {{15.6, 565.7}, {343.8, 79.6}}, label: 'PaperGrain'
+                                Other, 0x112a7a570, {{159.4, 556.4}, {55.4, 24.3}}
+                                Image, 0x112b56280, {{47.0, 594.5}, {18.0, 22.0}}, identifier: 'arrow.counterclockwise', label: 'arrow.counterclockwise'
+                                StaticText, 0x112a7a690, {{94.0, 583.5}, {135.0, 24.0}}, label: 'Missed words'
+                                StaticText, 0x112a7a7b0, {{94.0, 609.5}, {81.0, 18.0}}, label: '8 still shaky'
+                                Image, 0x112a7a8d0, {{333.0, 598.0}, {9.0, 15.0}}, identifier: 'chevron.right', label: 'Forward'
+                TabBar, 0x112a7a9f0, {{0.0, 618.0}, {375.0, 49.0}}, label: 'Tab Bar'
+                  Button, 0x112a7ab10, {{2.0, 619.0}, {90.0, 48.0}}, identifier: 'sun.max.fill', label: 'Today', Selected
+                    Image, 0x112a7ac30, {{32.0, 621.5}, {29.0, 29.5}}, identifier: 'sun.max.fill', label: 'brightness higher'
+                  Button, 0x112a7ad50, {{96.0, 619.0}, {90.0, 48.0}}, identifier: 'dumbbell.fill', label: 'Practice'
+                  Button, 0x113988dd0, {{190.0, 619.0}, {89.0, 48.0}}, identifier: 'books.vertical.fill', label: 'Words'
+                  Button, 0x113988ef0, {{283.0, 619.0}, {90.0, 48.0}}, identifier: 'person.crop.circle.fill', label: 'Me'
+      Other, 0x113989010, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x113989130, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x113989250, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x113989370, {{0.0, 0.0}, {375.0, 667.0}}
+              NavigationBar, 0x113989490, {{0.0, 20.0}, {375.0, 44.0}}, identifier: '_TtGC7SwiftUI29PresentationHosting'
+                Other, 0x112a7ae70, {{16.0, 27.5}, {30.0, 29.0}}, identifier: 'speaking-close', label: 'Close'
+                  Other, 0x112a7af90, {{16.0, 27.5}, {30.0, 29.0}}
+                    Button, 0x112a7b0b0, {{16.0, 27.5}, {30.0, 29.0}}, identifier: 'speaking-close', label: 'Close'
+                Other, 0x112a7b1d0, {{128.5, 26.0}, {118.5, 32.5}}
+                  Other, 0x112a7b2f0, {{128.5, 26.0}, {118.5, 32.5}}
+                    StaticText, 0x112a7b410, {{128.5, 26.0}, {118.5, 14.5}}, identifier: 'speaking-stage', label: 'Stage 1 · Restaurant'
+                    StaticText, 0x112b537b0, {{172.2, 40.5}, {31.0, 18.0}}, identifier: 'speaking-position', label: '1 / 5', value: Completed: 0
+                Other, 0x112a7b530, {{324.0, 25.5}, {35.0, 33.0}}, identifier: 'speaking-scenarios', label: 'All scenarios'
+                  Other, 0x112a7b650, {{324.0, 25.5}, {35.0, 33.0}}
+                    Button, 0x112a7b770, {{324.0, 25.5}, {35.0, 33.0}}, identifier: 'speaking-scenarios', label: 'All scenarios'
+              Other, 0x112a7b890, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x112a7b9b0, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x112a7bad0, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x112a7bbf0, {{0.0, 0.0}, {375.0, 667.0}}
+                      Image, 0x112a7bd10, {{0.0, 0.0}, {375.0, 667.0}}, label: 'PaperGrain'
+                      SegmentedControl, 0x112a7be30, {{16.0, 64.0}, {343.0, 31.0}}, identifier: 'speaking-track'
+                        Button, 0x112a7bf50, {{16.0, 64.0}, {171.0, 32.0}}, label: 'Scenarios', Selected
+                        Button, 0x112a7c070, {{188.0, 64.0}, {171.0, 32.0}}, label: 'Words'
+                      Other, 0x112a7c190, {{16.0, 129.5}, {343.0, 6.0}}
+                      Other, 0x112a7c2b0, {{18.0, 108.4}, {28.0, 25.6}}
+                      ScrollView, 0x112a7c3d0, {{16.0, 151.5}, {343.0, 441.5}}
+                        Other, 0x112ab1dd0, {{16.0, 151.5}, {343.0, 439.0}}
+                          StaticText, 0x112ab1ef0, {{48.0, 181.5}, {36.0, 14.5}}, label: '服務生'
+                          StaticText, 0x112ab2010, {{48.0, 200.0}, {192.0, 24.0}}, identifier: 'shadow-partner-line', label: '歡迎光臨！請問幾位？'
+                          Button, 0x112ab2130, {{273.0, 208.0}, {22.0, 17.5}}, identifier: 'speaker.wave.2.fill', label: 'Pronounce'
+                          StaticText, 0x1139895b0, {{48.0, 228.0}, {183.5, 34.0}}, label: 'huān yíng guāng lín! qǐng wèn jǐ wèi?'
+                          Button, 0x1139896d0, {{270.5, 250.5}, {27.0, 23.5}}, identifier: 'shadow-translation', label: 'Show translation'
+                          Button, 0x1139897f0, {{119.0, 324.5}, {22.0, 17.5}}, identifier: 'shadow-listen', label: 'Pronounce'
+                          Other, 0x113989910, {{172.0, 302.0}, {155.0, 62.0}}, identifier: 'shadow-sentence', label: '兩位，謝謝。'
+                            StaticText, 0x113989a30, {{173.5, 302.0}, {27.0, 14.5}}, label: 'liǎng'
+                            StaticText, 0x113989b50, {{173.5, 317.5}, {27.0, 33.5}}, label: '兩'
+                            Other, 0x113989c70, {{175.0, 352.0}, {24.0, 12.0}}
+                            StaticText, 0x113989d90, {{208.5, 302.0}, {19.0, 14.5}}, label: 'wèi'
+                            StaticText, 0x113989eb0, {{204.5, 317.5}, {27.0, 33.5}}, label: '位'
+                            Other, 0x113989fd0, {{206.0, 352.0}, {24.0, 12.0}}
+                            StaticText, 0x112b566a0, {{239.8, 302.0}, {3.5, 14.5}}, label: ' '
+                            StaticText, 0x112b56ac0, {{228.0, 317.5}, {27.0, 33.5}}, label: '，'
+                            StaticText, 0x11398a0f0, {{256.8, 302.0}, {16.5, 14.5}}, label: 'xiè'
+                            StaticText, 0x112b56ee0, {{251.5, 317.5}, {27.0, 33.5}}, label: '謝'
+                            Other, 0x112b84930, {{253.0, 352.0}, {24.0, 12.0}}
+                            StaticText, 0x112b840f0, {{287.8, 302.0}, {16.5, 14.5}}, label: 'xiè'
+                            StaticText, 0x112b84510, {{282.5, 317.5}, {27.0, 33.5}}, label: '謝'
+                            Other, 0x112ab2250, {{284.0, 352.0}, {24.0, 12.0}}
+                            StaticText, 0x112ab2370, {{317.8, 302.0}, {3.5, 14.5}}, label: ' '
+                            StaticText, 0x112ab2490, {{306.0, 317.5}, {27.0, 33.5}}, label: '。'
+                          Button, 0x112ab25b0, {{131.5, 426.0}, {112.0, 112.0}}, identifier: 'shadow-record', label: 'Start speaking'
+                          StaticText, 0x112ab2eb0, {{85.8, 558.0}, {203.5, 20.5}}, label: 'Listen, then tap and say it'
+                        Other, 0x112ab2fd0, {{326.0, 151.5}, {30.0, 441.5}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                          Other, 0x112ab30f0, {{353.0, 583.0}, {3.0, 7.0}}
+                        Other, 0x112ab3210, {{326.0, 151.5}, {30.0, 441.5}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                          Other, 0x112ab3330, {{353.0, 583.0}, {3.0, 7.0}}
+                      Button, 0x112ab3450, {{16.0, 609.0}, {165.5, 50.0}}, identifier: 'shadow-skip', label: 'Skip'
+                        Image, 0x112ab3570, {{16.0, 609.0}, {165.5, 50.0}}, label: 'PaperGrain'
+                        StaticText, 0x112a7e160, {{16.0, 609.0}, {165.5, 50.0}}, label: 'Skip'
+                      Button, 0x112a7e280, {{193.5, 609.0}, {165.5, 50.0}}, identifier: 'shadow-next', label: 'Next: answer', Disabled
+                        Image, 0x112a7e3a0, {{193.5, 609.0}, {165.5, 50.0}}, label: 'PaperGrain', Disabled
+                        StaticText, 0x112a7e4c0, {{193.5, 609.0}, {165.5, 50.0}}, label: 'Next: answer', Disabled
+      Other, 0x112a7e5e0, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x112a7e700, {{-375.0, -667.0}, {1125.0, 2001.0}}
+        Other, 0x112a7e820, {{0.0, 40.0}, {375.0, 627.0}}
+          Image, 0x112a7e940, {{-150.0, -110.0}, {675.0, 927.0}}
+          Other, 0x112a7ea60, {{0.0, 40.0}, {375.0, 627.0}}
+            Other, 0x112a7eb80, {{0.0, 40.0}, {375.0, 627.0}}
+              Other, 0x112a7eca0, {{0.0, 40.0}, {375.0, 627.0}}
+                Other, 0x112a7edc0, {{0.0, 40.0}, {375.0, 627.0}}
+                  Other, 0x112a7eee0, {{0.0, 40.0}, {375.0, 627.0}}
+                    NavigationBar, 0x112a7f000, {{0.0, 40.0}, {375.0, 56.0}}, identifier: 'Everyday scenarios'
+                      Other, 0x112a7f120, {{16.0, 54.0}, {51.0, 28.5}}, identifier: 'speaking-scenarios-close', label: 'Close'
+                        Other, 0x112a7f240, {{16.0, 54.0}, {51.0, 28.5}}
+                          Button, 0x112a7f360, {{16.0, 54.0}, {51.0, 28.5}}, identifier: 'speaking-scenarios-close', label: 'Close'
+                      StaticText, 0x112a7f480, {{108.5, 58.0}, {158.5, 20.5}}, label: 'Everyday scenarios'
+                    Other, 0x112a7f5a0, {{0.0, 40.0}, {375.0, 627.0}}
+                      Other, 0x112a7f6c0, {{0.0, 40.0}, {375.0, 627.0}}
+                        Other, 0x112a7f7e0, {{0.0, 40.0}, {375.0, 627.0}}
+                          Other, 0x112a7f900, {{0.0, 40.0}, {375.0, 627.0}}
+                            Image, 0x112a7fa20, {{0.0, 40.0}, {375.0, 627.0}}, label: 'PaperGrain'
+                            CollectionView, 0x112a7fb40, {{0.0, 40.0}, {375.0, 627.0}}
+                              Other, 0x112a7fc60, {{-16.0, -60.0}, {407.0, 171.0}}
+                              Cell, 0x112a7fd80, {{16.0, 29.0}, {343.0, 64.5}}
+                                Other, 0x112a7fea0, {{16.0, 29.0}, {343.0, 64.5}}
+                                  Other, 0x112a7ffc0, {{16.0, 29.0}, {343.0, 64.5}}
+                                    Other, 0x112a800e0, {{16.0, 29.0}, {343.0, 64.5}}
+                                      Image, 0x112a80200, {{16.0, 29.0}, {343.0, 64.5}}, label: 'PaperGrain'
+                                Other, 0x112a80320, {{16.0, 29.0}, {343.0, 64.5}}
+                                  Other, 0x112a80440, {{16.0, 29.0}, {343.0, 64.5}}
+                                    Other, 0x112a80560, {{16.0, 29.0}, {343.0, 64.5}}
+                                      Button, 0x112a80680, {{16.0, 29.0}, {343.0, 64.5}}, identifier: 'speaking-stage-convenience-2', label: '6, Heating food, paying bills, picking up parcels, 0 of 3 stars'
+                                        StaticText, 0x112a807a0, {{42.2, 52.2}, {9.5, 18.0}}, label: '6'
+                                        StaticText, 0x112a808c0, {{74.0, 40.0}, {177.5, 42.5}}, label: 'Heating food, paying bills, picking up parcels'
+                                        Other, 0x112a809e0, {{293.5, 55.0}, {48.5, 13.0}}, label: '0 of 3 stars'
+                                          Image, 0x112a80b00, {{293.5, 55.0}, {13.5, 13.0}}, identifier: 'star', label: 'Favorite'
+                                          Image, 0x112a80c20, {{311.0, 55.0}, {13.5, 13.0}}, identifier: 'star', label: 'Favorite'
+                                          Image, 0x112a80d40, {{328.5, 55.0}, {13.5, 13.0}}, identifier: 'star', label: 'Favorite'
+                              Other, 0x112a80e60, {{-16.0, 111.0}, {407.0, 190.5}}
+                              Cell, 0x112a80f80, {{16.0, 111.0}, {343.0, 44.0}}
+                                Other, 0x112a810a0, {{16.0, 111.0}, {343.0, 44.0}}
+                                Other, 0x112a811c0, {{16.0, 111.0}, {343.0, 44.0}}
+                                  Other, 0x112a812e0, {{16.0, 111.0}, {343.0, 44.0}}
+                                    Other, 0x112a81400, {{16.0, 111.0}, {343.0, 44.0}}
+                                      Image, 0x112a81520, {{34.0, 129.5}, {15.5, 17.5}}, identifier: 'bag.fill', label: 'Shopping Bag'
+                                      StaticText, 0x112a81640, {{16.0, 111.0}, {343.0, 44.0}}, label: 'Department store and clothes'
+                              Cell, 0x112a81760, {{16.0, 155.0}, {343.0, 64.5}}
+                                Other, 0x112a81880, {{16.0, 155.0}, {343.0, 64.5}}
+                                  Other, 0x112a819a0, {{16.0, 155.0}, {343.0, 64.5}}
+                                    Other, 0x112a81ac0, {{16.0, 155.0}, {343.0, 64.5}}
+                                      Image, 0x112a81be0, {{16.0, 155.0}, {343.0, 64.5}}, label: 'PaperGrain'
+                                Other, 0x112a81d00, {{16.0, 155.0}, {343.0, 64.5}}
+                                  Other, 0x112a81e20, {{16.0, 155.0}, {343.0, 64.5}}
+                                    Other, 0x112a81f40, {{16.0, 155.0}, {343.0, 64.5}}
+                                      Button, 0x112a82060, {{16.0, 155.0}, {343.0, 64.5}}, identifier: 'speaking-stage-shopping-1', label: '7, Finding things and trying them on, 0 of 3 stars'
+                                        StaticText, 0x112a82180, {{42.2, 178.2}, {9.5, 18.0}}, label: '7'
+                                        StaticText, 0x112a822a0, {{74.0, 166.0}, {144.5, 42.5}}, label: 'Finding things and trying them on'
+                                        Other, 0x112a823c0, {{293.5, 181.0}, {48.5, 13.0}}, label: '0 of 3 stars'
+                                          Image, 0x112a824e0, {{293.5, 181.0}, {13.5, 13.0}}, identifier: 'star', label: 'Favorite'
+                                          Image, 0x112a82600, {{311.0, 181.0}, {13.5, 13.0}}, identifier: 'star', label: 'Favorite'
+                                          Image, 0x112a82720, {{328.5, 181.0}, {13.5, 13.0}}, identifier: 'star', label: 'Favorite'
+                              Cell, 0x112a82840, {{16.0, 219.5}, {343.0, 64.5}}
+                                Other, 0x112a82960, {{16.0, 219.5}, {343.0, 64.5}}
+                                  Other, 0x112a82a80, {{16.0, 219.5}, {343.0, 64.5}}
+                                    Other, 0x112a82ba0, {{16.0, 219.5}, {343.0, 64.5}}
+                                      Image, 0x112a82cc0, {{16.0, 219.5}, {343.0, 64.5}}, label: 'PaperGrain'
+                                Other, 0x112a82de0, {{16.0, 219.5}, {343.0, 64.5}}
+                                  Other, 0x112a82f00, {{16.0, 219.5}, {343.0, 64.5}}
+                                    Other, 0x112a83020, {{16.0, 219.5}, {343.0, 64.5}}
+                                      Button, 0x112a83140, {{16.0, 219.5}, {343.0, 64.5}}, identifier: 'speaking-stage-shopping-2', label: '8, Sizes, paying and returns, 0 of 3 stars'
+                                        StaticText, 0x112a83260, {{42.2, 242.8}, {9.5, 18.0}}, label: '8'
+                                        StaticText, 0x112a83380, {{74.0, 230.5}, {104.5, 42.5}}, label: 'Sizes, paying and returns'
+                                        Other, 0x112a834a0, {{293.5, 245.5}, {48.5, 13.0}}, label: '0 of 3 stars'
+                                          Image, 0x112a835c0, {{293.5, 245.5}, {13.5, 13.0}}, identifier: 'star', label: 'Favorite'
+                                          Image, 0x112a836e0, {{311.0, 245.5}, {13.5, 13.0}}, identifier: 'star', label: 'Favorite'
+                                          Image, 0x112a83800, {{328.5, 245.5}, {13.5, 13.0}}, identifier: 'star', label: 'Favorite'
+                              Other, 0x112a83920, {{42.2, 219.0}, {316.8, 0.5}}
+                              Other, 0x112a83a40, {{-16.0, 301.5}, {407.0, 153.5}}
+                              Cell, 0x112a83b60, {{16.0, 301.5}, {343.0, 48.0}}
+                                Other, 0x112a83c80, {{16.0, 301.5}, {343.0, 48.0}}
+                                Other, 0x112a83da0, {{16.0, 301.5}, {343.0, 48.0}}
+                                  Other, 0x112a83ec0, {{16.0, 301.5}, {343.0, 48.0}}
+                                    Other, 0x112a83fe0, {{16.0, 301.5}, {343.0, 48.0}}
+                                      Image, 0x112a84100, {{34.0, 320.0}, {15.5, 22.0}}, identifier: 'tram.fill', label: 'Train'
+                                      StaticText, 0x112a84220, {{16.0, 301.5}, {343.0, 48.0}}, label: 'Directions and getting around'
+                              Cell, 0x112a84340, {{16.0, 349.5}, {343.0, 44.0}}
+                                Other, 0x112a84460, {{16.0, 349.5}, {343.0, 44.0}}
+                                  Other, 0x112a84580, {{16.0, 349.5}, {343.0, 44.0}}
+                                    Other, 0x112a846a0, {{16.0, 349.5}, {343.0, 44.0}}
+                                      Image, 0x112b7b5d0, {{16.0, 349.5}, {343.0, 44.0}}, label: 'PaperGrain'
+                                Other, 0x112a847c0, {{16.0, 349.5}, {343.0, 44.0}}
+                                  Other, 0x112a848e0, {{16.0, 349.5}, {343.0, 44.0}}
+                                    Other, 0x112a84a00, {{16.0, 349.5}, {343.0, 44.0}}
+                                      Button, 0x112a84b20, {{16.0, 349.5}, {343.0, 44.0}}, identifier: 'speaking-stage-transport-1', label: '9, Asking the way, 0 of 3 stars'
+                                        StaticText, 0x112a84c40, {{42.2, 362.5}, {9.5, 18.0}}, label: '9'
+                                        StaticText, 0x112a84d60, {{74.0, 361.2}, {115.0, 20.5}}, label: 'Asking the way'
+                                        Other, 0x112a84e80, {{293.5, 365.0}, {48.5, 13.0}}, label: '0 of 3 stars'
+                                          Image, 0x112a84fa0, {{293.5, 365.0}, {13.5, 13.0}}, identifier: 'star', label: 'Favorite'
+                                          Image, 0x112a850c0, {{311.0, 365.0}, {13.5, 13.0}}, identifier: 'star', label: 'Favorite'
+                                          Image, 0x112a851e0, {{328.5, 365.0}, {13.5, 13.0}}, identifier: 'star', label: 'Favorite'
+                              Cell, 0x112a85300, {{16.0, 393.5}, {343.0, 44.0}}
+                                Other, 0x112a85420, {{16.0, 393.5}, {343.0, 44.0}}
+                                  Other, 0x112a85540, {{16.0, 393.5}, {343.0, 44.0}}
+                                    Other, 0x112a85660, {{16.0, 393.5}, {343.0, 44.0}}
+                                      Image, 0x112a85780, {{16.0, 393.5}, {343.0, 44.0}}, label: 'PaperGrain'
+                                Other, 0x112a858a0, {{16.0, 393.5}, {343.0, 44.0}}
+                                  Other, 0x112a859c0, {{16.0, 393.5}, {343.0, 44.0}}
+                                    Other, 0x112a85ae0, {{16.0, 393.5}, {343.0, 44.0}}
+                                      Button, 0x112a85c00, {{16.0, 393.5}, {343.0, 44.0}}, identifier: 'speaking-stage-transport-2', label: '10, MRT, buses and taxis, 0 of 3 stars'
+                                        StaticText, 0x112a85d20, {{37.5, 406.5}, {19.0, 18.0}}, label: '10'
+                                        StaticText, 0x112a85e40, {{74.0, 405.2}, {161.5, 20.5}}, label: 'MRT, buses and taxis'
+                                        Other, 0x112a85f60, {{293.5, 409.0}, {48.5, 13.0}}, label: '0 of 3 stars'
+                                          Image, 0x112a86080, {{293.5, 409.0}, {13.5, 13.0}}, identifier: 'star', label: 'Favorite'
+                                          Image, 0x112a861a0, {{311.0, 409.0}, {13.5, 13.0}}, identifier: 'star', label: 'Favorite'
+                                          Image, 0x112a862c0, {{328.5, 409.0}, {13.5, 13.0}}, identifier: 'star', label: 'Favorite'
+                              Other, 0x112a863e0, {{42.2, 393.0}, {316.8, 0.5}}
+                              Other, 0x112a86500, {{-16.0, 455.0}, {407.0, 169.5}}
+                              Cell, 0x112a86620, {{16.0, 455.0}, {343.0, 43.5}}
+                                Other, 0x112a86740, {{16.0, 455.0}, {343.0, 43.5}}
+                                Other, 0x112a86860, {{16.0, 455.0}, {343.0, 43.5}}
+                                  Other, 0x112a86980, {{16.0, 455.0}, {343.0, 43.5}}
+                                    Other, 0x112a86aa0, {{16.0, 455.0}, {343.0, 43.5}}
+                                      Image, 0x112a86bc0, {{34.0, 473.5}, {20.0, 17.0}}, identifier: 'cross.case.fill', label: 'cross.case.fill'
+                                      StaticText, 0x112a86ce0, {{16.0, 455.0}, {343.0, 43.5}}, label: 'Doctor and pharmacy'
+                              Cell, 0x112a86e00, {{16.0, 498.5}, {343.0, 64.5}}
+                                Other, 0x112a86f20, {{16.0, 498.5}, {343.0, 64.5}}
+                                  Other, 0x112a87040, {{16.0, 498.5}, {343.0, 64.5}}
+                                    Other, 0x112a87160, {{16.0, 498.5}, {343.0, 64.5}}
+                                      Image, 0x112a87280, {{16.0, 498.5}, {343.0, 64.5}}, label: 'PaperGrain'
+                                Other, 0x112a873a0, {{16.0, 498.5}, {343.0, 64.5}}
+                                  Other, 0x112a874c0, {{16.0, 498.5}, {343.0, 64.5}}
+                                    Other, 0x112a875e0, {{16.0, 498.5}, {343.0, 64.5}}
+                                      Button, 0x112a87700, {{16.0, 498.5}, {343.0, 64.5}}, identifier: 'speaking-stage-clinic-1', label: '11, Checking in and seeing the doctor, 0 of 3 stars'
+                                        StaticText, 0x112a87820, {{37.5, 521.8}, {19.0, 18.0}}, label: '11'
+                                        StaticText, 0x112a87940, {{74.0, 509.5}, {181.0, 42.5}}, label: 'Checking in and seeing the doctor'
+                                        Other, 0x112a87a60, {{293.5, 524.5}, {48.5, 13.0}}, label: '0 of 3 stars'
+                                          Image, 0x112a87b80, {{293.5, 524.5}, {13.5, 13.0}}, identifier: 'star', label: 'Favorite'
+                                          Image, 0x112a87ca0, {{311.0, 524.5}, {13.5, 13.0}}, identifier: 'star', label: 'Favorite'
+                                          Image, 0x112a87dc0, {{328.5, 524.5}, {13.5, 13.0}}, identifier: 'star', label: 'Favorite'
+                              Cell, 0x112a87ee0, {{16.0, 563.0}, {343.0, 44.0}}
+                                Other, 0x112a88000, {{16.0, 563.0}, {343.0, 44.0}}
+                                  Other, 0x112a88120, {{16.0, 563.0}, {343.0, 44.0}}
+                                    Other, 0x112a88240, {{16.0, 563.0}, {343.0, 44.0}}
+                                      Image, 0x112a88360, {{16.0, 563.0}, {343.0, 44.0}}, label: 'PaperGrain'
+                                Other, 0x112a88480, {{16.0, 563.0}, {343.0, 44.0}}
+                                  Other, 0x112a885a0, {{16.0, 563.0}, {343.0, 44.0}}
+                                    Other, 0x112a886c0, {{16.0, 563.0}, {343.0, 44.0}}
+                                      Button, 0x112a887e0, {{16.0, 563.0}, {343.0, 44.0}}, identifier: 'speaking-stage-clinic-2', label: '12, At the pharmacy, 0 of 3 stars'
+                                        StaticText, 0x112a88900, {{37.5, 576.0}, {19.0, 18.0}}, label: '12'
+                                        StaticText, 0x112a88a20, {{74.0, 574.8}, {125.5, 20.5}}, label: 'At the pharmacy'
+                                        Other, 0x112a88b40, {{293.5, 578.5}, {48.5, 13.0}}, label: '0 of 3 stars'
+                                          Image, 0x112a88c60, {{293.5, 578.5}, {13.5, 13.0}}, identifier: 'star', label: 'Favorite'
+                                          Image, 0x112ab1170, {{311.0, 578.5}, {13.5, 13.0}}, identifier: 'star', label: 'Favorite'
+                                          Image, 0x112ab1290, {{328.5, 578.5}, {13.5, 13.0}}, identifier: 'star', label: 'Favorite'
+                              Other, 0x112ab13b0, {{37.5, 562.5}, {321.5, 0.5}}
+                              Other, 0x112ab14d0, {{-16.0, 624.5}, {407.0, 169.5}}
+                              Cell, 0x112ab15f0, {{16.0, 624.5}, {343.0, 43.5}}
+                                Other, 0x112ab1710, {{16.0, 624.5}, {343.0, 43.5}}
+                                Other, 0x112ab1830, {{16.0, 624.5}, {343.0, 43.5}}
+                                  Other, 0x112ab1950, {{16.0, 624.5}, {343.0, 43.5}}
+                                    Other, 0x112ab1a70, {{16.0, 624.5}, {343.0, 43.5}}
+                                      Image, 0x112ab1b90, {{34.0, 644.0}, {22.0, 15.0}}, identifier: 'bed.double.fill', label: 'Bedtime'
+                                      StaticText, 0x112aaf4c0, {{16.0, 624.5}, {343.0, 43.5}}, label: 'Hotel'
+                              Other, 0x112aaf5e0, {{342.0, 96.0}, {30.0, 571.0}}, label: 'Vertical scroll bar, 3 pages', value: 51%
+                                Other, 0x112aaf700, {{369.0, 276.0}, {3.0, 216.0}}
+                              Other, 0x112aaf820, {{342.0, 96.0}, {30.0, 571.0}}, label: 'Vertical scroll bar, 3 pages', value: 51%
+                                Other, 0x112aaf940, {{369.0, 276.0}, {3.0, 216.0}}
+Path to element:
+ →Application, 0x1139fe700, pid: 44949, label: 'WordCat'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x114687d80, pid: 44949, label: 'WordCat'
+  }

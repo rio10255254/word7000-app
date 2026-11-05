@@ -1,0 +1,276 @@
+Attributes: Application, 0x112d28940, pid: 73102, label: 'WordCat'
+Element subtree:
+ →Application, 0x112d28940, pid: 73102, label: 'WordCat'
+    Window (Main), 0x112d28f70, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x112d2ad90, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x112d2a970, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x112d56760, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x112d41a60, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x112d29b10, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x112d292d0, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x112d296f0, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x112d2b5d0, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x112d2b1b0, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x112d2c050, {{0.0, 0.0}, {375.0, 667.0}}
+                          Other, 0x112d2c470, {{0.0, 0.0}, {375.0, 667.0}}
+                            NavigationBar, 0x112d2bc30, {{0.0, 20.0}, {375.0, 148.0}}, identifier: '單字'
+                              Other, 0x112dea0b0, {{278.5, 25.0}, {42.0, 34.0}}, identifier: 'words-filter', label: '篩選'
+                                Other, 0x112d57b90, {{278.5, 25.0}, {42.0, 34.0}}
+                                  Button, 0x112dbaa80, {{278.5, 25.0}, {42.0, 34.0}}, identifier: 'words-filter', label: '篩選'
+                              Other, 0x112d2dbb0, {{328.5, 27.5}, {30.5, 29.5}}, identifier: 'words-add', label: '加號'
+                                Other, 0x112d2dcd0, {{328.5, 27.5}, {30.5, 29.5}}
+                                  Button, 0x112d2ddf0, {{328.5, 27.5}, {30.5, 29.5}}, identifier: 'words-add', label: '加號'
+                                    Button, 0x112d2df10, {{328.5, 27.5}, {30.5, 29.5}}
+                                      Other, 0x112d2e030, {{328.5, 27.5}, {30.5, 29.5}}
+                                        Image, 0x112d2e150, {{328.5, 27.5}, {30.5, 29.5}}, identifier: 'plus', label: '加號'
+                              StaticText, 0x112d2e270, {{16.0, 67.5}, {64.5, 41.0}}, label: '單字'
+                              SearchField, 0x112d2e390, {{16.0, 117.0}, {343.0, 36.0}}, label: '搜尋英文、中文或例句', placeholderValue: '搜尋英文、中文或例句'
+                                Image, 0x112d2e4b0, {{22.0, 125.5}, {20.5, 18.5}}, identifier: 'magnifyingglass', label: 'Search'
+                            Other, 0x112d2e5d0, {{0.0, 0.0}, {375.0, 667.0}}
+                              Other, 0x112d2e6f0, {{0.0, 0.0}, {375.0, 667.0}}
+                                Other, 0x112d2e810, {{0.0, 0.0}, {375.0, 667.0}}
+                                  Other, 0x112d2e930, {{0.0, 0.0}, {375.0, 667.0}}
+                                    Image, 0x112d2ea50, {{0.0, 0.0}, {375.0, 667.0}}, label: 'PaperGrain'
+                                    CollectionView, 0x112d2eb70, {{0.0, 0.0}, {375.0, 667.0}}
+                                      Other, 0x112d2ec90, {{-16.0, -1166.0}, {407.0, 1483.5}}
+                                      Cell, 0x112d2edb0, {{16.0, 168.0}, {343.0, 132.0}}
+                                        Other, 0x112d2eed0, {{16.0, 168.0}, {343.0, 132.0}}
+                                          Other, 0x112d2eff0, {{16.0, 168.0}, {343.0, 132.0}}
+                                            Other, 0x112d2f110, {{16.0, 168.0}, {343.0, 132.0}}
+                                        Other, 0x112d2f230, {{16.0, 168.0}, {343.0, 132.0}}
+                                          Other, 0x112d2f350, {{16.0, 168.0}, {343.0, 132.0}}
+                                            Other, 0x112d2f470, {{16.0, 168.0}, {343.0, 132.0}}
+                                              ScrollView, 0x112d2f590, {{16.0, 168.0}, {343.0, 132.0}}
+                                                Other, 0x112d2f6b0, {{16.0, 168.0}, {292.0, 132.0}}
+                                                  Button, 0x112d2f7d0, {{14.3, 160.1}, {147.7, 141.9}}, identifier: 'bank-core', label: '7000 單字、7000 個', Selected
+                                                    Image, 0x112d2f8f0, {{14.3, 170.1}, {143.4, 127.9}}, label: 'PaperGrain'
+                                                    Image, 0x112d2fa10, {{33.2, 186.0}, {18.1, 22.0}}, identifier: 'character.book.closed.fill', label: 'character.book.closed.fill'
+                                                    StaticText, 0x112d2fb30, {{29.1, 247.9}, {72.5, 20.0}}, label: '7000 單字'
+                                                    StaticText, 0x112d29f30, {{28.7, 265.9}, {45.4, 15.8}}, label: '7000 個'
+                                                    Other, 0x112d2a050, {{55.2, 160.1}, {65.1, 23.8}}
+                                                    Image, 0x112d2a170, {{126.0, 266.0}, {36.0, 36.0}}, identifier: 'checkmark', label: '已選取', Selected
+                                                  Button, 0x112d5c1d0, {{166.7, 170.5}, {142.6, 126.9}}, identifier: 'words-scan', label: '試用還能掃描 4 次、掃描單字表'
+                                                    Image, 0x112d5c2f0, {{166.7, 170.5}, {142.6, 126.9}}, label: 'PaperGrain'
+                                                    Image, 0x112d5c410, {{184.5, 188.0}, {21.5, 21.5}}, identifier: 'plus.viewfinder', label: 'plus.viewfinder'
+                                                    StaticText, 0x112d5c530, {{272.0, 186.0}, {22.0, 22.0}}, label: '試用還能掃描 4 次'
+                                                    StaticText, 0x112d5c650, {{182.0, 264.0}, {74.5, 18.0}}, label: '掃描單字表'
+                                      Other, 0x112d5c770, {{-16.0, 317.5}, {407.0, 309485.5}}
+                                      Cell, 0x112d5c890, {{16.0, 317.5}, {343.0, 39.0}}
+                                        Other, 0x112d5c9b0, {{16.0, 317.5}, {343.0, 39.0}}
+                                        Other, 0x112d5cad0, {{16.0, 317.5}, {343.0, 39.0}}
+                                          Other, 0x112d5cbf0, {{16.0, 317.5}, {343.0, 39.0}}
+                                            Other, 0x112d5cd10, {{16.0, 317.5}, {343.0, 39.0}}
+                                              StaticText, 0x112d5ce30, {{32.0, 334.5}, {61.0, 16.0}}, label: '7000 單字'
+                                              StaticText, 0x112d5cf50, {{294.0, 334.5}, {49.0, 16.0}}, label: '7000 個'
+                                      Cell, 0x112d5d070, {{16.0, 356.5}, {343.0, 62.5}}
+                                        Other, 0x112db2350, {{16.0, 356.5}, {343.0, 62.5}}
+                                          Other, 0x112db2470, {{16.0, 356.5}, {343.0, 62.5}}
+                                            Other, 0x112db2590, {{16.0, 356.5}, {343.0, 62.5}}
+                                              Image, 0x112db26b0, {{16.0, 356.5}, {343.0, 62.5}}, label: 'PaperGrain'
+                                        Other, 0x112db27d0, {{16.0, 356.5}, {343.0, 62.5}}
+                                          Other, 0x112db28f0, {{16.0, 356.5}, {343.0, 62.5}}
+                                            Other, 0x112db2a10, {{16.0, 356.5}, {343.0, 62.5}}
+                                              Button, 0x112db2b30, {{16.0, 356.5}, {343.0, 62.5}}, label: '未學、abandon、遺棄'
+                                                Image, 0x112db2c50, {{34.0, 381.5}, {12.5, 12.5}}, identifier: 'circle', label: '未學'
+                                                StaticText, 0x112db2d70, {{60.0, 367.5}, {73.5, 20.5}}, label: 'abandon'
+                                                StaticText, 0x112db2e90, {{60.0, 390.0}, {30.0, 18.0}}, label: '遺棄'
+                                                Image, 0x112db2fb0, {{335.0, 381.5}, {7.0, 12.0}}, identifier: 'chevron.forward'
+                                      Cell, 0x112db30d0, {{16.0, 419.0}, {343.0, 62.5}}
+                                        Other, 0x112db31f0, {{16.0, 419.0}, {343.0, 62.5}}
+                                          Other, 0x112db3310, {{16.0, 419.0}, {343.0, 62.5}}
+                                            Other, 0x112db3430, {{16.0, 419.0}, {343.0, 62.5}}
+                                              Image, 0x112db3550, {{16.0, 419.0}, {343.0, 62.5}}, label: 'PaperGrain'
+                                        Other, 0x112db3670, {{16.0, 419.0}, {343.0, 62.5}}
+                                          Other, 0x112db3790, {{16.0, 419.0}, {343.0, 62.5}}
+                                            Other, 0x112d3c720, {{16.0, 419.0}, {343.0, 62.5}}
+                                              Button, 0x112d3c840, {{16.0, 419.0}, {343.0, 62.5}}, label: '未學、abandoned、廢棄的'
+                                                Image, 0x112d3c960, {{34.0, 444.0}, {12.5, 12.5}}, identifier: 'circle', label: '未學'
+                                                StaticText, 0x112d3ca80, {{60.0, 430.0}, {93.5, 20.5}}, label: 'abandoned'
+                                                StaticText, 0x112d3cba0, {{60.0, 452.5}, {45.0, 18.0}}, label: '廢棄的'
+                                                Image, 0x112d3ccc0, {{335.0, 444.0}, {7.0, 12.0}}, identifier: 'chevron.forward'
+                                      Cell, 0x112d3cde0, {{16.0, 481.5}, {343.0, 62.5}}
+                                        Other, 0x112d3cf00, {{16.0, 481.5}, {343.0, 62.5}}
+                                          Other, 0x112d3d020, {{16.0, 481.5}, {343.0, 62.5}}
+                                            Other, 0x112d32ff0, {{16.0, 481.5}, {343.0, 62.5}}
+                                              Image, 0x112d33110, {{16.0, 481.5}, {343.0, 62.5}}, label: 'PaperGrain'
+                                        Other, 0x112d33230, {{16.0, 481.5}, {343.0, 62.5}}
+                                          Other, 0x112d33350, {{16.0, 481.5}, {343.0, 62.5}}
+                                            Other, 0x112d33470, {{16.0, 481.5}, {343.0, 62.5}}
+                                              Button, 0x112d33590, {{16.0, 481.5}, {343.0, 62.5}}, label: '未學、abbey、大修道院'
+                                                Image, 0x112d336b0, {{34.0, 506.5}, {12.5, 12.5}}, identifier: 'circle', label: '未學'
+                                                StaticText, 0x112d337d0, {{60.0, 492.5}, {49.5, 20.5}}, label: 'abbey'
+                                                StaticText, 0x112d338f0, {{60.0, 515.0}, {60.0, 18.0}}, label: '大修道院'
+                                                Image, 0x112d33a10, {{335.0, 506.5}, {7.0, 12.0}}, identifier: 'chevron.forward'
+                                      Cell, 0x112d33b30, {{16.0, 544.0}, {343.0, 62.5}}
+                                        Other, 0x112d33c50, {{16.0, 544.0}, {343.0, 62.5}}
+                                          Other, 0x112d33d70, {{16.0, 544.0}, {343.0, 62.5}}
+                                            Other, 0x112d33e90, {{16.0, 544.0}, {343.0, 62.5}}
+                                              Image, 0x112d33fb0, {{16.0, 544.0}, {343.0, 62.5}}, label: 'PaperGrain'
+                                        Other, 0x112d340d0, {{16.0, 544.0}, {343.0, 62.5}}
+                                          Other, 0x112d341f0, {{16.0, 544.0}, {343.0, 62.5}}
+                                            Other, 0x112d34310, {{16.0, 544.0}, {343.0, 62.5}}
+                                              Button, 0x112d34430, {{16.0, 544.0}, {343.0, 62.5}}, label: '未學、abc、字母'
+                                                Image, 0x112d34550, {{34.0, 569.0}, {12.5, 12.5}}, identifier: 'circle', label: '未學'
+                                                StaticText, 0x112d34670, {{60.0, 555.0}, {29.0, 20.5}}, label: 'abc'
+                                                StaticText, 0x112d34790, {{60.0, 577.5}, {30.0, 18.0}}, label: '字母'
+                                                Image, 0x112d348b0, {{335.0, 569.0}, {7.0, 12.0}}, identifier: 'chevron.forward'
+                                      Cell, 0x112d737f0, {{16.0, 606.5}, {343.0, 62.5}}
+                                        Other, 0x112d73910, {{16.0, 606.5}, {343.0, 62.5}}
+                                          Other, 0x112d73a30, {{16.0, 606.5}, {343.0, 62.5}}
+                                            Other, 0x112d73b50, {{16.0, 606.5}, {343.0, 62.5}}
+                                              Image, 0x112d73c70, {{16.0, 606.5}, {343.0, 62.5}}, label: 'PaperGrain'
+                                        Other, 0x112d73d90, {{16.0, 606.5}, {343.0, 62.5}}
+                                          Other, 0x112d73eb0, {{16.0, 606.5}, {343.0, 62.5}}
+                                            Other, 0x112d4e5e0, {{16.0, 606.5}, {343.0, 62.5}}
+                                              Button, 0x112d4e700, {{16.0, 606.5}, {343.0, 62.5}}, label: '未學、abide、遵守'
+                                                Image, 0x112d4e820, {{34.0, 631.5}, {12.5, 12.5}}, identifier: 'circle', label: '未學'
+                                                StaticText, 0x112d4e940, {{60.0, 617.5}, {46.0, 20.5}}, label: 'abide'
+                                                StaticText, 0x112d4ea60, {{60.0, 640.0}, {30.0, 18.0}}, label: '遵守'
+                                                Image, 0x112d4eb80, {{335.0, 631.5}, {7.0, 12.0}}, identifier: 'chevron.forward'
+                                      Other, 0x112d4eca0, {{342.0, 168.0}, {30.0, 450.0}}, label: 'Vertical scroll bar, 686 pages', value: 0%
+                                        Other, 0x112d4edc0, {{369.0, 171.0}, {3.0, 36.0}}
+                                      Other, 0x112d4eee0, {{342.0, 168.0}, {30.0, 450.0}}, label: 'Vertical scroll bar, 686 pages', value: 0%
+                                        Other, 0x112d4f000, {{369.0, 171.0}, {3.0, 36.0}}
+                TabBar, 0x112d4f120, {{0.0, 618.0}, {375.0, 49.0}}, label: 'Tab Bar'
+                  Button, 0x112d4f240, {{2.0, 619.0}, {90.0, 48.0}}, identifier: 'sun.max.fill', label: '今天'
+                  Button, 0x112d4f360, {{96.0, 619.0}, {90.0, 48.0}}, identifier: 'dumbbell.fill', label: '練習'
+                  Button, 0x112d4f480, {{190.0, 619.0}, {89.0, 48.0}}, identifier: 'books.vertical.fill', label: '單字', Selected
+                    Image, 0x112d4f5a0, {{217.5, 621.5}, {33.5, 29.5}}, identifier: 'books.vertical.fill', label: 'Bookshelf'
+                  Button, 0x112d4f6c0, {{283.0, 619.0}, {90.0, 48.0}}, identifier: 'person.crop.circle.fill', label: '我'
+      Other, 0x112d4f7e0, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x112d4f900, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x112d4fa20, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x112d4fb40, {{0.0, 0.0}, {375.0, 667.0}}
+              NavigationBar, 0x112d4fc60, {{0.0, 20.0}, {375.0, 44.0}}, identifier: '掃描單字表'
+                Other, 0x112d4fd80, {{16.0, 28.0}, {42.0, 28.5}}, identifier: 'scan-close', label: '關閉'
+                  Other, 0x112d4fea0, {{16.0, 28.0}, {42.0, 28.5}}
+                    Button, 0x112d4ffc0, {{16.0, 28.0}, {42.0, 28.5}}, identifier: 'scan-close', label: '關閉'
+                StaticText, 0x112d500e0, {{145.5, 32.0}, {84.5, 20.5}}, label: '掃描單字表'
+                Other, 0x112d50200, {{283.5, 28.0}, {75.5, 28.5}}, label: '重新掃描'
+                  Other, 0x112d50320, {{283.5, 28.0}, {75.5, 28.5}}
+                    Button, 0x112d50440, {{283.5, 28.0}, {75.5, 28.5}}, label: '重新掃描'
+              Other, 0x112d50560, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x112dc3800, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x112dc3920, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x112dc3a40, {{0.0, 0.0}, {375.0, 667.0}}
+                      Image, 0x112dc3b60, {{0.0, 0.0}, {375.0, 667.0}}, label: 'PaperGrain'
+                      Image, 0x112dc3c80, {{0.0, 0.0}, {375.0, 667.0}}, label: 'PaperGrain'
+                      CollectionView, 0x112dc3da0, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x112dc3ec0, {{-16.0, -1270.0}, {407.0, 1430.5}}
+                        Cell, 0x112dc3fe0, {{16.0, 99.0}, {343.0, 44.0}}
+                          Other, 0x112dc4100, {{16.0, 99.0}, {343.0, 44.0}}
+                            Other, 0x112d42e00, {{16.0, 99.0}, {343.0, 44.0}}
+                          Other, 0x112d42f20, {{16.0, 99.0}, {343.0, 44.0}}
+                            Other, 0x112d43040, {{16.0, 99.0}, {343.0, 44.0}}
+                              Other, 0x112d43160, {{16.0, 99.0}, {343.0, 44.0}}
+                                Button, 0x112d43280, {{16.0, 99.0}, {343.0, 44.0}}, identifier: 'scan-source-preview', label: '對照原始頁面'
+                                  Image, 0x112d433a0, {{37.0, 108.0}, {21.0, 26.5}}, identifier: 'doc.text.magnifyingglass', label: 'Search Document'
+                                  StaticText, 0x112d434c0, {{37.0, 108.0}, {140.5, 26.5}}, label: '對照原始頁面'
+                        Other, 0x112dc5cb0, {{-16.0, 160.5}, {407.0, 341.5}}
+                        Cell, 0x112dc5dd0, {{16.0, 160.5}, {343.0, 39.0}}
+                          Other, 0x112dc5ef0, {{16.0, 160.5}, {343.0, 39.0}}
+                          Other, 0x112dc6010, {{16.0, 160.5}, {343.0, 39.0}}
+                            Other, 0x112dc6130, {{16.0, 160.5}, {343.0, 39.0}}
+                              Other, 0x112dc6250, {{16.0, 160.5}, {343.0, 39.0}}
+                                StaticText, 0x112dc6370, {{16.0, 160.5}, {343.0, 39.0}}, label: '找到 3 個單字'
+                        Cell, 0x112dc6490, {{16.0, 199.5}, {343.0, 69.5}}
+                          Other, 0x112dc65b0, {{16.0, 199.5}, {343.0, 69.5}}
+                            Other, 0x112dc66d0, {{16.0, 199.5}, {343.0, 69.5}}
+                          Other, 0x112dd5340, {{16.0, 199.5}, {343.0, 69.5}}
+                            Other, 0x112dd5460, {{16.0, 199.5}, {343.0, 69.5}}
+                              Other, 0x112dd5580, {{16.0, 199.5}, {343.0, 69.5}}
+                                Button, 0x112dd56a0, {{33.5, 216.0}, {20.0, 20.0}}, identifier: 'checkmark.circle.fill', label: 'Selected', Selected
+                                TextField, 0x112dd57c0, {{67.0, 210.5}, {168.0, 22.0}}, identifier: 'scan-word-page0-p0-0-objectively-r0', placeholderValue: '英文', value: objectively
+                                TextField, 0x112dd58e0, {{243.0, 212.0}, {100.0, 19.5}}, placeholderValue: '詞性', value: adv
+                                TextField, 0x112dd5a00, {{67.0, 238.5}, {276.0, 19.5}}, identifier: 'scan-meaning-page0-p0-0-objectively-r0', placeholderValue: '中文意思', value: 客觀地
+                        Cell, 0x112dbdd90, {{16.0, 269.0}, {343.0, 69.5}}
+                          Other, 0x112dbdeb0, {{16.0, 269.0}, {343.0, 69.5}}
+                            Other, 0x112dbdfd0, {{16.0, 269.0}, {343.0, 69.5}}
+                          Other, 0x112dbe0f0, {{16.0, 269.0}, {343.0, 69.5}}
+                            Other, 0x112dbe210, {{16.0, 269.0}, {343.0, 69.5}}
+                              Other, 0x112dbe330, {{16.0, 269.0}, {343.0, 69.5}}
+                                Button, 0x112dbe450, {{33.5, 285.5}, {20.0, 20.0}}, identifier: 'checkmark.circle.fill', label: 'Selected', Selected
+                                TextField, 0x112dbe570, {{67.0, 280.0}, {168.0, 22.0}}, identifier: 'scan-word-page0-p0-1-objective-r1', placeholderValue: '英文', value: objective
+                                TextField, 0x112dbe690, {{243.0, 281.5}, {100.0, 19.5}}, placeholderValue: '詞性', value: n
+                                TextField, 0x112dbe7b0, {{67.0, 308.0}, {276.0, 19.5}}, identifier: 'scan-meaning-page0-p0-1-objective-r1', placeholderValue: '中文意思', value: 目標
+                        Other, 0x112dbe8d0, {{32.0, 268.5}, {327.0, 0.5}}
+                        Cell, 0x112df1750, {{16.0, 338.5}, {343.0, 69.5}}
+                          Other, 0x112df1870, {{16.0, 338.5}, {343.0, 69.5}}
+                            Other, 0x112df1990, {{16.0, 338.5}, {343.0, 69.5}}
+                          Other, 0x112dea6d0, {{16.0, 338.5}, {343.0, 69.5}}
+                            Other, 0x112dea7f0, {{16.0, 338.5}, {343.0, 69.5}}
+                              Other, 0x112dea910, {{16.0, 338.5}, {343.0, 69.5}}
+                                Button, 0x112deaa30, {{33.5, 355.0}, {20.0, 20.0}}, identifier: 'checkmark.circle.fill', label: 'Selected', Selected
+                                TextField, 0x112deab50, {{67.0, 349.5}, {168.0, 22.0}}, identifier: 'scan-word-page0-p0-2-carefully-r2', placeholderValue: '英文', value: carefully
+                                TextField, 0x112deac70, {{243.0, 351.0}, {100.0, 19.5}}, placeholderValue: '詞性', value: adv
+                                TextField, 0x112dead90, {{67.0, 377.5}, {276.0, 19.5}}, identifier: 'scan-meaning-page0-p0-2-carefully-r2', placeholderValue: '中文意思', value: 小心地
+                        Other, 0x112deaeb0, {{32.0, 338.0}, {327.0, 0.5}}
+                        Cell, 0x112deafd0, {{16.0, 408.0}, {343.0, 44.0}}
+                          Other, 0x112df96d0, {{16.0, 408.0}, {343.0, 44.0}}
+                            Other, 0x112df97f0, {{16.0, 408.0}, {343.0, 44.0}}
+                          Other, 0x112df9910, {{16.0, 408.0}, {343.0, 44.0}}
+                            Other, 0x112df9a30, {{16.0, 408.0}, {343.0, 44.0}}
+                              Other, 0x112df9b50, {{16.0, 408.0}, {343.0, 44.0}}
+                                Button, 0x112df9c70, {{16.0, 408.0}, {343.0, 44.0}}, label: '新增一列'
+                                  Image, 0x112df9d90, {{37.5, 421.5}, {17.5, 17.5}}, identifier: 'plus', label: 'Add'
+                                  StaticText, 0x112df9eb0, {{37.5, 419.8}, {106.0, 20.5}}, label: '新增一列'
+                        Other, 0x112df9fd0, {{32.0, 407.5}, {327.0, 0.5}}
+                        Cell, 0x112dfa0f0, {{16.0, 452.0}, {343.0, 50.0}}
+                          Other, 0x112dfa210, {{16.0, 452.0}, {343.0, 50.0}}
+                          Other, 0x112dfa330, {{16.0, 452.0}, {343.0, 50.0}}
+                            Other, 0x112dfa450, {{16.0, 452.0}, {343.0, 50.0}}
+                              Other, 0x112dfa570, {{16.0, 452.0}, {343.0, 50.0}}
+                                StaticText, 0x112dfa690, {{16.0, 452.0}, {343.0, 50.0}}, label: '儲存前可以直接修改英文或中文；取消勾選的不會存入。左滑可以刪除。'
+                        Other, 0x112dfa7b0, {{-16.0, 502.0}, {407.0, 144.5}}
+                        Cell, 0x112dfa8d0, {{16.0, 502.0}, {343.0, 39.0}}
+                          Other, 0x112dfa9f0, {{16.0, 502.0}, {343.0, 39.0}}
+                          Other, 0x112dfab10, {{16.0, 502.0}, {343.0, 39.0}}
+                            Other, 0x112dfac30, {{16.0, 502.0}, {343.0, 39.0}}
+                              Other, 0x112dfad50, {{16.0, 502.0}, {343.0, 39.0}}
+                                StaticText, 0x112dfae70, {{16.0, 502.0}, {343.0, 39.0}}, label: '存到'
+                        Cell, 0x112dfaf90, {{16.0, 541.0}, {343.0, 44.0}}
+                          Other, 0x112dfb0b0, {{16.0, 541.0}, {343.0, 44.0}}
+                            Other, 0x112dfb1d0, {{16.0, 541.0}, {343.0, 44.0}}
+                          Other, 0x112dfb2f0, {{16.0, 541.0}, {343.0, 44.0}}
+                            Other, 0x112dfb410, {{16.0, 541.0}, {343.0, 44.0}}
+                              Other, 0x112dfb530, {{16.0, 541.0}, {343.0, 44.0}}
+                                StaticText, 0x112dfb650, {{32.0, 552.8}, {34.0, 20.5}}, label: '存到'
+                                Button, 0x112dfb770, {{16.0, 541.0}, {343.0, 44.0}}, identifier: 'scan-destination', label: '存到, 新字庫'
+                                  StaticText, 0x112dfb890, {{276.0, 553.0}, {51.0, 20.5}}, label: '新字庫'
+                        Cell, 0x112dfb9b0, {{16.0, 585.0}, {343.0, 44.0}}
+                          Other, 0x112dfbad0, {{16.0, 585.0}, {343.0, 44.0}}
+                            Other, 0x112dfbbf0, {{16.0, 585.0}, {343.0, 44.0}}
+                          Other, 0x112dfbd10, {{16.0, 585.0}, {343.0, 44.0}}
+                            Other, 0x112dfbe30, {{16.0, 585.0}, {343.0, 44.0}}
+                              Other, 0x112dfbf50, {{16.0, 585.0}, {343.0, 44.0}}
+                                TextField, 0x112dfc070, {{16.0, 585.0}, {343.0, 44.0}}, identifier: 'scan-bank-name', placeholderValue: '字庫名稱', value: 掃描 11/5
+                        Other, 0x112dfc190, {{32.0, 584.5}, {327.0, 0.5}}
+                        Other, 0x112dfc2b0, {{-16.0, 646.5}, {407.0, 1421.5}}
+                        Cell, 0x112dfc3d0, {{16.0, 664.0}, {343.0, 50.0}}
+                          Other, 0x112dfc4f0, {{16.0, 664.0}, {343.0, 50.0}}
+                            Other, 0x112dfc610, {{16.0, 664.0}, {343.0, 50.0}}
+                              Other, 0x112dfc730, {{16.0, 664.0}, {343.0, 50.0}}
+                          Other, 0x112dfc850, {{16.0, 664.0}, {343.0, 50.0}}
+                            Other, 0x112dfc970, {{16.0, 664.0}, {343.0, 50.0}}
+                              Other, 0x112dfca90, {{16.0, 664.0}, {343.0, 50.0}}
+                                Button, 0x112dfcbb0, {{16.0, 664.0}, {343.0, 50.0}}, identifier: 'scan-save', label: '存入字庫（3 個）'
+                                  Image, 0x112dfccd0, {{16.0, 664.0}, {343.0, 50.0}}, label: 'PaperGrain'
+                                  StaticText, 0x112dfcdf0, {{16.0, 664.0}, {343.0, 50.0}}, label: '存入字庫（3 個）'
+                        Other, 0x112dfcf10, {{342.0, 64.0}, {30.0, 603.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                          Other, 0x112dfd030, {{369.0, 657.0}, {3.0, 7.0}}
+                        Other, 0x112dfd150, {{342.0, 64.0}, {30.0, 603.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                          Other, 0x112dfd270, {{369.0, 657.0}, {3.0, 7.0}}
+    Window, 0x112dfd390, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x112dfd4b0, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x112dfd5d0, {{0.0, 0.0}, {375.0, 667.0}}
+    Window, 0x112dfd6f0, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x112dfd810, {{0.0, 0.0}, {375.0, 667.0}}
+    Window, 0x112dfd930, {{0.0, 0.0}, {187.5, 333.5}}
+      Other, 0x112dfda50, {{0.0, 0.0}, {187.5, 333.5}}
+Path to element:
+ →Application, 0x112d28940, pid: 73102, label: 'WordCat'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x112dfe5b0, pid: 73102, label: 'WordCat'
+  }

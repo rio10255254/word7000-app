@@ -1,0 +1,134 @@
+Attributes: Application, 0x1139960b0, pid: 30098, label: 'WordCat'
+Element subtree:
+ →Application, 0x1139960b0, pid: 30098, label: 'WordCat'
+    Window (Main), 0x1139995f0, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x1139691f0, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x11396dc30, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x113992aa0, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x1139cdc20, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x11396cbb0, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x11396a270, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x11396c790, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x11391d4d0, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x11396d3f0, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x113969610, {{0.0, 0.0}, {375.0, 667.0}}
+                          Image, 0x1139ceac0, {{0.0, 0.0}, {375.0, 667.0}}, label: 'PaperGrain'
+                          ScrollView, 0x1139cebe0, {{0.0, 0.0}, {375.0, 667.0}}
+                            Other, 0x1139ced00, {{0.0, 20.0}, {375.0, 639.5}}
+                              StaticText, 0x1139cee20, {{16.0, 28.0}, {151.0, 33.5}}, label: 'Afternoon!'
+                              Other, 0x1139cef40, {{283.0, 32.0}, {76.0, 36.0}}, identifier: 'today-language', label: 'Learning language'
+                                Image, 0x1139cf060, {{283.0, 32.0}, {76.0, 36.0}}, label: 'PaperGrain'
+                                Button, 0x1139cf180, {{286.0, 35.0}, {34.0, 30.0}}, identifier: 'today-language-en', label: 'Learn English'
+                                Button, 0x1139cf2a0, {{322.0, 35.0}, {34.0, 30.0}}, identifier: 'today-language-zh', label: 'Learn Chinese', Selected
+                              Image, 0x1139cf3c0, {{17.5, 86.5}, {17.0, 17.0}}, identifier: 'sun.max.fill', label: 'Brightness Higher'
+                              StaticText, 0x1139cf4e0, {{40.0, 86.0}, {77.5, 18.0}}, label: 'Thu, Nov 5'
+                              Button, 0x1139cf600, {{218.0, 76.0}, {55.5, 38.0}}, identifier: 'today-streak', label: '2-day streak'
+                                Button, 0x1139cf720, {{218.0, 76.0}, {55.5, 38.0}}, label: '2'
+                                  Image, 0x1139cf840, {{218.0, 76.0}, {55.5, 38.0}}, label: 'PaperGrain'
+                                  Image, 0x1139cf960, {{231.5, 85.5}, {15.0, 19.0}}, identifier: 'flame.fill', label: 'Flame'
+                                  StaticText, 0x1139cfa80, {{252.0, 84.8}, {9.5, 20.5}}, label: '2'
+                              Button, 0x1139cfba0, {{281.5, 76.0}, {77.5, 38.0}}, identifier: 'today-shelf', label: '47 words mastered'
+                                Button, 0x1139cfcc0, {{281.5, 76.0}, {77.5, 38.0}}, label: '47'
+                                  Image, 0x1139cfde0, {{281.5, 76.0}, {77.5, 38.0}}, label: 'PaperGrain'
+                                  Image, 0x1139cff00, {{295.5, 85.5}, {23.5, 19.0}}, identifier: 'books.vertical.fill', label: 'Bookshelf'
+                                  StaticText, 0x1139d0020, {{325.0, 84.8}, {22.0, 20.5}}, label: '47'
+                              StaticText, 0x1139d0140, {{36.0, 188.0}, {189.0, 18.0}}, label: 'Today's words · chapter 1'
+                              Button, 0x1139d0260, {{272.2, 113.2}, {75.6, 75.6}}, identifier: 'today-mascot', label: 'Silly Cat'
+                                Other, 0x1139d0380, {{272.2, 113.2}, {75.6, 75.6}}
+                              Other, 0x1139d04a0, {{114.9, 197.4}, {145.3, 145.3}}, label: '7 of 20 words today'
+                                Other, 0x1139d05c0, {{114.9, 197.4}, {145.3, 145.3}}, value: 35%
+                                Image, 0x1139d06e0, {{164.0, 250.5}, {46.5, 39.5}}, identifier: 'rectangle.on.rectangle.angled', label: 'Study Cards'
+                                StaticText, 0x1139d0800, {{173.2, 300.2}, {28.5, 14.5}}, label: '7/20'
+                              StaticText, 0x1139d0920, {{90.8, 334.0}, {193.5, 33.5}}, label: 'Flip the cards'
+                              StaticText, 0x1139d0a40, {{113.8, 373.5}, {147.5, 20.5}}, label: '7 to review · 6 new'
+                              Button, 0x1139d0b60, {{48.2, 404.2}, {47.5, 65.3}}, identifier: 'today-node-cards', label: 'Cards'
+                                Image, 0x1139d0c80, {{60.1, 417.7}, {24.3, 20.5}}, identifier: 'rectangle.on.rectangle.angled', label: 'Study Cards'
+                                StaticText, 0x1139d0da0, {{53.2, 455.0}, {37.0, 14.5}}, label: 'Cards'
+                              Button, 0x1139d0ec0, {{127.0, 406.0}, {44.0, 63.5}}, identifier: 'today-spelling', label: 'Write'
+                                Image, 0x1139d0fe0, {{139.0, 419.5}, {18.5, 17.5}}, identifier: 'pencil.line', label: 'pencil.line'
+                                StaticText, 0x1139d1100, {{132.0, 455.0}, {34.0, 14.5}}, label: 'Write'
+                              Button, 0x1139d1220, {{204.5, 406.0}, {44.0, 63.5}}, identifier: 'today-quiz', label: 'Quiz'
+                                Image, 0x1139d1340, {{217.0, 420.0}, {19.0, 16.5}}, identifier: 'checklist', label: 'checklist'
+                                StaticText, 0x1139d1460, {{212.0, 455.0}, {28.5, 14.5}}, label: 'Quiz'
+                              Button, 0x1139d1580, {{281.5, 406.0}, {44.0, 63.5}}, identifier: 'today-speaking', label: 'Speak'
+                                Image, 0x1139d16a0, {{297.0, 419.0}, {13.5, 18.0}}, identifier: 'mic.fill', label: 'Microphone'
+                                StaticText, 0x1139d17c0, {{284.0, 455.0}, {39.0, 14.5}}, label: 'Speak'
+                              Button, 0x1139d18e0, {{36.0, 481.5}, {303.0, 52.0}}, identifier: 'today-start', label: 'Keep flipping'
+                                StaticText, 0x1139d1a00, {{107.0, 495.5}, {128.5, 24.0}}, label: 'Keep flipping'
+                                Image, 0x1139d1b20, {{246.0, 499.5}, {19.5, 16.5}}, identifier: 'arrow.right', label: 'Right'
+                              Button, 0x1139d1c40, {{16.0, 567.5}, {343.0, 76.0}}, identifier: 'today-review', label: 'Missed words, 8 still shaky'
+                                Image, 0x1139d1d60, {{15.6, 565.7}, {343.8, 79.6}}, label: 'PaperGrain'
+                                Other, 0x1139d1e80, {{159.4, 556.4}, {55.4, 24.3}}
+                                Image, 0x1139d1fa0, {{47.0, 594.5}, {18.0, 22.0}}, identifier: 'arrow.counterclockwise', label: 'arrow.counterclockwise'
+                                StaticText, 0x1139d20c0, {{94.0, 583.5}, {135.0, 24.0}}, label: 'Missed words'
+                                StaticText, 0x1139d21e0, {{94.0, 609.5}, {81.0, 18.0}}, label: '8 still shaky'
+                                Image, 0x1139d2300, {{333.0, 598.0}, {9.0, 15.0}}, identifier: 'chevron.right', label: 'Forward'
+                TabBar, 0x1139d2420, {{0.0, 618.0}, {375.0, 49.0}}, label: 'Tab Bar'
+                  Button, 0x1139d2540, {{2.0, 619.0}, {90.0, 48.0}}, identifier: 'sun.max.fill', label: 'Today', Selected
+                    Image, 0x1139d2660, {{32.0, 621.5}, {29.0, 29.5}}, identifier: 'sun.max.fill', label: 'brightness higher'
+                  Button, 0x1139d2780, {{96.0, 619.0}, {90.0, 48.0}}, identifier: 'dumbbell.fill', label: 'Practice'
+                  Button, 0x1139d28a0, {{190.0, 619.0}, {89.0, 48.0}}, identifier: 'books.vertical.fill', label: 'Words'
+                  Button, 0x1139d29c0, {{283.0, 619.0}, {90.0, 48.0}}, identifier: 'person.crop.circle.fill', label: 'Me'
+      Other, 0x11603f950, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x11603f310, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x116038610, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x116038730, {{0.0, 0.0}, {375.0, 667.0}}
+              NavigationBar, 0x116039a70, {{0.0, 20.0}, {375.0, 44.0}}, identifier: '_TtGC7SwiftUI32NavigationStackHosting'
+                Other, 0x116039b90, {{16.0, 27.5}, {30.0, 29.0}}, identifier: 'speaking-close', label: 'Close'
+                  Other, 0x116039650, {{16.0, 27.5}, {30.0, 29.0}}
+                    Button, 0x116039770, {{16.0, 27.5}, {30.0, 29.0}}, identifier: 'speaking-close', label: 'Close'
+                Other, 0x116039230, {{128.5, 26.0}, {118.5, 32.5}}
+                  Other, 0x116039350, {{128.5, 26.0}, {118.5, 32.5}}
+                    StaticText, 0x116038e10, {{128.5, 26.0}, {118.5, 14.5}}, identifier: 'speaking-stage', label: 'Stage 1 · Restaurant'
+                    StaticText, 0x116038f30, {{172.2, 40.5}, {31.0, 18.0}}, identifier: 'speaking-position', label: '1 / 5', value: Completed: 0
+                Other, 0x1160389f0, {{324.0, 25.5}, {35.0, 33.0}}, identifier: 'speaking-scenarios', label: 'All scenarios'
+                  Other, 0x116038b10, {{324.0, 25.5}, {35.0, 33.0}}
+                    Button, 0x116037d90, {{324.0, 25.5}, {35.0, 33.0}}, identifier: 'speaking-scenarios', label: 'All scenarios'
+              Other, 0x116037eb0, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x1160381b0, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x1160382d0, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x11603db60, {{0.0, 0.0}, {375.0, 667.0}}
+                      Image, 0x11603dc80, {{0.0, 0.0}, {375.0, 667.0}}, label: 'PaperGrain'
+                      SegmentedControl, 0x11603dda0, {{16.0, 64.0}, {343.0, 31.0}}, identifier: 'speaking-track'
+                        Button, 0x1160427b0, {{16.0, 64.0}, {171.0, 32.0}}, label: 'Scenarios', Selected
+                        Button, 0x1160428d0, {{188.0, 64.0}, {171.0, 32.0}}, label: 'Words'
+                      Other, 0x1160429f0, {{16.0, 129.5}, {343.0, 6.0}}
+                      Other, 0x116042b10, {{66.1, 108.5}, {29.6, 25.5}}
+                      ScrollView, 0x116042c30, {{16.0, 151.5}, {343.0, 441.5}}
+                        Other, 0x116042d50, {{16.0, 151.5}, {343.0, 599.5}}
+                          StaticText, 0x116042e70, {{52.0, 185.5}, {45.0, 18.0}}, identifier: 'speaking-role', label: '服務生'
+                          Button, 0x116042f90, {{296.0, 185.0}, {22.0, 17.5}}, identifier: 'speaker.wave.2.fill', label: 'Pronounce'
+                          StaticText, 0x1160430b0, {{52.0, 209.5}, {147.0, 57.0}}, identifier: 'speaking-question', label: '歡迎光臨！請問幾位？'
+                          Button, 0x1160431d0, {{283.3, 225.8}, {49.8, 49.2}}, identifier: 'speaking-translate', label: 'Show in English'
+                            Image, 0x1160432f0, {{295.0, 238.5}, {24.0, 22.5}}, identifier: 'character.bubble', label: 'character.bubble'
+                            Image, 0x116043410, {{322.8, 263.4}, {10.4, 11.6}}, identifier: 'hand.tap.fill', label: 'hand.tap.fill'
+                          StaticText, 0x116043530, {{52.0, 270.5}, {207.0, 38.0}}, identifier: 'speaking-question-pinyin', label: 'huān yíng guāng lín! qǐng wèn jǐ wèi?'
+                          StaticText, 0x116043650, {{36.0, 338.5}, {286.5, 42.5}}, label: 'Your turn: say how many of you there are and where you'd like to sit.'
+                          Image, 0x116043770, {{40.8, 437.6}, {17.9, 17.0}}, identifier: 'pencil.line', label: 'pencil.line'
+                          StaticText, 0x116043890, {{64.8, 434.2}, {95.4, 20.5}}, label: 'Your answer'
+                          TextView, 0x1160439b0, {{32.0, 480.5}, {311.0, 96.0}}, identifier: 'coach-answer', label: 'Your answer'
+                            Other, 0x116043ad0, {{310.0, 480.5}, {30.0, 96.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                              Other, 0x116043bf0, {{337.0, 531.5}, {3.0, 42.0}}
+                            Other, 0x116043d10, {{32.0, 543.5}, {311.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                              Other, 0x116043e30, {{35.0, 570.5}, {305.0, 3.0}}
+                          Button, 0x116043f50, {{32.0, 588.5}, {44.0, 44.0}}, identifier: 'coach-play-recording', label: 'Play'
+                          Button, 0x116044070, {{86.0, 588.5}, {44.0, 44.0}}, identifier: 'coach-retake', label: 'Record again'
+                          StaticText, 0x116044190, {{32.0, 644.5}, {306.5, 34.0}}, label: 'No offline transcription on this iPhone. Replay and type your answer.'
+                          StaticText, 0x1160442b0, {{16.0, 708.5}, {343.0, 30.5}}, identifier: 'coach-privacy', label: 'Recordings and answers stay on this iPhone; leaving deletes the recording.'
+                        Other, 0x1160443d0, {{326.0, 151.5}, {30.0, 441.5}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                          Other, 0x1160444f0, {{353.0, 154.5}, {3.0, 348.0}}
+                        Other, 0x116044610, {{326.0, 151.5}, {30.0, 441.5}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                          Other, 0x116044730, {{353.0, 154.5}, {3.0, 348.0}}
+                      Button, 0x112b43e60, {{16.0, 609.0}, {165.5, 50.0}}, identifier: 'speaking-show-reference', label: 'Sample answer'
+                        Image, 0x112b26700, {{16.0, 609.0}, {165.5, 50.0}}, label: 'PaperGrain'
+                        StaticText, 0x112b260c0, {{16.0, 609.0}, {165.5, 50.0}}, label: 'Sample answer'
+                      Button, 0x112b473f0, {{193.5, 609.0}, {165.5, 50.0}}, identifier: 'speaking-next', label: 'Next'
+                        Image, 0x112b46fd0, {{193.5, 609.0}, {165.5, 50.0}}, label: 'PaperGrain'
+                        StaticText, 0x112b44330, {{193.5, 609.0}, {165.5, 50.0}}, label: 'Next'
+Path to element:
+ →Application, 0x1139960b0, pid: 30098, label: 'WordCat'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x116045510, pid: 30098, label: 'WordCat'
+  }

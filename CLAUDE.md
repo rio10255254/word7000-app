@@ -26,6 +26,7 @@
 **合併方向只有一個：`master` → 研發分支**
 
 - 正式線的修正（單字內容、後端、bug）要帶到研發線時，把 `master` 合進研發分支。版本號衝突時保留研發線的 3.x。
+- 研發線的 `ios/Word7000/Resources/words.json` 多了挖空題用的中文提示詞（`content/example-cues.json`），合併時這個檔一定會衝突：隨便選一邊，再跑 `node scripts/export-native-words.mjs` 重新產生。它列出的「no longer match」提示詞，是例句被改過、要重新標註的字。
 - 不要把研發分支合進 `master`，也不要把研發線的改動開 PR 到 `master`。唯一的例外是下面的「換線」，而且要使用者明確要求。
 
 **版本號**

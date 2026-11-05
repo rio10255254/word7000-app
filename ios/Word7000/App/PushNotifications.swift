@@ -74,8 +74,8 @@ final class PushRegistration {
         if token != nil { await upload() }
     }
 
-    /// Asks once, at a good moment (after a learner's first round), whether
-    /// the cat may send notifications.
+    /// Asks once, right after the app first opens, whether the cat may send
+    /// notifications, so announcements reach a learner from the start.
     func askOnce(_ model: AppModel) async {
         guard !AppRuntime.uiTesting, model.settings.pushAsked != true else { return }
         model.settings.pushAsked = true
@@ -129,32 +129,42 @@ struct PushStatusRow: View {
     private var push: PushRegistration { .shared }
 
     var body: some View {
-        Button {
-            if push.status == .denied, let url = URL(string: UIApplication.openSettingsURLString) { openURL(url) }
-            else { Task { await push.retry() } }
-        } label: {
-            HStack {
-                SettingsLabel(L.t("公告推播", "Announcement pushes"), icon: icon, tint: tint)
-                Spacer(minLength: 8)
-                Text(summary + (push.isTester ? L.t("・測試機", " · test phone") : ""))
-                    .font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.trailing).lineLimit(3)
-            }
+        // Not a Button: inside a Form a Button takes the touch, and a long
+        // press added to it never fired. A plain row takes both gestures.
+        HStack {
+            SettingsLabel(L.t("公告推播", "Announcement pushes"), icon: icon, tint: tint)
+            Spacer(minLength: 8)
+            Text(summary + (push.isTester ? L.t("・測試機", " · test phone") : ""))
+                .font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.trailing).lineLimit(3)
         }
+        .contentShape(Rectangle())
+        .onTapGesture(perform: tap)
         // For the developer: a long press makes this iPhone a test phone.
-        .simultaneousGesture(LongPressGesture(minimumDuration: 1.2).onEnded { _ in
-            Task {
-                let done = await push.toggleTester()
-                testerNote = done
-                    ? (push.isTester ? L.t("這支手機已設為測試機：「只給測試手機」的公告與推播只會送到這裡。", "This iPhone is now a test phone: messages for test phones come only here.")
-                                     : L.t("已取消測試機。", "No longer a test phone."))
-                    : L.t("要先登記成功（顯示「已登記」）才能設為測試機。", "Register first (it must say Registered).")
-            }
-        })
+        .onLongPressGesture(minimumDuration: 1, perform: toggleTester)
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isButton)
+        .accessibilityAction(perform: tap)
         .alert(testerNote ?? "", isPresented: Binding(get: { testerNote != nil }, set: { if !$0 { testerNote = nil } })) {
             Button(L.t("好", "OK")) { testerNote = nil }
         }
         .accessibilityIdentifier("settings-push-status")
         .task { await push.refreshIfAllowed() }
+    }
+
+    private func tap() {
+        if push.status == .denied, let url = URL(string: UIApplication.openSettingsURLString) { openURL(url) }
+        else { Task { await push.retry() } }
+    }
+
+    private func toggleTester() {
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        Task {
+            let done = await push.toggleTester()
+            testerNote = done
+                ? (push.isTester ? L.t("這支手機已設為測試機：「只給測試手機」的公告與推播只會送到這裡。", "This iPhone is now a test phone: messages for test phones come only here.")
+                                 : L.t("已取消測試機。", "No longer a test phone."))
+                : L.t("要先登記成功（顯示「已登記」）才能設為測試機。", "Register first (it must say Registered).")
+        }
     }
 
     private var summary: String {

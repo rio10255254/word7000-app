@@ -8,6 +8,9 @@ import XCTest
 final class LayoutTests: XCTestCase {
     override func setUp() { continueAfterFailure = true }
 
+    /// WordCat Next: the controls on Today besides the header and today-start.
+    private static let home = ["today-goal", "today-step-cards", "today-spelling", "today-quiz", "today-speaking", "today-lead-speaking", "today-shelf", "today-words", "today-review", "today-scan", "today-chat"]
+
     private func launch(_ extra: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
         let theme = extra.contains("-uiTestingDark") ? [] : ["-uiTestingLight"]
@@ -21,23 +24,23 @@ final class LayoutTests: XCTestCase {
 
     func testTodayFitsInEnglishMode() {
         let app = launch()
-        checkToday(app, name: "layout-english", tiles: ["today-quiz", "today-speaking", "today-spelling", "today-exam"])
+        checkToday(app, name: "layout-english", tiles: Self.home)
     }
 
     func testTodayFitsInChineseMode() {
         let app = launch(["-uiTestingChineseMode"])
-        checkToday(app, name: "layout-chinese", tiles: ["today-quiz", "today-speaking", "today-spelling", "today-exam"])
+        checkToday(app, name: "layout-chinese", tiles: Self.home)
     }
 
     /// The other look, leather (the others run in the default, the collage).
     func testTodayFitsInLeather() {
         let app = launch(["-uiTestingLeather"])
-        checkToday(app, name: "layout-leather", tiles: ["today-quiz", "today-speaking", "today-spelling", "today-exam"])
+        checkToday(app, name: "layout-leather", tiles: Self.home)
     }
 
     func testTodayFitsInDarkMode() {
         let app = launch(["-uiTestingDark"])
-        checkToday(app, name: "layout-dark", tiles: ["today-quiz", "today-speaking", "today-spelling", "today-exam"])
+        checkToday(app, name: "layout-dark", tiles: Self.home)
     }
 
     /// The Me page's capsule buttons keep their labels on one line in the
@@ -144,23 +147,22 @@ final class LayoutTests: XCTestCase {
         onScreen(app.buttons["study-grade-review"], in: window, "study-grade-review")
         app.buttons["study-close"].tap()
 
+        // The word card's quiz step: exam-style questions on learned words.
         let quiz = app.buttons["today-quiz"]
         XCTAssertTrue(quiz.waitForExistence(timeout: 5))
         quiz.tap()
-        let start = app.buttons["quiz-start"]
-        XCTAssertTrue(start.waitForExistence(timeout: 5))
+        let lastOption = app.buttons["routine-option-3"]
+        XCTAssertTrue(lastOption.waitForExistence(timeout: 10))
         sleep(1)
-        snap(app, "tour-3-quiz-setup")
-        onScreen(start, in: window, "quiz-start")
-        start.tap()
-        XCTAssertTrue(app.buttons["quiz-option-0"].waitForExistence(timeout: 5))
-        app.buttons["quiz-option-0"].tap()
-        let next = app.buttons["quiz-next"]
+        snap(app, "tour-3-quiz")
+        onScreen(lastOption, in: window, "routine-option-3")
+        app.buttons["routine-option-0"].tap()
+        let next = app.buttons["routine-next"]
         XCTAssertTrue(next.waitForExistence(timeout: 5))
         sleep(1)
         snap(app, "tour-4-quiz-answered")
-        onScreen(next, in: window, "quiz-next")
-        app.buttons["quiz-close"].tap()
+        onScreen(next, in: window, "routine-next")
+        app.buttons["exam-round-close"].tap()
 
         let speaking = app.buttons["today-speaking"]
         XCTAssertTrue(speaking.waitForExistence(timeout: 5))
@@ -209,8 +211,7 @@ final class LayoutTests: XCTestCase {
         let window = app.windows.firstMatch.frame
         let tabBar = app.tabBars.firstMatch
         let bottom = tabBar.exists ? tabBar.frame.minY : window.maxY
-        var ids = ["today-language-en", "today-language-zh", "today-study-filter", "today-start"] + tiles
-        if app.buttons["today-review"].exists { ids.insert("today-review", at: 4) }
+        let ids = ["today-language-en", "today-language-zh", "today-study-filter", "today-start"] + tiles
 
         var frames: [String: CGRect] = [:]
         for id in ids {

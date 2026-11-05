@@ -17,6 +17,10 @@ enum Activity: Identifiable, Hashable {
     case scan
     /// WordCat Next: today's round as fill-in-the-blank questions.
     case cloze
+    /// WordCat Next: exam-style questions on learned words, from the word card.
+    case quickExam
+    /// WordCat Next: Sunday's quiz on the week's words.
+    case weeklyExam
 
     var id: Self { self }
 }
@@ -53,7 +57,7 @@ struct RootView: View {
                 } else {
                     activity = next
                 }
-            })
+            }, showWords: { tab = .words })
             .tabItem { Label(L.tabToday, systemImage: "sun.max.fill") }
             .tag(AppTab.today)
 
@@ -120,6 +124,11 @@ struct RootView: View {
                 ScanView(onStudy: { switchTo(.study) })
             case .cloze:
                 ClozeSessionView()
+            case .quickExam, .weeklyExam:
+                ExamRoundView(kind: activity == .weeklyExam ? .weekly : .quick, studyMissed: { ids in
+                    model.startStudySession(onlyIds: ids)
+                    switchTo(.study)
+                })
             }
         }
         .sheet(isPresented: Binding(get: { model.styleChoiceDue && activity == nil && !welcomeOpen && !signInForScan

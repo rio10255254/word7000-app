@@ -319,8 +319,7 @@ final class ScreenshotTests: XCTestCase {
         XCTAssertTrue(app.buttons["study-show-answer"].waitForExistence(timeout: 5))
         app.buttons["study-close"].tap()
 
-        XCTAssertTrue(app.buttons["today-quiz"].waitForExistence(timeout: 5))
-        app.buttons["today-quiz"].tap()
+        app.openWordsMenu("看字選意思", "Pick the meaning")
         XCTAssertTrue(app.buttons["quiz-start"].waitForExistence(timeout: 5))
         app.buttons["quiz-start"].tap()
         XCTAssertTrue(app.buttons["quiz-option-0"].waitForExistence(timeout: 5))

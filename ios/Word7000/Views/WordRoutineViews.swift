@@ -338,9 +338,7 @@ struct RoutineExamView: View {
             }
         }
         .onAppear {
-            if meanings.isEmpty {
-                meanings = Dictionary(model.coreWords.map { (Spelling.normalized($0.word), $0.meaningZh) }, uniquingKeysWith: { first, _ in first })
-            }
+            if meanings.isEmpty { meanings = ExamQuestionBody.meanings(model.coreWords) }
             if wordId == nil { wordId = routine.examLeft.first ?? "" }
         }
         .task(id: wordId) { await load() }
@@ -355,31 +353,9 @@ struct RoutineExamView: View {
             VStack(spacing: 16) {
                 RoutineStepStrip(routine: model.activeRoutine ?? routine)
                     .padding(.top, 4)
-                RoutineCatLine(text: catLine(question), mood: chosen == nil ? .thinking : chosen == question.answerIndex ? .cheer : .encourage)
-                VStack(alignment: .leading, spacing: 14) {
-                    sentence(question)
-                        .font(.title2)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .accessibilityIdentifier("routine-exam-sentence")
-                    if chosen != nil, let cue = Cloze.cue(for: word) {
-                        Text(marked(cue))
-                            .font(.title3)
-                            .foregroundStyle(Palette.secondaryLabel)
-                            .transition(.opacity)
-                    }
-                }
-                .padding(20)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Palette.surface, in: RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous))
-                VStack(spacing: 10) {
-                    ForEach(Array(question.options.enumerated()), id: \.offset) { index, option in
-                        optionButton(index, option, question)
-                    }
-                }
-                if let chosen {
-                    explanation(chosen, question)
-                        .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 8)))
-                }
+                RoutineCatLine(text: ExamQuestionBody.catLine(question, chosen: chosen),
+                               mood: chosen == nil ? .thinking : chosen == question.answerIndex ? .cheer : .encourage)
+                ExamQuestionBody(word: word, question: question, chosen: chosen, meanings: meanings) { choose($0, question) }
             }
             .padding(.bottom, 16)
         }
@@ -396,14 +372,87 @@ struct RoutineExamView: View {
         }
     }
 
-    private func catLine(_ question: ExamQuestion) -> String {
+    private func choose(_ index: Int, _ question: ExamQuestion) {
+        guard chosen == nil, let wordId else { return }
+        withAnimation(reduceMotion ? nil : Motion.reveal) { chosen = index }
+        model.recordRoutineCheck(wordId: wordId, outcome: index == question.answerIndex ? .knew : .missed, exam: true)
+    }
+
+    private func load() async {
+        chosen = nil
+        question = nil
+        guard let wordId else { return }
+        guard !wordId.isEmpty, let word = model.word(id: wordId) else { model.advanceRoutine(); return }
+        let pool = await model.examPool()
+        guard let built = ExamQuestions.make(for: word, pool: pool, seed: "\(routine.day):\(wordId)") else {
+            // Too few look-alikes for this one: let it pass.
+            model.recordRoutineCheck(wordId: wordId, outcome: .knew, exam: true)
+            self.wordId = model.activeRoutine?.examLeft.first ?? ""
+            return
+        }
+        question = built
+    }
+
+    private func next() {
+        Speaker.shared.stop()
+        wordId = model.activeRoutine?.examLeft.first ?? ""
+    }
+}
+
+/// One exam-style question: the sentence with its blank, four big options
+/// and, once one is chosen, what the answer and the chosen word mean. Used
+/// by the routine's quiz step and by the quizzes outside it.
+struct ExamQuestionBody: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var word: WordEntry
+    var question: ExamQuestion
+    var chosen: Int?
+    /// Meanings by normalized spelling, for the explanation.
+    var meanings: [String: String]
+    var choose: (Int) -> Void
+
+    static func meanings(_ words: [WordEntry]) -> [String: String] {
+        Dictionary(words.map { (Spelling.normalized($0.word), $0.meaningZh) }, uniquingKeysWith: { first, _ in first })
+    }
+
+    /// What the cat says above the question.
+    static func catLine(_ question: ExamQuestion, chosen: Int?) -> String {
         guard let chosen else { return L.t("學測題型：選出最適合的字。", "Exam style: pick the word that fits.") }
         return chosen == question.answerIndex
             ? L.t("對！這種題目考試最愛。", "Right! Exams love this one.")
             : L.t("抓到了！這兩個字常被拿來一起考。", "Caught you! These two often come up together.")
     }
 
-    private func sentence(_ question: ExamQuestion) -> Text {
+    var body: some View {
+        VStack(spacing: 16) {
+            VStack(alignment: .leading, spacing: 14) {
+                sentence
+                    .font(.title2)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .accessibilityIdentifier("routine-exam-sentence")
+                if chosen != nil, let cue = Cloze.cue(for: word) {
+                    Text(marked(cue))
+                        .font(.title3)
+                        .foregroundStyle(Palette.secondaryLabel)
+                        .transition(.opacity)
+                }
+            }
+            .padding(20)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Palette.surface, in: RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous))
+            VStack(spacing: 10) {
+                ForEach(Array(question.options.enumerated()), id: \.offset) { index, option in
+                    optionButton(index, option)
+                }
+            }
+            if let chosen {
+                explanation(chosen)
+                    .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 8)))
+            }
+        }
+    }
+
+    private var sentence: Text {
         var text = AttributedString()
         for piece in question.sentence.pieces {
             switch piece {
@@ -425,12 +474,12 @@ struct RoutineExamView: View {
         return AttributedString(cue.before) + mark + AttributedString(cue.after)
     }
 
-    private func optionButton(_ index: Int, _ option: String, _ question: ExamQuestion) -> some View {
+    private func optionButton(_ index: Int, _ option: String) -> some View {
         let letter = ["A", "B", "C", "D"][min(index, 3)]
         let isAnswer = index == question.answerIndex
         let tint: Color = chosen == nil ? Palette.accent : isAnswer ? Palette.known : index == chosen ? Palette.miss : Palette.secondaryLabel
         return Button {
-            choose(index, question)
+            choose(index)
         } label: {
             HStack(spacing: 14) {
                 Text(letter)
@@ -463,11 +512,11 @@ struct RoutineExamView: View {
     }
 
     /// What the chosen word and the answer mean, so the difference sticks.
-    private func explanation(_ chosen: Int, _ question: ExamQuestion) -> some View {
+    private func explanation(_ chosen: Int) -> some View {
         let lines = (chosen == question.answerIndex ? [question.answerIndex] : [question.answerIndex, chosen]).map { index -> String in
             let option = question.options[index]
             let meaning = meanings[Spelling.normalized(option)].map(ChineseDisplay.conciseMeaning) ?? ""
-            return meaning.isEmpty ? option : "\(option)　\(meaning)"
+            return meaning.isEmpty ? option : "\(option)\u{3000}\(meaning)"
         }
         return VStack(alignment: .leading, spacing: 6) {
             ForEach(lines, id: \.self) { line in
@@ -478,32 +527,6 @@ struct RoutineExamView: View {
         .padding(16)
         .background(Palette.fill, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
         .accessibilityIdentifier("routine-explanation")
-    }
-
-    private func choose(_ index: Int, _ question: ExamQuestion) {
-        guard chosen == nil, let wordId else { return }
-        withAnimation(reduceMotion ? nil : Motion.reveal) { chosen = index }
-        model.recordRoutineCheck(wordId: wordId, outcome: index == question.answerIndex ? .knew : .missed, exam: true)
-    }
-
-    private func load() async {
-        chosen = nil
-        question = nil
-        guard let wordId else { return }
-        guard !wordId.isEmpty, let word = model.word(id: wordId) else { model.advanceRoutine(); return }
-        let pool = await model.examPool()
-        guard let built = ExamQuestions.make(for: word, pool: pool, seed: "\(routine.day):\(wordId)") else {
-            // Too few look-alikes for this one: let it pass.
-            model.recordRoutineCheck(wordId: wordId, outcome: .knew, exam: true)
-            self.wordId = model.activeRoutine?.examLeft.first ?? ""
-            return
-        }
-        question = built
-    }
-
-    private func next() {
-        Speaker.shared.stop()
-        wordId = model.activeRoutine?.examLeft.first ?? ""
     }
 }
 

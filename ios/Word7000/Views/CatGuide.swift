@@ -9,14 +9,19 @@ import Word7000Core
 enum GuideStep: String, CaseIterable, Sendable {
     case quiz, speaking, spelling, exam, scan, chat
 
-    /// The Today tile to circle, when it has one.
+    /// WordCat Next: spelling and the quizzes are steps of today's words, so
+    /// the cat introduces only what lives outside them.
+    static let guided: [GuideStep] = [.speaking, .scan, .chat]
+
+    /// The control on Today to circle.
     var tileId: String? {
         switch self {
         case .quiz: "today-quiz"
         case .speaking: "today-speaking"
         case .spelling: "today-spelling"
-        case .exam: "today-exam"
-        case .scan, .chat: nil
+        case .exam: nil
+        case .scan: "today-scan"
+        case .chat: "today-chat"
         }
     }
 
@@ -48,7 +53,7 @@ enum GuideStep: String, CaseIterable, Sendable {
         case .spelling: self = .spelling
         case .scan: self = .scan
         case .exam: self = .exam
-        case .study, .cloze: return nil
+        case .study, .cloze, .quickExam, .weeklyExam: return nil
         }
     }
 
@@ -120,7 +125,7 @@ extension AppModel {
         guard settings.guideActive == true, progress.lastStudyDate != nil, !AppRuntime.catShowcase else { return nil }
         let tried = Set(settings.guideTried ?? [])
         let offered = settings.guideOffered ?? [:]
-        return GuideStep.allCases.first { step in
+        return GuideStep.guided.first { step in
             guard !tried.contains(step.rawValue) else { return false }
             if let first = offered[step.rawValue], let end = DayMath.addDays(first, GuideStep.patienceDays), today >= end { return false }
             return true
@@ -137,7 +142,7 @@ extension AppModel {
         let tried = Set(settings.guideTried ?? [])
         var stops = [GuideStop(id: "study", title: L.t("背一組", "Learn a set"), icon: "rectangle.on.rectangle.angled",
                                done: progress.lastStudyDate != nil, step: nil)]
-        for step in GuideStep.allCases {
+        for step in GuideStep.guided {
             stops.append(GuideStop(id: step.rawValue, title: step.title, icon: step.icon, done: tried.contains(step.rawValue), step: step))
         }
         return stops.allSatisfy(\.done) ? nil : stops

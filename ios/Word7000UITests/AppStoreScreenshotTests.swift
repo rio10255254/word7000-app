@@ -36,9 +36,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 
         // A quiz answered wrong, with the cat explaining the mix-up.
         app = launch(chineseMode: chineseMode)
-        let quiz = app.buttons["today-quiz"]
-        quiz.scrollIntoView(in: app, swipes: 4)
-        quiz.tap()
+        app.openWordsMenu("看字選意思", "Pick the meaning")
         XCTAssertTrue(app.buttons["quiz-start"].waitForExistence(timeout: 5))
         app.buttons["quiz-start"].tap()
         // The page is about getting one wrong: answer until a miss shows the contrast.

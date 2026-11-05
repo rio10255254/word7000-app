@@ -9,9 +9,9 @@ final class ExperienceTests: XCTestCase {
         super.tearDown()
     }
 
-    private func launch() -> XCUIApplication {
+    private func launch(_ extra: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingSampleProgress", "-uiTestingFakePlans"]
+        app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingSampleProgress", "-uiTestingFakePlans"] + extra
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
         return app
@@ -87,7 +87,7 @@ final class ExperienceTests: XCTestCase {
 
     func testQuizLengthAndPersistentTopNextAction() {
         let app = launch()
-        app.buttons["today-quiz"].tap()
+        app.openWordsMenu("看字選意思", "Pick the meaning")
         XCTAssertTrue(app.buttons["quiz-start"].waitForExistence(timeout: 5))
         app.segmentedControls["quiz-question-count"].buttons["20"].tap()
         app.buttons["quiz-start"].tap()
@@ -98,16 +98,14 @@ final class ExperienceTests: XCTestCase {
         app.buttons["quiz-next-toolbar"].tap()
         XCTAssertTrue(app.staticTexts["2 / 20"].waitForExistence(timeout: 5))
         app.buttons["quiz-close"].tap()
-        app.buttons["today-quiz"].tap()
+        app.openWordsMenu("看字選意思", "Pick the meaning")
         XCTAssertTrue(app.segmentedControls["quiz-question-count"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.segmentedControls["quiz-question-count"].buttons["20"].isSelected)
     }
 
     func testExamUsesConciseOptionsAndCanBeSubmittedOnSmallScreens() {
         let app = launch()
-        let exam = app.buttons["today-exam"]
-        exam.scrollIntoView(in: app, swipes: 4)
-        exam.tap()
+        app.openWordsMenu("限時模擬考", "Timed mock exam")
         let first = app.buttons["exam-option-0"]
         XCTAssertTrue(first.waitForExistence(timeout: 10))
         for index in 0..<4 {
@@ -120,8 +118,10 @@ final class ExperienceTests: XCTestCase {
         snapshot(app, "exam-results-small-screen")
     }
 
+    /// Writing practice for learners of Chinese, the word card's second step
+    /// (learners of English spell inside sentences instead; RoutineTests).
     func testSpellingChecksEachAnswerAndReachesResults() {
-        let app = launch()
+        let app = launch(["-uiTestingChineseMode"])
         let spelling = app.buttons["today-spelling"]
         spelling.scrollIntoView(in: app, swipes: 4)
         spelling.tap()
@@ -200,18 +200,18 @@ final class ExperienceTests: XCTestCase {
         snapshot(app, "polish-session-summary")
         app.buttons["study-done"].tap()
 
-        // After a new learner's first round, the cat suggests the quiz next
-        // and circles its tile.
-        let quiz = app.buttons["today-quiz"]
-        XCTAssertTrue(quiz.waitForExistence(timeout: 10))
+        // After a new learner's first round, the cat suggests speaking next
+        // (spelling and quizzes are steps of the words) and circles it.
+        let speaking = app.buttons["today-speaking"]
+        XCTAssertTrue(speaking.waitForExistence(timeout: 10))
         let suggested = NSPredicate(format: "value == '傻貓推薦'")
-        XCTAssertEqual(XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: suggested, object: quiz)], timeout: 5), .completed,
-                       String(describing: quiz.value))
-        // The starter checklist shows the first round ticked and the quiz next.
+        XCTAssertEqual(XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: suggested, object: speaking)], timeout: 5), .completed,
+                       String(describing: speaking.value))
+        // The starter checklist shows the first round ticked and speaking next.
         XCTAssertTrue(app.descendants(matching: .any)["guide-checklist"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["guide-checklist-go"].exists)
         sleep(2)
-        snapshot(app, "guide-quiz-next")
+        snapshot(app, "guide-speaking-next")
 
         app.tabBars.buttons.element(boundBy: 1).tap()
         XCTAssertTrue(app.buttons["words-scan"].waitForExistence(timeout: 5))

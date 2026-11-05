@@ -66,6 +66,11 @@ struct AppSettings: Codable, Equatable, Sendable {
     var guideHidden: Bool?
     /// Progress has been split between learning English and Chinese.
     var splitModeProgress: Bool?
+    /// WordCat Next: which of words and speaking the learner wants first on
+    /// the home page (nil: words).
+    var homeLead: Pillar?
+    /// WordCat Next: the speaking card on the home page (nil: shown).
+    var homeShowsSpeaking: Bool?
 
     var speakingHistoryOwnerKey: String {
         Self.speakingHistoryKey(ownerId: localOwnerId, anonymous: localOwnerIsAnonymous)

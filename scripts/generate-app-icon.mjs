@@ -73,9 +73,11 @@ const variants = [
   },
 ];
 
-// The main icon, the paper collage's (the default look): the same cat and
-// notebook on plain graph paper, the notebook in terracotta. Nothing else, so
-// it stays clear at home-screen size. The leather one above is the alternate.
+// The main icon: the same cat and notebook on olive green, the colour of
+// Today's "goal done" card and the Instagram avatar, lighter at the top left
+// like that card, with its paper grain. The notebook stays terracotta, the
+// olive's complement, so the pair reads at home-screen size. The leather one
+// above is the alternate.
 const grayPalette = variants[2].palette;
 variants.push(
   {
@@ -83,21 +85,25 @@ variants.push(
     file: 'icon-1024.png',
     palette: warm,
     book: { fill: '#C96442' },
-    graph: { paper: '#F1F2EA', line: '#C6D6CF' },
+    background: ['#93A066', '#778A53', '#5F7340'],
+    glow: 'rgba(255, 248, 220, 0.22)',
+    grain: 0.08,
   },
   {
     folder: 'AppIcon.appiconset',
     file: 'icon-1024-dark.png',
     palette: warm,
     book: { fill: '#D97757' },
-    graph: { paper: '#22231F', line: '#38443F' },
+    background: ['#4C5A36', '#36412A', '#20271A'],
+    glow: 'rgba(220, 235, 190, 0.10)',
+    grain: 0.06,
   },
   {
     folder: 'AppIcon.appiconset',
     file: 'icon-1024-tinted.png',
     palette: grayPalette,
     book: { fill: '#CFCFCF' },
-    graph: { paper: '#000000', line: '#262626' },
+    background: ['#202020', '#0C0C0C', '#000000'],
   },
 );
 

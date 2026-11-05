@@ -143,7 +143,7 @@ struct PushStatusRow: View {
         .onLongPressGesture(minimumDuration: 1, perform: toggleTester)
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isButton)
-        .accessibilityAction(perform: tap)
+        .accessibilityAction { tap() }
         .alert(testerNote ?? "", isPresented: Binding(get: { testerNote != nil }, set: { if !$0 { testerNote = nil } })) {
             Button(L.t("好", "OK")) { testerNote = nil }
         }

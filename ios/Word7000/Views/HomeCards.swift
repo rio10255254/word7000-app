@@ -1,82 +1,8 @@
 import SwiftUI
 import Word7000Core
 
-// WordCat Next: the pieces of the home page around the big card. The
-// other pillar as one row, the week's stamps with the shelf of chapters,
-// the four big buttons and the notes that only show when they apply.
-// Big type and few words: each piece says one thing.
-
-/// The pillar that is not the big card, as one row: tap it to start, or
-/// make it the one to do first.
-struct PillarRow: View {
-    var icon: String
-    var tint: Color
-    var title: String
-    var detail: String
-    var done: Bool
-    var compact: Bool
-    /// "Do this first": swaps the cards. Nil once it is done.
-    var leadTitle: String?
-    var lead: (() -> Void)?
-    var open: () -> Void
-    var openId: String
-    var leadId: String
-    /// The cat is suggesting this one to a new learner.
-    var suggested = false
-
-    var body: some View {
-        HStack(spacing: 12) {
-            Button(action: open) {
-                HStack(spacing: 12) {
-                    Image(systemName: done ? "checkmark" : icon)
-                        .font(.system(size: compact ? 17 : 20, weight: .bold))
-                        .foregroundStyle(.white)
-                        .frame(width: compact ? 40 : 46, height: compact ? 40 : 46)
-                        .background(LinearGradient(colors: [tint.opacity(0.75), tint], startPoint: .topLeading, endPoint: .bottomTrailing),
-                                    in: RoundedRectangle(cornerRadius: compact ? 12 : 14, style: .continuous))
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(title)
-                            .font(.display(compact ? .headline : .title3, weight: .bold))
-                            .foregroundStyle(Palette.ink)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.75)
-                        Text(detail)
-                            .font(compact ? .footnote : .subheadline)
-                            .foregroundStyle(done ? tint : Palette.secondaryLabel)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.8)
-                    }
-                    Spacer(minLength: 4)
-                }
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(SoftPressStyle())
-            .accessibilityValue(suggested ? L.t("傻貓推薦", "Silly Cat suggests") : "")
-            .accessibilityIdentifier(openId)
-            if let leadTitle, let lead {
-                Button(action: lead) {
-                    Text(leadTitle)
-                        .font(.subheadline.weight(.bold))
-                        .foregroundStyle(tint)
-                        .padding(.horizontal, 14)
-                        .frame(minHeight: 36)
-                        .background(tint.opacity(0.14), in: Capsule())
-                        .contentShape(Capsule())
-                }
-                .buttonStyle(SoftPressStyle())
-                .accessibilityIdentifier(leadId)
-            } else if done {
-                Image(systemName: "checkmark.seal.fill")
-                    .font(.title2)
-                    .foregroundStyle(tint)
-                    .accessibilityHidden(true)
-            }
-        }
-        .padding(.horizontal, 14)
-        .padding(.vertical, compact ? 8 : 10)
-        .background { HomeSurface(radius: 22, paper: .sage) }
-    }
-}
+// WordCat Next: the pieces of the home page: a stop on today's path, the
+// week's stamps, the cat's can and the shelf of chapters.
 
 /// A card's surface: leather-soft in the standard style, cut paper in the collage.
 struct HomeSurface: View {
@@ -93,132 +19,9 @@ struct HomeSurface: View {
     }
 }
 
-/// A step of a pillar, as a chip on the big card: done, the one now, or later.
-struct HeroStepChip: View {
-    enum Mark { case done, now, later }
-    var icon: String
-    var title: String
-    var state: Mark
-    var compact: Bool
-
-    private static let cream = Color(red: 1.0, green: 0.97, blue: 0.91)
-
-    var body: some View {
-        HStack(spacing: 4) {
-            Image(systemName: state == .done ? "checkmark" : icon)
-                .font(.caption.weight(.heavy))
-            Text(title)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-        }
-        .font(.display(compact ? .footnote : .subheadline, weight: .bold))
-        .foregroundStyle(state == .now ? Color(red: 0.4, green: 0.25, blue: 0.15) : Self.cream.opacity(state == .later ? 0.75 : 1))
-        .frame(maxWidth: .infinity, minHeight: compact ? 32 : 38)
-        .padding(.horizontal, 6)
-        .background {
-            Capsule().fill(state == .now ? Self.cream : Self.cream.opacity(state == .done ? 0.22 : 0.08))
-        }
-        .overlay {
-            if state == .later {
-                Capsule().strokeBorder(Self.cream.opacity(0.4), style: StrokeStyle(lineWidth: 1.2, dash: [4, 3]))
-            }
-        }
-        .contentShape(Capsule())
-    }
-}
-
-/// The week as a card of stamps (Monday to Sunday) and the cat's can, with
-/// the shelf of chapters underneath: how far through the list.
-struct HomeProgressCard: View {
-    @Environment(AppModel.self) private var model
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    var compact: Bool
-    var flameBounce: Int
-    var openShelf: () -> Void
-
-    var body: some View {
-        let stamps = model.weekStamps
-        let chapters = model.shelfChapters
-        let mastered = chapters.reduce(0) { $0 + $1.mastered }
-        let total = chapters.reduce(0) { $0 + $1.total }
-        let current = MasteryShelf.current(chapters)
-        let studiedDays = stamps.filter { $0.mark == .studied }.count
-        VStack(spacing: compact ? 10 : 14) {
-            HStack(spacing: 8) {
-                HStack(alignment: .firstTextBaseline, spacing: 3) {
-                    Image(systemName: "flame.fill")
-                        .foregroundStyle(LinearGradient(colors: [Color(red: 1, green: 0.75, blue: 0.3), Color(red: 0.93, green: 0.42, blue: 0.2)],
-                                                        startPoint: .top, endPoint: .bottom))
-                        .symbolEffect(.bounce, value: flameBounce)
-                    Text("\(model.progress.streak)")
-                        .font(.display(compact ? .title3 : .title2, weight: .bold))
-                        .monospacedDigit()
-                        .contentTransition(.numericText(value: Double(model.progress.streak)))
-                    Text(L.t("天", "d"))
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Palette.secondaryLabel)
-                }
-                .fixedSize()
-                Spacer(minLength: 2)
-                HStack(spacing: compact ? 4 : 6) {
-                    ForEach(Array(stamps.enumerated()), id: \.offset) { index, stamp in
-                        DayStamp(mark: stamp.mark, weekday: Self.weekday(index), size: compact ? 24 : 28)
-                    }
-                    CatCan(full: model.catCanReady, size: compact ? 22 : 26)
-                        .padding(.leading, 2)
-                }
-            }
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel(L.t("連續 \(model.progress.streak) 天，這週學了 \(studiedDays) 天。", "\(model.progress.streak)-day streak, \(studiedDays) days this week.")
-                                + (model.catCanReady ? L.t("貓罐頭在，漏一天也能保住紀錄。", " The cat's can is ready to save a missed day.") : ""))
-            .accessibilityIdentifier("today-week")
-
-            Button(action: openShelf) {
-                HStack(alignment: .bottom, spacing: 10) {
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text(L.t("已掌握", "Mastered"))
-                            .font(.footnote.weight(.semibold))
-                            .foregroundStyle(Palette.secondaryLabel)
-                        HStack(alignment: .firstTextBaseline, spacing: 3) {
-                            Text(mastered.formatted())
-                                .font(.display(compact ? .title3 : .title2, weight: .bold))
-                                .foregroundStyle(Palette.ink)
-                                .monospacedDigit()
-                                .contentTransition(.numericText(value: Double(mastered)))
-                            Text("/ \(total.formatted())")
-                                .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(Palette.secondaryLabel)
-                                .monospacedDigit()
-                        }
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.7)
-                    }
-                    .fixedSize()
-                    Spacer(minLength: 4)
-                    Shelf(chapters: chapters, current: current, height: compact ? 26 : 32)
-                }
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(SoftPressStyle())
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel(L.t("已掌握 \(mastered) 個字，共 \(total) 個", "\(mastered) of \(total) words mastered")
-                                + (current.map { L.t("，正在讀第 \($0 + 1) 章", ", reading chapter \($0 + 1)") } ?? ""))
-            .accessibilityAddTraits(.isButton)
-            .accessibilityIdentifier("today-shelf")
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, compact ? 10 : 14)
-        .background { HomeSurface(radius: 22, paper: .ruled) }
-    }
-
-    static func weekday(_ index: Int) -> String {
-        L.zh ? ["一", "二", "三", "四", "五", "六", "日"][index] : ["M", "T", "W", "T", "F", "S", "S"][index]
-    }
-}
-
 /// One day on the stamp card: a clay stamp once studied, a dashed ring for
 /// today, the cat's can where protection saved the day.
-private struct DayStamp: View {
+struct DayStamp: View {
     var mark: WeekStamp.Mark
     var weekday: String
     var size: CGFloat
@@ -277,10 +80,11 @@ struct CatCan: View {
 
 /// The fourteen chapters as books on a shelf, each filled to how much of it
 /// is mastered; the one being read is outlined.
-private struct Shelf: View {
+struct Shelf: View {
     var chapters: [ShelfChapter]
     var current: Int?
     var height: CGFloat
+    var bookWidth: CGFloat = 10
 
     var body: some View {
         VStack(spacing: 0) {
@@ -305,7 +109,7 @@ private struct Shelf: View {
                             }
                         }
                         // Books of slightly different heights, like a real shelf.
-                        .frame(width: 10, height: height * (index % 3 == 1 ? 0.88 : index % 3 == 2 ? 0.94 : 1))
+                        .frame(width: bookWidth, height: height * (index % 3 == 1 ? 0.88 : index % 3 == 2 ? 0.94 : 1))
                 }
             }
             Capsule()
@@ -316,95 +120,64 @@ private struct Shelf: View {
     }
 }
 
-/// One of the big buttons along the bottom: an icon and a word.
-struct QuickButton: View {
-    var icon: String
-    var title: String
-    var tint: Color
-    var badge: String?
-    var locked = false
-    var minHeight: CGFloat
-    var maxHeight: CGFloat?
-    var bounce = 0
-
-    var body: some View {
-        VStack(spacing: 6) {
-            Image(systemName: icon)
-                .font(.system(size: 19, weight: .semibold))
-                .foregroundStyle(.white)
-                .symbolEffect(.bounce, value: bounce)
-                .frame(width: 42, height: 42)
-                .background(LinearGradient(colors: [tint.opacity(0.72), tint], startPoint: .topLeading, endPoint: .bottomTrailing),
-                            in: RoundedRectangle(cornerRadius: 13, style: .continuous))
-                .shadow(color: tint.opacity(0.28), radius: 4, y: 2)
-            Text(title)
-                .font(.display(.subheadline, weight: .bold))
-                .foregroundStyle(Palette.ink)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-        }
-        .padding(.horizontal, 4)
-        .frame(maxWidth: .infinity, minHeight: minHeight, maxHeight: maxHeight)
-        .background { HomeSurface(radius: 20, paper: .ivory) }
-        .overlay(alignment: .topTrailing) {
-            if locked {
-                PlusBadgeFitting().padding(6)
-            } else if let badge {
-                Text(badge)
-                    .font(.caption.weight(.heavy))
-                    .monospacedDigit()
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 7)
-                    .padding(.vertical, 3)
-                    .background(tint, in: Capsule())
-                    .padding(6)
-            }
-        }
-        .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+extension WeekStamps {
+    /// Monday to Sunday, in the interface language.
+    static func label(_ index: Int) -> String {
+        L.zh ? ["一", "二", "三", "四", "五", "六", "日"][index] : ["M", "T", "W", "T", "F", "S", "S"][index]
     }
 }
 
-/// A note that only shows when it applies: Sunday's quiz, the month before
-/// the exam.
-struct HomeNoteCard: View {
-    var icon: String
+/// A colour sitting on a darker copy of itself, like a raised key.
+struct RaisedFill<S: Shape>: View {
+    var shape: S
     var tint: Color
-    var title: String
-    var detail: String
-    var locked = false
+    var depth: CGFloat = 5
 
     var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: icon)
-                .font(.system(size: 18, weight: .bold))
-                .foregroundStyle(tint)
-                .frame(width: 40, height: 40)
-                .background(tint.opacity(0.14), in: Circle())
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.display(.headline, weight: .bold))
-                    .foregroundStyle(Palette.ink)
-                Text(detail)
-                    .font(.subheadline)
-                    .foregroundStyle(Palette.secondaryLabel)
-                    .lineLimit(2)
-            }
-            Spacer(minLength: 4)
-            if locked {
-                PlusBadgeFitting()
-            } else {
-                Image(systemName: "chevron.right")
-                    .font(.subheadline.weight(.bold))
-                    .foregroundStyle(tint)
+        ZStack {
+            shape.fill(tint).overlay(shape.fill(Color.black.opacity(0.22))).offset(y: depth)
+            shape.fill(tint)
+        }
+    }
+}
+
+/// A stop on today's path: a round raised key. Gold with a tick once done,
+/// in its colour with a soft ring when it is the one to do now, grey after.
+struct PathNodeButton: View {
+    enum Mark { case done, now, later }
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var node: TodayNode
+    var state: Mark
+    var tint: Color
+    var action: () -> Void
+    @State private var breathe = false
+
+    private static let gold = Color(red: 0.91, green: 0.69, blue: 0.29)
+
+    var body: some View {
+        let size: CGFloat = state == .now ? 84 : 72
+        let fill = state == .done ? Self.gold : state == .now ? tint : Palette.fill
+        Button(action: action) {
+            Image(systemName: state == .done ? "checkmark" : node.icon)
+                .font(.system(size: size * 0.38, weight: .heavy))
+                .foregroundStyle(state == .later ? Palette.tertiaryLabel : .white)
+                .frame(width: size, height: size * 0.92)
+                .background { RaisedFill(shape: Ellipse(), tint: fill, depth: 6) }
+                .padding(.bottom, 6)
+        }
+        .buttonStyle(SoftPressStyle())
+        .background {
+            if state == .now {
+                Circle()
+                    .strokeBorder(tint.opacity(0.25), lineWidth: 7)
+                    .frame(width: size + 26, height: size + 26)
+                    .scaleEffect(breathe ? 1.06 : 1)
+                    .offset(y: -3)
             }
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 10)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background { HomeSurface(radius: 20, paper: .mustard) }
-        .overlay {
-            RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(tint.opacity(0.35), lineWidth: 1.5)
+        .onAppear {
+            guard state == .now, !reduceMotion else { return }
+            withAnimation(.easeInOut(duration: 1.1).repeatForever(autoreverses: true)) { breathe = true }
         }
-        .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
     }
 }

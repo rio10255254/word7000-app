@@ -207,9 +207,6 @@ final class ExperienceTests: XCTestCase {
         let suggested = NSPredicate(format: "value == '傻貓推薦'")
         XCTAssertEqual(XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: suggested, object: speaking)], timeout: 5), .completed,
                        String(describing: speaking.value))
-        // The starter checklist shows the first round ticked and speaking next.
-        XCTAssertTrue(app.descendants(matching: .any)["guide-checklist"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["guide-checklist-go"].exists)
         sleep(2)
         snapshot(app, "guide-speaking-next")
 

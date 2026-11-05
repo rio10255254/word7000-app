@@ -117,7 +117,7 @@ struct DayCompleteView: View {
         HStack(spacing: 8) {
             ForEach(Array(model.weekStamps.enumerated()), id: \.offset) { index, day in
                 let studied = day.mark == .studied
-                Text(HomeProgressCard.weekday(index))
+                Text(WeekStamps.label(index))
                     .font(.subheadline.weight(.heavy))
                     .foregroundStyle(studied ? Color(red: 0.3, green: 0.19, blue: 0.1) : Self.cream.opacity(0.55))
                     .frame(width: 34, height: 34)

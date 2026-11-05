@@ -9,7 +9,7 @@ final class LayoutTests: XCTestCase {
     override func setUp() { continueAfterFailure = true }
 
     /// WordCat Next: the controls on Today besides the header and today-start.
-    private static let home = ["today-goal", "today-step-cards", "today-spelling", "today-quiz", "today-speaking", "today-lead-speaking", "today-shelf", "today-words", "today-review", "today-scan", "today-chat"]
+    private static let home = ["today-streak", "today-shelf", "today-chapter", "today-node-cards"]
 
     private func launch(_ extra: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
@@ -80,11 +80,15 @@ final class LayoutTests: XCTestCase {
         XCTAssertTrue(mascot.exists)
         mascot.tap()
 
+        // The word bank is in the shelf sheet, opened from the top.
+        let shelf = app.buttons["today-shelf"]
+        XCTAssertTrue(shelf.isHittable)
+        shelf.tap()
         let chip = app.buttons["today-study-filter"]
-        XCTAssertTrue(chip.isHittable)
+        XCTAssertTrue(chip.waitForExistence(timeout: 5))
         chip.tap()
         let sheet = app.navigationBars["學習範圍"]
-        XCTAssertTrue(sheet.waitForExistence(timeout: 5), "The study scope did not open from the header chip")
+        XCTAssertTrue(sheet.waitForExistence(timeout: 5), "The study scope did not open from the shelf sheet")
         snap(app, "layout-scope-sheet")
         sheet.buttons["完成"].tap()
         XCTAssertTrue(sheet.waitForNonExistence(timeout: 5), "The study scope did not close")
@@ -211,7 +215,7 @@ final class LayoutTests: XCTestCase {
         let window = app.windows.firstMatch.frame
         let tabBar = app.tabBars.firstMatch
         let bottom = tabBar.exists ? tabBar.frame.minY : window.maxY
-        let ids = ["today-language-en", "today-language-zh", "today-study-filter", "today-start"] + tiles
+        let ids = ["today-language-en", "today-language-zh", "today-start"] + tiles
 
         var frames: [String: CGRect] = [:]
         for id in ids {

@@ -1112,9 +1112,20 @@ enum SampleData {
     /// Six of the sample's known words, learned a while ago and due now.
     static func olderWordsDue(_ state: ProgressState, words: [WordEntry], today: String) -> ProgressState {
         var next = state
+        // Other reviews wait till tomorrow, so these six make today's reviews.
+        let tomorrow = DayMath.addDays(today, 1) ?? today
+        for (id, progress) in next.words where progress.status != .new {
+            var later = progress
+            later.dueDate = tomorrow
+            next.words[id] = later
+        }
         for word in words.prefix(6) {
             var progress = next.progress(for: word.id)
+            // Known for a while: met two weeks ago, at the 14-day stage.
+            progress.status = .mastered
+            progress.reviewCount = max(2, progress.reviewCount)
             progress.stage = 4
+            progress.lastStudied = DayMath.addDays(today, -15) ?? today
             progress.dueDate = DayMath.addDays(today, -1) ?? today
             next.words[word.id] = progress
         }

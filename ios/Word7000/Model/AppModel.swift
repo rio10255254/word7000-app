@@ -154,6 +154,10 @@ final class AppModel {
         }
         if arguments.contains("-uiTestingSampleProgress") {
             progress = SampleData.progress(words: words, today: DayMath.today())
+            // The routine's exam questions need older words that are due.
+            if arguments.contains("-uiTestingRoutine") {
+                progress = SampleData.olderWordsDue(progress, words: words, today: DayMath.today())
+            }
         }
         if arguments.contains("-uiTestingHistoryData") {
             var analytics = LearningAnalyticsState()
@@ -1103,6 +1107,18 @@ enum SampleData {
         }
         state = LearningEngine.toggleFavorite(state, wordId: words[2].id)
         return state
+    }
+
+    /// Six of the sample's known words, learned a while ago and due now.
+    static func olderWordsDue(_ state: ProgressState, words: [WordEntry], today: String) -> ProgressState {
+        var next = state
+        for word in words.prefix(6) {
+            var progress = next.progress(for: word.id)
+            progress.stage = 4
+            progress.dueDate = DayMath.addDays(today, -1) ?? today
+            next.words[word.id] = progress
+        }
+        return next
     }
 
     /// A published official bank and a correction to the first built-in

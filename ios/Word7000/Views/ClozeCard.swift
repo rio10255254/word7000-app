@@ -64,6 +64,8 @@ struct ClozeCard: View {
                     .font(.title2)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .accessibilityIdentifier("cloze-sentence")
+                    // UI tests read the answer here to type it.
+                    .accessibilityValue(AppRuntime.uiTesting ? sentence.answer : "")
                 if attempt.solved {
                     SpeakButton(text: word.example)
                 }

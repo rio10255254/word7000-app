@@ -39,6 +39,9 @@ final class ScreenshotTests: XCTestCase {
         XCTAssertTrue(app.buttons["me-settings"].waitForExistence(timeout: 5))
         scrollClearOfTabBar(app, app.buttons["me-settings"])
         app.buttons["me-settings"].tap()
+        // Settings is a lazy list: the style row exists once scrolled to.
+        XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 5))
+        for _ in 0..<5 where !app.buttons["settings-style"].exists { app.swipeUp() }
         XCTAssertTrue(app.buttons["settings-style"].waitForExistence(timeout: 5))
         // On a small screen the row can sit behind the tab bar while still
         // counting as hittable, and the tap would land on the tab bar.

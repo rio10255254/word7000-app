@@ -43,11 +43,6 @@ struct MeView: View {
                     ActivityCalendarView(weeks: ActivityCalendar.weeks(20, today: model.today, analytics: model.progress.analytics))
                         .padding(.vertical, 4)
                         .listRowBackground(StyledRowBackground(paper: .graph))
-                    Button { historyOpen = true } label: {
-                        ActionRow(icon: "chart.bar.xaxis", tint: Palette.accent, title: L.t("完整學習紀錄", "Full history"))
-                    }
-                    .tint(.primary)
-                    .accessibilityIdentifier("me-history")
                 } header: {
                     Text(L.t("最近 20 週", "The last 20 weeks"))
                 } footer: {
@@ -57,6 +52,22 @@ struct MeView: View {
                 }
 
                 LevelEstimateSection()
+
+                Section {
+                    HistoryActivityChart(activity: model.activity(days: 7), chartHeight: 120, compact: true)
+                        .listRowBackground(StyledRowBackground(paper: .graph))
+                    Button { historyOpen = true } label: {
+                        ActionRow(icon: "chart.bar.xaxis", tint: Palette.accent, title: L.t("完整學習紀錄", "Full history"))
+                    }
+                    .tint(.primary)
+                    .accessibilityIdentifier("me-history")
+                } header: {
+                    Text(L.thisWeek)
+                } footer: {
+                    if let accuracy = model.quizAccuracy {
+                        Text(L.quizAccuracy(accuracy.percent, correct: accuracy.correct, total: accuracy.total))
+                    }
+                }
 
                 AIInsightsSection()
     

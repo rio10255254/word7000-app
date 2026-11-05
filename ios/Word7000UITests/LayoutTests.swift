@@ -53,7 +53,7 @@ final class LayoutTests: XCTestCase {
                                "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryXXXL"]
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
-        app.tabBars.buttons.element(boundBy: 2).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
         let plus = app.buttons["me-plus"]
         XCTAssertTrue(plus.waitForExistence(timeout: 5))
         sleep(1)

@@ -329,7 +329,7 @@ final class SpeakingCoachTests: XCTestCase {
 
     func testAISettingsDisableSuggestionsButKeepRecordingAndText() {
         let app = launch(coach: "success", englishUI: true)
-        app.tabBars.buttons.element(boundBy: 2).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
         tap(app.buttons["me-settings"], in: app)
         tap(app.buttons["settings-intelligence"], in: app)
         let toggle = app.switches["settings-ai-toggle"]
@@ -353,7 +353,7 @@ final class SpeakingCoachTests: XCTestCase {
     func testEditorialNotesAreReachableInBothLanguages() {
         for englishUI in [false, true] {
             let app = launch(dark: englishUI, englishUI: englishUI)
-            app.tabBars.buttons.element(boundBy: 1).tap()
+            app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["單字", "Words"])).firstMatch.tap()
             let search = app.searchFields.firstMatch
             XCTAssertTrue(search.waitForExistence(timeout: 5))
             search.tap()
@@ -478,7 +478,7 @@ final class SpeakingCoachTests: XCTestCase {
     }
 
     private func weeklySpeakingCount(_ app: XCUIApplication) -> String {
-        app.tabBars.buttons.element(boundBy: 2).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
         let count = app.descendants(matching: .any)["me-week-speaking"].firstMatch
         reveal(count, in: app)
         XCTAssertFalse(count.label.isEmpty)

@@ -19,7 +19,7 @@ final class DayCompleteTests: XCTestCase {
         keep.tap()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
 
-        app.tabBars.buttons.element(boundBy: 2).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
         let calendar = app.descendants(matching: .any)["me-calendar"].firstMatch
         for _ in 0..<3 where !calendar.exists { app.swipeUp() }
         XCTAssertTrue(calendar.waitForExistence(timeout: 5), app.debugDescription)

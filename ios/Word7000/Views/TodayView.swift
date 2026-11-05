@@ -610,27 +610,6 @@ struct TodayView: View {
                         sheetRow(L.t("字庫", "Word bank"), value: model.bankName)
                     }
                     .accessibilityIdentifier("today-study-filter")
-                    Menu {
-                        Button { afterClosing { start(model.studyMode == .english ? .cloze : .spelling) } } label: {
-                            Label(model.studyMode == .english ? L.t("只拼字", "Just spelling") : L.t("只寫字", "Just writing"), systemImage: "pencil.line")
-                        }
-                        if model.studyMode == .english {
-                            Button { afterClosing { start(.quickExam) } } label: { Label(L.t("考 10 題（學測題型）", "10 exam-style questions"), systemImage: "checklist") }
-                        }
-                        Button { afterClosing { quizSetupOpen = true } } label: { Label(L.t("看字選意思", "Pick the meaning"), systemImage: "list.bullet.rectangle") }
-                        Button { afterClosing { start(.exam) } } label: { Label(L.t("限時模擬考", "Timed mock exam"), systemImage: "timer") }
-                        if model.stats.review > 0 {
-                            Button {
-                                afterClosing {
-                                    model.startStudySession(onlyIds: model.reviewWordIds)
-                                    start(.study)
-                                }
-                            } label: { Label(L.t("錯題本（\(model.stats.review)）", "Missed words (\(model.stats.review))"), systemImage: "arrow.counterclockwise") }
-                        }
-                    } label: {
-                        sheetRow(L.t("其他練法", "More practice"), value: L.t("拼字・考題・模擬考", "Spell, quiz, mock exam"))
-                    }
-                    .accessibilityIdentifier("today-more")
                     Button { afterClosing { showWords() } } label: {
                         sheetRow(L.t("單字本", "All words"), value: L.t("搜尋、收藏、拍講義", "Search, saved, scan"))
                     }

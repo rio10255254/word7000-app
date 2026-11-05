@@ -87,7 +87,7 @@ final class ExperienceTests: XCTestCase {
 
     func testQuizLengthAndPersistentTopNextAction() {
         let app = launch()
-        app.openWordsMenu("看字選意思", "Pick the meaning")
+        app.openPractice("practice-meaning")
         XCTAssertTrue(app.buttons["quiz-start"].waitForExistence(timeout: 5))
         app.segmentedControls["quiz-question-count"].buttons["20"].tap()
         app.buttons["quiz-start"].tap()
@@ -98,14 +98,14 @@ final class ExperienceTests: XCTestCase {
         app.buttons["quiz-next-toolbar"].tap()
         XCTAssertTrue(app.staticTexts["2 / 20"].waitForExistence(timeout: 5))
         app.buttons["quiz-close"].tap()
-        app.openWordsMenu("看字選意思", "Pick the meaning")
+        app.openPractice("practice-meaning")
         XCTAssertTrue(app.segmentedControls["quiz-question-count"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.segmentedControls["quiz-question-count"].buttons["20"].isSelected)
     }
 
     func testExamUsesConciseOptionsAndCanBeSubmittedOnSmallScreens() {
         let app = launch()
-        app.openWordsMenu("限時模擬考", "Timed mock exam")
+        app.openPractice("practice-mock")
         let first = app.buttons["exam-option-0"]
         XCTAssertTrue(first.waitForExistence(timeout: 10))
         for index in 0..<4 {
@@ -210,7 +210,7 @@ final class ExperienceTests: XCTestCase {
         sleep(2)
         snapshot(app, "guide-speaking-next")
 
-        app.tabBars.buttons.element(boundBy: 1).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["單字", "Words"])).firstMatch.tap()
         XCTAssertTrue(app.buttons["words-scan"].waitForExistence(timeout: 5))
         app.cells.element(boundBy: 2).tap()
         let progress = app.descendants(matching: .any)["word-progress"].firstMatch
@@ -219,7 +219,7 @@ final class ExperienceTests: XCTestCase {
         snapshot(app, "polish-word-progress")
         app.navigationBars.buttons.element(boundBy: 0).tap()
 
-        app.tabBars.buttons.element(boundBy: 2).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
         XCTAssertTrue(app.descendants(matching: .any)["me-week-strip"].firstMatch.waitForExistence(timeout: 5))
         snapshot(app, "polish-me-week")
     }
@@ -246,14 +246,14 @@ final class ExperienceTests: XCTestCase {
         XCTAssertTrue(app.buttons["study-grade-review"].isHittable)
         app.buttons["study-close"].tap()
 
-        app.tabBars.buttons.element(boundBy: 2).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
         sleep(1)
         snapshot(app, "large-text-4-me")
     }
 
     func testLibrarySearchKeepsKeyboardAndExactMatch() {
         let app = launch()
-        app.tabBars.buttons.element(boundBy: 1).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["單字", "Words"])).firstMatch.tap()
         let search = app.searchFields.firstMatch
         XCTAssertTrue(search.waitForExistence(timeout: 5))
         search.tap()
@@ -311,7 +311,7 @@ final class ExperienceTests: XCTestCase {
 
     func testSettingsAreGroupedAndReachable() {
         let app = launch()
-        app.tabBars.buttons.element(boundBy: 2).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
         let settings = app.buttons["me-settings"]
         for _ in 0..<5 where !settings.isHittable { app.swipeUp() }
         settings.tap()
@@ -334,7 +334,7 @@ final class ExperienceTests: XCTestCase {
     }
 
     private func openSpeechSettings(_ app: XCUIApplication) {
-        app.tabBars.buttons.element(boundBy: 2).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
         let settings = app.buttons["me-settings"]
         settings.scrollIntoView(in: app, swipes: 5)
         XCTAssertTrue(settings.waitForExistence(timeout: 5))

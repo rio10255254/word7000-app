@@ -213,7 +213,7 @@ final class ScanPickerTests: XCTestCase {
         app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingFakePlans"]
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
-        app.tabBars.buttons.element(boundBy: 1).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["單字", "Words"])).firstMatch.tap()
         app.buttons["words-add"].tap()
         app.buttons["words-new-bank"].tap()
         let alert = app.alerts.firstMatch
@@ -270,7 +270,7 @@ final class ScanPickerTests: XCTestCase {
         app.launchEnvironment["WORD7000_SCAN_TEST_TEXT"] = pastedText
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
-        app.tabBars.buttons.element(boundBy: 1).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["單字", "Words"])).firstMatch.tap()
         XCTAssertTrue(app.buttons["words-scan"].waitForExistence(timeout: 5))
         app.buttons["words-scan"].tap()
         XCTAssertTrue(app.buttons["scan-choose-photo"].waitForExistence(timeout: 5))

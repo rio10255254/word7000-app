@@ -2,7 +2,7 @@ import SwiftUI
 import Word7000Core
 
 enum AppTab: Hashable {
-    case today, words, me
+    case today, practice, words, me
 }
 
 /// What runs full screen on top of the tabs.
@@ -62,6 +62,19 @@ struct RootView: View {
             }, showWords: { tab = .words })
             .tabItem { Label(L.tabToday, systemImage: "sun.max.fill") }
             .tag(AppTab.today)
+
+            // WordCat Next: every way to practise outside today's path.
+            NavigationStack {
+                PracticeView(start: { next in
+                    if next == .exam {
+                        plus.require(.examPractice) { activity = .exam }
+                    } else {
+                        activity = next
+                    }
+                })
+            }
+            .tabItem { Label(L.t("練習", "Practice"), systemImage: "dumbbell.fill") }
+            .tag(AppTab.practice)
 
             NavigationStack {
                 WordsView(scan: openScan, study: { activity = .study })

@@ -32,7 +32,7 @@ final class ScreenshotTests: XCTestCase {
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 5))
         sleep(1)
         snap(app, "style-chosen-collage-today")
-        app.tabBars.buttons.element(boundBy: 2).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
         // Settings is the last row of Me: it only exists once scrolled to.
         XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 5))
         for _ in 0..<6 where !app.buttons["me-settings"].exists { app.swipeUp() }
@@ -75,7 +75,7 @@ final class ScreenshotTests: XCTestCase {
         app.buttons["study-close"].tap()
 
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 5))
-        app.tabBars.buttons.element(boundBy: 2).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
         XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 5))
         for _ in 0..<6 where !app.buttons["me-cat-memory"].exists { app.swipeUp() }
         XCTAssertTrue(app.buttons["me-cat-memory"].waitForExistence(timeout: 5))
@@ -93,7 +93,7 @@ final class ScreenshotTests: XCTestCase {
         app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingCollage"]
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
-        app.tabBars.buttons.element(boundBy: 1).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["單字", "Words"])).firstMatch.tap()
         app.buttons["words-add"].tap()
         app.buttons["words-new-bank"].tap()
         let alert = app.alerts.firstMatch
@@ -201,7 +201,7 @@ final class ScreenshotTests: XCTestCase {
         if chineseMode { app.launchArguments.append("-uiTestingChineseMode") }
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
-        app.tabBars.buttons.element(boundBy: 2).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
         for _ in 0..<4 where !app.buttons["me-history"].isHittable { app.swipeUp() }
         XCTAssertTrue(app.buttons["me-history"].waitForExistence(timeout: 5))
         app.buttons["me-history"].tap()
@@ -238,7 +238,7 @@ final class ScreenshotTests: XCTestCase {
         app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingPlus", "-uiTestingFakePlans"]
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
-        app.tabBars.buttons.element(boundBy: 2).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
         for _ in 0..<4 where !app.buttons["me-history"].isHittable { app.swipeUp() }
         XCTAssertTrue(app.buttons["me-history"].waitForExistence(timeout: 5))
         app.buttons["me-history"].tap()
@@ -278,7 +278,7 @@ final class ScreenshotTests: XCTestCase {
             app.buttons[L10n.close].firstMatch.tap()
             sleep(1)
         }
-        app.tabBars.buttons.element(boundBy: 2).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
         sleep(1)
         snap(app, "plus-5-me")
         for _ in 0..<4 where !app.buttons["me-history"].isHittable { app.swipeUp() }
@@ -319,7 +319,7 @@ final class ScreenshotTests: XCTestCase {
         XCTAssertTrue(app.buttons["study-show-answer"].waitForExistence(timeout: 5))
         app.buttons["study-close"].tap()
 
-        app.openWordsMenu("看字選意思", "Pick the meaning")
+        app.openPractice("practice-meaning")
         XCTAssertTrue(app.buttons["quiz-start"].waitForExistence(timeout: 5))
         app.buttons["quiz-start"].tap()
         XCTAssertTrue(app.buttons["quiz-option-0"].waitForExistence(timeout: 5))
@@ -336,7 +336,7 @@ final class ScreenshotTests: XCTestCase {
         let quizGone = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: closeQuiz)
         XCTAssertEqual(XCTWaiter.wait(for: [quizGone], timeout: 5), .completed)
 
-        app.tabBars.buttons.element(boundBy: 1).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["單字", "Words"])).firstMatch.tap()
         XCTAssertTrue(app.buttons["words-scan"].waitForExistence(timeout: 5))
         snap(app, "\(prefix)-6-words")
         app.cells.element(boundBy: 2).tap()
@@ -349,7 +349,7 @@ final class ScreenshotTests: XCTestCase {
         snap(app, "\(prefix)-8-scan")
         app.buttons["關閉"].firstMatch.tap()
 
-        app.tabBars.buttons.element(boundBy: 2).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
         sleep(1)
         snap(app, "\(prefix)-9-me")
 

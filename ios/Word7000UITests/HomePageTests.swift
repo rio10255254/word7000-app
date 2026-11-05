@@ -2,7 +2,7 @@ import XCTest
 
 /// WordCat Next: Today as one path and one button. The button starts the
 /// cards; the streak opens the week, the shelf opens the chapters with the
-/// goal, the bank and more practice; the quiz stop runs a short exam-style
+/// goal and the bank; the Practice tab lists the other rounds; the quiz stop runs a short exam-style
 /// quiz to its score, and Sunday's stop opens the weekly quiz. Screenshots
 /// of each.
 final class HomePageTests: XCTestCase {
@@ -29,7 +29,7 @@ final class HomePageTests: XCTestCase {
         let shelf = app.buttons["today-shelf"]
         XCTAssertTrue(shelf.waitForExistence(timeout: 5))
         shelf.tap()
-        XCTAssertTrue(app.buttons["today-more"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["today-goal"].waitForExistence(timeout: 5))
         sleep(1)
         snap(app, "home-3-shelf")
         app.swipeDown(velocity: .fast)
@@ -60,6 +60,15 @@ final class HomePageTests: XCTestCase {
         let empty = app.descendants(matching: .any)["exam-round-empty"]
         XCTAssertTrue(question.waitForExistence(timeout: 10) || empty.exists, app.debugDescription)
         app.buttons["exam-round-close"].tap()
+
+        // The Practice tab: every other way to practise.
+        let practice = app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["練習", "Practice"])).firstMatch
+        XCTAssertTrue(practice.waitForExistence(timeout: 5))
+        practice.tap()
+        XCTAssertTrue(app.buttons["practice-spell"].waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "home-4-practice")
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["今天", "Today"])).firstMatch.tap()
 
         // The button starts the cards.
         XCTAssertTrue(start.waitForExistence(timeout: 10))

@@ -417,7 +417,7 @@ struct ShadowStepView: View {
             // Test phones only: which recognizer listened, and whether text
             // came while speaking (live colouring needs it).
             if PushRegistration.shared.isTester {
-                Text("辨識：\(listener.engine == "new" ? "新版即時" : listener.engine == "old" ? "舊版" : "無")・即時更新 \(listener.liveUpdates) 次・音高 \(tones.count)/\(check.scoredCount) 字")
+                Text("辨識：\(listener.recognizerUsed == "new" ? "新版即時" : listener.recognizerUsed == "old" ? "舊版" : "無")・即時更新 \(listener.liveUpdates) 次・音高 \(tones.count)/\(check.scoredCount) 字")
                     .font(.caption2.monospacedDigit())
                     .foregroundStyle(.tertiary)
                     .accessibilityIdentifier("shadow-diagnostics")

@@ -43,7 +43,7 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
     /// Seconds since the voice was last heard; 0 until it was.
     var silentFor: TimeInterval { heardVoice ? Date().timeIntervalSince(lastVoice) : 0 }
     /// Which recognizer took this take, for test phones: "new", "old" or "none".
-    private(set) var engine = "none"
+    private(set) var recognizerUsed = "none"
     /// How many times the text changed while the learner was still speaking.
     private(set) var liveUpdates = 0
 
@@ -158,7 +158,7 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
                     feed = await self.startStreaming(id: id)
                     guard self.generation == id else { return }
                 }
-                self.engine = feed != nil ? "new" : (self.legacyLive && self.support == .live ? "old" : "none")
+                self.recognizerUsed = feed != nil ? "new" : (self.legacyLive && self.support == .live ? "old" : "none")
                 do {
                     try self.begin(hints: hints, id: id, feed: feed)
                 } catch {

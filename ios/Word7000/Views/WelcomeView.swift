@@ -772,7 +772,7 @@ struct WelcomeView: View {
                     .accessibilityElement(children: .combine)
                     .accessibilityIdentifier("welcome-result-estimate")
                     if let spelling = profile.spelling {
-                        Text(spellingVerdict(spelling))
+                        Text(spellingVerdict(spelling, lowered: plan.startChapter < test.startChapter))
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
@@ -806,9 +806,11 @@ struct WelcomeView: View {
         .accessibilityIdentifier("welcome-result")
     }
 
-    private func spellingVerdict(_ spelling: Double) -> String {
+    private func spellingVerdict(_ spelling: Double, lowered: Bool) -> String {
         switch spelling {
-        case ..<0.34: text("認得不少，但拼字要多練：先從低一章開始。", "You know plenty, but spelling needs work: we start a chapter lower.")
+        case ..<0.34:
+            lowered ? text("認得，但拼不太出來：先從低一章開始。", "You know them but can't spell them yet: we start a chapter lower.")
+                    : text("拼字要多練，我會多抽幾個給你寫。", "Spelling needs work; I'll ask you to spell more.")
         case ..<0.8: text("拼字還可以，我會多抽幾個給你寫。", "Spelling is fair; I'll ask you to spell a few more.")
         default: text("拼字很穩，抽查會少一點。", "Your spelling is solid; fewer checks.")
         }

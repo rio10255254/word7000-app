@@ -202,6 +202,15 @@ struct RoutineSpellView: View {
                     .shake(trigger: misses, enabled: !reduceMotion)
                     .pulse(trigger: solves, scale: 1.02, enabled: !reduceMotion)
                     .id(word.id)
+            }
+            .padding(.bottom, 16)
+        }
+        .scrollDismissesKeyboard(.never)
+        // The answer box sits on the buttons, right above the keyboard, so
+        // it is never pushed under them.
+        .safeAreaInset(edge: .bottom) {
+            VStack(spacing: 10) {
+                // What was wrong sits right on the answer box, never scrolled under it.
                 if let message = ClozeCard.message(for: word, attempt: attempt) {
                     Text(message.text)
                         .font(.headline)
@@ -213,14 +222,6 @@ struct RoutineSpellView: View {
                         .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 8)))
                         .accessibilityIdentifier("routine-message")
                 }
-            }
-            .padding(.bottom, 16)
-        }
-        .scrollDismissesKeyboard(.never)
-        // The answer box sits on the buttons, right above the keyboard, so
-        // it is never pushed under them.
-        .safeAreaInset(edge: .bottom) {
-            VStack(spacing: 10) {
                 inputField(attempt)
                 actions(attempt)
             }

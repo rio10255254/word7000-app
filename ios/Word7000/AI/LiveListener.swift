@@ -42,6 +42,10 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
     private(set) var heardVoice = false
     /// Seconds since the voice was last heard; 0 until it was.
     var silentFor: TimeInterval { heardVoice ? Date().timeIntervalSince(lastVoice) : 0 }
+    /// Which recognizer took this take, for test phones: "new", "old" or "none".
+    private(set) var recognizerUsed = "none"
+    /// How many times the text changed while the learner was still speaking.
+    private(set) var liveUpdates = 0
 
     struct Segment: Equatable, Sendable {
         let text: String
@@ -97,11 +101,15 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         let expected = language
         // The newer recognizer first: it hears Taiwan Mandarin much better,
         // and gives text while the learner is still speaking.
+        // Checked with the settings it listens live with: the live model can
+        // need its own download, and a missing one fetches in the background.
         var analyzer = false
-        if #available(iOS 26.0, *), SpeechTranscriber.isAvailable,
-           let locale = await SpeechTranscriber.supportedLocale(equivalentTo: Locale(identifier: language)),
-           await AssetInventory.status(forModules: [SpeechTranscriber(locale: locale, preset: .transcription)]) == .installed {
-            analyzer = true
+        if #available(iOS 26.0, *) {
+            switch await StreamingTranscription.availability(language: language) {
+            case .installed: analyzer = true
+            case .downloadable: installLiveModel(language: language)
+            case .unsupported: break
+            }
         }
         let legacy = SFSpeechRecognizer(locale: Locale(identifier: language))?.supportsOnDeviceRecognition == true
         guard self.language == expected else { return }
@@ -150,6 +158,7 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
                     feed = await self.startStreaming(id: id)
                     guard self.generation == id else { return }
                 }
+                self.recognizerUsed = feed != nil ? "new" : (self.legacyLive && self.support == .live ? "old" : "none")
                 do {
                     try self.begin(hints: hints, id: id, feed: feed)
                 } catch {
@@ -163,6 +172,35 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
                 self.message = L.t("無法開始錄音，請確認麥克風沒有被其他 App 使用。", "Recording could not start. Check whether another app is using the microphone.")
                 WordAudioSession.release()
             }
+        }
+    }
+
+    /// One fetch per language for the whole app; once there, live text is used.
+    private static var installing: Set<String> = []
+
+    /// At launch: fetches the live model for the study language if this
+    /// iPhone can have it, so it is there before the first practice.
+    static func prepareLiveModel(language: String) {
+        guard #available(iOS 26.0, *), !installing.contains(language) else { return }
+        installing.insert(language)
+        Task {
+            if await StreamingTranscription.availability(language: language) == .downloadable {
+                _ = await StreamingTranscription.install(language: language)
+            }
+            installing.remove(language)
+        }
+    }
+
+    private func installLiveModel(language: String) {
+        guard #available(iOS 26.0, *), !Self.installing.contains(language) else { return }
+        Self.installing.insert(language)
+        Task { [weak self] in
+            let installed = await StreamingTranscription.install(language: language)
+            Self.installing.remove(language)
+            guard installed, let self, self.language == language, !self.busy else { return }
+            self.useAnalyzer = true
+            self.canTranscribeFile = true
+            self.support = .live
         }
     }
 
@@ -306,6 +344,7 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         if let text, text != self.text {
             self.text = text
             lastChange = Date()
+            if state == .listening, !final { liveUpdates += 1 }
         }
         if let segments { self.segments = segments }
         if final { settle() }
@@ -532,7 +571,7 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
         file = nil
         store.reset(rate: 0)
         text = ""; segments = []; isFinal = false; hasRecording = false; seconds = 0
-        heardVoice = false; loudSince = nil; noiseFloor = -1
+        heardVoice = false; loudSince = nil; noiseFloor = -1; liveUpdates = 0
         message = nil; level = 0; state = .idle
         if hadAudio { WordAudioSession.release() }
     }
@@ -587,13 +626,39 @@ private final class StreamingTranscription: @unchecked Sendable {
         self.format = format
     }
 
-    /// Nil when this language's model is not on the phone.
-    static func start(language: String) async throws -> StreamingTranscription? {
+    enum Availability { case installed, downloadable, unsupported }
+
+    /// The recognizer as it listens live: text while speaking, as fast as it
+    /// comes, each piece with its time in the take.
+    private static func liveTranscriber(language: String) async -> SpeechTranscriber? {
         guard SpeechTranscriber.isAvailable,
               let locale = await SpeechTranscriber.supportedLocale(equivalentTo: Locale(identifier: language)) else { return nil }
-        let transcriber = SpeechTranscriber(locale: locale, transcriptionOptions: [],
-                                            reportingOptions: [.volatileResults], attributeOptions: [.audioTimeRange])
-        guard await AssetInventory.status(forModules: [transcriber]) == .installed else { return nil }
+        return SpeechTranscriber(locale: locale, transcriptionOptions: [],
+                                 reportingOptions: [.volatileResults, .fastResults], attributeOptions: [.audioTimeRange])
+    }
+
+    static func availability(language: String) async -> Availability {
+        guard let transcriber = await liveTranscriber(language: language) else { return .unsupported }
+        switch await AssetInventory.status(forModules: [transcriber]) {
+        case .installed: return .installed
+        case .unsupported: return .unsupported
+        default: return .downloadable
+        }
+    }
+
+    /// Fetches the live model; true once it is on the phone.
+    static func install(language: String) async -> Bool {
+        guard let transcriber = await liveTranscriber(language: language) else { return false }
+        if let request = try? await AssetInventory.assetInstallationRequest(supporting: [transcriber]) {
+            try? await request.downloadAndInstall()
+        }
+        return await AssetInventory.status(forModules: [transcriber]) == .installed
+    }
+
+    /// Nil when this language's model is not on the phone.
+    static func start(language: String) async throws -> StreamingTranscription? {
+        guard let transcriber = await liveTranscriber(language: language),
+              await AssetInventory.status(forModules: [transcriber]) == .installed else { return nil }
         let analyzer = SpeechAnalyzer(modules: [transcriber])
         let format = await SpeechAnalyzer.bestAvailableAudioFormat(compatibleWith: [transcriber])
         let (stream, input) = AsyncStream<AnalyzerInput>.makeStream()

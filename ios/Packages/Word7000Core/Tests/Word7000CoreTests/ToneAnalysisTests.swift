@@ -64,6 +64,16 @@ final class ToneAnalysisTests: XCTestCase {
         XCTAssertEqual(result.map { $0?.heard }, [1, 2, 3, 4])
     }
 
+    func testASlipIsCaughtAgainstTheToneAskedFor() {
+        // Said as a fourth tone where a first is asked for: caught, even
+        // though no single tone stands far ahead of the others.
+        XCTAssertEqual(ToneAnalysis.judge([4.8, 4.4, 3.5, 2.5, 1.6], expected: 1), 4)
+        // A slightly rough second tone is still a second tone.
+        XCTAssertEqual(ToneAnalysis.judge([3.2, 3.2, 3.5, 4.1, 4.6], expected: 2), 2)
+        // A level contour asked to fall is a slip.
+        XCTAssertEqual(ToneAnalysis.judge([4.5, 4.5, 4.4, 4.5, 4.5], expected: 4), 1)
+    }
+
     func testSilenceIsNotJudged() {
         let result = ToneAnalysis.analyze(samples: silence(1), rate: 16_000, spans: [0...0.5], expected: [1])
         XCTAssertNil(result[0] ?? nil)
@@ -107,6 +117,8 @@ final class ToneSlipTests: XCTestCase {
         XCTAssertEqual(slipped.units.first { $0.text == "馬" }?.mark, .tone(heard: "mā"))
         XCTAssertEqual(slipped.score, 2.5 / 3, accuracy: 0.001)
         XCTAssertTrue(slipped.passed)
+        XCTAssertTrue(check.perfect)
+        XCTAssertFalse(slipped.perfect, "A tone slip keeps it from being perfect")
         XCTAssertEqual(check.withToneSlips([:]), check)
     }
 

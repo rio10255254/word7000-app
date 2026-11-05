@@ -303,11 +303,20 @@ public struct SupabaseClient: Sendable {
 
     /// Tells the developer which app version this account runs (one row per
     /// account, overwritten), so old versions can be counted and reached.
-    public func reportAppVersion(_ version: String, build: Int?, os: String, language: String, session: AuthSession) async throws {
-        _ = try await request("POST", "rest/v1/rpc/report_app_version", body: .object([
+    /// `device` (the app's per-vendor id) and `model` (e.g. "iPhone18,1") add
+    /// this phone to the list of phones; without them only the account's
+    /// version is recorded.
+    public func reportAppVersion(_ version: String, build: Int?, os: String, language: String,
+                                 device: String? = nil, model: String? = nil, session: AuthSession) async throws {
+        var body: [String: JSONValue] = [
             "p_version": .string(version), "p_build": build.map { .number(Double($0)) } ?? .null,
             "p_os": .string(os), "p_language": .string(language),
-        ]), session: session)
+        ]
+        if let device, let model {
+            body["p_device"] = .string(device)
+            body["p_model"] = .string(model)
+        }
+        _ = try await request("POST", "rest/v1/rpc/report_app_version", body: .object(body), session: session)
     }
 
     /// Marks this guest as merged into an Apple account that already existed,

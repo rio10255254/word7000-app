@@ -44,7 +44,12 @@ describe('native speaking recency integration', () => {
   });
 
   it('restarts open practice on identity change and rejects stale question actions', () => {
-    expect(view).toContain('.onChange(of: model.speakingHistoryOwnerKey) { _, _ in start() }');
+    // Another learner restarts; only the same learner (history moved with them) carries on.
+    expect(view).toContain('.onChange(of: model.speakingHistoryOwnerKey) { old, new in');
+    expect(view).toContain('if Self.sameLearner(old, new) { historyOwnerKey = new } else { start() }');
+    const same = view.slice(view.indexOf('static func sameLearner'), view.indexOf('private func start('));
+    expect(same).toContain('if old == "guest" { return new.hasPrefix("guest:") }');
+    expect(same).toContain('return old.dropFirst("guest:".count) == new.dropFirst("account:".count)');
     expect(view).toContain('historyOwnerKey = model.speakingHistoryOwnerKey');
     // Moving on is the only question action that writes history (showing the
     // sample answer no longer does), and it is guarded.

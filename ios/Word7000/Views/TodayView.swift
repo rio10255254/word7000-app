@@ -443,7 +443,8 @@ struct TodayView: View {
                     StrollingCompanion(mood: mascotMood, size: 70, lines: mascotLines,
                                        greeting: guideTip?.text ?? insightHeadline ?? mascotGreeting,
                                        tip: guideTip ?? mascotTip ?? MascotTip(text: L.t("有問題就問我。", "Ask me anything.")) { mascotChatOpen = true },
-                                       hop: greetingHops + taps, range: max(0, cardWidth - 100), pause: taps)
+                                       hop: greetingHops + taps, range: max(0, cardWidth - 100), pause: taps,
+                                       onTap: { mascotChatOpen = true })
                         .offset(x: -14, y: -54)
                         .accessibilityIdentifier("today-mascot")
                 }
@@ -851,6 +852,8 @@ private struct StrollingCompanion: View {
     var range: CGFloat
     /// Bumped by the page (a tile tapped) to keep it still for a while.
     var pause: Int
+    /// A tap opens the chat with the cat.
+    var onTap: (() -> Void)? = nil
 
     @State private var x: CGFloat = 0
     @State private var walking = false
@@ -871,7 +874,7 @@ private struct StrollingCompanion: View {
                     // The bubble opens toward the room: left of it at home, right of it out on the left.
                     bubbleSide: x < -range / 2 ? .trailing : .leading,
                     hop: hop, walking: walking, facing: facing, tip: tip, onInteract: rest,
-                    pace: pace, cue: cue, onFling: fling, onBeatenUp: stormOff)
+                    pace: pace, cue: cue, onFling: fling, onBeatenUp: stormOff, onTap: onTap)
             .offset(x: x)
             .task(id: roams) { await wander() }
             .onChange(of: pause) { _, _ in rest() }

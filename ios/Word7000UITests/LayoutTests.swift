@@ -78,7 +78,9 @@ final class LayoutTests: XCTestCase {
         let app = launch()
         let mascot = app.buttons["today-mascot"]
         XCTAssertTrue(mascot.exists)
+        // WordCat Next: a tap opens the chat with the cat; closing it leaves Today working.
         mascot.tap()
+        closeCatChat(app)
 
         // The word bank is in the shelf sheet, opened from the top.
         let shelf = app.buttons["today-shelf"]
@@ -110,6 +112,7 @@ final class LayoutTests: XCTestCase {
         let mascot = app.buttons["today-mascot"]
         XCTAssertTrue(mascot.exists)
         mascot.tap()
+        closeCatChat(app)
         mascot.press(forDuration: 0.8)
         let from = mascot.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
         from.press(forDuration: 0.05, thenDragTo: from.withOffset(CGVector(dx: -60, dy: 30)))
@@ -184,6 +187,15 @@ final class LayoutTests: XCTestCase {
         snap(app, "tour-7-speaking-turn2")
         XCTAssertTrue(app.descendants(matching: .any)["speaking-earlier-line"].firstMatch.exists, "The line said before stays above")
         onScreen(app.buttons["shadow-record"], in: window, "shadow-record (turn 2)")
+    }
+
+    /// The chat a tap on the cat opens, closed again.
+    private func closeCatChat(_ app: XCUIApplication) {
+        XCTAssertTrue(app.descendants(matching: .any)["mascot-chat-input"].waitForExistence(timeout: 5), "A tap on the cat opens its chat")
+        let done = app.buttons.matching(NSPredicate(format: "label IN %@", ["完成", "Done"])).firstMatch
+        XCTAssertTrue(done.waitForExistence(timeout: 5))
+        done.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["mascot-chat-input"].waitForNonExistence(timeout: 5))
     }
 
     /// Wholly above the row of buttons at the bottom, not tucked under it.

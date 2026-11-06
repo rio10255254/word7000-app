@@ -944,6 +944,9 @@ struct MascotBuddy: View {
     var speech: Binding<String?>? = nil
     /// Told when a run of smacks has been too much, e.g. to storm off.
     var onBeatenUp: (() -> Void)? = nil
+    /// WordCat Next: when given, a tap does this (e.g. opens the chat)
+    /// instead of a smack. Holding and dragging still play.
+    var onTap: (() -> Void)? = nil
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(AppModel.self) private var model
@@ -1009,6 +1012,11 @@ struct MascotBuddy: View {
             }
             .contentShape(Circle().inset(by: -size * 0.04))
             .onTapGesture(coordinateSpace: .local) { location in
+                if let onTap {
+                    onInteract?()
+                    onTap()
+                    return
+                }
                 // Hit on its left, it flies right, and the other way round.
                 smack(from: location.x < size / 2 ? -1 : 1)
             }
@@ -1066,8 +1074,8 @@ struct MascotBuddy: View {
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(L.t("傻貓", "Silly Cat"))
             .accessibilityAddTraits(.isButton)
-            .accessibilityAction { poke() }
-            .accessibilityHint(L.t("點一下扁它", "Tap to smack it"))
+            .accessibilityAction { if let onTap { onTap() } else { poke() } }
+            .accessibilityHint(onTap == nil ? L.t("點一下扁它", "Tap to smack it") : L.t("點一下和傻貓聊天", "Tap to chat with Silly Cat"))
             .accessibilityActions {
                 if let tip { Button(tip.text) { tip.action() } }
             }

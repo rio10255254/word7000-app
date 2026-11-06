@@ -90,7 +90,7 @@ struct QuizSessionView: View {
             guard let new else { return nil }
             return new.correct ? SoundEffect.correct : SoundEffect.wrong
         }
-        .soundEffect(trigger: finished) { _, new in new && missedIds.isEmpty ? .complete : nil }
+        .soundEffect(trigger: finished) { (_: Bool, new: Bool) -> SoundEffect? in new && missedIds.isEmpty ? .complete : nil }
         .catTip(.quiz, at: .top, inset: 60)
     }
 

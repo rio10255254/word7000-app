@@ -175,7 +175,7 @@ struct StampSlam: ViewModifier {
             .sensoryFeedback(.impact(weight: .heavy, intensity: 1), trigger: down) { _, now in
                 now && (model.settings.hapticsEnabled ?? true)
             }
-            .soundEffect(trigger: down) { _, now in now ? .stamp : nil }
+            .soundEffect(trigger: down) { (_: Bool, now: Bool) -> SoundEffect? in now ? .stamp : nil }
             .task {
                 guard !reduceMotion else { down = true; return }
                 try? await Task.sleep(for: .milliseconds(Int(delay * 1000)))

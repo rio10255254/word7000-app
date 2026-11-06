@@ -192,10 +192,7 @@ struct RoutineSpellView: View {
                 focused = true
             }
         }
-        .sensoryFeedback(trigger: solves) { _, _ in haptics ? .success : nil }
-        .sensoryFeedback(trigger: misses) { _, new in new > 0 && haptics ? .error : nil }
-        .soundEffect(trigger: solves) { old, new in new > old ? .correct : nil }
-        .soundEffect(trigger: misses) { old, new in new > old ? .wrong : nil }
+        .modifier(AnswerFeedback(solves: solves, misses: misses, haptics: haptics))
         .task(id: advancing) {
             guard advancing else { return }
             do { try await Task.sleep(for: AutoAdvance.delay) } catch { return }
@@ -407,7 +404,7 @@ struct RoutineExamView: View {
             guard let new, let question, haptics else { return nil }
             return new == question.answerIndex ? .success : .error
         }
-        .soundEffect(trigger: chosen) { _, new in
+        .soundEffect(trigger: chosen) { (_: Int?, new: Int?) -> SoundEffect? in
             guard let new, let question else { return nil }
             return new == question.answerIndex ? .correct : .wrong
         }
@@ -697,7 +694,7 @@ struct RoutineSummaryView: View {
         }
         .sheet(isPresented: $signInOpen) { SignInSheet(reason: .general) }
         .onAppear { appeared = true }
-        .soundEffect(trigger: appeared) { _, now in now ? .complete : nil }
+        .soundEffect(trigger: appeared) { (_: Bool, now: Bool) -> SoundEffect? in now ? .complete : nil }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("routine-summary")
     }
@@ -760,5 +757,21 @@ struct ReminderAskCard: View {
         Usage.log("reminder_time", "\(minute)")
         withAnimation { answered = true }
         Task { await PushRegistration.shared.askOnce(model) }
+    }
+}
+
+/// A tap and a sound for each answer typed: right (`solves` up) or wrong
+/// (`misses` up). Its own modifier, so a view's body stays quick to compile.
+struct AnswerFeedback: ViewModifier {
+    var solves: Int
+    var misses: Int
+    var haptics: Bool
+
+    func body(content: Content) -> some View {
+        content
+            .sensoryFeedback(trigger: solves) { (_: Int, _: Int) -> SensoryFeedback? in haptics ? .success : nil }
+            .sensoryFeedback(trigger: misses) { (_: Int, new: Int) -> SensoryFeedback? in new > 0 && haptics ? .error : nil }
+            .soundEffect(trigger: solves) { (old: Int, new: Int) -> SoundEffect? in new > old ? .correct : nil }
+            .soundEffect(trigger: misses) { (old: Int, new: Int) -> SoundEffect? in new > old ? .wrong : nil }
     }
 }

@@ -916,8 +916,8 @@ struct WelcomeView: View {
                 .foregroundStyle(Palette.ink)
             planRow("book.fill", text("從第 \(plan.startChapter) 章開始", "Start at chapter \(plan.startChapter)"),
                     text("太簡單的字直接跳過", "Words too easy for you are skipped"))
-            planRow("plus.circle.fill", text("每天 \(plan.newPerDay) 個新字", "\(plan.newPerDay) new words a day"),
-                    text("加上該複習的字", "plus the words due again"))
+            planRow("plus.circle.fill", text("每天 \(plan.wordsPerDay) 個字", "\(plan.wordsPerDay) words a day"),
+                    text("新字和該複習的字一起算", "New words and reviews together"))
             if mode == .english {
                 planRow("pencil.line", text("翻卡後拼 \(plan.spellChecks) 個、考 \(plan.examChecks) 題", "Then spell \(plan.spellChecks) and answer \(plan.examChecks)"),
                         text("拼字穩了就少抽，退步了就多抽", "Fewer when spelling holds, more when it slips"))

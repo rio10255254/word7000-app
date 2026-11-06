@@ -491,7 +491,9 @@ private struct CollageButtonBody: View {
         let shape = RoundedRectangle(cornerRadius: 7, style: .continuous)
         configuration.label
             .font(.headline)
-            .foregroundStyle(prominent ? Color.white : tint)
+            // Ivory by day; dark at night, where the tints are lighter and
+            // white on green or ochre was hard to read (2.2–2.5:1).
+            .foregroundStyle(prominent ? Palette.surface : tint)
             .padding(.horizontal, 16)
             .padding(.vertical, 13)
             .frame(minHeight: 50)

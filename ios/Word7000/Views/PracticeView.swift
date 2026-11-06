@@ -180,7 +180,7 @@ struct PracticeView: View {
             VStack(alignment: .leading, spacing: 10) {
                 Image(systemName: item.icon)
                     .font(.system(size: 20, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Palette.surface)
                     .frame(width: 46, height: 46)
                     .background { RaisedFill(shape: RoundedRectangle(cornerRadius: 14, style: .continuous), tint: item.tint, depth: 3) }
                 Spacer(minLength: 0)

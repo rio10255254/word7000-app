@@ -229,6 +229,9 @@ struct TodayView: View {
             HStack(spacing: 4) { content() }
                 .font(.display(.headline, weight: .heavy))
                 .foregroundStyle(Palette.ink)
+                // A count stays on one line ("47", not "4" over "7") at large text.
+                .lineLimit(1)
+                .fixedSize()
                 .padding(.horizontal, 12)
                 .frame(minHeight: 38)
                 .background {
@@ -491,7 +494,8 @@ struct TodayView: View {
             HStack(spacing: 14) {
                 Image(systemName: icon)
                     .font(.system(size: 20, weight: .bold))
-                    .foregroundStyle(.white)
+                    // Ivory by day, dark at night on the lighter night tints.
+                    .foregroundStyle(Palette.surface)
                     .frame(width: 48, height: 48)
                     .background(tint, in: Circle())
                 VStack(alignment: .leading, spacing: 2) {

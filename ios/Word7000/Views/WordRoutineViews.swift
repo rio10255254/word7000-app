@@ -620,7 +620,7 @@ struct ExamQuestionBody: View {
             HStack(spacing: 14) {
                 Text(letter)
                     .font(.headline)
-                    .foregroundStyle(chosen == nil ? Palette.accent : .white)
+                    .foregroundStyle(chosen == nil ? Palette.accent : Palette.surface)
                     .frame(width: 36, height: 36)
                     .background(chosen == nil ? Palette.accent.opacity(0.12) : tint, in: Circle())
                 Text(option)

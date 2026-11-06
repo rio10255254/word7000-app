@@ -103,7 +103,10 @@ final class LearnerProfileTests: XCTestCase {
         let weak = PersonalPlan(test: test, profile: LearnerProfile(spelling: 0), target: 20, daysToExam: 50)
         XCTAssertGreaterThan(strong.startChapter, 1)
         XCTAssertEqual(weak.startChapter, strong.startChapter - 1)
-        XCTAssertEqual(strong.reachChapter, PlacementTest.chaptersReached(from: strong.startChapter, wordsPerDay: 20, days: 50))
+        // Twenty a day with reviews in them: about twelve of them new.
+        XCTAssertEqual(strong.wordsPerDay, 20)
+        XCTAssertEqual(strong.newPerDay, 12)
+        XCTAssertEqual(strong.reachChapter, PlacementTest.chaptersReached(from: strong.startChapter, wordsPerDay: 12, days: 50))
         XCTAssertNil(PersonalPlan(test: test, profile: LearnerProfile(), target: 20, daysToExam: nil).reachChapter)
         XCTAssertEqual(PersonalPlan(test: PlacementTest(), profile: LearnerProfile(spelling: 0), target: 20, daysToExam: nil).startChapter, 1)
     }

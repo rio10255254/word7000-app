@@ -24,6 +24,8 @@ struct QuizSessionView: View {
     /// The score on the results screen, counted up once it is shown.
     @State private var shownScore = 0
     @State private var finished = false
+    /// A right answer (not the last) moves on by itself, as in today's words.
+    @State private var advancing = false
     @State private var seed = SeededRandom.runtimeSeed()
     @State private var configured = false
     /// Set up already (in the sheet on Today): skip straight to the questions.
@@ -91,6 +93,12 @@ struct QuizSessionView: View {
             return new.correct ? SoundEffect.correct : SoundEffect.wrong
         }
         .soundEffect(trigger: finished) { (_: Bool, new: Bool) -> SoundEffect? in new && missedIds.isEmpty ? .complete : nil }
+        .task(id: advancing) {
+            guard advancing else { return }
+            do { try await Task.sleep(for: AutoAdvance.delay) } catch { return }
+            guard advancing else { return }
+            next()
+        }
         .catTip(.quiz, at: .top)
     }
 
@@ -216,6 +224,7 @@ struct QuizSessionView: View {
                         .frame(maxWidth: .infinity)
                 }
                 .prominentAction(tint: chosen.correct ? Palette.known : Palette.accent)
+                .overlay { CountdownFillOverlay(active: advancing) }
                 .accessibilityIdentifier("quiz-next")
                 .padding(.vertical, 8)
                 .background { PaperBarBackground() }
@@ -322,9 +331,11 @@ struct QuizSessionView: View {
         let wordId = questions[index].id
         model.recordQuizAnswer(wordId: wordId, correct: option.correct)
         if option.correct { correctCount += 1 } else { missedIds.append(wordId) }
+        advancing = AutoAdvance.enabled && option.correct && index + 1 < questions.count
     }
 
     private func next() {
+        advancing = false
         guard chosen != nil else { return }
         Speaker.shared.stop()
         if index + 1 >= questions.count {

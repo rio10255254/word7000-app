@@ -123,6 +123,11 @@ public struct LearnerProfile: Codable, Equatable, Sendable {
 /// numbers.
 public struct PersonalPlan: Equatable, Sendable {
     public let startChapter: Int
+    /// The daily goal: new words and reviews together.
+    public let wordsPerDay: Int
+    /// New words on an ordinary day once reviews come in: the queue keeps at
+    /// least `newWordShare` of the goal for them and early on gives them all
+    /// of it, so about three in five.
     public let newPerDay: Int
     public let spellChecks: Int
     public let examChecks: Int
@@ -136,10 +141,12 @@ public struct PersonalPlan: Equatable, Sendable {
         var chapter = test.answers.isEmpty ? 1 : test.startChapter
         if let spelling = profile.spelling, spelling < 0.34, chapter > 1 { chapter -= 1 }
         startChapter = chapter
-        newPerDay = target
+        wordsPerDay = target
+        let fresh = max(1, (max(0, target) * 3 + 4) / 5)
+        newPerDay = fresh
         spellChecks = profile.spellChecks
         examChecks = profile.examChecks
         lead = profile.lead
-        reachChapter = daysToExam.map { PlacementTest.chaptersReached(from: chapter, wordsPerDay: target, days: $0) }
+        reachChapter = daysToExam.map { PlacementTest.chaptersReached(from: chapter, wordsPerDay: fresh, days: $0) }
     }
 }

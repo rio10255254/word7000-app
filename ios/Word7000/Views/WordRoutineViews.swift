@@ -202,6 +202,7 @@ struct RoutineSpellView: View {
                     .shake(trigger: misses, enabled: !reduceMotion)
                     .pulse(trigger: solves, scale: 1.02, enabled: !reduceMotion)
                     .id(word.id)
+                    .transition(.questionSwap(reduceMotion))
             }
             .padding(.bottom, 16)
         }
@@ -345,7 +346,7 @@ struct RoutineSpellView: View {
     private func next() {
         guard attempt?.solved == true else { return }
         Speaker.shared.stop()
-        load(model.activeRoutine?.spellLeft.first)
+        withAnimation(reduceMotion ? nil : Motion.swap) { load(model.activeRoutine?.spellLeft.first) }
     }
 }
 
@@ -370,7 +371,7 @@ struct RoutineExamView: View {
             if let question, let wordId, let word = model.word(id: wordId), question.wordId == wordId {
                 content(word, question)
             } else {
-                ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
+                DelayedProgress()
             }
         }
         .onAppear {
@@ -392,6 +393,8 @@ struct RoutineExamView: View {
                 RoutineCatLine(text: ExamQuestionBody.catLine(question, chosen: chosen),
                                mood: chosen == nil ? .thinking : chosen == question.answerIndex ? .cheer : .encourage)
                 ExamQuestionBody(word: word, question: question, chosen: chosen, meanings: meanings) { choose($0, question) }
+                    .id(question.wordId)
+                    .transition(.questionSwap(reduceMotion))
             }
             .padding(.bottom, 16)
         }
@@ -426,7 +429,7 @@ struct RoutineExamView: View {
             self.wordId = model.activeRoutine?.examLeft.first ?? ""
             return
         }
-        question = built
+        withAnimation(reduceMotion ? nil : Motion.swap) { question = built }
     }
 
     private func next() {

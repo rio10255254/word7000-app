@@ -38,7 +38,7 @@ struct ExamRoundView: View {
                 } else if let question, let word = model.word(id: question.wordId), question.wordId == ids[index] {
                     content(word, question)
                 } else {
-                    ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
+                    DelayedProgress()
                 }
             }
             .padding(.horizontal, Metrics.gutter)
@@ -95,6 +95,7 @@ struct ExamRoundView: View {
                                mood: chosen == nil ? .thinking : chosen == question.answerIndex ? .cheer : .encourage)
                 ExamQuestionBody(word: word, question: question, chosen: chosen, meanings: meanings) { choose($0, question) }
                     .id(index)
+                    .transition(.questionSwap(reduceMotion))
             }
             .padding(.bottom, 16)
         }
@@ -145,7 +146,7 @@ struct ExamRoundView: View {
             if let word = model.word(id: ids[at]),
                let built = ExamQuestions.make(for: word, pool: pool, seed: "\(model.today):\(kind.rawValue):\(word.id)") {
                 if at != index { index = at }
-                question = built
+                withAnimation(reduceMotion ? nil : Motion.swap) { question = built }
                 return
             }
             at += 1

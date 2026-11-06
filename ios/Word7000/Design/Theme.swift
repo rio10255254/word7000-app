@@ -95,6 +95,34 @@ enum Motion {
     }
 }
 
+extension Motion {
+    /// One question giving way to the next: the new one comes in from the
+    /// right as the old one leaves to the left, both fading.
+    static let swap = Animation.spring(response: 0.42, dampingFraction: 0.9)
+}
+
+extension AnyTransition {
+    static func questionSwap(_ reduceMotion: Bool) -> AnyTransition {
+        reduceMotion ? .opacity : .asymmetric(insertion: .offset(x: 36).combined(with: .opacity),
+                                              removal: .offset(x: -36).combined(with: .opacity))
+    }
+}
+
+/// A spinner that only appears when loading takes a moment, so a quick swap
+/// between questions does not flash it.
+struct DelayedProgress: View {
+    @State private var shown = false
+
+    var body: some View {
+        ZStack { if shown { ProgressView().transition(.opacity) } }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .task {
+                try? await Task.sleep(for: .milliseconds(450))
+                withAnimation { shown = true }
+            }
+    }
+}
+
 /// Sinks a little under the finger and springs back when released.
 struct SoftPressStyle: ButtonStyle {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion

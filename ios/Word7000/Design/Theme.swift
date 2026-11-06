@@ -640,7 +640,32 @@ enum AppRuntime {
     static let dayComplete = !uiTesting || ProcessInfo.processInfo.arguments.contains("-uiTestingDayComplete")
 }
 
+/// A sheet exactly as tall as what it holds: a note or a few rows does
+/// not open on half a screen of empty paper.
+private struct FittedSheet: ViewModifier {
+    @State private var height: CGFloat = 300
+
+    func body(content: Content) -> some View {
+        content
+            .fixedSize(horizontal: false, vertical: true)
+            .background {
+                GeometryReader { proxy in
+                    Color.clear
+                        .onAppear { height = proxy.size.height }
+                        .onChange(of: proxy.size.height) { _, value in height = value }
+                }
+            }
+            .frame(maxHeight: .infinity, alignment: .top)
+            .presentationDetents([.height(height)])
+            .presentationDragIndicator(.visible)
+            .presentationCornerRadius(28)
+            .presentationBackground(Palette.background)
+    }
+}
+
 extension View {
+    func fittedSheet() -> some View { modifier(FittedSheet()) }
+
     /// A short sheet for a few settings or a note: opens at half height with a
     /// grabber, and can be pulled up to full height when there is more to see.
     func compactSheet() -> some View {

@@ -84,7 +84,6 @@ struct MeView: View {
         .navigationTitle(L.tabMe)
         .navigationDestination(isPresented: $historyOpen) { HistoryView() }
         .sheet(isPresented: $signInOpen) { SignInSheet(reason: .general) }
-        .catTip(.me)
     }
 
     private var streakProtectionText: String {

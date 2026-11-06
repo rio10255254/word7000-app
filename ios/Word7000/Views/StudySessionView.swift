@@ -10,6 +10,7 @@ struct StudySessionView: View {
     @Environment(\.appStyle) private var appStyle
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @ScaledMetric(relativeTo: .largeTitle) private var promptSize = 42.0
     var startQuiz: () -> Void
@@ -93,6 +94,7 @@ struct StudySessionView: View {
                                         cardWidth = proxy.size.width
                                         enterCard()
                                         speakIfAutomatic(word)
+                                        if session.done == 0 { showHowToSwipe() }
                                     }
                                     .onChange(of: proxy.size.width) { _, value in cardWidth = value }
                                     .id("\(word.id)-\(session.index)")
@@ -470,6 +472,23 @@ struct StudySessionView: View {
         let face = model.face(word)
         guard Speaker.shared.activeText != face.speakText else { return }
         Speaker.shared.speak(face.speakText, language: face.speakLanguage, preferences: preferences)
+    }
+
+    /// The first card ever shows how it goes instead of saying it: it
+    /// leans right until 認得 shows, then left to 不熟, and settles. With
+    /// Reduce Motion or VoiceOver the cat says it in words instead.
+    private func showHowToSwipe() {
+        guard model.tipDue(.study), !reduceMotion, !voiceOver, !AppRuntime.uiTesting else { return }
+        model.noteTipSeen(.study)
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(900))
+            for offset in [72.0, 0, -72, 0] as [CGFloat] {
+                // A learner who has started on the card takes over.
+                guard visible, phase == .idle, !revealed else { return }
+                withAnimation(.spring(response: 0.5, dampingFraction: 0.72)) { dragOffset = offset }
+                try? await Task.sleep(for: .milliseconds(offset == 0 ? 300 : 750))
+            }
+        }
     }
 
     private func enterCard() {

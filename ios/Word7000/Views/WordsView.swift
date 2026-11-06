@@ -184,7 +184,6 @@ struct WordsView: View {
             }
             .disabled(newName.trimmed.isEmpty)
         }
-        .catTip(.words)
     }
 
     private var bankNameTitle: String {

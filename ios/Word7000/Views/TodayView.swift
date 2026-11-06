@@ -109,8 +109,7 @@ struct TodayView: View {
                 case .shelf: shelfSheet
                 }
             }
-            .presentationDetents([.medium, .large])
-            .presentationDragIndicator(.visible)
+            .fittedSheet()
         }
         .sheet(isPresented: $studySettingsOpen) { StudySettingsSheet().compactSheet() }
         .sheet(isPresented: $mascotChatOpen, onDismiss: {
@@ -626,7 +625,6 @@ struct TodayView: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
             .padding(.horizontal, 8)
-            Spacer(minLength: 0)
             Button { sheet = nil } label: {
                 Text(L.t("知道了", "Got it")).font(.title3.weight(.bold)).frame(maxWidth: .infinity)
             }
@@ -655,8 +653,7 @@ struct TodayView: View {
         let mastered = chapters.reduce(0) { $0 + $1.mastered }
         let total = chapters.reduce(0) { $0 + $1.total }
         let current = MasteryShelf.current(chapters)
-        return ScrollView {
-            VStack(spacing: 16) {
+        return VStack(spacing: 16) {
                 Text(L.t("已掌握 \(mastered.formatted()) / \(total.formatted())", "\(mastered.formatted()) of \(total.formatted()) mastered"))
                     .font(.display(.title2, weight: .heavy))
                     .padding(.top, 24)
@@ -687,8 +684,7 @@ struct TodayView: View {
             }
             .padding(.horizontal, Metrics.gutter)
             .padding(.bottom, 24)
-        }
-        .background { Palette.background.ignoresSafeArea() }
+            .background { Palette.background.ignoresSafeArea() }
     }
 
     private func sheetRow(_ title: String, value: String) -> some View {
@@ -828,7 +824,7 @@ struct TodayView: View {
     private static let doneDeep = Color(red: 0.3, green: 0.38, blue: 0.22)
     private static let speakingDeep = Color(red: 0.16, green: 0.3, blue: 0.27)
     /// Text and the button on the leather card.
-    private static let cream = Color(red: 1.0, green: 0.97, blue: 0.91)
+    static let cream = Color(red: 1.0, green: 0.97, blue: 0.91)
 }
 
 /// The companion on Today, free to wander. Every so often it waddles (or
@@ -1051,7 +1047,7 @@ enum HeroTone { case words, done, speaking }
 /// speaking), with a fine grain, light pooling in one corner, a glint that
 /// sweeps across now and then, and a hairline catching the light. It turns
 /// olive once today's goal is met.
-private struct HeroBackground: View {
+struct HeroBackground: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.appStyle) private var appStyle
     var tone: HeroTone

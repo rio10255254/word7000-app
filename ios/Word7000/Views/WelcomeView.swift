@@ -161,23 +161,94 @@ struct WelcomeView: View {
             .opacity(lockedSteps.contains(step) ? 0 : 1)
             .disabled(lockedSteps.contains(step))
             .accessibilityLabel(text("上一步", "Back"))
-            Spacer()
-            HStack(spacing: 6) {
-                ForEach(flow, id: \.self) { item in
-                    let index = flow.firstIndex(of: item) ?? 0
-                    Capsule()
-                        .fill(index <= position ? Palette.accent : Palette.fill)
-                        .frame(width: item == step ? 22 : 8, height: 8)
-                }
+            Spacer(minLength: 8)
+            phaseBar
+            Spacer(minLength: 8)
+            // While the test runs: a quiet way out, in the corner.
+            if step == .test {
+                Button(text("跳過", "Skip"), action: skipTest)
+                    .font(.subheadline.weight(.semibold))
+                    .frame(minWidth: 44, minHeight: 44)
+                    .accessibilityHint(text("從第 1 章開始", "Start at chapter 1"))
+                    .accessibilityIdentifier("welcome-test-skip")
+            } else {
+                Color.clear.frame(width: 44, height: 44)
             }
-            .animation(reduceMotion ? nil : .snappy, value: step)
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel(text("第 \(position + 1) 步，共 \(flow.count) 步", "Step \(position + 1) of \(flow.count)"))
-            Spacer()
-            Color.clear.frame(width: 44, height: 44)
         }
         .padding(.horizontal, 8)
         .tint(Palette.accent)
+    }
+
+    /// The welcome in three parts, as a learner thinks of it (about you,
+    /// your level, your plan), rather than a dot for each of eleven scenes:
+    /// the part under way fills as it goes, question by question in the test.
+    private enum Phase: Int, CaseIterable { case about, level, plan }
+
+    private func phase(of step: Step) -> Phase {
+        switch step {
+        case .hello, .stage, .exam, .focus, .goal, .words: .about
+        case .testIntro, .test, .spell, .thinking: .level
+        case .result, .voice: .plan
+        }
+    }
+
+    private func phaseTitle(_ phase: Phase) -> String {
+        switch phase {
+        case .about: text("認識你", "About you")
+        case .level: text("測程度", "Your level")
+        case .plan: text("你的計畫", "Your plan")
+        }
+    }
+
+    /// How full a part's bar is: done parts full, the current one by its
+    /// scenes so far (and the questions within the test and the spelling).
+    private func phaseFill(_ item: Phase) -> Double {
+        let current = phase(of: step)
+        if item.rawValue < current.rawValue { return 1 }
+        guard item == current else { return 0 }
+        let scenes = flow.filter { phase(of: $0) == current }
+        guard let index = scenes.firstIndex(of: step) else { return 0 }
+        var within = 0.2
+        if step == .test { within = max(within, Double(test.asked) / Double(PlacementTest.maxQuestions)) }
+        if step == .spell, !spellWords.isEmpty { within = max(within, Double(spellIndex) / Double(spellWords.count)) }
+        return min(1, (Double(index) + within) / Double(max(1, scenes.count)))
+    }
+
+    private var phaseBar: some View {
+        let current = phase(of: step)
+        let phases = Phase.allCases.filter { item in flow.contains { phase(of: $0) == item } }
+        return HStack(alignment: .top, spacing: 6) {
+            ForEach(phases, id: \.self) { item in
+                VStack(spacing: 5) {
+                    GeometryReader { proxy in
+                        Capsule().fill(Palette.fill)
+                            .overlay(alignment: .leading) {
+                                Capsule().fill(Palette.accent)
+                                    .frame(width: proxy.size.width * phaseFill(item))
+                            }
+                    }
+                    .frame(height: 6)
+                    Text(phaseTitle(item))
+                        .font(.caption2.weight(.bold))
+                        .foregroundStyle(item == current ? Palette.accent : Palette.tertiaryLabel)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                }
+                .frame(maxWidth: .infinity)
+            }
+        }
+        .frame(maxWidth: 260)
+        .animation(reduceMotion ? nil : .snappy, value: step)
+        .animation(reduceMotion ? nil : .snappy, value: test.asked)
+        .animation(reduceMotion ? nil : .snappy, value: spellIndex)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(phaseTitle(current))
+        .accessibilityValue("\(Int((phaseFill(current) * 100).rounded()))%")
+    }
+
+    private func skipTest() {
+        test = PlacementTest()
+        go(.thinking)
     }
 
     // MARK: 1. What to learn
@@ -456,13 +527,6 @@ struct WelcomeView: View {
                     text: testLine)
             if let question {
                 VStack(spacing: 6) {
-                    Text(text("第 \(question.level) 章", "Chapter \(question.level)"))
-                        .font(.subheadline.weight(.bold))
-                        .foregroundStyle(Palette.accent)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 5)
-                        .background(Palette.accent.opacity(0.12), in: Capsule())
-                        .accessibilityIdentifier("welcome-test-chapter")
                     Text(question.prompt)
                         .font(.displaySize(44, weight: .bold))
                         .lineLimit(1)
@@ -489,6 +553,18 @@ struct WelcomeView: View {
                                 .background(optionFill(index, question), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
                                 .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous)
                                     .strokeBorder(optionStroke(index, question), lineWidth: 2))
+                                // Once picked: a tick on the right one, a cross on a wrong pick.
+                                .overlay(alignment: .topTrailing) {
+                                    if picked != nil, index == question.answerIndex || index == picked {
+                                        Image(systemName: index == question.answerIndex ? "checkmark.circle.fill" : "xmark.circle.fill")
+                                            .font(.title3)
+                                            .foregroundStyle(index == question.answerIndex ? Palette.known : Palette.miss)
+                                            .background(Circle().fill(Palette.background))
+                                            .offset(x: 6, y: -6)
+                                            .transition(.scale(scale: 0.3).combined(with: .opacity))
+                                    }
+                                }
+                                .scaleEffect(picked == index && !reduceMotion ? 1.04 : 1)
                         }
                         .buttonStyle(SoftPressStyle())
                         .disabled(picked != nil)
@@ -501,19 +577,9 @@ struct WelcomeView: View {
                 .secondaryAction()
                 .disabled(picked != nil)
                 .accessibilityIdentifier("welcome-test-unknown")
-                Text(text("第 \(test.asked + 1) 題，最多 \(PlacementTest.maxQuestions) 題", "Question \(test.asked + 1) of at most \(PlacementTest.maxQuestions)"))
-                    .font(.footnote.monospacedDigit())
-                    .foregroundStyle(.secondary)
             } else {
                 ProgressView().frame(minHeight: 200)
             }
-            Button(text("跳過測驗，從第 1 章開始", "Skip the test and start at chapter 1")) {
-                test = PlacementTest()
-                go(.thinking)
-            }
-            .font(.subheadline.weight(.semibold))
-            .frame(minHeight: 44)
-            .accessibilityIdentifier("welcome-test-skip")
         }
         .onAppear { if question == nil, !test.isFinished { nextQuestion() } }
         .sensoryFeedback(trigger: picked) { _, new in

@@ -91,9 +91,20 @@ struct QuizConfiguration: View {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var start: () -> Void
+    @State private var scopeOpen = false
 
     private var selection: Binding<FilterSelection> {
         Binding(get: { model.settings.quizFilter }, set: { model.settings.quizFilter = $0 })
+    }
+
+    /// "7000 單字・全部" or the filters in use, in a few words.
+    private func scopeSummary(_ filter: FilterSelection) -> String {
+        guard filter.isActive else { return L.t("\(model.bankName)・全部", "\(model.bankName) · all") }
+        var parts: [String] = []
+        if filter.status != .all { parts.append(L.filterLabel(filter.status)) }
+        if !filter.levels.isEmpty { parts.append(L.levelSummary(filter.levels)) }
+        if filter.initial != "all" { parts.append(L.t("\(filter.initial) 開頭", "starts with \(filter.initial)")) }
+        return parts.joined(separator: "・")
     }
 
     var body: some View {
@@ -108,7 +119,20 @@ struct QuizConfiguration: View {
                     .pickerStyle(.segmented)
                     .accessibilityIdentifier("quiz-question-count")
                 } header: { Text(L.t("這次想練習幾題？", "How many questions?")) }
-                Section { FilterControls(selection: selection) } header: { Text(model.bankName) }
+                // Which words: folded away, its summary on the row; most
+                // rounds only change how many questions.
+                Section {
+                    DisclosureGroup(isExpanded: $scopeOpen) {
+                        FilterControls(selection: selection)
+                    } label: {
+                        LabeledContent(L.t("範圍", "Words")) {
+                            Text(scopeSummary(filter))
+                                .lineLimit(1)
+                                .foregroundStyle(filter.isActive ? Palette.accent : Palette.secondaryLabel)
+                        }
+                    }
+                    .accessibilityIdentifier("quiz-scope")
+                }
                 Section {
                     let roundSize = min(count, model.settings.quizQuestionCount)
                     LabeledContent(L.t("本輪題數", "This round")) {

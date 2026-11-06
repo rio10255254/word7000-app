@@ -64,6 +64,9 @@ struct SpeakingSessionView: View {
     /// Which kind of prompt each word of this practice gets: a reviewed
     /// conversation question, or building on its example sentence.
     @State private var kinds: [String: SpeakingPractice.Activity] = [:]
+    /// WordCat Next: in a role-play, what the learner answered on each turn,
+    /// shown in the chat above the next turns in place of the model reply.
+    @State private var replies: [Int: String] = [:]
 
     private func isExample(_ word: WordEntry) -> Bool {
         kinds[word.id] == .examples || SpeakingPractice.entry(for: word) == nil
@@ -375,6 +378,7 @@ struct SpeakingSessionView: View {
         bannerShown = false
         listened = !(AppRuntime.speakingRoutine && scenarioRef != nil)
         wordChoices = []
+        replies = [:]
         started = true
     }
 
@@ -401,8 +405,9 @@ struct SpeakingSessionView: View {
         guard scenarioRef != nil, index > 0 else { return [] }
         return turns.prefix(index).enumerated().flatMap { item -> [ShadowStepView.ChatLine] in
             let card = SpeakingScenarios.card(item.element, mode: mode)
+            let said = replies[item.offset]?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             return [ShadowStepView.ChatLine(id: "\(item.offset)-partner", text: card.question, mine: false),
-                    ShadowStepView.ChatLine(id: "\(item.offset)-reply", text: shadowSentence(card), mine: true)]
+                    ShadowStepView.ChatLine(id: "\(item.offset)-reply", text: said.isEmpty ? shadowSentence(card) : said, mine: true)]
         }
     }
 
@@ -482,7 +487,118 @@ struct SpeakingSessionView: View {
         }
     }
 
+    @ViewBuilder
     private func answerPage(at index: Int, card: ConversationPromptCard, builtOnSentence: Bool) -> some View {
+        if scenarioRef != nil {
+            chatAnswerPage(at: index, card: card)
+        } else {
+            wordAnswerPage(at: index, card: card, builtOnSentence: builtOnSentence)
+        }
+    }
+
+    /// WordCat Next: a role-play's answer step as the chat itself. The whole
+    /// conversation so far scrolls above, the other person's line comes in as
+    /// the newest message with what to say under it, and the answer is
+    /// written or spoken in the box at the end; the keys stay at the bottom.
+    /// Moving on adds the next lines below instead of turning a page.
+    private func chatAnswerPage(at index: Int, card: ConversationPromptCard) -> some View {
+        VStack(spacing: 12) {
+            progressBar
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(spacing: 14) {
+                        ChatHistory(lines: earlierLines(before: index))
+                        TranslatableQuestion(
+                            caption: turns[index].role.practised(mode),
+                            question: card.question,
+                            pinyin: model.studyMode == .chinese ? ChineseDisplay.readablePinyin(ChineseDisplay.sentencePinyin(card.question)) : "",
+                            translation: card.questionGloss,
+                            language: speakLanguage,
+                            showsHint: !translationTried,
+                            onTranslate: { translationTried = true }
+                        )
+                        .modifier(ChatRise(step: 0))
+                        // What to say, as a quiet note in the chat.
+                        Label(card.questionSupport, systemImage: "arrow.turn.down.right")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Palette.accent)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 7)
+                            .background(Palette.accent.opacity(0.1), in: Capsule())
+                            .frame(maxWidth: .infinity)
+                            .modifier(ChatRise(step: 1))
+                            .accessibilityIdentifier("speaking-support")
+                        if revealed, !card.referenceAnswer.isEmpty {
+                            sampleBubble(card)
+                                .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 12)))
+                        }
+                        answerPanel(at: index, card: card, examplesOnly: false, proxy: proxy)
+                            .modifier(ChatRise(step: 2))
+                            .id(coachContextID)
+                    }
+                    .padding(.top, 4)
+                    .padding(.bottom, 12)
+                }
+                .defaultScrollAnchor(.bottom)
+                .scrollDismissesKeyboard(.interactively)
+                .softTopScrollEdge()
+                .onChange(of: revealed) { _, shown in
+                    guard shown else { return }
+                    withAnimation(reduceMotion ? nil : Motion.reveal) { proxy.scrollTo("sample", anchor: .center) }
+                }
+            }
+            ButtonRow {
+                Button {
+                    withAnimation(reduceMotion ? nil : Motion.reveal) { revealed.toggle() }
+                } label: {
+                    Text(revealed ? L.t("收起參考", "Hide sample") : L.showSample)
+                        .font(.headline).frame(maxWidth: .infinity)
+                }
+                .secondaryAction()
+                .disabled(card.referenceAnswer.isEmpty)
+                .accessibilityIdentifier("speaking-show-reference")
+                Button {
+                    withAnimation(reduceMotion ? nil : .spring(response: 0.5, dampingFraction: 0.88)) { next() }
+                } label: {
+                    HStack(spacing: 6) {
+                        Text(attempted ? (index + 1 >= count ? L.seeResults : L.t("繼續對話", "Carry on")) : L.t("跳過", "Skip"))
+                        if attempted, index + 1 < count { Image(systemName: "arrow.down") }
+                    }
+                    .font(.headline).frame(maxWidth: .infinity)
+                }
+                .modifier(NextKey(attempted: attempted))
+                .accessibilityIdentifier("speaking-next")
+            }
+        }
+    }
+
+    /// The sample reply, on the learner's side of the chat with a dashed edge:
+    /// one way to say it, not something said.
+    private func sampleBubble(_ card: ConversationPromptCard) -> some View {
+        HStack(alignment: .bottom, spacing: 8) {
+            Spacer(minLength: 40)
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    Text(L.sampleAnswer).font(.caption.weight(.semibold)).foregroundStyle(Palette.accent)
+                    Spacer(minLength: 8)
+                    SpeakButton(text: card.referenceAnswer, language: speakLanguage)
+                }
+                Text(card.referenceAnswer).lineSpacing(3).accessibilityIdentifier("speaking-reference-answer")
+                if !card.referenceTranslation.isEmpty {
+                    Text(card.referenceTranslation).font(.subheadline).foregroundStyle(.secondary)
+                }
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background {
+                BubbleShape(tail: .trailing)
+                    .stroke(Palette.accent.opacity(0.5), style: StrokeStyle(lineWidth: 1.5, dash: [5, 4]))
+            }
+        }
+        .id("sample")
+    }
+
+    private func wordAnswerPage(at index: Int, card: ConversationPromptCard, builtOnSentence: Bool) -> some View {
         let examplesOnly = scenarioRef == nil && isExample(words[index])
         return VStack(spacing: 16) {
             progressBar
@@ -643,6 +759,9 @@ struct SpeakingSessionView: View {
         // Saying the model or answering is the practice; skipping is not.
         model.recordSpeaking(completed: attempted || shadowedThisWord)
         if attempted { answered += 1 }
+        if scenarioRef != nil, attempted, !coachAnswer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            replies[index] = coachAnswer
+        }
         clearCoach()
         if scenarioRef == nil { model.noteSpeakingPractised(words[index].id) }
         Speaker.shared.stop()

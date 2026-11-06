@@ -119,6 +119,8 @@ struct ShadowStepView: View {
                     }
                     .padding(.bottom, 12)
                 }
+                // A role-play opens at its newest lines, the conversation so far above.
+                .defaultScrollAnchor(partner == nil ? .top : .bottom)
                 // A later turn of a role-play scrolls like a chat: on a small phone
                 // the oldest line moves up out of the way, so the new lines and the
                 // key stay in full view.
@@ -401,9 +403,8 @@ struct ShadowStepView: View {
 
     private var sentenceCard: some View {
         VStack(alignment: .leading, spacing: 16) {
-            if partner != nil, let last = earlier.last {
-                EarlierChatLine(line: last)
-                    .modifier(ChatRise(step: 0, from: 64))
+            if partner != nil, !earlier.isEmpty {
+                ChatHistory(lines: earlier)
             }
             if let partner { partnerBubble(partner).modifier(ChatRise(step: 1)) }
             // Only a role-play rolls on like a chat.
@@ -412,7 +413,8 @@ struct ShadowStepView: View {
             else if let lastTake { result(lastTake, tones: lastTones).opacity(0.6) }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .card(radius: Metrics.wordCardRadius, padding: 18)
+        // A role-play is a chat on the page itself; a word's sentence sits on a card.
+        .modifier(OptionalCard(enabled: partner == nil))
     }
 
     private func result(_ check: ShadowingCheck, tones: [Int: ToneAnalysis.Syllable]) -> some View {
@@ -688,6 +690,40 @@ struct EarlierChatLine: View {
     }
 }
 
+/// WordCat Next: everything said so far in a role-play, as a chat: the
+/// other person's lines on the left, the learner's on the right (what they
+/// actually answered when they did, else the reply they repeated). The
+/// oldest lines are a little fainter. Shown above each step of each turn,
+/// so moving on reads as the conversation scrolling on, not a new page.
+struct ChatHistory: View {
+    let lines: [ShadowStepView.ChatLine]
+
+    var body: some View {
+        VStack(spacing: 10) {
+            ForEach(Array(lines.enumerated()), id: \.element.id) { index, line in
+                let age = lines.count - 1 - index
+                HStack(alignment: .bottom, spacing: 0) {
+                    if line.mine { Spacer(minLength: 56) }
+                    Text(line.text)
+                        .font(.body)
+                        .foregroundStyle(Palette.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 10)
+                        .background(line.mine ? Palette.accent.opacity(0.14) : Palette.fill,
+                                    in: BubbleShape(tail: line.mine ? .trailing : .leading))
+                    if !line.mine { Spacer(minLength: 56) }
+                }
+                .opacity(age > 3 ? 0.55 : age > 1 ? 0.75 : 0.9)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel(line.mine ? L.t("我：\(line.text)", "Me: \(line.text)") : line.text)
+                .accessibilityIdentifier(index == lines.count - 1 ? "speaking-earlier-line" : "speaking-history-line")
+            }
+        }
+        .frame(maxWidth: .infinity)
+    }
+}
+
 /// A turn of the conversation arriving like a chat scrolling on: the line
 /// from before rises into place above, then the new bubbles come up from
 /// below, one after the other.
@@ -952,5 +988,18 @@ struct ToneCurve: View {
             }
         }
         .accessibilityHidden(true)
+    }
+}
+
+/// A card around the content, or nothing.
+struct OptionalCard: ViewModifier {
+    var enabled: Bool
+
+    func body(content: Content) -> some View {
+        if enabled {
+            content.card(radius: Metrics.wordCardRadius, padding: 18)
+        } else {
+            content.padding(.horizontal, 2).padding(.top, 4)
+        }
     }
 }

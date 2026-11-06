@@ -79,7 +79,7 @@ struct SpellingSessionView: View {
             return new == .correct ? .success : .error
         }
         .sensoryFeedback(.selection, trigger: hints) { _, new in new > 0 && (model.settings.hapticsEnabled ?? true) }
-        .catTip(.spelling, at: .top, inset: 60)
+        .catTip(.spelling, at: .top)
     }
 
     // MARK: Question

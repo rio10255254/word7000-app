@@ -78,6 +78,7 @@ struct RoutineStepStrip: View {
 /// check step, then the step itself.
 struct RoutineChecksView: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
     var routine: WordRoutine
     /// The step whose hand-off was tapped through.
     @State private var begun: WordRoutine.Step?
@@ -134,6 +135,11 @@ struct RoutineChecksView: View {
                     Text(action).font(.title3.weight(.bold)).frame(maxWidth: .infinity).padding(.vertical, 4)
                 }
                 .prominentAction()
+                // It starts by itself, the key filling meanwhile: one step
+                // flows into the next as in a Duolingo lesson, and Not today
+                // is still a tap away.
+                .overlay { CountdownFillOverlay(active: autoStarts, seconds: Self.handOffSeconds)
+                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous)) }
                 .accessibilityIdentifier("routine-begin")
                 Button {
                     model.skipRoutineChecks()
@@ -149,7 +155,15 @@ struct RoutineChecksView: View {
         // A container: its buttons keep their own identifiers.
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("routine-hand-off")
+        .task(id: step) {
+            guard autoStarts else { return }
+            do { try await Task.sleep(for: .seconds(Self.handOffSeconds)) } catch { return }
+            if begun != step { begun = step }
+        }
     }
+
+    private static let handOffSeconds = 2.6
+    private var autoStarts: Bool { AutoAdvance.enabled && !voiceOver }
 }
 
 /// Spelling the young words marked known: the fill-in-the-blank card, one

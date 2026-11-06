@@ -203,10 +203,15 @@ struct SpeakingSessionView: View {
         .task(id: "\(started)-\(listened)-\(index)-\(count)-\(shadowing)-\(String(describing: source))") {
             guard started, listened, index < count, !AppRuntime.uiTesting,
                   model.settings.speech?.autoReadQuestions ?? true else { return }
-            // The stage's opening banner goes first.
-            do { try await Task.sleep(for: .milliseconds(index == 0 && shadowing ? 1500 : 450)) } catch { return }
             let card = card(at: index)
             let sentence = shadowSentence(card)
+            // A role-play's answer step answers the line just heard: it is not read again.
+            if scenarioRef != nil, !shadowing, !sentence.isEmpty { return }
+            // The stage's opening banner goes first; on a later turn of a role-play,
+            // the other person's line is read once it has come in after typing.
+            let wait: Duration = index == 0 && shadowing ? .milliseconds(1500)
+                : scenarioRef != nil && shadowing ? ShadowStepView.typingPause + .milliseconds(300) : .milliseconds(450)
+            do { try await Task.sleep(for: wait) } catch { return }
             let preferences = model.settings.speech ?? SpeechPreferences()
             let saying = shadowing && !sentence.isEmpty
             if scenarioRef != nil || !saying {
@@ -517,7 +522,26 @@ struct SpeakingSessionView: View {
                             showsHint: !translationTried,
                             onTranslate: { translationTried = true }
                         )
-                        .modifier(ChatRise(step: 0))
+                        // The reply just repeated stays as the learner's message.
+                        let repeated = shadowSentence(card)
+                        if !repeated.isEmpty {
+                            HStack(alignment: .bottom, spacing: 6) {
+                                Spacer(minLength: 56)
+                                if shadowedThisWord {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .font(.footnote)
+                                        .foregroundStyle(Palette.known)
+                                        .accessibilityLabel(L.t("跟讀過了", "Repeated"))
+                                }
+                                Text(repeated)
+                                    .foregroundStyle(Palette.ink)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .padding(.horizontal, 14)
+                                    .padding(.vertical, 10)
+                                    .background(Palette.accent.opacity(0.14), in: BubbleShape(tail: .trailing))
+                            }
+                            .accessibilityIdentifier("speaking-repeated-line")
+                        }
                         // What to say, as a quiet note in the chat.
                         Label(card.questionSupport, systemImage: "arrow.turn.down.right")
                             .font(.subheadline.weight(.semibold))
@@ -526,14 +550,14 @@ struct SpeakingSessionView: View {
                             .padding(.vertical, 7)
                             .background(Palette.accent.opacity(0.1), in: Capsule())
                             .frame(maxWidth: .infinity)
-                            .modifier(ChatRise(step: 1))
+                            .modifier(ChatRise(step: 1, from: 20))
                             .accessibilityIdentifier("speaking-support")
                         if revealed, !card.referenceAnswer.isEmpty {
                             sampleBubble(card)
                                 .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 12)))
                         }
                         answerPanel(at: index, card: card, examplesOnly: false, proxy: proxy)
-                            .modifier(ChatRise(step: 2))
+                            .modifier(ChatRise(step: 2, from: 28))
                             .id(coachContextID)
                     }
                     .padding(.top, 4)
@@ -558,6 +582,7 @@ struct SpeakingSessionView: View {
                 .disabled(card.referenceAnswer.isEmpty)
                 .accessibilityIdentifier("speaking-show-reference")
                 Button {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                     withAnimation(reduceMotion ? nil : .spring(response: 0.5, dampingFraction: 0.88)) { next() }
                 } label: {
                     HStack(spacing: 6) {

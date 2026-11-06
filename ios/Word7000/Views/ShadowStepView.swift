@@ -64,6 +64,9 @@ struct ShadowStepView: View {
     /// Learning Chinese: the tone each character has as said in the phrase,
     /// by unit id, drawn under it as a guide before anything is said.
     @State private var guideTones: [Int: Int] = [:]
+    /// WordCat Next: on a later turn of a role-play the other person types
+    /// for a moment before their line comes in, then the reply to say.
+    @State private var partnerArrived = false
 
     private var language: String { chinese ? "zh-TW" : "en-US" }
     private var live: Bool { listener.listening }
@@ -108,6 +111,8 @@ struct ShadowStepView: View {
     }
 
     private static let recorderID = "shadow-recorder"
+    /// How long the other person "types" before their next line.
+    static let typingPause: Duration = .milliseconds(850)
 
     var body: some View {
         VStack(spacing: 16) {
@@ -115,7 +120,10 @@ struct ShadowStepView: View {
                 ScrollView {
                     VStack(spacing: 20) {
                         sentenceCard
+                        // The key waits for the line it answers.
                         recorderKey.id(Self.recorderID)
+                            .opacity(arrived ? 1 : 0)
+                            .allowsHitTesting(arrived)
                     }
                     .padding(.bottom, 12)
                 }
@@ -126,7 +134,8 @@ struct ShadowStepView: View {
                 // key stay in full view.
                 .task(id: sentence) {
                     guard !earlier.isEmpty else { return }
-                    do { try await Task.sleep(for: .milliseconds(reduceMotion ? 50 : 450)) } catch { return }
+                    // Once the other person's line and the reply have come in.
+                    do { try await Task.sleep(for: reduceMotion ? .milliseconds(50) : Self.typingPause + .milliseconds(420)) } catch { return }
                     withAnimation(reduceMotion ? nil : .easeOut(duration: 0.35)) {
                         proxy.scrollTo(Self.recorderID, anchor: .bottom)
                     }
@@ -162,6 +171,14 @@ struct ShadowStepView: View {
             }
         }
         .task { await listener.refresh(language: language) }
+        .task(id: sentence) {
+            guard !arrived else { return }
+            do { try await Task.sleep(for: Self.typingPause) } catch { return }
+            withAnimation(.spring(response: 0.42, dampingFraction: 0.86)) { partnerArrived = true }
+        }
+        .sensoryFeedback(trigger: partnerArrived) { _, now in
+            now && (model.settings.hapticsEnabled ?? true) ? .impact(weight: .light) : nil
+        }
         .task(id: sentence) {
             guideTones = chinese ? Self.tonesAsSaid(in: sentence) : [:]
             lastTake = nil; lastTones = [:]; retryFocus = []
@@ -406,9 +423,19 @@ struct ShadowStepView: View {
             if partner != nil, !earlier.isEmpty {
                 ChatHistory(lines: earlier)
             }
-            if let partner { partnerBubble(partner).modifier(ChatRise(step: 1)) }
-            // Only a role-play rolls on like a chat.
-            replyBlock.modifier(ChatRise(step: 2, enabled: partner != nil))
+            if let partner {
+                if arrived {
+                    partnerBubble(partner).modifier(ChatRise(step: 0))
+                    // Only a role-play rolls on like a chat.
+                    replyBlock.modifier(ChatRise(step: 2))
+                } else {
+                    ChatTypingBubble()
+                        .transition(.opacity)
+                        .accessibilityIdentifier("speaking-typing")
+                }
+            } else {
+                replyBlock
+            }
             if let check, listener.isFinal { result(check, tones: tones) }
             else if let lastTake { result(lastTake, tones: lastTones).opacity(0.6) }
         }
@@ -416,6 +443,9 @@ struct ShadowStepView: View {
         // A role-play is a chat on the page itself; a word's sentence sits on a card.
         .modifier(OptionalCard(enabled: partner == nil))
     }
+
+    /// The first turn, a word, or reduced motion: no typing pause.
+    private var arrived: Bool { partnerArrived || earlier.isEmpty || reduceMotion }
 
     private func result(_ check: ShadowingCheck, tones: [Int: ToneAnalysis.Syllable]) -> some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -687,6 +717,31 @@ struct EarlierChatLine: View {
         .opacity(0.8)
         .accessibilityLabel(L.t("上一句：\(line.text)", "Before: \(line.text)"))
         .accessibilityIdentifier("speaking-earlier-line")
+    }
+}
+
+/// The other person typing: three dots in their bubble.
+struct ChatTypingBubble: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        HStack {
+            HStack(spacing: 5) {
+                ForEach(0..<3, id: \.self) { dot in
+                    Circle()
+                        .fill(Palette.secondaryLabel)
+                        .frame(width: 8, height: 8)
+                        .phaseAnimator(reduceMotion ? [1.0] : [0.3, 1.0]) { content, phase in content.opacity(phase) } animation: { _ in
+                            .easeInOut(duration: 0.4).delay(Double(dot) * 0.14)
+                        }
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .background(Palette.fill, in: BubbleShape(tail: .leading))
+            Spacer(minLength: 0)
+        }
+        .accessibilityLabel(L.t("對方正在輸入", "Typing"))
     }
 }
 

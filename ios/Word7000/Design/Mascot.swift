@@ -912,6 +912,21 @@ struct MascotTip {
 /// little hearts float up, grudgingly.
 /// Its speech bubble takes no touches unless it carries the companion's tip,
 /// and then only where it floats over nothing tappable.
+/// A double tap, only when asked for: declared before the single tap, so a
+/// single tap waits to see whether a second follows.
+private struct DoubleTapSmack: ViewModifier {
+    var enabled: Bool
+    var action: (CGPoint) -> Void
+
+    func body(content: Content) -> some View {
+        if enabled {
+            content.onTapGesture(count: 2, coordinateSpace: .local) { location in action(location) }
+        } else {
+            content
+        }
+    }
+}
+
 struct MascotBuddy: View {
     var mood: Mascot.Mood = .idle
     var size: CGFloat = 64
@@ -1011,6 +1026,10 @@ struct MascotBuddy: View {
                 }
             }
             .contentShape(Circle().inset(by: -size * 0.04))
+            // With a tap action (Today: the chat), a double tap smacks it.
+            .modifier(DoubleTapSmack(enabled: onTap != nil) { location in
+                smack(from: location.x < size / 2 ? -1 : 1)
+            })
             .onTapGesture(coordinateSpace: .local) { location in
                 if let onTap {
                     onInteract?()
@@ -1075,7 +1094,7 @@ struct MascotBuddy: View {
             .accessibilityLabel(L.t("傻貓", "Silly Cat"))
             .accessibilityAddTraits(.isButton)
             .accessibilityAction { if let onTap { onTap() } else { poke() } }
-            .accessibilityHint(onTap == nil ? L.t("點一下扁它", "Tap to smack it") : L.t("點一下和傻貓聊天", "Tap to chat with Silly Cat"))
+            .accessibilityHint(onTap == nil ? L.t("點一下扁它", "Tap to smack it") : L.t("點一下和傻貓聊天，點兩下扁它", "Tap to chat with Silly Cat; double-tap to smack it"))
             .accessibilityActions {
                 if let tip { Button(tip.text) { tip.action() } }
             }

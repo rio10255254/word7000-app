@@ -133,12 +133,16 @@ struct QuizConfiguration: View {
                     }
                     .accessibilityIdentifier("quiz-scope")
                 }
-                Section {
-                    let roundSize = min(count, model.settings.quizQuestionCount)
-                    LabeledContent(L.t("本輪題數", "This round")) {
-                        Text("\(roundSize)")
-                            .monospacedDigit()
-                            .contentTransition(.numericText(value: Double(roundSize)))
+                // The count chosen above is the round's, unless the words in
+                // range are fewer: only then is there anything to say.
+                if count < model.settings.quizQuestionCount {
+                    Section {
+                        Label(count == 0 ? L.t("範圍裡沒有字，換個範圍再開始", "No words in range: widen it to start")
+                                         : L.t("範圍裡只有 \(count) 個字，這輪考 \(count) 題", "Only \(count) words in range: \(count) questions this round"),
+                              systemImage: "info.circle")
+                            .font(.subheadline)
+                            .foregroundStyle(Palette.secondaryLabel)
+                            .accessibilityIdentifier("quiz-round-size")
                     }
                 }
             }

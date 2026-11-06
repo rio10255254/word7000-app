@@ -98,7 +98,8 @@ struct SpeakingListenView: View {
                 Text(partner.isEmpty ? title : partner)
                     .font(.display(.headline, weight: .bold))
                     .foregroundStyle(Palette.ink)
-                Text(title)
+                // The stage's name is already at the top of the screen.
+                Text(L.t("\(lines.count) 句對話", "\(lines.count) lines"))
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(Palette.secondaryLabel)
                     .lineLimit(1)

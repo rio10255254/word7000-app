@@ -78,11 +78,14 @@ if (!to) {
 
 // 2. The testers.
 const fromTesters = (await api('GET', `/v1/betaGroups/${from.id}/betaTesters?limit=200`)).data;
-if (fromTesters.length) {
+// Only those not in the new group yet: adding one twice is refused.
+const already = new Set((await api('GET', `/v1/betaGroups/${to.id}/betaTesters?limit=200`)).data.map((t) => t.id));
+const toAdd = fromTesters.filter((tester) => !already.has(tester.id));
+if (toAdd.length) {
   await api('POST', `/v1/betaGroups/${to.id}/relationships/betaTesters`,
-    { data: fromTesters.map((tester) => ({ type: 'betaTesters', id: tester.id })) });
+    { data: toAdd.map((tester) => ({ type: 'betaTesters', id: tester.id })) });
 }
-say(`- 加入 ${fromTesters.length} 位測試人員：${fromTesters.map((t) => mask(t.attributes.email)).join('、') || '（沒有）'}`);
+say(`- 測試人員 ${fromTesters.length} 位（這次新加 ${toAdd.length} 位）：${fromTesters.map((t) => mask(t.attributes.email)).join('、') || '（沒有）'}`);
 
 // 3. The newest build the public testers have (master's), so the testers
 //    have a build to test right away.

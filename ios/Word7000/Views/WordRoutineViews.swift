@@ -353,7 +353,7 @@ struct RoutineSpellView: View {
             solves += 1
             streak = outcome == .knew ? streak + 1 : 0
             // Right without the answer shown: on to the next by itself.
-            advancing = outcome != .missed
+            advancing = AutoAdvance.enabled && outcome != .missed
         } else {
             misses += 1
             streak = 0
@@ -448,7 +448,7 @@ struct RoutineExamView: View {
         withAnimation(reduceMotion ? nil : Motion.reveal) { chosen = index }
         model.recordRoutineCheck(wordId: wordId, outcome: index == question.answerIndex ? .knew : .missed, exam: true)
         // Right: on to the next by itself. Wrong: wait, so the explanation is read.
-        advancing = index == question.answerIndex
+        advancing = AutoAdvance.enabled && index == question.answerIndex
     }
 
     private func load() async {

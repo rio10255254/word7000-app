@@ -135,7 +135,7 @@ struct ExamRoundView: View {
         asked += 1
         if correct { right += 1 } else { missed.append(question.wordId) }
         model.recordQuizAnswer(wordId: question.wordId, correct: correct)
-        advancing = correct && index + 1 < ids.count
+        advancing = AutoAdvance.enabled && correct && index + 1 < ids.count
     }
 
     private func next() {

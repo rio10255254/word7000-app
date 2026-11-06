@@ -110,10 +110,13 @@ extension AnyTransition {
 
 /// WordCat Next: after a right answer the next question comes by itself,
 /// so a run of right answers flows without a tap each time. A wrong answer
-/// waits, so the explanation can be read. UI tests get longer, to tap first.
+/// waits, so the explanation can be read. Off in UI tests: a slow test
+/// machine could take longer than the wait between finding Next and tapping
+/// it, and the question would move on under the test.
 enum AutoAdvance {
-    static var delay: Duration { AppRuntime.uiTesting ? .seconds(4) : .milliseconds(1300) }
-    static var seconds: Double { AppRuntime.uiTesting ? 4 : 1.3 }
+    static var enabled: Bool { !AppRuntime.uiTesting }
+    static var delay: Duration { .milliseconds(1300) }
+    static var seconds: Double { 1.3 }
 }
 
 /// A key's face filling from the left while the next question is on its way.

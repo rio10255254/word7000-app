@@ -470,7 +470,7 @@ struct WelcomeView: View {
     private var testIntro: some View {
         VStack(spacing: 22) {
             Mascot(mood: .smug, size: 104, hop: hop).popIn()
-            Text(text("最後，兩分鐘小測驗", "Last, a two-minute check"))
+            Text(text("最後，兩分鐘程度測驗", "Last, a two-minute level check"))
                 .font(.display(.title2, weight: .bold))
                 .multilineTextAlignment(.center)
             VStack(alignment: .leading, spacing: 14) {
@@ -920,7 +920,7 @@ struct WelcomeView: View {
                     text("加上該複習的字", "plus the words due again"))
             if mode == .english {
                 planRow("pencil.line", text("翻卡後拼 \(plan.spellChecks) 個、考 \(plan.examChecks) 題", "Then spell \(plan.spellChecks) and answer \(plan.examChecks)"),
-                        text("拼字穩了就少抽，滑掉了就多抽", "Fewer when spelling holds, more when it slips"))
+                        text("拼字穩了就少抽，退步了就多抽", "Fewer when spelling holds, more when it slips"))
             }
             planRow(plan.lead == .speaking ? "mic.fill" : "rectangle.on.rectangle.angled",
                     plan.lead == .speaking ? text("每天先練口說", "Speaking first each day") : text("單字先，口說後", "Words first, then speaking"),

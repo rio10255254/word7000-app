@@ -100,9 +100,9 @@ struct ExamRoundView: View {
     private func content(_ word: WordEntry, _ question: ExamQuestion) -> some View {
         ScrollView {
             VStack(spacing: 16) {
-                BuddyProgressBar(fraction: Double(index + (chosen == nil ? 0 : 1)) / Double(max(1, ids.count)),
-                                 mood: chosen == nil ? .thinking : chosen == question.answerIndex ? .happy : .encourage,
-                                 hop: asked, remark: nil)
+                // One cat on screen: the one saying the line below.
+                SessionBar(fraction: Double(index + (chosen == nil ? 0 : 1)) / Double(max(1, ids.count)))
+                    .padding(.top, 8)
                 RoutineCatLine(text: index == 0 && chosen == nil && kind == .weekly
                                    ? L.t("週考！這週學的字，看你記住幾個。", "Weekly quiz! This week's words: let's see what stuck.")
                                    : ExamQuestionBody.catLine(question, chosen: chosen, style: model.examStyleName),
@@ -121,9 +121,9 @@ struct ExamRoundView: View {
                         .font(.title3.weight(.bold)).frame(maxWidth: .infinity)
                 }
                 .prominentAction(tint: Palette.known)
-                .overlay { CountdownFillOverlay(active: advancing).clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous)) }
+                .overlay { CountdownFillOverlay(active: advancing) }
                 .padding(.vertical, 8)
-                .background { Palette.background.overlay { PaperGrain() } }
+                .background { PaperBarBackground() }
                 .accessibilityIdentifier("routine-next")
             }
         }
@@ -199,13 +199,23 @@ struct ExamRoundView: View {
             Spacer(minLength: 0)
             Mascot(mood: perfect ? .cheer : right * 2 >= total ? .happy : .encourage, size: 110)
                 .popIn()
+                // Every one right: the same stamp as today's words thumps down.
+                .overlay(alignment: .topTrailing) {
+                    if perfect {
+                        StampMark(color: Palette.known, size: 70, angle: -12) {
+                            Text(L.t("全對", "Spot on")).font(.display(.headline, weight: .heavy))
+                        }
+                        .modifier(StampSlam(delay: 0.7))
+                        .offset(x: 64, y: 0)
+                        .accessibilityLabel(L.t("全部答對", "All right"))
+                    }
+                }
             Text(L.t("\(title)完成！", "\(title) done!"))
                 .font(.display(.largeTitle, weight: .bold))
             HStack(alignment: .firstTextBaseline, spacing: 4) {
-                Text("\(right)")
+                CountUpText(value: right, delay: 0.3)
                     .font(.displaySize(64, weight: .bold))
                     .foregroundStyle(perfect ? Palette.known : Palette.accent)
-                    .contentTransition(.numericText(value: Double(right)))
                 Text("/ \(asked)")
                     .font(.display(.title, weight: .semibold))
                     .foregroundStyle(Palette.secondaryLabel)
@@ -233,7 +243,7 @@ struct ExamRoundView: View {
                 }
                 .padding(16)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Palette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .background { PremiumSurface(radius: 20) }
             } else {
                 Text(L.t("全對。我沒話說了。", "All right. I have nothing to say."))
                     .font(.title3.weight(.semibold))
@@ -254,6 +264,9 @@ struct ExamRoundView: View {
                 .accessibilityIdentifier("exam-round-done")
             }
             .padding(.bottom, 8)
+        }
+        .overlay(alignment: .top) {
+            if perfect, !reduceMotion { ConfettiBurst().allowsHitTesting(false) }
         }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("exam-round-summary")

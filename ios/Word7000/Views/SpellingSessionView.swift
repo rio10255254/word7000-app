@@ -244,27 +244,27 @@ struct SpellingSessionView: View {
                             .contentTransition(.symbolEffect(.replace))
                             .symbolEffect(.bounce, value: reduceMotion ? 0 : hints)
                     }
-                    .font(.headline).frame(maxWidth: .infinity)
+                    .font(.title3.weight(.bold)).frame(maxWidth: .infinity)
                 }
                 .secondaryAction()
                 .disabled(hints >= maxHints(word))
                 .accessibilityIdentifier("spelling-hint")
                 Button(action: check) {
-                    Text(L.t("檢查", "Check")).font(.headline).frame(maxWidth: .infinity)
+                    Text(L.t("檢查", "Check")).font(.title3.weight(.bold)).frame(maxWidth: .infinity)
                 }
                 .prominentAction()
                 .disabled(input.trimmed.isEmpty)
                 .accessibilityIdentifier("spelling-check")
             } else {
                 Button(action: next) {
-                    Text(index + 1 >= words.count ? L.seeResults : L.nextQuestion).font(.headline).frame(maxWidth: .infinity)
+                    Text(index + 1 >= words.count ? L.seeResults : L.nextQuestion).font(.title3.weight(.bold)).frame(maxWidth: .infinity)
                 }
                 .prominentAction(tint: result == .correct ? Palette.known : Palette.accent)
                 .accessibilityIdentifier("spelling-next")
             }
         }
         .padding(.vertical, 8)
-        .background { Palette.background.overlay { PaperGrain() } }
+        .background { PaperBarBackground() }
     }
 
     private func title(_ result: Spelling.Result) -> String {

@@ -1,6 +1,36 @@
 import SwiftUI
 import Word7000Core
 
+/// WordCat Next: the card a question is written on, the same as the flip
+/// cards before it: in the collage a ruled index card with its red margin,
+/// taped on; in leather the raised ivory card. `wash` tints it (green once
+/// solved).
+struct QuestionCardSurface: ViewModifier {
+    @Environment(\.appStyle) private var appStyle
+    var wash: Color = .clear
+
+    func body(content: Content) -> some View {
+        content
+            // Collage: the words clear of the red margin.
+            .padding(.leading, appStyle == .collage ? 16 : 0)
+            .background {
+                if appStyle == .collage {
+                    PaperSurface(kind: .ruled)
+                        .overlay { wash }
+                        .overlay { Rectangle().strokeBorder(Collage.ink.opacity(0.12), lineWidth: 1) }
+                } else {
+                    PremiumSurface(radius: Metrics.wordCardRadius)
+                        .overlay { RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous).fill(wash) }
+                }
+            }
+            .overlay(alignment: .top) {
+                if appStyle == .collage {
+                    TapeStrip(width: 64, angle: -2).offset(y: -10).accessibilityHidden(true)
+                }
+            }
+    }
+}
+
 /// A fill-in-the-blank card: the Chinese sentence on top with the word's
 /// part marked like a highlighter, the English sentence below with the
 /// blank. The blank shows what is typed, the letters given or the answer to
@@ -16,9 +46,10 @@ struct ClozeCard: View {
     /// The word was missed earlier in this round.
     var secondLook = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.appStyle) private var appStyle
 
     var body: some View {
-        let shape = RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: appStyle == .collage ? 0 : Metrics.wordCardRadius, style: .continuous)
         VStack(alignment: .leading, spacing: 0) {
             VStack(alignment: .leading, spacing: 12) {
                 if secondLook || (attempt.solved && comeBack != nil) {
@@ -72,10 +103,7 @@ struct ClozeCard: View {
             }
             .padding(20)
         }
-        .background {
-            shape.fill(Palette.surface)
-                .overlay(shape.fill(attempt.solved ? Palette.known.opacity(0.16) : .clear))
-        }
+        .modifier(QuestionCardSurface(wash: attempt.solved ? Palette.known.opacity(0.16) : .clear))
         .overlay(shape.stroke(border, lineWidth: 2))
         .overlay(alignment: .topLeading) {
             if attempt.solved {

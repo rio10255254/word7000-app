@@ -53,6 +53,12 @@ enum WarmTone {
         navigation.titleTextAttributes = [.font: serif(.headline), .foregroundColor: ink]
         navigation.tintColor = clay
         UITabBar.appearance().tintColor = clay
+        // Segmented pickers on the warm paper rather than system grey.
+        let segments = UISegmentedControl.appearance()
+        segments.selectedSegmentTintColor = ivory
+        segments.backgroundColor = khakiFill
+        segments.setTitleTextAttributes([.foregroundColor: inkSoft], for: .normal)
+        segments.setTitleTextAttributes([.foregroundColor: ink], for: .selected)
     }
 
     private static func serif(_ style: UIFont.TextStyle) -> UIFont {
@@ -122,6 +128,7 @@ enum AutoAdvance {
 /// A key's face filling from the left while the next question is on its way.
 struct CountdownFillOverlay: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.appStyle) private var appStyle
     var active: Bool
     var seconds: Double = AutoAdvance.seconds
     @State private var progress: CGFloat = 0
@@ -132,6 +139,8 @@ struct CountdownFillOverlay: View {
                 .fill(.white.opacity(0.24))
                 .frame(width: proxy.size.width * progress)
         }
+        // The shape of the action button it fills: a paper slip or a capsule.
+        .clipShape(appStyle == .collage ? AnyShape(RoundedRectangle(cornerRadius: 7, style: .continuous)) : AnyShape(Capsule()))
         .allowsHitTesting(false)
         .accessibilityHidden(true)
         .onChange(of: active, initial: true) { _, now in

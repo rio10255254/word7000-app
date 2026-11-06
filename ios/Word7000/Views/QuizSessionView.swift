@@ -212,13 +212,13 @@ struct QuizSessionView: View {
             if let chosen {
                 Button(action: next) {
                     Text(index + 1 >= questions.count ? L.seeResults : L.nextQuestion)
-                        .font(.headline)
+                        .font(.title3.weight(.bold))
                         .frame(maxWidth: .infinity)
                 }
                 .prominentAction(tint: chosen.correct ? Palette.known : Palette.accent)
                 .accessibilityIdentifier("quiz-next")
                 .padding(.vertical, 8)
-                .background { Palette.background.overlay { PaperGrain() } }
+                .background { PaperBarBackground() }
                 .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
             }
         }

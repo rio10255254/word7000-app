@@ -34,14 +34,14 @@ enum GuideStep: String, CaseIterable, Sendable {
         case .speaking: L.t("光認得不夠，開口說說看。點這裡，我聽著。", "Recognizing isn't enough. Say it out loud; tap here, I'm listening.")
         case .spelling: L.t("拼得出來才算真的會。來拼拼看？", "Write it in Chinese and you really know it. Characters or pinyin, give it a go?")
         case .exam: plus
-            ? L.t("來場 15 分鐘模擬考，看看哪一級還不熟。", "Try a 15-minute mock exam and see which words still need work.")
-            : L.t("Premium 有 15 分鐘模擬考，交卷就知道哪一級還不熟。點這裡看看。", "Premium has a 15-minute mock exam that shows which words need work. Tap to see.")
+            ? L.t("來場 15 分鐘模擬考，看看哪一章還不熟。", "Try a 15-minute mock exam and see which chapters need work.")
+            : L.t("Premium 有 15 分鐘模擬考，交卷就知道哪一章還不熟。", "Premium has a 15-minute mock exam that shows which chapters need work.")
         case .scan: plus
-            ? L.t("有自己的單字表？拍下來，手寫的也行，我幫你變成卡片。點這裡。", "Got your own word list? Snap it, handwriting too, and I'll make cards. Tap here.")
-            : L.t("課本、講義的單字表拍一下就變成字庫，手寫也讀得懂。這是 Premium 的。點這裡看看。", "Snap a word list from a textbook or handout and it becomes a bank, handwriting too. That's Premium. Tap to see.")
+            ? L.t("有自己的單字表？拍下來，我幫你變成卡片。", "Got your own word list? Snap it and I'll make cards.")
+            : L.t("單字表拍一下就變字庫，手寫也行（Premium）。", "Snap a word list and it becomes a bank, handwriting too (Premium).")
         case .chat: plus
-            ? L.t("哪個字搞不懂就問我：用法、例句、跟別的字差在哪。點這裡跟我聊。", "Stuck on a word? Ask me: usage, examples, how it differs. Tap here to chat.")
-            : L.t("我還會講解單字、改你的口說、陪你聊天，那是 Premium 的我。點這裡認識一下。", "I can also explain words, fix your speaking and chat with you: that's the Premium me. Tap to meet it.")
+            ? L.t("哪個字搞不懂？點我問就好。", "Stuck on a word? Tap me and ask.")
+            : L.t("我還會講解單字、改口說，那是 Premium 的我。點我看看。", "I can also explain words and fix your speaking: that's the Premium me. Tap to see.")
         }
     }
 
@@ -62,7 +62,7 @@ enum GuideStep: String, CaseIterable, Sendable {
 
     var title: String {
         switch self {
-        case .quiz: L.t("小測驗", "Quiz")
+        case .quiz: L.t("看字選意思", "Pick the meaning")
         case .speaking: L.t("開口說", "Speak")
         case .spelling: L.t("拼字", "Write")
         case .exam: L.t("模擬考", "Mock exam")

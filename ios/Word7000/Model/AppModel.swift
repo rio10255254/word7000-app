@@ -924,9 +924,9 @@ final class AppModel {
         guard routinePending, let routine = activeRoutine else { return nil }
         if routine.step == .exam {
             let done = routine.examIds.count - routine.examLeft.count
-            return L.t("翻卡完成・考考看 \(done)/\(routine.examIds.count)", "Cards done · quiz \(done)/\(routine.examIds.count)")
+            return L.t("翻卡完成 · 考考看 \(done)/\(routine.examIds.count)", "Cards done · quiz \(done)/\(routine.examIds.count)")
         }
-        return L.t("翻卡完成・接下來拼字", "Cards done · spelling next")
+        return L.t("翻卡完成 · 接下來拼字", "Cards done · spelling next")
     }
 
     /// After the flip cards: picks today's checks from the cards marked known.

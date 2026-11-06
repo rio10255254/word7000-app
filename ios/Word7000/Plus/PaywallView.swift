@@ -110,7 +110,7 @@ struct PaywallView: View {
                         .font(.system(size: 14, weight: .bold))
                         .foregroundStyle(.secondary)
                         .frame(width: 32, height: 32)
-                        .background(.regularMaterial, in: Circle())
+                        .background(Palette.fill, in: Circle())
                         .frame(width: 44, height: 44)
                         .contentShape(Rectangle())
                 }

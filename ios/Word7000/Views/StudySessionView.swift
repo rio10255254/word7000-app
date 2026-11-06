@@ -163,7 +163,7 @@ struct StudySessionView: View {
                             }
                             // A guest is reminded, quietly, that none of this is kept.
                             if account.configured, !account.isPermanent {
-                                Text(L.t("訪客・不會保存", "Guest · not kept"))
+                                Text(L.t("訪客 · 不會保存", "Guest · not kept"))
                                     .font(.caption2.weight(.semibold))
                                     .foregroundStyle(Palette.review)
                                     .accessibilityIdentifier("study-guest")
@@ -583,7 +583,7 @@ struct CardStatusChip: View {
         switch status {
         case .new: (L.t("新字", "New"), Palette.accent)
         case .review: (L.t("還不熟", "Still learning"), Palette.review)
-        case .mastered: (L.t("複習", "Review"), Palette.known)
+        case .mastered: (L.t("已會", "Known"), Palette.known)
         }
     }
 
@@ -625,9 +625,6 @@ struct SessionSummary: View {
             Text(reachedGoal ? L.goalReachedTitle : L.sessionCompleteTitle)
                 .font(.display(.title, weight: .bold))
                 .entrance(1)
-            Text(L.sessionCompleteText(known: session.knownIds.count, review: session.reviewIds.count))
-                .foregroundStyle(.secondary)
-                .entrance(2)
             SessionVerdict(fallback: CatQuips.studyDone(reachedGoal: reachedGoal || model.goalDone, source: model.catLines),
                            mood: reachedGoal || model.goalDone ? .happy : .smug, kind: "study",
                            total: session.knownIds.count + session.reviewIds.count, correct: session.knownIds.count,
@@ -639,7 +636,8 @@ struct SessionSummary: View {
             }
             if !session.reviewIds.isEmpty, !AppRuntime.uiTesting {
                 PlusUpsellCard(feature: .smartAI,
-                               title: L.t("這 \(session.reviewIds.count) 個字，讓傻貓講給你聽", "Let Silly Cat explain these \(session.reviewIds.count) words"),
+                               title: session.reviewIds.count == 1 ? L.t("這個字，讓傻貓講給你聽", "Let Silly Cat explain this word")
+                                   : L.t("這 \(session.reviewIds.count) 個字，讓傻貓講給你聽", "Let Silly Cat explain these \(session.reviewIds.count) words"),
                                detail: L.t("用法、例句、跟哪個字容易搞混，一個一個說清楚，下次就記得。", "Usage, examples and what they get mixed up with, one by one, so they stick."))
                     .entrance(4)
             }

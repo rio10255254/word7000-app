@@ -139,7 +139,7 @@ struct ClozeSessionView: View {
                 actions(word, attempt)
             }
             .padding(.top, 8)
-            .background { Palette.background.overlay { PaperGrain() }.ignoresSafeArea() }
+            .background { PaperBarBackground() }
         }
     }
 
@@ -150,14 +150,14 @@ struct ClozeSessionView: View {
                     Button(action: takeHelp) {
                         Label(help == .firstLetter ? L.t("第一個字母", "First letter") : L.t("看答案", "Show answer"),
                               systemImage: help == .firstLetter ? "lightbulb" : "eye")
-                            .font(.headline)
+                            .font(.title3.weight(.bold))
                             .frame(maxWidth: .infinity)
                     }
                     .secondaryAction()
                     .accessibilityIdentifier("cloze-help")
                 }
                 Button(action: check) {
-                    Text(L.t("檢查", "Check")).font(.headline).frame(maxWidth: .infinity)
+                    Text(L.t("檢查", "Check")).font(.title3.weight(.bold)).frame(maxWidth: .infinity)
                 }
                 .prominentAction()
                 .disabled(input.trimmed.isEmpty)
@@ -165,7 +165,7 @@ struct ClozeSessionView: View {
             } else {
                 Button(action: next) {
                     Text(finishesRound ? L.seeResults : L.nextQuestion)
-                        .font(.headline)
+                        .font(.title3.weight(.bold))
                         .frame(maxWidth: .infinity)
                 }
                 .prominentAction(tint: Palette.known)

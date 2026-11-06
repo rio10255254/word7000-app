@@ -84,7 +84,7 @@ struct SpeakingSessionView: View {
 
     /// "Stage 3 · Restaurant", or word practice.
     private var stageTitle: String {
-        guard let ref = scenarioRef, let scenario = SpeakingScenarios.scenario(ref) else { return L.t("單字練習", "Word practice") }
+        guard let ref = scenarioRef, let scenario = SpeakingScenarios.scenario(ref) else { return L.t("單字口說", "Word speaking") }
         let number = SpeakingScenarios.number(ref)
         return L.t("第 \(number) 關 · \(scenario.title.zh)", "Stage \(number) · \(scenario.title.en)")
     }
@@ -288,7 +288,7 @@ struct SpeakingSessionView: View {
             }
         } label: {
             HStack(spacing: 8) {
-                Label(L.t("詞庫", "Word list"), systemImage: "books.vertical").foregroundStyle(.primary)
+                Label(L.t("字庫", "Word bank"), systemImage: "books.vertical").foregroundStyle(.primary)
                 Spacer(minLength: 8)
                 Text(model.bankName).lineLimit(1).foregroundStyle(.secondary)
                 Image(systemName: "chevron.up.chevron.down").font(.caption2.weight(.semibold)).foregroundStyle(.secondary)
@@ -848,8 +848,8 @@ struct SpeakingSessionView: View {
                 .popIn()
             VStack(spacing: 4) {
                 Text(!result.cleared ? L.t("這關還沒過", "Not cleared yet")
-                     : ref.map { L.t("第 \(SpeakingScenarios.number($0)) 關 過關！", "Stage \(SpeakingScenarios.number($0)) cleared!") }
-                     ?? L.t("單字練習完成！", "Word practice done!"))
+                     : ref.map { L.t("第 \(SpeakingScenarios.number($0)) 關過關！", "Stage \(SpeakingScenarios.number($0)) cleared!") }
+                     ?? L.t("單字口說完成！", "Word speaking done!"))
                     .font(.display(.title, weight: .bold))
                     .accessibilityIdentifier("speaking-stage-result")
                 if ref != nil {
@@ -861,9 +861,9 @@ struct SpeakingSessionView: View {
                 .entrance(2)
             if result.cleared {
                 if let ref { StagePathView(current: ref, progress: path).entrance(3) }
-                Label(streak < 1 ? L.t("今天的關卡完成", "Today's stage done")
+                Label(streak < 1 ? L.t("今天的口說完成", "Today's speaking done")
                       : path.clearedToday(model.today)
-                      ? L.t("今天的關卡完成 · 連續 \(streak) 天", "Today's stage done · \(streak)-day streak")
+                      ? L.t("今天的口說完成 · 連續 \(streak) 天", "Today's speaking done · \(streak)-day streak")
                       : L.t("連續 \(streak) 天", "\(streak)-day streak"),
                       systemImage: "flame.fill")
                     .font(.subheadline.weight(.semibold))

@@ -206,6 +206,7 @@ struct TodayView: View {
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(memory.daysToExam == nil ? Palette.secondaryLabel : Palette.accent)
                 .lineLimit(1)
+                .minimumScaleFactor(0.8)
                 Spacer(minLength: 4)
                 chip(id: "today-streak", label: L.t("連續 \(model.progress.streak) 天", "\(model.progress.streak)-day streak"), action: { open(.week) }) {
                     Image(systemName: "flame.fill")
@@ -214,7 +215,7 @@ struct TodayView: View {
                         .symbolEffect(.bounce, value: flameBounce)
                     Text("\(model.progress.streak)")
                 }
-                chip(id: "today-shelf", label: L.t("已掌握 \(model.stats.mastered) 個字", "\(model.stats.mastered) words mastered"), action: { open(.shelf) }) {
+                chip(id: "today-shelf", label: L.t("已會 \(model.stats.mastered) 個字", "\(model.stats.mastered) words known"), action: { open(.shelf) }) {
                     Image(systemName: "books.vertical.fill").foregroundStyle(Palette.known)
                     Text(model.stats.mastered.formatted()).monospacedDigit()
                 }
@@ -331,7 +332,7 @@ struct TodayView: View {
         case .cards: return L.t("翻卡", "Flip the cards")
         case .spell: return model.studyMode == .english ? L.t("拼字", "Spell them") : L.t("寫字", "Write them")
         case .quiz: return L.t("考考看", "Quiz time")
-        case .speaking: return speakingStage.number.map { L.t("第 \($0) 關・\(speakingStage.title)", "Stage \($0) · \(speakingStage.title)") } ?? speakingStage.title
+        case .speaking: return speakingStage.number.map { L.t("第 \($0) 關 · \(speakingStage.title)", "Stage \($0) · \(speakingStage.title)") } ?? speakingStage.title
         case nil: return L.t("今天的份完成！", "All done today!")
         default: return ""
         }
@@ -349,7 +350,7 @@ struct TodayView: View {
             let left = routine?.examLeft.count ?? 0
             return left > 0 ? L.t("\(model.examStyleName) \(left) 題", "\(left) exam-style questions") : model.examStyleName
         case .speaking: return L.t("聽、跟讀、回答、用今天的字", "Listen, repeat, answer, use a word")
-        case nil: return L.t("單字 \(model.progress.studiedToday) 個・想加碼就再一組", "\(model.progress.studiedToday) words. One more set?")
+        case nil: return L.t("\(model.progress.studiedToday) 個字 · 想加碼就再一組", "\(model.progress.studiedToday) words. One more set?")
         default: return ""
         }
     }
@@ -467,10 +468,12 @@ struct TodayView: View {
                      title: L.t("週日週考", "Sunday quiz"), detail: L.t("這週學過的字，最多 \(ExamRound.weeklyCount) 題", "This week's words, up to \(ExamRound.weeklyCount)")) {
                 start(.weeklyExam)
             }
-        } else if let days = memory.daysToExam, days <= 30, plus.decide(.examPractice) == .allowed {
-            // The mock exam is Premium: a free learner keeps the missed words here.
+        } else if let days = memory.daysToExam, days <= 30, days >= 0, plus.decide(.examPractice) == .allowed {
+            // The mock exam is Premium: a free learner keeps the missed words
+            // here. The days to the exam are already at the top of Today.
             noteSlip(id: "today-exam", icon: "timer", tint: Palette.review, paper: .peach,
-                     title: L.t("離考試 \(days) 天", "\(days) days to the exam"), detail: L.t("來一場完整模擬考", "Take a full mock exam")) {
+                     title: L.t("完整模擬考", "Full mock exam"),
+                     detail: L.t("\(ExamView.questionCount) 題，限時 \(ExamView.minutes) 分鐘", "\(ExamView.questionCount) questions, \(ExamView.minutes) minutes")) {
                 start(.exam)
             }
         } else if model.stats.review > 0 {
@@ -493,7 +496,7 @@ struct TodayView: View {
                     .background(tint, in: Circle())
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title).font(.display(.title3, weight: .bold)).foregroundStyle(Palette.ink)
-                    Text(detail).font(.subheadline).foregroundStyle(Palette.secondaryLabel).lineLimit(1)
+                    Text(detail).font(.subheadline).foregroundStyle(Palette.secondaryLabel).lineLimit(2)
                 }
                 Spacer(minLength: 4)
                 Image(systemName: "chevron.right").font(.headline).foregroundStyle(tint)
@@ -610,8 +613,8 @@ struct TodayView: View {
 
     private var speakingStageLine: String {
         let stage = speakingStage
-        guard let number = stage.number else { return L.t("口說・\(stage.title)", "Speaking · \(stage.title)") }
-        return L.t("口說・第 \(number) 關 \(stage.title)", "Speaking · stage \(number) \(stage.title)")
+        guard let number = stage.number else { return L.t("口說 · \(stage.title)", "Speaking · \(stage.title)") }
+        return L.t("口說 · 第 \(number) 關 \(stage.title)", "Speaking · stage \(number) \(stage.title)")
     }
 
     // MARK: Sheets
@@ -647,15 +650,15 @@ struct TodayView: View {
 
     private var canLine: String {
         if model.streakProtectionJustUsed {
-            return L.t("貓罐頭剛幫你保住了紀錄，今天學 1 個字就能延續。", "The cat's can just saved your streak. One word today keeps it going.")
+            return L.t("貓罐頭剛幫你保住連續天數，今天學 1 個字就能接下去。", "A Cat Can just saved your streak. One word today keeps it going.")
         }
         if model.catCanReady {
-            return L.t("貓罐頭在你這：漏學 1 天，牠幫你保住紀錄。", "The cat's can is ready: one missed day is covered.")
+            return L.t("貓罐頭在你這：漏學 1 天也不會斷。", "You have a Cat Can: miss a day and your streak is safe.")
         }
         guard let ready = model.streakProtectionReadyOn else { return "" }
         let parts = ready.split(separator: "-").compactMap { Int($0) }
         let date = parts.count == 3 ? "\(parts[1])/\(parts[2])" : ready
-        return L.t("貓罐頭 \(date) 回來，這幾天別漏掉。", "The cat's can is back on \(date). Don't miss a day till then.")
+        return L.t("貓罐頭 \(date) 回來，這幾天別漏掉喔。", "Your Cat Can is back on \(date). Don't miss a day till then.")
     }
 
     private var shelfSheet: some View {
@@ -664,7 +667,7 @@ struct TodayView: View {
         let total = chapters.reduce(0) { $0 + $1.total }
         let current = MasteryShelf.current(chapters, from: model.placementStart)
         return VStack(spacing: 16) {
-                Text(L.t("已掌握 \(mastered.formatted()) / \(total.formatted())", "\(mastered.formatted()) of \(total.formatted()) mastered"))
+                Text(L.t("已會 \(mastered.formatted()) / \(total.formatted())", "\(mastered.formatted()) of \(total.formatted()) known"))
                     .font(.display(.title2, weight: .heavy))
                     .padding(.top, 24)
                 Shelf(chapters: chapters, current: current, height: 64, bookWidth: 16)
@@ -728,11 +731,11 @@ struct TodayView: View {
         let hour = Calendar.current.component(.hour, from: Date())
         let call = catLines.context?.callout ?? ""
         let day = Calendar.current.ordinality(of: .day, in: .year, for: Date()) ?? 0
-        if model.goalDone { return L.t("\(call)嗯，勉強及格。不要得意。", "\(call)fine. You passed. Don't get cocky.") }
+        if model.goalDone { return L.t("\(call)嗯，勉強及格。不要得意。", L.named(call, "fine. You passed. Don't get cocky.")) }
         // Back after a missed day the cat's can covered: say so, once it matters.
         if model.streakProtectionJustUsed, progress.studiedToday == 0, progress.streak > 0 {
             return L.t("哼，貓罐頭幫你保住了連續 \(progress.streak) 天。今天學 1 個字就續上。",
-                       "Hmph. The cat's can saved your \(progress.streak)-day streak. One word today keeps it going.")
+                       "Hmph. A Cat Can saved your \(progress.streak)-day streak. One word today keeps it going.")
         }
         // Every other day, a line written for today; the exam countdown when there is one.
         if day % 2 == 0, let line = (progress.studiedToday == 0 ? catLines.pack?.nudge : catLines.pack?.greeting)?.first {
@@ -791,7 +794,7 @@ struct TodayView: View {
     private var mascotLines: [String] {
         model.goalDone
             ? [L.t("好啦，你很棒。滿意了吧？", "Fine, you're great. Happy now?"),
-               L.t("要不要順便測驗？還是怕了？", "Quick quiz? Or are you scared?"),
+               L.t("要不要順便考考看？還是怕了？", "A quick quiz? Or are you scared?"),
                L.t("明天同一時間，我會來找你。", "Same time tomorrow. I'll find you."),
                L.t("今天表現……還可以啦。不要跟別人說我誇你。", "Today was… okay. Don't tell anyone I said that.")]
             : catLines.contextLines + (catLines.pack?.nudge ?? []) + [L.t("我阿嬤背得都比你快。", "My grandma learns faster than you."),

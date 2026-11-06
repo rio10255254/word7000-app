@@ -18,6 +18,7 @@ struct RoutineStepStrip: View {
         var remark: String?
     }
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var routine: WordRoutine
     /// While the cards are being flipped: how far along.
     var flipped: (done: Int, total: Int)?
@@ -51,6 +52,8 @@ struct RoutineStepStrip: View {
                                 .overlay(alignment: .leading) {
                                     Capsule().fill(fill >= 1 && index != current ? Palette.known : Palette.accent)
                                         .frame(width: max(fill > 0 ? 8 : 0, proxy.size.width * fill))
+                                        // Each answer fills its part smoothly, as the cards' part does.
+                                        .animation(reduceMotion ? nil : Motion.fill, value: fill)
                                 }
                         }
                         .frame(height: 8)
@@ -154,8 +157,7 @@ struct RoutineChecksView: View {
                 // It starts by itself, the key filling meanwhile: one step
                 // flows into the next as in a Duolingo lesson, and Not today
                 // is still a tap away.
-                .overlay { CountdownFillOverlay(active: autoStarts, seconds: Self.handOffSeconds)
-                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous)) }
+                .overlay { CountdownFillOverlay(active: autoStarts, seconds: Self.handOffSeconds) }
                 .accessibilityIdentifier("routine-begin")
                 Button {
                     model.skipRoutineChecks()
@@ -268,7 +270,7 @@ struct RoutineSpellView: View {
                 actions(attempt)
             }
             .padding(.top, 8)
-            .background { Palette.background.overlay { PaperGrain() }.ignoresSafeArea() }
+            .background { PaperBarBackground() }
         }
     }
 
@@ -304,8 +306,8 @@ struct RoutineSpellView: View {
             }
             switch attempt.outcome {
             case .knew: return L.t("真的會，算你厲害。", "You really know it. Fine.")
-            case .gotIt: return L.t("有點危險喔，明天再考你。", "A little shaky. Tomorrow again.")
-            default: return L.t("抓到了！明天再來一次。", "Caught you! Again tomorrow.")
+            case .gotIt: return L.t("有點危險喔，之後再考你。", "A little shaky. I'll check it again.")
+            default: return L.t("抓到了！等一下再翻一次。", "Caught you! We'll flip it again.")
             }
         }
         let wanted = Cloze.cue(for: word)?.cue ?? ChineseDisplay.conciseMeaning(word.meaningZh)
@@ -336,7 +338,7 @@ struct RoutineSpellView: View {
                     Text(L.nextQuestion).font(.title3.weight(.bold)).frame(maxWidth: .infinity)
                 }
                 .prominentAction(tint: Palette.known)
-                .overlay { CountdownFillOverlay(active: advancing).clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous)) }
+                .overlay { CountdownFillOverlay(active: advancing) }
                 .accessibilityIdentifier("routine-next")
             }
         }
@@ -466,9 +468,9 @@ struct RoutineExamView: View {
                     Text(L.nextQuestion).font(.title3.weight(.bold)).frame(maxWidth: .infinity)
                 }
                 .prominentAction(tint: Palette.known)
-                .overlay { CountdownFillOverlay(active: advancing).clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous)) }
+                .overlay { CountdownFillOverlay(active: advancing) }
                 .padding(.vertical, 8)
-                .background { Palette.background.overlay { PaperGrain() } }
+                .background { PaperBarBackground() }
                 .accessibilityIdentifier("routine-next")
             }
         }
@@ -570,7 +572,7 @@ struct ExamQuestionBody: View {
             }
             .padding(20)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Palette.surface, in: RoundedRectangle(cornerRadius: Metrics.wordCardRadius, style: .continuous))
+            .modifier(QuestionCardSurface())
             VStack(spacing: 10) {
                 ForEach(Array(question.options.enumerated()), id: \.offset) { index, option in
                     optionButton(index, option)

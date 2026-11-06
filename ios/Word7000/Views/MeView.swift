@@ -88,11 +88,11 @@ struct MeView: View {
 
     private var streakProtectionText: String {
         guard let ready = model.streakProtectionReadyOn else {
-            return L.t("貓罐頭在你這：漏學 1 天，牠會幫你保住紀錄", "The cat's can is ready: one missed day is covered")
+            return L.t("貓罐頭在你這：漏學 1 天也不會斷。", "You have a Cat Can: miss a day and your streak is safe.")
         }
         let parts = ready.split(separator: "-").compactMap { Int($0) }
         let date = parts.count == 3 ? "\(parts[1])/\(parts[2])" : ready
-        return L.t("貓罐頭 \(date) 回來", "The cat's can is back on \(date)")
+        return L.t("貓罐頭 \(date) 回來", "Your Cat Can is back on \(date)")
     }
 }
 
@@ -217,13 +217,13 @@ struct SettingsView: View {
                             Text(L.wordsPerDay(value)).tag(value)
                         }
                     } label: {
-                        SettingsLabel(L.dailyTargetTitle, icon: "target", tint: .orange, trigger: model.progress.dailyTarget)
+                        SettingsLabel(L.dailyTargetTitle, icon: "target", tint: Palette.accent, trigger: model.progress.dailyTarget)
                     }
                     Toggle(isOn: Binding(
                         get: { model.settings.studyAutoReveal ?? false },
                         set: { model.settings.studyAutoReveal = $0 }
                     )) {
-                        SettingsLabel(L.autoReveal, icon: (model.settings.studyAutoReveal ?? false) ? "eye.fill" : "eye.slash.fill", tint: .teal)
+                        SettingsLabel(L.autoReveal, icon: (model.settings.studyAutoReveal ?? false) ? "eye.fill" : "eye.slash.fill", tint: Palette.chinese)
                     }
                     .accessibilityIdentifier("settings-auto-reveal")
                     // WordCat Next: the speaking card on the home page.
@@ -245,7 +245,7 @@ struct SettingsView: View {
                         get: { model.reminderEnabled },
                         set: { model.setReminderEnabled($0) }
                     )) {
-                        SettingsLabel(L.reminder, icon: model.reminderEnabled ? "bell.badge.fill" : "bell.slash.fill", tint: .red)
+                        SettingsLabel(L.reminder, icon: model.reminderEnabled ? "bell.badge.fill" : "bell.slash.fill", tint: Palette.miss)
                     }
                     .accessibilityIdentifier("settings-reminder")
                     PushStatusRow()
@@ -260,7 +260,7 @@ struct SettingsView: View {
                                 model.settings.reminderMinute = (parts.hour ?? 12) * 60 + (parts.minute ?? 0)
                             }
                         ), displayedComponents: .hourAndMinute) {
-                            SettingsLabel(L.t("每日學習時間", "Daily practice time"), icon: "clock.fill", tint: .red)
+                            SettingsLabel(L.t("提醒時間", "Reminder time"), icon: "clock.fill", tint: Palette.miss)
                         }
                     }
                 } header: {
@@ -271,12 +271,12 @@ struct SettingsView: View {
     
                 Section {
                     NavigationLink { IntelligenceSettingsView() } label: {
-                        SettingsLabel(L.t("AI 與錄音", "AI and recording"), icon: "sparkles", tint: .purple,
+                        SettingsLabel(L.t("AI 與錄音", "AI and recording"), icon: "sparkles", tint: Palette.review,
                                       value: CloudAssistant.shared.statusText)
                     }
                     .accessibilityIdentifier("settings-intelligence")
                     NavigationLink { SpeechSettingsView() } label: {
-                        SettingsLabel(L.t("朗讀聲音", "Reading voice"), icon: "speaker.wave.2.fill", tint: .pink,
+                        SettingsLabel(L.t("朗讀聲音", "Reading voice"), icon: "speaker.wave.2.fill", tint: Palette.accent,
                                       value: speedLabel)
                     }
                     .accessibilityIdentifier("settings-speech")
@@ -293,10 +293,10 @@ struct SettingsView: View {
                             Text(option.label).tag(option)
                         }
                     } label: {
-                        SettingsLabel(L.appearance, icon: appearanceIcon, tint: .indigo)
+                        SettingsLabel(L.appearance, icon: appearanceIcon, tint: Palette.chinese)
                     }
                     NavigationLink { StyleSettingsView() } label: {
-                        SettingsLabel(L.t("App 風格", "App style"), icon: "paintpalette.fill", tint: .purple,
+                        SettingsLabel(L.t("App 風格", "App style"), icon: "paintpalette.fill", tint: Palette.review,
                                       value: (model.settings.appStyle ?? .standard).label)
                     }
                     .accessibilityIdentifier("settings-style")
@@ -304,7 +304,7 @@ struct SettingsView: View {
                         get: { model.settings.hapticsEnabled ?? true },
                         set: { model.settings.hapticsEnabled = $0 }
                     )) {
-                        SettingsLabel(L.t("觸覺回饋", "Haptic feedback"), icon: "hand.tap.fill", tint: .green,
+                        SettingsLabel(L.t("觸覺回饋", "Haptic feedback"), icon: "hand.tap.fill", tint: Palette.known,
                                       trigger: model.settings.hapticsEnabled ?? true)
                     }
                     Toggle(isOn: Binding(
@@ -314,7 +314,7 @@ struct SettingsView: View {
                             if on { SoundBoard.play(.correct) }
                         }
                     )) {
-                        SettingsLabel(L.t("音效", "Sound effects"), icon: "speaker.wave.2.fill", tint: .orange,
+                        SettingsLabel(L.t("音效", "Sound effects"), icon: "speaker.wave.2.fill", tint: Palette.known,
                                       trigger: model.soundEffectsOn)
                     }
                     .accessibilityHint(L.t("手機切到靜音時不會響。", "Silent when the phone is set to silent."))
@@ -328,7 +328,7 @@ struct SettingsView: View {
                 if plus.subscribed {
                     Section {
                         Button { manageOpen = true } label: {
-                            SettingsLabel(P.manage, icon: "sparkles", tint: .orange)
+                            SettingsLabel(P.manage, icon: "sparkles", tint: Palette.review)
                         }
                         .accessibilityIdentifier("settings-manage-subscription")
                     } header: {
@@ -340,13 +340,13 @@ struct SettingsView: View {
     
                 Section {
                     Link(destination: URL(string: "https://word7000-app.rio10255254.workers.dev/privacy.html")!) {
-                        SettingsLabel(L.privacyPolicy, icon: "hand.raised.fill", tint: .blue, external: true)
+                        SettingsLabel(L.privacyPolicy, icon: "hand.raised.fill", tint: Palette.secondaryLabel, external: true)
                     }
                     Link(destination: URL(string: "https://word7000-app.rio10255254.workers.dev/support.html")!) {
-                        SettingsLabel(L.supportPage, icon: "questionmark.circle.fill", tint: .gray, external: true)
+                        SettingsLabel(L.supportPage, icon: "questionmark.circle.fill", tint: Palette.secondaryLabel, external: true)
                     }
                     HStack {
-                        SettingsLabel(L.version, icon: "info.circle.fill", tint: .gray)
+                        SettingsLabel(L.version, icon: "info.circle.fill", tint: Palette.secondaryLabel)
                         Spacer()
                         Text(Bundle.main.versionLabel).foregroundStyle(.secondary).monospacedDigit()
                     }
@@ -414,7 +414,9 @@ struct SettingsLabel: View {
         HStack(spacing: 12) {
             Image(systemName: icon)
                 .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(.white)
+                // Ivory by day; dark at night, where the tints are lighter
+                // and white on them is hard to read.
+                .foregroundStyle(Palette.surface)
                 .contentTransition(.symbolEffect(.replace))
                 .symbolEffect(.bounce, value: reduceMotion ? nil : (trigger ?? value.map { AnyHashable($0) }))
                 .frame(width: 29, height: 29)
@@ -542,7 +544,10 @@ private struct ProfileCard: View {
     /// What the companion says when tapped here: how far you have come.
     private var buddyLines: [String] {
         let streak = model.progress.streak
-        var lines = [L.t("熟記 \(mastered) 個。離 7000 還很遠，加油喔（棒讀）。", "\(mastered) mastered. Only \(max(0, 7000 - mastered)) to go. Yay. (Flatly.)")]
+        let total = model.bank.words.count
+        var lines = [mastered == 0
+            ? L.t("一個字都還沒會？好，從今天開始盯你。", "Not one word known yet? Fine. I'm watching from today.")
+            : L.t("已會 \(mastered) 個。離 \(total) 還很遠，加油喔（棒讀）。", "\(mastered) known. Only \(max(0, total - mastered)) to go. Yay. (Flatly.)")]
         if streak > 0 { lines.append(L.t("連續 \(streak) 天。斷掉的話，我會記一輩子。", "\(streak)-day streak. Break it and I'll never let it go.")) }
         if reviewing > 0 { lines.append(L.t("\(reviewing) 個字等你複習，它們開始懷疑人生了。", "\(reviewing) words waiting for review. They're questioning their existence.")) }
         lines.append(L.t("我會一直盯著你的進度。一直。", "I'll be watching your progress. Always."))
@@ -575,7 +580,7 @@ private struct ProfileCard: View {
                 .background(PlusStyle.gradient, in: Capsule())
                 .accessibilityLabel(P.memberTitle)
         case .trial(let daysLeft):
-            Text(L.t("試用 \(daysLeft) 天", "Trial · \(daysLeft)d"))
+            Text(L.t("試用剩 \(daysLeft) 天", "Trial · \(daysLeft)d"))
                 .font(.caption2.weight(.bold))
                 .foregroundStyle(Palette.review)
                 .padding(.horizontal, 7)
@@ -583,7 +588,7 @@ private struct ProfileCard: View {
                 .background(Palette.review.opacity(0.15), in: Capsule())
         case .expired:
             if plus.subscriptionAwaitsSignIn {
-                Text(L.t("PREMIUM・待登入", "PREMIUM · sign in"))
+                Text(L.t("PREMIUM · 待登入", "PREMIUM · sign in"))
                     .font(.caption2.weight(.heavy))
                     .foregroundStyle(Palette.review)
                     .padding(.horizontal, 7)

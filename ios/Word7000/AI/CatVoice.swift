@@ -129,7 +129,7 @@ enum CatQuips {
                 lines.append(L.t("連對 \(combo)。考試剩 \(days) 天，保持這樣我就不碎念。", "\(combo) straight. \(days) days to the exam. Keep this up and I'll stop nagging."))
             }
         } else {
-            lines = [L.t("\(call)還可以嘛。", "\(call)not bad."),
+            lines = [L.t("\(call)還可以嘛。", L.named(call, "not bad.")),
                      L.t("矇的吧？", "Lucky guess?"),
                      L.t("哼，算你對。", "Fine. That's right."),
                      L.t("嗯，有在讀喔。", "Oh, you did study.")]
@@ -137,7 +137,7 @@ enum CatQuips {
                 lines.append(L.t("\(word) 對了。我就說你可以，雖然我沒說過。", "\(word), right. I always said you could. I never said that."))
             }
             if let level = source.context?.level {
-                lines.append(L.t("\(level)的人答對這題，剛好而已。", "Someone at \(level) should get that. Just saying."))
+                lines.append(L.t("都讀到\(level)了，答對這題剛好而已。", "You're at \(level); you should get that. Just saying."))
             }
         }
         return lines.picked(index)
@@ -158,7 +158,7 @@ enum CatQuips {
         var lines = [L.t("蛤？", "Huh?"),
                      L.t("這題我都會欸。", "Even I knew that one."),
                      L.t("沒關係，我會記得你錯了。", "It's fine. I'll remember."),
-                     L.t("\(call)再錯我要哭給你看。", "\(call)one more and I'll cry. Really."),
+                     L.t("\(call)再錯我要哭給你看。", L.named(call, "one more and I'll cry. Really.")),
                      L.t("你是認真的嗎？", "Are you serious?")]
         if let days = source.context?.daysToExam {
             lines.append(L.t("考試剩 \(days) 天，你還在這裡錯。我好擔心。", "\(days) days to the exam and you're missing this. I'm worried."))
@@ -184,7 +184,7 @@ enum CatQuips {
     /// On the results, from 0 (none right) to 1 (all right).
     static func verdict(_ score: Double, source: CatLineSource = .none) -> String {
         let call = source.context?.callout ?? ""
-        if score >= 0.999 { return L.t("\(call)全對？……我不信，明天再考一次。", "\(call)all right? …I don't believe it. Again tomorrow.") }
+        if score >= 0.999 { return L.t("\(call)全對？……我不信，明天再考一次。", L.named(call, "all right? …I don't believe it. Again tomorrow.")) }
         if score >= 0.8 { return L.t("還不錯，但不要以為我會誇你。", "Not bad. Don't expect praise.") }
         if score >= 0.5 {
             if let days = source.context?.daysToExam {

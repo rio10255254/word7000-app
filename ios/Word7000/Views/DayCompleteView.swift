@@ -171,12 +171,12 @@ struct DayCompleteView: View {
 
     private var canLine: String {
         if model.catCanReady {
-            return L.t("貓罐頭在你這：哪天忘了，牠會幫你保住紀錄。", "The cat's can is yours: miss a day and it keeps your streak.")
+            return L.t("貓罐頭在你這：漏學 1 天也不會斷。", "You have a Cat Can: miss a day and your streak is safe.")
         }
         guard let ready = model.streakProtectionReadyOn else { return "" }
         let parts = ready.split(separator: "-").compactMap { Int($0) }
         let date = parts.count == 3 ? "\(parts[1])/\(parts[2])" : ready
-        return L.t("貓罐頭 \(date) 回來。這幾天別漏掉喔。", "The cat's can is back on \(date). Don't miss a day till then.")
+        return L.t("貓罐頭 \(date) 回來，這幾天別漏掉喔。", "Your Cat Can is back on \(date). Don't miss a day till then.")
     }
 
     private var shareText: String {

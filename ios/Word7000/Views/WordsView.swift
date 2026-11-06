@@ -115,13 +115,20 @@ struct WordsView: View {
                 HStack {
                     Text(L.t("已刪除「\(deleted.name)」", "Deleted \(deleted.name)")).font(.subheadline).lineLimit(2)
                     Spacer()
-                    Button(L.undo) { model.restoreDeletedSet() }.fontWeight(.semibold)
+                    Button(L.undoPlain) { model.restoreDeletedSet() }.fontWeight(.semibold)
                         .accessibilityIdentifier("bank-undo-delete")
-                    Button { model.dismissDeletedSetUndo() } label: { Image(systemName: "xmark").frame(width: 44, height: 44) }
-                        .accessibilityLabel(L.close)
+                    Button { model.dismissDeletedSetUndo() } label: {
+                        Image(systemName: "xmark")
+                            .font(.caption.weight(.bold))
+                            .foregroundStyle(Palette.secondaryLabel)
+                            .frame(width: 28, height: 28)
+                            .background(Palette.fill, in: Circle())
+                            .frame(width: 44, height: 44)
+                    }
+                    .accessibilityLabel(L.close)
                 }
                 .padding(.horizontal, 16)
-                .background(.regularMaterial)
+                .background { PaperBarBackground() }
                 .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
             }
           }
@@ -231,7 +238,7 @@ struct WordsView: View {
         let filter = model.settings.libraryFilter
         return [filter.status == .all ? nil : L.filterLabel(filter.status),
                 filter.level == "all" ? nil : L.levelSummary(filter.levels),
-                filter.initial == "all" ? nil : "\(L.t("字首", "Letter")) \(filter.initial)"]
+                filter.initial == "all" ? nil : L.t("\(filter.initial) 開頭", "Starts with \(filter.initial)")]
             .compactMap { $0 }.joined(separator: " · ")
     }
 

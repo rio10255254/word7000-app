@@ -7,6 +7,7 @@ import Word7000Core
 struct PracticeView: View {
     @Environment(AppModel.self) private var model
     @Environment(PlusModel.self) private var plus
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     var start: (Activity) -> Void
     @State private var quizSetupOpen = false
     @State private var quizQueued = false
@@ -62,12 +63,12 @@ struct PracticeView: View {
     private var speakingItems: [Item] {
         [
             Item(id: "practice-scenarios", icon: "bubble.left.and.text.bubble.right.fill", tint: TodayView.speakingTint,
-                 title: L.t("情境關卡", "Scenarios"), detail: L.t("餐廳、商店、看醫生……", "A restaurant, a shop, the doctor…")) {
+                 title: L.t("生活情境", "Scenarios"), detail: L.t("餐廳、商店、看醫生……", "A restaurant, a shop, the doctor…")) {
                 model.settings.speakingWordsTab = false
                 start(.speaking)
             },
             Item(id: "practice-word-speaking", icon: "mic.fill", tint: TodayView.speakingTint,
-                 title: L.t("單字口說", "Speak with words"), detail: L.t("用學過的字回答問題", "Answer with words you've learned")) {
+                 title: L.t("單字口說", "Word speaking"), detail: L.t("用學過的字回答問題", "Answer with words you've learned")) {
                 model.settings.speakingWordsTab = true
                 start(.speaking)
             },
@@ -149,7 +150,9 @@ struct PracticeView: View {
     }
 
     private func grid(_ items: [Item]) -> some View {
-        LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
+        // One column at the accessibility text sizes, where two cut the titles short.
+        let columns = dynamicTypeSize.isAccessibilitySize ? 1 : 2
+        return LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: columns), spacing: 12) {
             ForEach(items, id: \.id) { tile($0) }
         }
     }

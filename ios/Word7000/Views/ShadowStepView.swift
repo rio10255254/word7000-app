@@ -281,7 +281,7 @@ struct ShadowStepView: View {
 
     private var nextKey: some View {
         Button { finish() } label: {
-            Text(L.t("下一步：回答問題", "Next: answer")).font(.headline).frame(maxWidth: .infinity)
+            Text(L.t("接著回答", "Now answer")).font(.headline).frame(maxWidth: .infinity)
         }
         .prominentAction(tint: said ? Palette.known : Palette.accent)
         .overlay(alignment: .leading) { countdownFill }

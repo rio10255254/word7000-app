@@ -33,8 +33,8 @@ struct FilterControls: View {
             .menuActionDismissBehavior(.disabled)
             .accessibilityIdentifier("filter-level")
         }
-        Picker(L.t("英文字首", "First letter"), selection: $selection.initial) {
-            Text(L.t("全部字首", "All letters")).tag("all")
+        Picker(L.t("開頭字母", "First letter"), selection: $selection.initial) {
+            Text(L.t("全部字母", "All letters")).tag("all")
             ForEach(Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ").map(String.init), id: \.self) { Text($0).tag($0) }
         }
         if includesSort {
@@ -99,12 +99,12 @@ struct QuizConfiguration: View {
 
     /// "7000 單字・全部" or the filters in use, in a few words.
     private func scopeSummary(_ filter: FilterSelection) -> String {
-        guard filter.isActive else { return L.t("\(model.bankName)・全部", "\(model.bankName) · all") }
+        guard filter.isActive else { return L.t("\(model.bankName) · 全部", "\(model.bankName) · all") }
         var parts: [String] = []
         if filter.status != .all { parts.append(L.filterLabel(filter.status)) }
         if !filter.levels.isEmpty { parts.append(L.levelSummary(filter.levels)) }
         if filter.initial != "all" { parts.append(L.t("\(filter.initial) 開頭", "starts with \(filter.initial)")) }
-        return parts.joined(separator: "・")
+        return parts.joined(separator: " · ")
     }
 
     var body: some View {

@@ -100,7 +100,9 @@ struct ScanView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(L.closeSheet) { dismiss() }
+                    // A full screen closes with ✕, as every round does.
+                    Button { dismiss() } label: { Image(systemName: "xmark") }
+                        .accessibilityLabel(L.close)
                         .accessibilityIdentifier("scan-close")
                 }
                 if phase == .review {

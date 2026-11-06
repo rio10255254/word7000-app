@@ -113,6 +113,7 @@ struct ExamRoundView: View {
             }
             .padding(.bottom, 16)
         }
+        .revealsExplanation(after: chosen)
         .safeAreaInset(edge: .bottom) {
             if chosen != nil {
                 Button(action: next) {

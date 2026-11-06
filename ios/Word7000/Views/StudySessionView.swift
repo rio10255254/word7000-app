@@ -67,10 +67,13 @@ struct StudySessionView: View {
                         }
                     } else if let cardId = session.currentCardId, let word = model.word(id: cardId) {
                         if let routine = model.activeRoutine {
-                            RoutineStepStrip(routine: routine, flipped: (session.done, session.total))
+                            // One bar: the routine's steps, the cat riding the cards' part.
+                            RoutineStepStrip(routine: routine, flipped: (session.done, session.total),
+                                             rider: .init(mood: buddyMood, hop: buddyHop, remark: buddyRemark))
+                        } else {
+                            BuddyProgressBar(fraction: Double(session.done) / Double(max(1, session.total)),
+                                             mood: buddyMood, hop: buddyHop, remark: buddyRemark)
                         }
-                        BuddyProgressBar(fraction: Double(session.done) / Double(max(1, session.total)),
-                                         mood: buddyMood, hop: buddyHop, remark: buddyRemark)
                         GeometryReader { proxy in
                             ZStack {
                                 // The next card peeking out underneath, while there is one.
@@ -151,10 +154,13 @@ struct StudySessionView: View {
                 ToolbarItem(placement: .principal) {
                     if let session = model.studySession, !session.isComplete, session.total > 0 {
                         VStack(spacing: 0) {
-                            Text(L.cardCount(done: session.done, total: session.total))
-                                .font(.display(.subheadline, weight: .semibold))
-                                .monospacedDigit()
-                                .accessibilityIdentifier("study-position")
+                            // Today's words count their cards on the step strip instead.
+                            if model.activeRoutine == nil {
+                                Text(L.cardCount(done: session.done, total: session.total))
+                                    .font(.display(.subheadline, weight: .semibold))
+                                    .monospacedDigit()
+                                    .accessibilityIdentifier("study-position")
+                            }
                             // A guest is reminded, quietly, that none of this is kept.
                             if account.configured, !account.isPermanent {
                                 Text(L.t("訪客・不會保存", "Guest · not kept"))

@@ -140,6 +140,7 @@ struct SessionBar: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var fraction: Double
     var tint: Color = Palette.accent
+    var height: CGFloat = 6
 
     var body: some View {
         GeometryReader { proxy in
@@ -153,7 +154,7 @@ struct SessionBar: View {
                     .animation(reduceMotion ? nil : Motion.reveal, value: tint)
             }
         }
-        .frame(height: 6)
+        .frame(height: height)
         .accessibilityHidden(true)
     }
 }
@@ -192,6 +193,7 @@ struct BuddyProgressBar: View {
     /// A quip about the answer just given, said beside it for a moment each
     /// time `hop` changes.
     var remark: String? = nil
+    var barHeight: CGFloat = 6
 
     @State private var saying: String?
     /// Halfway and the end each throw a few sparks off the bar's filled end.
@@ -199,7 +201,7 @@ struct BuddyProgressBar: View {
     @State private var milestoneAt = 0.0
 
     var body: some View {
-        SessionBar(fraction: fraction, tint: tint)
+        SessionBar(fraction: fraction, tint: tint, height: barHeight)
             .overlay(alignment: .leading) {
                 GeometryReader { proxy in
                     let x = proxy.size.width * min(1, max(0, fraction))

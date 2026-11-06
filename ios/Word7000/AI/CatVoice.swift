@@ -198,7 +198,8 @@ enum CatQuips {
     static func studyDone(reachedGoal: Bool, source: CatLineSource = .none) -> String {
         if let line = source.pack?.done.first, !reachedGoal { return line }
         return reachedGoal
-            ? L.t("今天的目標達成了。好啦，准你休息。", "Today's goal: done. Fine, you may rest.")
+            // The title above already says the goal is reached.
+            ? L.t("好啦，准你休息。", "Fine, you may rest.")
             : L.t("就這樣？好吧，休息一下再回來。我會等。一直等。", "That's it? Fine. Take a break and come back. I'll wait. Forever.")
     }
 

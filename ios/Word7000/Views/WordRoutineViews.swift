@@ -11,9 +11,19 @@ import Word7000Core
 /// equal parts, one per step. Steps done are green, the step under way fills
 /// in the accent, the ones to come are empty.
 struct RoutineStepStrip: View {
+    /// The cat riding the part under way, as on a round's own bar.
+    struct Rider {
+        var mood: Mascot.Mood
+        var hop: Int
+        var remark: String?
+    }
+
     var routine: WordRoutine
     /// While the cards are being flipped: how far along.
     var flipped: (done: Int, total: Int)?
+    /// While the cards are flipped, the cat rides their part of the strip, so
+    /// the screen has one bar rather than the strip and a round's bar.
+    var rider: Rider? = nil
 
     var body: some View {
         let parts = segments
@@ -29,17 +39,23 @@ struct RoutineStepStrip: View {
             .monospacedDigit()
             .lineLimit(1)
             .minimumScaleFactor(0.8)
-            HStack(spacing: 6) {
+            HStack(alignment: .bottom, spacing: 6) {
                 ForEach(Array(parts.enumerated()), id: \.offset) { index, fill in
-                    GeometryReader { proxy in
-                        Capsule().fill(Palette.fill)
-                            .overlay(alignment: .leading) {
-                                Capsule().fill(fill >= 1 && index != current ? Palette.known : Palette.accent)
-                                    .frame(width: max(fill > 0 ? 8 : 0, proxy.size.width * fill))
-                            }
+                    if index == current, let rider {
+                        BuddyProgressBar(fraction: fill, mood: rider.mood, hop: rider.hop, size: 24,
+                                         remark: rider.remark, barHeight: 8)
+                            .frame(maxWidth: .infinity)
+                    } else {
+                        GeometryReader { proxy in
+                            Capsule().fill(Palette.fill)
+                                .overlay(alignment: .leading) {
+                                    Capsule().fill(fill >= 1 && index != current ? Palette.known : Palette.accent)
+                                        .frame(width: max(fill > 0 ? 8 : 0, proxy.size.width * fill))
+                                }
+                        }
+                        .frame(height: 8)
+                        .frame(maxWidth: .infinity)
                     }
-                    .frame(height: 8)
-                    .frame(maxWidth: .infinity)
                 }
             }
         }
@@ -443,6 +459,7 @@ struct RoutineExamView: View {
             }
             .padding(.bottom, 16)
         }
+        .revealsExplanation(after: chosen)
         .safeAreaInset(edge: .bottom) {
             if chosen != nil {
                 Button(action: next) {
@@ -485,6 +502,32 @@ struct RoutineExamView: View {
         Speaker.shared.stop()
         wordId = model.activeRoutine?.examLeft.first ?? ""
     }
+}
+
+/// Once an answer is chosen, scrolls its explanation into view above the
+/// Next key; on a small phone it would otherwise sit under it.
+struct RevealsExplanation: ViewModifier {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var chosen: Int?
+
+    func body(content: Content) -> some View {
+        ScrollViewReader { proxy in
+            content.onChange(of: chosen) { _, now in
+                guard now != nil else { return }
+                Task { @MainActor in
+                    // Once the explanation has come in.
+                    try? await Task.sleep(for: .milliseconds(200))
+                    withAnimation(reduceMotion ? nil : Motion.reveal) {
+                        proxy.scrollTo(ExamQuestionBody.explanationId, anchor: .bottom)
+                    }
+                }
+            }
+        }
+    }
+}
+
+extension View {
+    func revealsExplanation(after chosen: Int?) -> some View { modifier(RevealsExplanation(chosen: chosen)) }
 }
 
 /// One exam-style question: the sentence with its blank, four big options
@@ -536,9 +579,12 @@ struct ExamQuestionBody: View {
             if let chosen {
                 explanation(chosen)
                     .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 8)))
+                    .id(Self.explanationId)
             }
         }
     }
+
+    static let explanationId = "exam-explanation"
 
     private var sentence: Text {
         var text = AttributedString()

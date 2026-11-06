@@ -151,7 +151,13 @@ struct ExamView: View {
                                 withAnimation(reduceMotion ? nil : .snappy) { index += 1 }
                             }
                         } label: {
-                            HStack {
+                            HStack(spacing: 14) {
+                                // A to D, as in the exam-style questions elsewhere.
+                                Text(["A", "B", "C", "D"][min(offset, 3)])
+                                    .font(.headline)
+                                    .foregroundStyle(chosen ? .white : Palette.accent)
+                                    .frame(width: 34, height: 34)
+                                    .background(chosen ? Palette.accent : Palette.accent.opacity(0.12), in: Circle())
                                 Text(option.text).font(.body.weight(.medium)).multilineTextAlignment(.leading)
                                 Spacer(minLength: 8)
                                 if chosen {

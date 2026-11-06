@@ -37,11 +37,10 @@ final class TourTests: XCTestCase {
         sleep(2)
         snap(app, "today")
 
-        // The two sheets are only as tall as what they hold: pull each down by the sheet itself.
         tapIfThere(app.buttons["today-streak"]); sleep(1); snap(app, "today-streak-sheet")
-        app.descendants(matching: .any)["today-week"].firstMatch.swipeDown(velocity: .fast); sleep(1)
+        app.descendants(matching: .any)["today-week"].firstMatch.pullSheetDown(); sleep(1)
         tapIfThere(app.buttons["today-shelf"]); sleep(1); snap(app, "today-shelf-sheet")
-        app.buttons["today-goal"].swipeDown(velocity: .fast); sleep(1)
+        app.buttons["today-goal"].pullSheetDown(); sleep(1)
 
         // Practice: each round's first screen.
         let rows = ["practice-missed", "practice-spell", "practice-exam-style", "practice-meaning", "practice-mock",

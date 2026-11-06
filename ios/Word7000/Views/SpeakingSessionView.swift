@@ -522,36 +522,30 @@ struct SpeakingSessionView: View {
                             showsHint: !translationTried,
                             onTranslate: { translationTried = true }
                         )
-                        // The reply just repeated stays as the learner's message.
-                        let repeated = shadowSentence(card)
-                        if !repeated.isEmpty {
-                            HStack(alignment: .bottom, spacing: 6) {
-                                Spacer(minLength: 56)
-                                if shadowedThisWord {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .font(.footnote)
-                                        .foregroundStyle(Palette.known)
-                                        .accessibilityLabel(L.t("跟讀過了", "Repeated"))
-                                }
-                                Text(repeated)
+                        // What to answer, from the cat: in a word, and a word to use.
+                        HStack(alignment: .top, spacing: 8) {
+                            Mascot(mood: .happy, size: 40)
+                                .accessibilityHidden(true)
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text(card.questionSupport)
+                                    .font(.body.weight(.semibold))
                                     .foregroundStyle(Palette.ink)
                                     .fixedSize(horizontal: false, vertical: true)
-                                    .padding(.horizontal, 14)
-                                    .padding(.vertical, 10)
-                                    .background(Palette.accent.opacity(0.14), in: BubbleShape(tail: .trailing))
+                                if !card.keyword.isEmpty {
+                                    Label(L.t("試著用「\(card.keyword)」", "Try using \u{201C}\(card.keyword)\u{201D}"), systemImage: "lightbulb.fill")
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundStyle(Palette.accent)
+                                }
                             }
-                            .accessibilityIdentifier("speaking-repeated-line")
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 10)
+                            .background(MascotBubble.cream, in: BubbleShape(tail: .leading))
+                            .environment(\.colorScheme, .light)
+                            Spacer(minLength: 24)
                         }
-                        // What to say, as a quiet note in the chat.
-                        Label(card.questionSupport, systemImage: "arrow.turn.down.right")
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(Palette.accent)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 7)
-                            .background(Palette.accent.opacity(0.1), in: Capsule())
-                            .frame(maxWidth: .infinity)
-                            .modifier(ChatRise(step: 1, from: 20))
-                            .accessibilityIdentifier("speaking-support")
+                        .modifier(ChatRise(step: 1, from: 20))
+                        .accessibilityElement(children: .combine)
+                        .accessibilityIdentifier("speaking-support")
                         if revealed, !card.referenceAnswer.isEmpty {
                             sampleBubble(card)
                                 .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 12)))
@@ -774,7 +768,8 @@ struct SpeakingSessionView: View {
             onAttempt: {
                 guard contextID == coachContextID, !attempted else { return }
                 withAnimation(reduceMotion ? nil : Motion.pop) { attempted = true }
-            }
+            },
+            chat: scenarioRef != nil
         )
     }
 

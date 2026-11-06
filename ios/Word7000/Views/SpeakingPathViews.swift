@@ -38,10 +38,13 @@ struct StageBanner: View {
     }
 }
 
-/// Up to three stars, filling one after another.
+/// Up to three stars, landing one after another: each pops with a few
+/// sparks and a tap that gets firmer, and `onLanded` once the last is down.
 struct StageStars: View {
+    @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let count: Int
+    var onLanded: () -> Void = {}
     @State private var lit = 0
 
     var body: some View {
@@ -51,21 +54,34 @@ struct StageStars: View {
                     .font(.system(size: index == 1 ? 44 : 36, weight: .semibold))
                     .foregroundStyle(index < lit ? Palette.review : Palette.khaki)
                     .offset(y: index == 1 ? -6 : 0)
-                    .scaleEffect(index < lit && !reduceMotion ? 1 : 0.92)
+                    .scaleEffect(index < lit || reduceMotion ? 1 : 0.84)
                     .contentTransition(.symbolEffect(.replace))
+                    .overlay {
+                        if index < lit, !reduceMotion {
+                            SparkleBurst(color: Palette.review, radius: index == 1 ? 42 : 36)
+                                .offset(y: index == 1 ? -6 : 0)
+                        }
+                    }
             }
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(L.t("\(count) 顆星", "\(count) of 3 stars"))
         .accessibilityIdentifier("speaking-stars")
         .task {
-            guard !reduceMotion else { lit = count; return }
-            for star in 0..<count {
-                try? await Task.sleep(for: .milliseconds(star == 0 ? 500 : 320))
-                withAnimation(.spring(duration: 0.4, bounce: 0.5)) { lit = star + 1 }
-            }
+            guard !reduceMotion else { lit = count; onLanded(); return }
+            do {
+                for star in 0..<count {
+                    try await Task.sleep(for: .milliseconds(star == 0 ? 500 : 380))
+                    withAnimation(.spring(duration: 0.42, bounce: 0.55)) { lit = star + 1 }
+                }
+                try await Task.sleep(for: .milliseconds(count > 0 ? 220 : 0))
+            } catch { return }
+            onLanded()
         }
-        .sensoryFeedback(.impact(weight: .light), trigger: lit)
+        .sensoryFeedback(trigger: lit) { _, new in
+            guard new > 0, model.settings.hapticsEnabled ?? true else { return nil }
+            return .impact(weight: new == 1 ? .light : new == 2 ? .medium : .heavy, intensity: 1)
+        }
     }
 }
 

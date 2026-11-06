@@ -194,12 +194,20 @@ struct BuddyProgressBar: View {
     var remark: String? = nil
 
     @State private var saying: String?
+    /// Halfway and the end each throw a few sparks off the bar's filled end.
+    @State private var milestone = 0
+    @State private var milestoneAt = 0.0
 
     var body: some View {
         SessionBar(fraction: fraction, tint: tint)
             .overlay(alignment: .leading) {
                 GeometryReader { proxy in
                     let x = proxy.size.width * min(1, max(0, fraction))
+                    if milestone > 0, !reduceMotion {
+                        SparkleBurst(color: tint, radius: 22)
+                            .id(milestone)
+                            .position(x: proxy.size.width * milestoneAt, y: proxy.size.height / 2)
+                    }
                     // The bubble opens toward the room: right of it early on, left of it near the end.
                     let opensRight = x < proxy.size.width * 0.55
                     Mascot(mood: mood, size: size, hop: hop)
@@ -215,6 +223,15 @@ struct BuddyProgressBar: View {
                         .position(x: min(max(size / 2, x - size * 0.2), proxy.size.width - size / 2),
                                   y: proxy.size.height / 2 - size * 0.42)
                         .animation(reduceMotion ? nil : .spring(response: 0.55, dampingFraction: 0.68), value: fraction)
+                }
+            }
+            .onChange(of: fraction) { old, new in
+                guard let mark = [0.5, 1.0].first(where: { old < $0 - 0.001 && new >= $0 - 0.001 }) else { return }
+                Task { @MainActor in
+                    // Once the fill has got there.
+                    try? await Task.sleep(for: .milliseconds(280))
+                    milestoneAt = mark
+                    milestone += 1
                 }
             }
             .task(id: hop) {

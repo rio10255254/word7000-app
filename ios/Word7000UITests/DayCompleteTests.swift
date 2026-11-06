@@ -14,7 +14,8 @@ final class DayCompleteTests: XCTestCase {
         let keep = app.buttons["day-complete-keep"]
         XCTAssertTrue(keep.waitForExistence(timeout: 10), app.debugDescription)
         XCTAssertTrue(app.descendants(matching: .any)["day-complete-stamp"].exists)
-        sleep(2)
+        // The stamp, then its streak rolling on, then today's square.
+        sleep(3)
         snap(app, "day-1-stamp")
         keep.tap()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))

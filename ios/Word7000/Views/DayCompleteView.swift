@@ -8,7 +8,11 @@ struct DayCompleteView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// In turn: the stamp is down, its streak rolls on to today's, and
+    /// today's square of the week is stamped gold.
     @State private var stamped = false
+    @State private var rolled = false
+    @State private var todayStamped = false
 
     static let gold = Color(red: 0.95, green: 0.78, blue: 0.45)
     private static let cream = Color(red: 1.0, green: 0.96, blue: 0.88)
@@ -73,18 +77,37 @@ struct DayCompleteView: View {
         .padding(.horizontal, Metrics.gutter)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background { background }
-        .onAppear {
-            guard !stamped else { return }
-            withAnimation(reduceMotion ? .easeOut(duration: 0.3) : .spring(response: 0.45, dampingFraction: 0.55).delay(0.35)) { stamped = true }
+        .overlay(alignment: .top) {
+            if rolled, !reduceMotion { ConfettiBurst(colors: ConfettiBurst.gold).allowsHitTesting(false).ignoresSafeArea() }
         }
-        .sensoryFeedback(.success, trigger: stamped) { _, new in new && (model.settings.hapticsEnabled ?? true) }
+        .task {
+            guard !stamped else { return }
+            guard !reduceMotion else {
+                withAnimation(.easeOut(duration: 0.3)) { stamped = true; rolled = true; todayStamped = true }
+                return
+            }
+            do {
+                try await Task.sleep(for: .milliseconds(350))
+                withAnimation(.spring(response: 0.45, dampingFraction: 0.55)) { stamped = true }
+                try await Task.sleep(for: .milliseconds(480))
+                withAnimation(.snappy(duration: 0.5)) { rolled = true }
+                try await Task.sleep(for: .milliseconds(520))
+                withAnimation(.spring(response: 0.35, dampingFraction: 0.5)) { todayStamped = true }
+            } catch { return }
+        }
+        .sensoryFeedback(.success, trigger: stamped) { _, new in new && haptics }
+        .sensoryFeedback(.impact(weight: .medium), trigger: todayStamped) { _, new in new && haptics }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("day-complete")
     }
 
-    /// The streak as a gold stamp, pressed down with a little bounce.
+    private var haptics: Bool { model.settings.hapticsEnabled ?? true }
+
+    /// The streak as a gold stamp, pressed down with a little bounce; its
+    /// number then rolls on from yesterday's with a burst of gold.
     private func stamp(_ streak: Int) -> some View {
-        ZStack {
+        let shown = rolled ? streak : max(0, streak - 1)
+        return ZStack {
             Circle()
                 .fill(RadialGradient(colors: [Self.gold.opacity(0.35), .clear], center: .center, startRadius: 10, endRadius: 150))
                 .frame(width: 300, height: 300)
@@ -95,10 +118,14 @@ struct DayCompleteView: View {
             Circle()
                 .strokeBorder(Self.gold.opacity(0.6), lineWidth: 1.5)
                 .frame(width: 168, height: 168)
+            if rolled, !reduceMotion {
+                SparkleBurst(color: Self.gold, radius: 58).scaleEffect(2)
+            }
             VStack(spacing: 0) {
-                Text("\(streak)")
+                Text("\(shown)")
                     .font(.displaySize(76, weight: .heavy))
                     .monospacedDigit()
+                    .contentTransition(.numericText(value: Double(shown)))
                 Text(L.t("連續天數", "day streak"))
                     .font(.display(.headline, weight: .bold))
             }
@@ -116,7 +143,9 @@ struct DayCompleteView: View {
     private var week: some View {
         HStack(spacing: 8) {
             ForEach(Array(model.weekStamps.enumerated()), id: \.offset) { index, day in
-                let studied = day.mark == .studied
+                // Today's square is stamped last, after the streak.
+                let landing = day.date == model.today && !todayStamped
+                let studied = day.mark == .studied && !landing
                 Text(WeekStamps.label(index))
                     .font(.subheadline.weight(.heavy))
                     .foregroundStyle(studied ? Color(red: 0.3, green: 0.19, blue: 0.1) : Self.cream.opacity(0.55))
@@ -130,6 +159,7 @@ struct DayCompleteView: View {
                             Circle().strokeBorder(Self.cream.opacity(0.3), lineWidth: 1.5)
                         }
                     }
+                    .scaleEffect(landing && !reduceMotion ? 0.82 : 1)
             }
             CatCan(full: model.catCanReady, size: 32)
         }

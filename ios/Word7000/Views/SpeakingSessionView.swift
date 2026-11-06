@@ -30,6 +30,9 @@ struct SpeakingSessionView: View {
     @State private var started = false
     @State private var availableCount = 0
     @State private var finishedBounce = 0
+    /// The stage's stars have all landed: three of them shower paper, and
+    /// the streak's flame jumps.
+    @State private var starsLanded = false
     @State private var filtersOpen = false
     @State private var scenariosOpen = false
     @State private var previousFilter = FilterSelection()
@@ -380,6 +383,7 @@ struct SpeakingSessionView: View {
         shadowed = 0
         shadowedThisWord = false
         stageResult = nil
+        starsLanded = false
         bannerShown = false
         listened = !(AppRuntime.speakingRoutine && scenarioRef != nil)
         wordChoices = []
@@ -850,7 +854,7 @@ struct SpeakingSessionView: View {
                 }
             }
             .entrance(1)
-            StageStars(count: result.stars)
+            StageStars(count: result.stars) { starsLanded = true }
                 .entrance(2)
             if result.cleared {
                 if let ref { StagePathView(current: ref, progress: path).entrance(3) }
@@ -860,6 +864,7 @@ struct SpeakingSessionView: View {
                       systemImage: "flame.fill")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Palette.accent)
+                    .symbolEffect(.bounce, value: starsLanded)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
                     .background(Palette.accent.opacity(0.12), in: Capsule())
@@ -894,8 +899,8 @@ struct SpeakingSessionView: View {
             }
         }
         .overlay(alignment: .top) {
-            // Three stars earn a shower of paper.
-            if !reduceMotion, result.stars == 3 { ConfettiBurst().allowsHitTesting(false) }
+            // Three stars earn a shower of paper, once the third is down.
+            if !reduceMotion, result.stars == 3, starsLanded { ConfettiBurst().allowsHitTesting(false) }
         }
         .task {
             try? await Task.sleep(for: .milliseconds(450))

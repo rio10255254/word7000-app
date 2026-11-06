@@ -723,18 +723,25 @@ struct ConfettiBurst: View {
         var x: Double, delay: Double, speed: Double, spin: Double, drift: Double, size: CGSize, color: Color
     }
 
-    private static let colors: [Color] = [Palette.accent, Palette.known, Palette.review, Palette.chinese, Palette.miss]
+    static let paper: [Color] = [Palette.accent, Palette.known, Palette.review, Palette.chinese, Palette.miss]
+    /// Gold leaf and cream, for the dark leather of a finished day.
+    static let gold: [Color] = [Color(red: 0.95, green: 0.78, blue: 0.45), Color(red: 0.82, green: 0.6, blue: 0.24),
+                                Color(red: 1.0, green: 0.96, blue: 0.88), Color(red: 0.98, green: 0.86, blue: 0.6)]
     @State private var start = Date()
     @State private var finished = false
-    private let pieces: [Piece] = (0..<48).map { index in
-        var random = SystemRandomNumberGenerator()
-        return Piece(x: .random(in: 0...1, using: &random),
-                     delay: .random(in: 0...0.5, using: &random),
-                     speed: .random(in: 260...420, using: &random),
-                     spin: .random(in: -4...4, using: &random),
-                     drift: .random(in: -40...40, using: &random),
-                     size: CGSize(width: .random(in: 6...10, using: &random), height: .random(in: 10...16, using: &random)),
-                     color: colors[index % colors.count])
+    private let pieces: [Piece]
+
+    init(colors: [Color] = ConfettiBurst.paper) {
+        pieces = (0..<48).map { index in
+            var random = SystemRandomNumberGenerator()
+            return Piece(x: .random(in: 0...1, using: &random),
+                         delay: .random(in: 0...0.5, using: &random),
+                         speed: .random(in: 260...420, using: &random),
+                         spin: .random(in: -4...4, using: &random),
+                         drift: .random(in: -40...40, using: &random),
+                         size: CGSize(width: .random(in: 6...10, using: &random), height: .random(in: 10...16, using: &random)),
+                         color: colors[index % colors.count])
+        }
     }
     private let duration = 2.6
 

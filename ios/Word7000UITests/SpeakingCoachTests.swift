@@ -95,16 +95,18 @@ final class SpeakingCoachTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.descendants(matching: .any)["speaking-role"].firstMatch.exists)
         snapshot(app, "speaking-scenario-question-en")
-        // Word practice is the other tab, and is remembered for next time.
+        // Word speaking is the other tab.
         app.segmentedControls["speaking-track"].buttons["Words"].tap()
-        wait(app.staticTexts["speaking-stage"], matching: "label == 'Word practice'")
+        wait(app.staticTexts["speaking-stage"], matching: "label == 'Word speaking'")
         XCTAssertFalse(app.buttons["speaking-scenarios"].exists, "The scenario list belongs to the scenario tab")
         XCTAssertTrue(app.buttons["speaking-filters"].exists)
         app.buttons["speaking-close"].tap()
+        // WordCat Next: Today's speaking is always the next scenario stage,
+        // whichever tab was used last; word speaking is in the Practice tab.
         tap(app.buttons["today-speaking"], in: app)
-        wait(app.staticTexts["speaking-stage"], matching: "label == 'Word practice'")
-        app.segmentedControls["speaking-track"].buttons["Scenarios"].tap()
         wait(app.staticTexts["speaking-stage"], matching: "label CONTAINS 'Restaurant'")
+        app.segmentedControls["speaking-track"].buttons["Words"].tap()
+        wait(app.staticTexts["speaking-stage"], matching: "label == 'Word speaking'")
     }
 
     func testMockSuccessTypingCheckAndProgressInLightEnglishUI() {

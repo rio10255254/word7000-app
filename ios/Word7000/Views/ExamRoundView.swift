@@ -22,6 +22,9 @@ struct ExamRoundView: View {
     @State private var meanings: [String: String] = [:]
     @State private var started = false
     @State private var noted = false
+    /// A right answer moves on by itself after a moment (not the last one,
+    /// whose score is worth a look first).
+    @State private var advancing = false
 
     private var haptics: Bool { model.settings.hapticsEnabled ?? true }
     private var finished: Bool { started && index >= ids.count }
@@ -68,6 +71,12 @@ struct ExamRoundView: View {
             guard let new, let question, haptics else { return nil }
             return new == question.answerIndex ? .success : .error
         }
+        .task(id: advancing) {
+            guard advancing else { return }
+            do { try await Task.sleep(for: AutoAdvance.delay) } catch { return }
+            guard advancing else { return }
+            next()
+        }
     }
 
     private var title: String {
@@ -106,6 +115,7 @@ struct ExamRoundView: View {
                         .font(.title3.weight(.bold)).frame(maxWidth: .infinity)
                 }
                 .prominentAction(tint: Palette.known)
+                .overlay { CountdownFillOverlay(active: advancing).clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous)) }
                 .padding(.vertical, 8)
                 .background { Palette.background.overlay { PaperGrain() } }
                 .accessibilityIdentifier("routine-next")
@@ -120,9 +130,11 @@ struct ExamRoundView: View {
         asked += 1
         if correct { right += 1 } else { missed.append(question.wordId) }
         model.recordQuizAnswer(wordId: question.wordId, correct: correct)
+        advancing = correct && index + 1 < ids.count
     }
 
     private func next() {
+        advancing = false
         Speaker.shared.stop()
         chosen = nil
         question = nil

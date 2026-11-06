@@ -546,7 +546,7 @@ struct ShadowStepView: View {
                 Spacer(minLength: 0)
                 Text(resultLine(check))
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(check.perfect ? Palette.known : Palette.review)
+                    .foregroundStyle(check.allRecognized ? Palette.known : Palette.review)
                     .multilineTextAlignment(.trailing)
                 Text("\(Int((check.score * 100).rounded()))%")
                     .font(.caption.weight(.heavy))
@@ -554,7 +554,7 @@ struct ShadowStepView: View {
                     .foregroundStyle(.white)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 3)
-                    .background(check.perfect ? Palette.known : Palette.review, in: Capsule())
+                    .background(check.allRecognized ? Palette.known : Palette.review, in: Capsule())
                     .symbolEffect(.bounce, value: reduceMotion ? false : check.passed)
                 if check.heardCount < check.scoredCount {
                     Button { withAnimation(reduceMotion ? nil : Motion.reveal) { legendShown.toggle() } } label: {
@@ -593,6 +593,7 @@ struct ShadowStepView: View {
 
     private func resultLine(_ check: ShadowingCheck) -> String {
         check.perfect ? L.t("全部念對了！", "All of it, right!")
+            : check.allRecognized ? L.t("都念出來了！黃色的字留意聲調", "All of it! Mind the yellow tones")
             : listener.text.isEmpty && listener.support == .live ? L.t("沒聽清楚，靠近一點再說一次", "Didn't catch that. Closer, once more")
             : check.passed ? L.t("差一點，黃色紅色的再念一次", "Almost. The yellow and red again")
             : L.t("再念一次看看", "Once more")

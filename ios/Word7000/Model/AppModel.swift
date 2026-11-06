@@ -291,13 +291,10 @@ final class AppModel {
         AppIconSwitcher.apply(settings.appStyle ?? .standard)
     }
 
-    /// The one-time style chooser is due: once, on a day after the first
-    /// practice, so the first day is only about learning.
-    var styleChoiceDue: Bool {
-        guard settings.stylePicked != true, settings.onboardingComplete == true, !progress.words.isEmpty else { return false }
-        if AppRuntime.uiTesting { return true }
-        return progress.analytics?.days.keys.contains { $0 < today } ?? false
-    }
+    /// The one-time style chooser (master asks once, on a day after the
+    /// first practice). WordCat Next: never; nothing gets in the way of a
+    /// day's learning, and the style is changed in Settings › App style.
+    var styleChoiceDue: Bool { false }
 
     var reminderEnabled: Bool { settings.streakReminder ?? true }
 

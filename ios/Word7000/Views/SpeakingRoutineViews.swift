@@ -15,6 +15,78 @@ enum SpeakingStep: Int, Comparable {
     static func < (a: SpeakingStep, b: SpeakingStep) -> Bool { a.rawValue < b.rawValue }
 }
 
+/// WordCat Next: where a scenario stage is, the way today's words show
+/// theirs: "第 2 步，共 3 步 · 跟讀" over three equal parts (listen, the
+/// conversation turn by turn, one of today's words). The turn count stays
+/// at the top of the screen.
+struct SpeakingStepStrip: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var step: SpeakingStep
+    /// The turn under way (0-based) and how many there are.
+    var turn: Int
+    var turns: Int
+
+    private var current: Int {
+        switch step {
+        case .listen: 0
+        case .shadow, .answer: 1
+        case .useWord, .done: 2
+        }
+    }
+
+    private var fills: [Double] {
+        let talk = Double(turn) / Double(max(1, turns))
+        switch step {
+        case .listen: return [0.15, 0, 0]
+        case .shadow, .answer: return [1, max(0.06, talk), 0]
+        case .useWord: return [1, 1, 0.15]
+        case .done: return [1, 1, 1]
+        }
+    }
+
+    private var label: String {
+        switch step {
+        case .listen: L.t("先聽一遍", "Listen first")
+        case .shadow: L.t("跟讀", "Repeat")
+        case .answer: L.t("回答", "Answer")
+        case .useWord, .done: L.t("用今天的字", "Use today's word")
+        }
+    }
+
+    var body: some View {
+        let parts = fills
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 6) {
+                Text(L.t("第 \(current + 1) 步，共 3 步", "Step \(current + 1) of 3"))
+                    .foregroundStyle(Palette.secondaryLabel)
+                Text("·").foregroundStyle(Palette.tertiaryLabel)
+                Text(label).foregroundStyle(Palette.known)
+            }
+            .font(.subheadline.weight(.bold))
+            .lineLimit(1)
+            .minimumScaleFactor(0.8)
+            HStack(spacing: 6) {
+                ForEach(Array(parts.enumerated()), id: \.offset) { index, fill in
+                    GeometryReader { proxy in
+                        Capsule().fill(Palette.fill)
+                            .overlay(alignment: .leading) {
+                                Capsule().fill(index < current ? Palette.known : Palette.accent)
+                                    .frame(width: max(fill > 0 ? 8 : 0, proxy.size.width * fill))
+                                    .animation(reduceMotion ? nil : Motion.fill, value: fill)
+                            }
+                    }
+                    .frame(height: 8)
+                    .frame(maxWidth: .infinity)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(L.t("第 \(current + 1) 步，共 3 步，", "Step \(current + 1) of 3, ") + label)
+        .accessibilityIdentifier("speaking-steps")
+    }
+}
+
 /// The first step: the whole conversation of the stage as a chat room.
 /// The other person writes from the left with their face and name, the
 /// learner's lines arrive on the right; each line appears as it is read

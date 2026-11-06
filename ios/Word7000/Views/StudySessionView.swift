@@ -37,6 +37,10 @@ struct StudySessionView: View {
     @State private var catLines = CatLineSource.none
     /// A word that has now slipped three times or more, with how to remember it.
     @State private var stuck: (word: WordEntry, misses: Int)?
+    /// When the card just swiped comes back (明天見, 3 天後見), shown for a
+    /// moment so the spacing of reviews can be seen; `comeBackTick` restarts it.
+    @State private var comeBack: (text: String, known: Bool)?
+    @State private var comeBackTick = 0
 
     private enum CardPhase { case idle, dragging, leaving, arriving }
     private var committing: Bool { phase == .leaving || phase == .arriving }
@@ -102,6 +106,27 @@ struct StudySessionView: View {
                                     .onChange(of: proxy.size.width) { _, value in cardWidth = value }
                                     .id("\(word.id)-\(session.index)")
                             }
+                            .overlay(alignment: .bottom) {
+                                if let comeBack {
+                                    Label(comeBack.text, systemImage: comeBack.known ? "calendar" : "arrow.counterclockwise")
+                                        .font(.subheadline.weight(.bold))
+                                        .foregroundStyle(comeBack.known ? Palette.known : Palette.review)
+                                        .padding(.horizontal, 14)
+                                        .padding(.vertical, 7)
+                                        .background(Palette.surface, in: Capsule())
+                                        .overlay(Capsule().strokeBorder((comeBack.known ? Palette.known : Palette.review).opacity(0.45), lineWidth: 1.5))
+                                        .padding(.bottom, 12)
+                                        .transition(reduceMotion ? .opacity : .scale(scale: 0.7).combined(with: .opacity))
+                                        .allowsHitTesting(false)
+                                        .accessibilityIdentifier("study-comes-back")
+                                }
+                            }
+                            .task(id: comeBackTick) {
+                                guard comeBackTick > 0 else { return }
+                                try? await Task.sleep(for: .seconds(1.4))
+                                guard !Task.isCancelled else { return }
+                                withAnimation(reduceMotion ? nil : Motion.reveal) { comeBack = nil }
+                            }
                         }
                         if let stuck {
                             StuckWordTip(word: stuck.word, misses: stuck.misses) {
@@ -134,7 +159,7 @@ struct StudySessionView: View {
                             .symbolEffect(.bounce, value: goalBanner)
                     }
                         .font(.headline)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Palette.surface)
                         .padding(.horizontal, 18)
                         .padding(.vertical, 10)
                         .background(Palette.known, in: Capsule())
@@ -467,8 +492,23 @@ struct StudySessionView: View {
                 armed = false
                 model.gradeCurrentCard(grade, expectedWordId: wordId)
             }
+            // When it comes back: the schedule made visible, as Anki prints it on its keys.
+            if let text = comeBackText(wordId), model.studySession?.isComplete != true {
+                withAnimation(reduceMotion ? nil : Motion.pop) { comeBack = (text, grade == .known) }
+                comeBackTick += 1
+            }
             if model.studySession?.isComplete == true { phase = .idle; cardOpacity = 1; cardScale = 1; dragOffset = 0 }
         }
+    }
+
+    /// When a card just graded comes back: later in this set, or in so many days.
+    private func comeBackText(_ wordId: String) -> String? {
+        if let session = model.studySession, session.cardIds.dropFirst(session.index).contains(wordId) {
+            return L.t("這組等一下再翻一次", "Again later in this set")
+        }
+        guard let due = model.progress(for: wordId).dueDate, let dueDay = DayMath.dayNumber(due),
+              let today = DayMath.dayNumber(model.today) else { return nil }
+        return ClozeCard.comeBackLabel(days: max(0, dueDay - today), inThisRound: false)
     }
 
     /// Reads the front of each new card aloud when the learner turned that on.

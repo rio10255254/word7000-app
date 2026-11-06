@@ -18,20 +18,15 @@ final class ScreenshotTests: XCTestCase {
     func testCollageScreens() { walkThrough(theme: "Light", style: "collage") }
     func testCollageDarkScreens() { walkThrough(theme: "Dark", style: "collage") }
 
-    /// After some practice the cat asks once which style to use; choosing
-    /// the collage closes the sheet and Today redraws in it.
+    /// WordCat Next: no style chooser pops up after some practice; the
+    /// style is chosen in Settings › App style.
     func testStyleChooserAppearsOnceAndApplies() {
         let app = XCUIApplication()
         app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingLight", "-uiTestingStyleChooser"]
         app.launch()
-        XCTAssertTrue(app.buttons["style-choose"].waitForExistence(timeout: 10), "The style chooser did not appear")
-        snap(app, "style-chooser")
-        app.buttons["style-collage"].tap()
-        app.buttons["style-choose"].tap()
-        XCTAssertTrue(app.buttons["style-choose"].waitForNonExistence(timeout: 5), "The style chooser did not close")
-        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 5))
-        sleep(1)
-        snap(app, "style-chosen-collage-today")
+        XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
+        sleep(2)
+        XCTAssertFalse(app.buttons["style-choose"].exists, "The style chooser should not interrupt Today")
         app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
         // Settings is the last row of Me: it only exists once scrolled to.
         XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 5))

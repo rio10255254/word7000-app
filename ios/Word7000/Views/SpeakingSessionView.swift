@@ -111,6 +111,11 @@ struct SpeakingSessionView: View {
                 // Practice tab, and the stage's place shows in the title, so the
                 // top stays clear.
                 if started, index < count || count == 0, !AppRuntime.speakingRoutine { trackPicker }
+                // WordCat Next: the stage's three steps, as today's words show theirs.
+                if let step = routineStep, step != .done {
+                    SpeakingStepStrip(step: step, turn: min(index, count), turns: count)
+                        .padding(.top, 4)
+                }
                 Group {
                     if !started {
                         ProgressView()

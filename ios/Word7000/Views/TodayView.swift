@@ -50,9 +50,11 @@ private enum TodaySheet: String, Identifiable {
 struct TodayView: View {
     @Environment(AppModel.self) private var model
     @Environment(PlusModel.self) private var plus
+    @Environment(AccountModel.self) private var account
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var studySettingsOpen = false
+    @State private var signInOpen = false
     /// The meaning quiz's few settings, in a half-height sheet before it starts.
     @State private var quizSetupOpen = false
     @State private var quizQueued = false
@@ -112,6 +114,7 @@ struct TodayView: View {
             .fittedSheet()
         }
         .sheet(isPresented: $studySettingsOpen) { StudySettingsSheet().compactSheet() }
+        .sheet(isPresented: $signInOpen) { SignInSheet(reason: .general) }
         .sheet(isPresented: $mascotChatOpen, onDismiss: {
             insightHeadline = InsightsStore.today(mode: model.studyMode)?.headline
             guard let ids = focusPractice else { return }
@@ -466,7 +469,14 @@ struct TodayView: View {
     /// the mock exam in the month before the exam, or words still shaky.
     @ViewBuilder
     private var note: some View {
-        if model.weeklyQuizDue {
+        // A guest's words today are lost when the app closes: say so first.
+        if account.configured, !account.isPermanent, model.progress.studiedToday > 0 {
+            noteSlip(id: "today-guest", icon: "exclamationmark.icloud.fill", tint: Palette.miss, paper: .peach,
+                     title: L.t("今天的 \(model.progress.studiedToday) 個字還沒存", "Today's \(model.progress.studiedToday) words aren't saved"),
+                     detail: L.t("訪客模式，關掉 App 就沒了。登入才保得住。", "As a guest, closing the app loses them. Sign in to keep them.")) {
+                signInOpen = true
+            }
+        } else if model.weeklyQuizDue {
             noteSlip(id: "today-weekly-quiz", icon: "trophy.fill", tint: Palette.chinese, paper: .mustard,
                      title: L.t("週日週考", "Sunday quiz"), detail: L.t("這週學過的字，最多 \(ExamRound.weeklyCount) 題", "This week's words, up to \(ExamRound.weeklyCount)")) {
                 start(.weeklyExam)

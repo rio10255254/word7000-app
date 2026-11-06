@@ -189,7 +189,7 @@ struct PracticeView: View {
                 Text(item.detail)
                     .font(.caption)
                     .foregroundStyle(Palette.secondaryLabel)
-                    .lineLimit(2)
+                    .lineLimit(2, reservesSpace: true) // titles line up across a row
                     .fixedSize(horizontal: false, vertical: true)
             }
             .padding(14)

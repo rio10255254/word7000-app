@@ -23,7 +23,8 @@ final class HomePageTests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["today-week"].firstMatch.waitForExistence(timeout: 5))
         sleep(1)
         snap(app, "home-2-week")
-        app.swipeDown(velocity: .fast)
+        // The sheet is only as tall as its note: pull it down by the sheet itself.
+        app.descendants(matching: .any)["today-week"].firstMatch.swipeDown(velocity: .fast)
 
         // The shelf: chapters, goal, bank and more practice.
         let shelf = app.buttons["today-shelf"]
@@ -32,7 +33,7 @@ final class HomePageTests: XCTestCase {
         XCTAssertTrue(app.buttons["today-goal"].waitForExistence(timeout: 5))
         sleep(1)
         snap(app, "home-3-shelf")
-        app.swipeDown(velocity: .fast)
+        app.buttons["today-goal"].swipeDown(velocity: .fast)
 
         // The quiz stop: exam-style questions on learned words, then the score.
         let quiz = app.buttons["today-quiz"]

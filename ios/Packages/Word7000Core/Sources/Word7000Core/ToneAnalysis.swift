@@ -175,13 +175,22 @@ public enum ToneAnalysis {
     /// How far ahead the nearest tone must be to count as heard.
     public static let clearMargin = 0.45
     /// How much better another tone must fit than the one asked for to count
-    /// as a slip.
-    public static let slipMargin = 0.3
+    /// as a slip. Wide: in running speech tones bend (half thirds, short
+    /// syllables), and a slip shown that was not one is worse than one missed.
+    public static let slipMargin = 0.5
+    /// Pitch frames (10 ms each) a syllable needs before its tone is judged;
+    /// a shorter one is still drawn.
+    public static let framesToJudge = 8
 
     /// Measures each syllable of a take. `spans` are where each syllable
     /// falls, in seconds (nil where it is not known); `expected` the tones
     /// to say. Returns one entry per syllable, nil where nothing was heard.
-    public static func analyze(samples: [Float], rate: Double, spans: [ClosedRange<Double>?], expected: [Int]) -> [Syllable?] {
+    ///
+    /// `judges` false: draw the pitch but judge no tone, for spans that are
+    /// only a guess (the take shared out evenly), where a syllable's pitch
+    /// may well be its neighbour's.
+    public static func analyze(samples: [Float], rate: Double, spans: [ClosedRange<Double>?], expected: [Int],
+                               judges: Bool = true) -> [Syllable?] {
         let track = PitchTracker.track(samples: samples, rate: rate)
         let voiced = track.compactMap(\.hz)
         guard voiced.count >= 5 else { return spans.map { _ in nil } }
@@ -199,7 +208,8 @@ public enum ToneAnalysis {
             // The ends of a syllable are its least steady part.
             let trim = frames.count >= 8 ? frames.count / 8 : 0
             let contour = Array(frames.dropFirst(trim).dropLast(trim)).map(scale)
-            return Syllable(expected: tone, heard: judge(contour, expected: tone), contour: resample(contour, to: 12))
+            let heard = judges && frames.count >= framesToJudge ? judge(contour, expected: tone) : nil
+            return Syllable(expected: tone, heard: heard, contour: resample(contour, to: 12))
         }
     }
 

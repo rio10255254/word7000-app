@@ -97,6 +97,8 @@ struct DayCompleteView: View {
         }
         .sensoryFeedback(.success, trigger: stamped) { _, new in new && haptics }
         .sensoryFeedback(.impact(weight: .medium), trigger: todayStamped) { _, new in new && haptics }
+        .soundEffect(trigger: stamped) { _, now in now ? .stamp : nil }
+        .soundEffect(trigger: rolled) { _, now in now ? .complete : nil }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("day-complete")
     }

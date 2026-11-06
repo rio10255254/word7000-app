@@ -304,6 +304,18 @@ struct SettingsView: View {
                         SettingsLabel(L.t("觸覺回饋", "Haptic feedback"), icon: "hand.tap.fill", tint: .green,
                                       trigger: model.settings.hapticsEnabled ?? true)
                     }
+                    Toggle(isOn: Binding(
+                        get: { model.soundEffectsOn },
+                        set: { on in
+                            model.settings.soundEffectsEnabled = on
+                            if on { SoundBoard.play(.correct) }
+                        }
+                    )) {
+                        SettingsLabel(L.t("音效", "Sound effects"), icon: "speaker.wave.2.fill", tint: .orange,
+                                      trigger: model.soundEffectsOn)
+                    }
+                    .accessibilityHint(L.t("手機切到靜音時不會響。", "Silent when the phone is set to silent."))
+                    .accessibilityIdentifier("settings-sounds")
                 } header: {
                     Text(L.t("顯示與操作", "Display and feel"))
                 }

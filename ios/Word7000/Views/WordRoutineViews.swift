@@ -194,6 +194,8 @@ struct RoutineSpellView: View {
         }
         .sensoryFeedback(trigger: solves) { _, _ in haptics ? .success : nil }
         .sensoryFeedback(trigger: misses) { _, new in new > 0 && haptics ? .error : nil }
+        .soundEffect(trigger: solves) { old, new in new > old ? .correct : nil }
+        .soundEffect(trigger: misses) { old, new in new > old ? .wrong : nil }
         .task(id: advancing) {
             guard advancing else { return }
             do { try await Task.sleep(for: AutoAdvance.delay) } catch { return }
@@ -404,6 +406,10 @@ struct RoutineExamView: View {
         .sensoryFeedback(trigger: chosen) { _, new in
             guard let new, let question, haptics else { return nil }
             return new == question.answerIndex ? .success : .error
+        }
+        .soundEffect(trigger: chosen) { _, new in
+            guard let new, let question else { return nil }
+            return new == question.answerIndex ? .correct : .wrong
         }
         .task(id: advancing) {
             guard advancing else { return }
@@ -691,6 +697,7 @@ struct RoutineSummaryView: View {
         }
         .sheet(isPresented: $signInOpen) { SignInSheet(reason: .general) }
         .onAppear { appeared = true }
+        .soundEffect(trigger: appeared) { _, now in now ? .complete : nil }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("routine-summary")
     }

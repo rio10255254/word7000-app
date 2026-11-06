@@ -82,6 +82,7 @@ struct StageStars: View {
             guard new > 0, model.settings.hapticsEnabled ?? true else { return nil }
             return .impact(weight: new == 1 ? .light : new == 2 ? .medium : .heavy, intensity: 1)
         }
+        .soundEffect(trigger: lit) { old, new in new > old ? .star(new) : nil }
     }
 }
 

@@ -326,13 +326,17 @@ final class ExperienceTests: XCTestCase {
         let speech = app.buttons["settings-speech"]
         for _ in 0..<3 where !speech.isHittable { app.swipeUp() }
         XCTAssertTrue(speech.isHittable)
+        // WordCat Next: sound effects, on until turned off.
+        let sounds = app.switches["settings-sounds"]
+        for _ in 0..<3 where !sounds.isHittable { app.swipeUp() }
+        XCTAssertEqual(sounds.value as? String, "1", app.debugDescription)
         app.swipeUp()
         app.swipeUp()
         snapshot(app, "settings-bottom")
         app.swipeDown()
         app.swipeDown()
         let intelligence = app.buttons["settings-intelligence"]
-        for _ in 0..<3 where !intelligence.isHittable { app.swipeDown() }
+        for _ in 0..<5 where !intelligence.isHittable { app.swipeDown() }
         intelligence.tap()
         XCTAssertTrue(app.switches["settings-ai-toggle"].waitForExistence(timeout: 5))
     }

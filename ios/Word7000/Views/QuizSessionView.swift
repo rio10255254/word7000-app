@@ -86,6 +86,11 @@ struct QuizSessionView: View {
         .sensoryFeedback(.success, trigger: finished) { _, new in
             new && missedIds.isEmpty && (model.settings.hapticsEnabled ?? true)
         }
+        .soundEffect(trigger: chosen) { _, new -> SoundEffect? in
+            guard let new else { return nil }
+            return new.correct ? SoundEffect.correct : SoundEffect.wrong
+        }
+        .soundEffect(trigger: finished) { _, new in new && missedIds.isEmpty ? .complete : nil }
         .catTip(.quiz, at: .top, inset: 60)
     }
 

@@ -78,6 +78,10 @@ struct SpellingSessionView: View {
             guard let new, model.settings.hapticsEnabled ?? true else { return nil }
             return new == .correct ? .success : .error
         }
+        .soundEffect(trigger: result) { _, new -> SoundEffect? in
+            guard let new else { return nil }
+            return new == .correct ? SoundEffect.correct : SoundEffect.wrong
+        }
         .sensoryFeedback(.selection, trigger: hints) { _, new in new > 0 && (model.settings.hapticsEnabled ?? true) }
         .catTip(.spelling, at: .top, inset: 60)
     }

@@ -71,6 +71,11 @@ struct ExamRoundView: View {
             guard let new, let question, haptics else { return nil }
             return new == question.answerIndex ? .success : .error
         }
+        .soundEffect(trigger: chosen) { _, new in
+            guard let new, let question else { return nil }
+            return new == question.answerIndex ? .correct : .wrong
+        }
+        .soundEffect(trigger: finished) { _, now in now && asked > 0 && right == asked ? .complete : nil }
         .task(id: advancing) {
             guard advancing else { return }
             do { try await Task.sleep(for: AutoAdvance.delay) } catch { return }

@@ -75,6 +75,8 @@ struct ClozeSessionView: View {
         .onDisappear { Speaker.shared.stop() }
         .sensoryFeedback(trigger: solves) { _, _ in haptics ? .success : nil }
         .sensoryFeedback(trigger: misses) { _, new in new > 0 && haptics ? .error : nil }
+        .soundEffect(trigger: solves) { old, new in new > old ? .correct : nil }
+        .soundEffect(trigger: misses) { old, new in new > old ? .wrong : nil }
     }
 
     // MARK: Question

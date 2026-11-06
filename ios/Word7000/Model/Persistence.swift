@@ -77,6 +77,8 @@ struct AppSettings: Codable, Equatable, Sendable {
     /// what they want to get better at, how well they spell), used to shape
     /// each day's checks. Only added to; an older build drops it.
     var learnerProfile: LearnerProfile?
+    /// WordCat Next: sounds for answers and celebrations; nil means on.
+    var soundEffectsEnabled: Bool?
 
     var speakingHistoryOwnerKey: String {
         Self.speakingHistoryKey(ownerId: localOwnerId, anonymous: localOwnerIsAnonymous)

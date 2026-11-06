@@ -456,7 +456,7 @@ struct WelcomeView: View {
                     text: testLine)
             if let question {
                 VStack(spacing: 6) {
-                    Text(text("第 \(question.level) 章・Core \(question.level)", "Chapter \(question.level) · Core \(question.level)"))
+                    Text(text("第 \(question.level) 章", "Chapter \(question.level)"))
                         .font(.subheadline.weight(.bold))
                         .foregroundStyle(Palette.accent)
                         .padding(.horizontal, 12)
@@ -889,6 +889,10 @@ struct WelcomeView: View {
     /// Saves what was learned about the learner and starts. Words missed in
     /// the spelling start as words being learned.
     private func complete(practice: Bool) {
+        var profile = profile
+        // Only a test actually taken sets where new words start.
+        profile.startChapter = test.answers.isEmpty ? nil : plan.startChapter
+        profile.startMode = mode.rawValue
         model.settings.learnerProfile = profile
         model.settings.homeLead = profile.lead
         let learning = spellOutcomes.filter { $0.value == .missed }.map(\.key)

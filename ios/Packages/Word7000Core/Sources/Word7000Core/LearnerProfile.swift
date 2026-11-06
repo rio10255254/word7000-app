@@ -54,6 +54,12 @@ public struct LearnerProfile: Codable, Equatable, Sendable {
     public var focus: [Focus]
     /// How well the words marked known are spelled, 0 to 1 (nil: not measured yet).
     public var spelling: Double?
+    /// The chapter the level test placed the learner at: new Core words come
+    /// from it on, and the easier chapters are skipped (nil: no test taken).
+    public var startChapter: Int?
+    /// The study mode that test was in ("english" or "chinese"): the start
+    /// chapter only applies to that mode's words.
+    public var startMode: String?
 
     public init(stage: Stage? = nil, focus: [Focus] = [], spelling: Double? = nil) {
         self.stage = stage

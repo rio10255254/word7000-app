@@ -555,10 +555,19 @@ final class AppModel {
     }
     var newWordsLeftToday: Int { studyPlan.fresh }
 
+    /// WordCat Next: the chapter the level test placed the learner at, for
+    /// the built-in words of the mode it was taken in; new words start there.
+    var placementStart: Int? {
+        guard settings.activeBankId == WordBanks.coreBankId, let profile = settings.learnerProfile,
+              profile.startMode == nil || profile.startMode == studyMode.rawValue else { return nil }
+        return profile.startChapter
+    }
+
     var studyPlan: (fresh: Int, review: Int, total: Int) {
         guard let session = studySession, session.sourceKey == studySourceKey, !session.isComplete else {
             // Only the counts are shown, so skip building and shuffling the queue.
-            return LearningEngine.studyQueueCounts(words: studyCandidates, state: progress, today: today, limit: nextSessionLimit)
+            return LearningEngine.studyQueueCounts(words: studyCandidates, state: progress, today: today, limit: nextSessionLimit,
+                                                   startLevel: placementStart)
         }
         var seen = Set<String>()
         let words = session.cardIds.dropFirst(session.index).filter { seen.insert($0).inserted }.compactMap { word(id: $0) }
@@ -647,7 +656,8 @@ final class AppModel {
             candidates = studyCandidates
         }
         let queue = LearningEngine.buildStudyQueue(words: candidates, state: progress, today: today,
-                                                  limit: limit ?? (onlyIds == nil ? nextSessionLimit : max(1, candidates.count)))
+                                                  limit: limit ?? (onlyIds == nil ? nextSessionLimit : max(1, candidates.count)),
+                                                  startLevel: onlyIds == nil ? placementStart : nil)
         studySession = StudySession(cardIds: queue.map(\.id), sourceKey: studySourceKey)
         wordRoutine = onlyIds == nil && studyMode == .english && AppRuntime.wordRoutine
             ? WordRoutine(cardIds: queue.map(\.id),
@@ -760,7 +770,7 @@ final class AppModel {
             }
             .sorted { ($0.1.lapses ?? 0, $0.1.reviewCount) > ($1.1.lapses ?? 0, $1.1.reviewCount) }
             .prefix(12)
-        return [
+        var input: [String: JSONValue] = [
             "mode": .string(studyMode.rawValue),
             "streak": .number(Double(max(0, progress.streak))),
             "mastered": .number(Double(stats.mastered)),
@@ -786,6 +796,10 @@ final class AppModel {
                 ])
             }),
         ]
+        // WordCat Next: where the level test placed them, so a new learner
+        // with few words marked known is not read as a beginner.
+        if let placementStart { input["placementChapter"] = .number(Double(placementStart)) }
+        return input
     }
 
     /// Bank words shown with these prompts in the current study mode, such as
@@ -840,7 +854,7 @@ final class AppModel {
         guard studyMode == .english else { return (ClozeRound(entries: []), []) }
         let candidates = studyCandidates.filter { Cloze.sentence(for: $0) != nil }
         let queue = LearningEngine.buildStudyQueue(words: candidates, state: progress, today: today,
-                                                  limit: nextSessionLimit, seed: seed)
+                                                  limit: nextSessionLimit, seed: seed, startLevel: placementStart)
         let entries = queue.map { word in
             let saved = progress.words[word.id]
             return ClozeRound.Entry(wordId: word.id, isNew: (saved?.status ?? .new) == .new,

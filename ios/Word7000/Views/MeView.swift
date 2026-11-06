@@ -106,9 +106,11 @@ struct LevelEstimateSection: View {
     private static let topLevel = CatLevel.top
 
     var body: some View {
-        let estimate = LearningEngine.abilityEstimate(words: model.vocabularyWords, state: model.progress)
+        let estimate = LearningEngine.abilityEstimate(words: model.vocabularyWords, state: model.progress,
+                                                      startLevel: model.placementStart)
         Section {
-            if estimate.seen < Self.wordsNeeded {
+            // The level test is enough to go on, before many words are met.
+            if estimate.seen < Self.wordsNeeded, model.placementStart == nil {
                 CatSays(mood: .thinking, size: 28) {
                     Text(L.t("再多學幾個字，我就看得出你的程度。",
                              "Learn a few more words and I'll tell you your level."))
@@ -501,6 +503,8 @@ private struct ProfileCard: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
                 membershipBadge
+                    .fixedSize()
+                    .layoutPriority(1)
             }
             Label(account.message, systemImage: syncSymbol)
                 .font(.caption)

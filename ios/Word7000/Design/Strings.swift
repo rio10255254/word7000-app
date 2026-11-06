@@ -94,8 +94,9 @@ enum L {
     /// Chinese study their own bank of everyday Taiwan Mandarin.
     static var coreBankName: String { t("7000 單字", "Taiwan Mandarin") }
     /// The word list files its levels as "Core 1"…"Core 14"; on screen they
-    /// are 第 N 級 or Level N. Other groups (a scanned bank's) show as they are.
-    static func level(_ number: Int) -> String { t("第 \(number) 級", "Level \(number) · \(tocflBand(number))") }
+    /// are 第 N 章 or Level N (WordCat Next: chapters, as on Today and in the
+    /// level test). Other groups (a scanned bank's) show as they are.
+    static func level(_ number: Int) -> String { t("第 \(number) 章", "Level \(number) · \(tocflBand(number))") }
     /// Learners of Chinese study the Taiwan Mandarin bank, whose fourteen
     /// levels spread over TOCFL's bands (see scripts/build-taiwan-words.py).
     static func tocflBand(_ level: Int) -> String {
@@ -107,7 +108,7 @@ enum L {
         }
     }
     static func levelRange(_ low: Int, _ high: Int) -> String {
-        low == high ? level(low) : t("第 \(low)–\(high) 級", "Levels \(low)–\(high)")
+        low == high ? level(low) : t("第 \(low)–\(high) 章", "Levels \(low)–\(high)")
     }
     /// The level filter in a few words: all, one level, a run, or a short list.
     static func levelSummary(_ groups: [String]) -> String {
@@ -118,9 +119,9 @@ enum L {
             return levelRange(low, high)
         }
         if numbers.count == groups.count, numbers.count <= 4 {
-            return t("第 \(numbers.map(String.init).joined(separator: "、")) 級", "Levels \(numbers.map(String.init).joined(separator: ", "))")
+            return t("第 \(numbers.map(String.init).joined(separator: "、")) 章", "Levels \(numbers.map(String.init).joined(separator: ", "))")
         }
-        return t("\(groups.count) 個分級", "\(groups.count) levels")
+        return t("\(groups.count) 個章節", "\(groups.count) levels")
     }
     static func levelName(_ group: String) -> String {
         guard group.hasPrefix("Core "), let number = Int(group.dropFirst(5)) else { return group }
@@ -142,11 +143,11 @@ enum L {
     static var noLibraryWords: String { t("沒有符合的單字", "No matching words") }
     static var filters: String { t("篩選", "Filter") }
     static var filterStatus: String { t("狀態", "Status") }
-    static var filterLevel: String { t("分級", "Level") }
+    static var filterLevel: String { t("章節", "Level") }
     static var filterSort: String { t("排序", "Sort") }
     static var sortDefault: String { t("原本順序", "Original order") }
     static var sortAlphabetical: String { t("A 到 Z", "A to Z") }
-    static var allLevels: String { t("全部分級", "All levels") }
+    static var allLevels: String { t("全部章節", "All levels") }
     static var favoriteWord: String { t("收藏", "Save") }
     static var unfavoriteWord: String { t("取消收藏", "Unsave") }
     static var pronounce: String { t("發音", "Pronounce") }
@@ -154,7 +155,7 @@ enum L {
     static var example: String { t("例句", "Example") }
     static var status: String { t("狀態", "Status") }
     static var nextReviewTitle: String { t("下次複習", "Next review") }
-    static var level: String { t("分級", "Level") }
+    static var level: String { t("章節", "Level") }
 
     // Me
     static var streak: String { t("連續天數", "Day streak") }

@@ -50,10 +50,39 @@ public struct AuthUser: Codable, Equatable, Sendable {
     public var anonymous: Bool { isAnonymous ?? false }
 
     public var displayName: String? {
+        // Composed from its parts when both are known, so a Chinese name
+        // reads family name first (an older full_name may have it reversed).
+        if case let .string(given)? = userMetadata?["given_name"], case let .string(family)? = userMetadata?["family_name"],
+           let name = PersonName.compose(given: given, family: family) {
+            return name
+        }
         for key in ["full_name", "name", "given_name"] {
             if case let .string(value)? = userMetadata?[key], !value.isEmpty { return value }
         }
         return nil
+    }
+}
+
+/// A person's name from its parts, in the order their language writes it.
+public enum PersonName {
+    /// "江彥誼" for a name in Chinese or Japanese characters (or Korean),
+    /// family name first and no space; "Ava Chen" otherwise.
+    public static func compose(given: String?, family: String?) -> String? {
+        let given = given?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let family = family?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        if given.isEmpty && family.isEmpty { return nil }
+        if given.isEmpty { return family }
+        if family.isEmpty { return given }
+        return isEastAsian(given + family) ? family + given : given + " " + family
+    }
+
+    static func isEastAsian(_ text: String) -> Bool {
+        text.unicodeScalars.contains { scalar in
+            switch scalar.value {
+            case 0x3040...0x30FF, 0x3400...0x4DBF, 0x4E00...0x9FFF, 0xAC00...0xD7AF, 0xF900...0xFAFF, 0x20000...0x2FA1F: return true
+            default: return false
+            }
+        }
     }
 }
 

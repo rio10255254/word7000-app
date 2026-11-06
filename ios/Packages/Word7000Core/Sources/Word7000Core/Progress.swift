@@ -399,13 +399,13 @@ public enum LearningEngine {
     /// sight and which they did not, pulled gently towards Core 4 while there
     /// is little to go on. It moves with every answer, so it follows the
     /// learner as they grow.
-    public static func estimateAbility(_ levels: [(level: Int, seen: Int, knew: Int)]) -> Int {
+    public static func estimateAbility(_ levels: [(level: Int, seen: Int, knew: Int)], prior: Int = abilityPrior) -> Int {
         let top = levels.map { $0.level }.max() ?? 0
-        guard top > 0 else { return abilityPrior }
-        var best = abilityPrior
+        guard top > 0 else { return prior }
+        var best = prior
         var bestScore = Int.min
-        for ability in 0...max(2 * top + 2, 2 * abilityPrior) {
-            var score = -30 * (ability - abilityPrior) * (ability - abilityPrior)
+        for ability in 0...max(2 * top + 2, 2 * prior) {
+            var score = -30 * (ability - prior) * (ability - prior)
             for entry in levels where entry.seen > 0 {
                 let index = min(6, max(-6, 2 * entry.level - ability)) + 6
                 score += entry.knew * knownLog[index] + (entry.seen - entry.knew) * missedLog[index]
@@ -421,7 +421,7 @@ public enum LearningEngine {
     /// The learner's estimated level over a word list (see `estimateAbility`),
     /// and how many of its Core words they have met, which says how much the
     /// estimate rests on.
-    public static func abilityEstimate(words: [WordEntry], state: ProgressState) -> (ability: Int, seen: Int) {
+    public static func abilityEstimate(words: [WordEntry], state: ProgressState, startLevel: Int? = nil) -> (ability: Int, seen: Int) {
         var counts: [Int: (seen: Int, knew: Int)] = [:]
         for word in words {
             guard let level = coreLevel(word.group) else { continue }
@@ -433,7 +433,24 @@ public enum LearningEngine {
             counts[level] = count
         }
         let levels = counts.keys.sorted().map { (level: $0, seen: counts[$0]!.seen, knew: counts[$0]!.knew) }
-        return (estimateAbility(levels), levels.reduce(0) { $0 + $1.seen })
+        return (estimateAbility(levels, prior: abilityPrior(startLevel: startLevel)), levels.reduce(0) { $0 + $1.seen })
+    }
+
+    /// Where the estimate starts before any answers: the level test's start
+    /// chapter when there was one (new words then come mostly from it and
+    /// the one above), otherwise `abilityPrior`.
+    public static func abilityPrior(startLevel: Int?) -> Int {
+        guard let startLevel, startLevel > 1 else { return abilityPrior }
+        return 2 * startLevel - 2
+    }
+
+    /// New words to draw from: with a start chapter from the level test,
+    /// the Core words below it are skipped while any from it on are left.
+    /// Words outside the Core levels are never skipped.
+    static func skippingEasyChapters(_ fresh: [WordEntry], startLevel: Int?) -> [WordEntry] {
+        guard let startLevel, startLevel > 1 else { return fresh }
+        let kept = fresh.filter { word in coreLevel(word.group).map { $0 >= startLevel } ?? true }
+        return kept.isEmpty ? fresh : kept
     }
 
     /// The Core levels new words are drawn from most for this ability.
@@ -468,14 +485,14 @@ public enum LearningEngine {
     /// the levels with new words left, then that level's next word in a seeded
     /// random order. With a single level this is simply the shuffled order.
     static func pickNewWords(_ fresh: [WordEntry], count: Int, levelOrder: [String],
-                             levels: [String: (seen: Int, knew: Int)], seed: String) -> [WordEntry] {
+                             levels: [String: (seen: Int, knew: Int)], seed: String, prior: Int = abilityPrior) -> [WordEntry] {
         guard count > 0, !fresh.isEmpty else { return [] }
         var buckets: [String: [WordEntry]] = [:]
         for word in SeededRandom.shuffle(fresh, seed: "\(seed):fresh") { buckets[word.group, default: []].append(word) }
         let ability = estimateAbility(levelOrder.compactMap { group -> (level: Int, seen: Int, knew: Int)? in
             guard let level = coreLevel(group), let counts = levels[group] else { return nil }
             return (level, counts.seen, counts.knew)
-        })
+        }, prior: prior)
         let order = levelOrder.filter { buckets[$0] != nil }
         let weights = order.map { newWordLevelWeight(level: coreLevel($0), ability: ability) }
         var taken = Array(repeating: 0, count: order.count)
@@ -509,7 +526,8 @@ public enum LearningEngine {
         return min(fresh, max(size - due, share))
     }
 
-    public static func buildStudyQueue(words: [WordEntry], state: ProgressState, today: String, limit: Int, seed: String = SeededRandom.runtimeSeed()) -> [WordEntry] {
+    public static func buildStudyQueue(words: [WordEntry], state: ProgressState, today: String, limit: Int,
+                                       seed: String = SeededRandom.runtimeSeed(), startLevel: Int? = nil) -> [WordEntry] {
         let size = max(0, limit)
         guard size > 0, !words.isEmpty else { return [] }
 
@@ -557,27 +575,33 @@ public enum LearningEngine {
         seenToday.sort(by: byDue)
         ahead.sort { $0.date != $1.date ? $0.date < $1.date : $0.order < $1.order }
 
+        fresh = skippingEasyChapters(fresh, startLevel: startLevel)
         let newCount = newWordSlots(size: size, due: due.count, fresh: fresh.count)
         let chosen = Array((due.prefix(size - newCount).map(\.word)
-            + pickNewWords(fresh, count: newCount, levelOrder: levelOrder, levels: levels, seed: seed)
+            + pickNewWords(fresh, count: newCount, levelOrder: levelOrder, levels: levels, seed: seed,
+                           prior: abilityPrior(startLevel: startLevel))
             + seenToday.map(\.word) + ahead.map(\.word)).prefix(size))
         return SeededRandom.shuffle(chosen, seed: "\(seed):queue")
     }
 
     /// How many new and review cards `buildStudyQueue` would pick, counted
     /// without sorting, copying or shuffling the words.
-    public static func studyQueueCounts(words: [WordEntry], state: ProgressState, today: String, limit: Int) -> (fresh: Int, review: Int, total: Int) {
+    public static func studyQueueCounts(words: [WordEntry], state: ProgressState, today: String, limit: Int,
+                                        startLevel: Int? = nil) -> (fresh: Int, review: Int, total: Int) {
         let size = max(0, limit)
         guard size > 0 else { return (0, 0, 0) }
-        var due = 0, fresh = 0, later = 0
+        var due = 0, fresh = 0, later = 0, freshFromStart = 0
         for word in words {
             let progress = state.words[word.id]
             guard let dueDate = reviewDueDate(progress) else {
                 fresh += 1
+                if let startLevel, coreLevel(word.group).map({ $0 >= startLevel }) ?? true { freshFromStart += 1 }
                 continue
             }
             if dueDate <= today, progress?.lastStudied != today { due += 1 } else { later += 1 }
         }
+        // The easier chapters skipped (see skippingEasyChapters).
+        if let startLevel, startLevel > 1, freshFromStart > 0 { fresh = freshFromStart }
         // Due words and new ones (at least their share) fill the queue first,
         // then due words already studied today and words ahead of schedule.
         let total = min(size, due + fresh + later)

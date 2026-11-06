@@ -123,9 +123,9 @@ struct CatContext {
 
 extension AppModel {
     @MainActor var catContext: CatContext {
-        let estimate = LearningEngine.abilityEstimate(words: vocabularyWords, state: progress)
+        let estimate = LearningEngine.abilityEstimate(words: vocabularyWords, state: progress, startLevel: placementStart)
         return CatContext(
-            level: estimate.seen >= CatLevel.wordsNeeded ? CatLevel.name(estimate.ability) : nil,
+            level: estimate.seen >= CatLevel.wordsNeeded || placementStart != nil ? CatLevel.name(estimate.ability) : nil,
             streak: max(0, progress.streak), studiedToday: progress.studiedToday, dailyGoal: progress.dailyTarget,
             daysToExam: CatMemory.shared.daysToExam, nickname: CatMemory.shared.nickname?.trimmed.nilIfEmpty,
             hour: Calendar.current.component(.hour, from: Date()))

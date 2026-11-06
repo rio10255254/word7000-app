@@ -100,19 +100,19 @@ enum CatTip: String, CaseIterable, Sendable {
 
     var text: String {
         switch self {
-        case .study: L.t("點卡片看答案。認得往右滑、不熟往左滑；右上角能復原上一張，眼睛可以直接顯示答案。",
-                         "Tap the card for the answer. Swipe right if you knew it, left if not; undo is top right, and the eye shows answers straight away.")
-        case .words: L.t("中文、英文、例句都能搜。上面可以換字庫和篩選，長按字庫可以改名、管理單字。",
-                         "Search Chinese, English or examples. Switch banks and filter up top; press and hold a bank to rename or manage it.")
-        case .wordDetail: L.t("點喇叭聽發音，星星收藏。Premium 可以請我講解用法、例句和常見陷阱。",
-                              "Tap the speaker to hear it, the star to save it. With Premium I explain usage, examples and common traps.")
-        case .speaking: L.t("看題目開口說，說完按「我說完了」。Premium 的 AI 口說教練會幫你改句子、再追問一題。",
-                            "Read the prompt and answer out loud, then tap when you're done. Premium's AI coach rewrites your answer and asks a follow-up.")
-        case .quiz: L.t("選錯也沒關係，我會告訴你選到的那個是什麼意思。", "Wrong is fine: I'll tell you what the option you picked really means.")
-        case .spelling: L.t("聽發音、看意思，把單字拼出來。卡住就按提示，一次多給一個字母。",
-                            "Write the Chinese for the English word, in characters or pinyin; tones are optional, but if you add them they must be right. Each hint shows one more syllable.")
-        case .me: L.t("這裡有我估的程度、每週紀錄和設定，紙張或皮革風格也在設定裡換。",
-                      "Here is the level I estimate, your week and Settings, where you can switch between paper and leather.")
+        case .study: L.t("點卡片看答案；認得往右滑，不熟往左滑。",
+                         "Tap for the answer. Swipe right if you knew it, left if not.")
+        case .words: L.t("中文、英文、例句都能搜；長按字庫可以管理。",
+                         "Search Chinese, English or examples. Hold a bank to manage it.")
+        case .wordDetail: L.t("點喇叭聽發音，點星星收藏。",
+                              "Tap the speaker to hear it, the star to save it.")
+        case .speaking: L.t("看題目開口說，說完按「我說完了」。",
+                            "Read the prompt, answer out loud, then tap when you're done.")
+        case .quiz: L.t("選錯沒關係，我會說你選的那個是什麼意思。", "Wrong is fine: I'll say what the one you picked means.")
+        case .spelling: L.t("把單字拼出來；卡住就按提示，一次多給一個字母。",
+                            "Write the Chinese for the word; each hint shows one more syllable.")
+        case .me: L.t("我估的程度、每週紀錄和設定都在這裡。",
+                      "Your level, your weeks and Settings are here.")
         case .scan: L.t("拍單字表，或在筆記本上一行寫一個字，只寫英文或中文我都會幫你補。",
                         "Snap a word list, or write one word a line on the notepad: English or Chinese alone, and I'll fill in the rest.")
         }
@@ -249,32 +249,33 @@ private struct HandLoop: Shape {
 }
 
 extension View {
-    /// The cat's one-time tip for this screen, floating at its top or bottom.
-    /// `inset` keeps it clear of a navigation bar or a row of buttons.
-    func catTip(_ tip: CatTip, at edge: VerticalEdge = .bottom, inset: CGFloat = 12) -> some View {
-        modifier(CatTipModifier(tip: tip, edge: edge, inset: inset))
+    /// The cat's one-time tip for a screen, at its top or bottom edge. It
+    /// takes its own room (the screen moves aside, nothing is covered), and
+    /// goes away by itself after a few seconds or at a tap.
+    func catTip(_ tip: CatTip, at edge: VerticalEdge = .bottom) -> some View {
+        modifier(CatTipModifier(tip: tip, edge: edge))
     }
 }
 
 private struct CatTipModifier: ViewModifier {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
     let tip: CatTip
     let edge: VerticalEdge
-    let inset: CGFloat
     @State private var shown = false
 
     func body(content: Content) -> some View {
         content
-            .overlay(alignment: edge == .top ? .top : .bottom) {
+            .safeAreaInset(edge: edge == .top ? .top : .bottom, spacing: 0) {
                 if shown {
-                    CatTipCard(text: tip.text) {
-                        withAnimation(reduceMotion ? nil : Motion.reveal) { shown = false }
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(edge == .top ? .top : .bottom, inset)
-                    .transition(.move(edge: edge == .top ? .top : .bottom).combined(with: .opacity))
-                    .accessibilityIdentifier("cat-tip-\(tip.rawValue)")
+                    CatTipCard(text: tip.text) { hide() }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 6)
+                        .contentShape(Rectangle())
+                        .onTapGesture { hide() }
+                        .transition(.move(edge: edge == .top ? .top : .bottom).combined(with: .opacity))
+                        .accessibilityIdentifier("cat-tip-\(tip.rawValue)")
                 }
             }
             .task {
@@ -284,7 +285,16 @@ private struct CatTipModifier: ViewModifier {
                 // Seen once shown: it never comes back, even if left open.
                 model.noteTipSeen(tip)
                 withAnimation(reduceMotion ? nil : Motion.pop) { shown = true }
+                // Long enough to read twice; VoiceOver users close it themselves.
+                guard !voiceOver else { return }
+                try? await Task.sleep(for: .seconds(8))
+                hide()
             }
+    }
+
+    private func hide() {
+        guard shown else { return }
+        withAnimation(reduceMotion ? nil : Motion.reveal) { shown = false }
     }
 }
 

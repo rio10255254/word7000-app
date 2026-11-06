@@ -21,9 +21,9 @@ on:
         type: boolean
         default: false
       testflight_group:
-        description: 'native-testflight only: TestFlight group the build is added to once Apple has processed it (empty: none). This is the research line: an internal testing group only, never the public testers, and never submitted for review.'
+        description: 'native-testflight only: TestFlight group the build is added to once Apple has processed it (empty: none). New builds go to Rio Testing first; the owner adds them to other groups by hand after trying them. This is the research line: never the public testers, never submitted for review.'
         type: string
-        default: ''
+        default: 'Rio Testing'
       what_to_test:
         description: 'native-testflight only: "What to Test" for testers (Traditional Chinese; optional)'
         type: string

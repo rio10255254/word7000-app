@@ -108,6 +108,81 @@ extension AnyTransition {
     }
 }
 
+/// WordCat Next: after a right answer the next question comes by itself,
+/// so a run of right answers flows without a tap each time. A wrong answer
+/// waits, so the explanation can be read. UI tests get longer, to tap first.
+enum AutoAdvance {
+    static var delay: Duration { AppRuntime.uiTesting ? .seconds(4) : .milliseconds(1300) }
+    static var seconds: Double { AppRuntime.uiTesting ? 4 : 1.3 }
+}
+
+/// A key's face filling from the left while the next question is on its way.
+struct CountdownFillOverlay: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var active: Bool
+    var seconds: Double = AutoAdvance.seconds
+    @State private var progress: CGFloat = 0
+
+    var body: some View {
+        GeometryReader { proxy in
+            Rectangle()
+                .fill(.white.opacity(0.24))
+                .frame(width: proxy.size.width * progress)
+        }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+        .onChange(of: active, initial: true) { _, now in
+            progress = 0
+            guard now, !reduceMotion else { return }
+            withAnimation(.linear(duration: seconds)) { progress = 1 }
+        }
+    }
+}
+
+/// A number that rolls up from zero when it appears.
+struct CountUpText: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var value: Int
+    var delay: Double = 0
+    @State private var shown = 0
+
+    var body: some View {
+        Text("\(shown)")
+            .monospacedDigit()
+            .contentTransition(.numericText(value: Double(shown)))
+            .task(id: value) {
+                guard !reduceMotion, value > 0 else { shown = value; return }
+                try? await Task.sleep(for: .milliseconds(Int(delay * 1000)))
+                withAnimation(.snappy(duration: 0.7)) { shown = value }
+            }
+            .accessibilityLabel("\(value)")
+    }
+}
+
+/// Pressed on like a rubber stamp: big and tilted, then down hard with a
+/// small bounce and a thud.
+struct StampSlam: ViewModifier {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(AppModel.self) private var model
+    var delay: Double = 0
+    @State private var down = false
+
+    func body(content: Content) -> some View {
+        content
+            .scaleEffect(down || reduceMotion ? 1 : 2.2)
+            .rotationEffect(.degrees(down || reduceMotion ? 0 : -18))
+            .opacity(down || reduceMotion ? 1 : 0)
+            .sensoryFeedback(.impact(weight: .heavy, intensity: 1), trigger: down) { _, now in
+                now && (model.settings.hapticsEnabled ?? true)
+            }
+            .task {
+                guard !reduceMotion else { down = true; return }
+                try? await Task.sleep(for: .milliseconds(Int(delay * 1000)))
+                withAnimation(.spring(response: 0.28, dampingFraction: 0.55)) { down = true }
+            }
+    }
+}
+
 /// A spinner that only appears when loading takes a moment, so a quick swap
 /// between questions does not flash it.
 struct DelayedProgress: View {

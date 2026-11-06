@@ -166,6 +166,10 @@ struct RoutineSpellView: View {
     @State private var lookup: [String: WordEntry] = [:]
     @State private var misses = 0
     @State private var solves = 0
+    /// Right first time in a row, for the cat to notice.
+    @State private var streak = 0
+    /// A right answer moves on by itself after a moment; a touch holds it.
+    @State private var advancing = false
     @FocusState private var focused: Bool
 
     private var haptics: Bool { model.settings.hapticsEnabled ?? true }
@@ -190,6 +194,12 @@ struct RoutineSpellView: View {
         }
         .sensoryFeedback(trigger: solves) { _, _ in haptics ? .success : nil }
         .sensoryFeedback(trigger: misses) { _, new in new > 0 && haptics ? .error : nil }
+        .task(id: advancing) {
+            guard advancing else { return }
+            do { try await Task.sleep(for: AutoAdvance.delay) } catch { return }
+            guard advancing else { return }
+            next()
+        }
     }
 
     private func question(_ word: WordEntry, _ sentence: Cloze.Sentence, _ attempt: ClozeAttempt) -> some View {
@@ -200,9 +210,11 @@ struct RoutineSpellView: View {
                 RoutineCatLine(text: catLine(word, attempt), mood: attempt.solved ? (attempt.outcome == .missed ? .encourage : .cheer) : .thinking)
                 ClozeCard(word: word, sentence: sentence, attempt: attempt, input: input, comeBack: comeBack)
                     .shake(trigger: misses, enabled: !reduceMotion)
-                    .pulse(trigger: solves, scale: 1.02, enabled: !reduceMotion)
+                    .pulse(trigger: solves, scale: 1.03, enabled: !reduceMotion)
                     .id(word.id)
                     .transition(.questionSwap(reduceMotion))
+                    // A touch on the card holds the next question back.
+                    .simultaneousGesture(TapGesture().onEnded { advancing = false })
             }
             .padding(.bottom, 16)
         }
@@ -258,6 +270,9 @@ struct RoutineSpellView: View {
     /// The cat asks with the Chinese cue, never the word itself.
     private func catLine(_ word: WordEntry, _ attempt: ClozeAttempt) -> String {
         if attempt.solved {
+            if attempt.outcome == .knew, streak >= 3 {
+                return L.t("連對 \(streak) 個！手感來了。", "\(streak) in a row! You're on a roll.")
+            }
             switch attempt.outcome {
             case .knew: return L.t("真的會，算你厲害。", "You really know it. Fine.")
             case .gotIt: return L.t("有點危險喔，明天再考你。", "A little shaky. Tomorrow again.")
@@ -292,6 +307,7 @@ struct RoutineSpellView: View {
                     Text(L.nextQuestion).font(.title3.weight(.bold)).frame(maxWidth: .infinity)
                 }
                 .prominentAction(tint: Palette.known)
+                .overlay { CountdownFillOverlay(active: advancing).clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous)) }
                 .accessibilityIdentifier("routine-next")
             }
         }
@@ -336,8 +352,12 @@ struct RoutineSpellView: View {
             let days = Cloze.daysUntil(LearningEngine.reviewDueDate(model.progress(for: wordId)), today: model.today) ?? 0
             comeBack = ClozeCard.comeBackLabel(days: days, inThisRound: false)
             solves += 1
+            streak = outcome == .knew ? streak + 1 : 0
+            // Right without the answer shown: on to the next by itself.
+            advancing = outcome != .missed
         } else {
             misses += 1
+            streak = 0
             if current.answerShown { input = "" }
         }
         withAnimation(reduceMotion ? nil : Motion.reveal) { attempt = current }
@@ -345,6 +365,7 @@ struct RoutineSpellView: View {
 
     private func next() {
         guard attempt?.solved == true else { return }
+        advancing = false
         Speaker.shared.stop()
         withAnimation(reduceMotion ? nil : Motion.swap) { load(model.activeRoutine?.spellLeft.first) }
     }
@@ -363,6 +384,7 @@ struct RoutineExamView: View {
     @State private var question: ExamQuestion?
     @State private var chosen: Int?
     @State private var meanings: [String: String] = [:]
+    @State private var advancing = false
 
     private var haptics: Bool { model.settings.hapticsEnabled ?? true }
 
@@ -382,6 +404,12 @@ struct RoutineExamView: View {
         .sensoryFeedback(trigger: chosen) { _, new in
             guard let new, let question, haptics else { return nil }
             return new == question.answerIndex ? .success : .error
+        }
+        .task(id: advancing) {
+            guard advancing else { return }
+            do { try await Task.sleep(for: AutoAdvance.delay) } catch { return }
+            guard advancing else { return }
+            next()
         }
     }
 
@@ -404,6 +432,7 @@ struct RoutineExamView: View {
                     Text(L.nextQuestion).font(.title3.weight(.bold)).frame(maxWidth: .infinity)
                 }
                 .prominentAction(tint: Palette.known)
+                .overlay { CountdownFillOverlay(active: advancing).clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous)) }
                 .padding(.vertical, 8)
                 .background { Palette.background.overlay { PaperGrain() } }
                 .accessibilityIdentifier("routine-next")
@@ -415,6 +444,8 @@ struct RoutineExamView: View {
         guard chosen == nil, let wordId else { return }
         withAnimation(reduceMotion ? nil : Motion.reveal) { chosen = index }
         model.recordRoutineCheck(wordId: wordId, outcome: index == question.answerIndex ? .knew : .missed, exam: true)
+        // Right: on to the next by itself. Wrong: wait, so the explanation is read.
+        advancing = index == question.answerIndex
     }
 
     private func load() async {
@@ -433,6 +464,7 @@ struct RoutineExamView: View {
     }
 
     private func next() {
+        advancing = false
         Speaker.shared.stop()
         wordId = model.activeRoutine?.examLeft.first ?? ""
     }
@@ -589,6 +621,17 @@ struct RoutineSummaryView: View {
                 Mascot(mood: summary.caught == 0 ? .cheer : .happy, size: 120, hop: appeared ? 1 : 0)
                     .popIn()
                     .padding(.top, 12)
+                    // Nothing caught: a stamp thumps down beside the cat.
+                    .overlay(alignment: .topTrailing) {
+                        if summary.caught == 0, summary.alreadyKnew + summary.learned + summary.reviewed > 0 {
+                            StampMark(color: Palette.known, size: 76, angle: -12) {
+                                Text(L.t("全對", "Spot on")).font(.display(.headline, weight: .heavy))
+                            }
+                            .modifier(StampSlam(delay: 0.9))
+                            .offset(x: 70, y: 4)
+                            .accessibilityLabel(L.t("全部答對", "All right"))
+                        }
+                    }
                 Text(reachedGoal || model.goalDone ? L.goalReachedTitle : L.t("今天的單字完成！", "Today's words done!"))
                     .font(.display(.title, weight: .bold))
                     .multilineTextAlignment(.center)
@@ -654,9 +697,8 @@ struct RoutineSummaryView: View {
 
     private func tile(_ title: String, _ value: Int, _ tint: Color) -> some View {
         VStack(spacing: 6) {
-            Text("\(value)")
+            CountUpText(value: value, delay: 0.35)
                 .font(.displaySize(40, weight: .bold))
-                .monospacedDigit()
                 .foregroundStyle(tint)
             Text(title)
                 .font(.headline)

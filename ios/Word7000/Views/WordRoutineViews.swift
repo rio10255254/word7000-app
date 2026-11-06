@@ -716,20 +716,6 @@ struct RoutineSummaryView: View {
                     tile(L.t("複習", "Reviewed"), summary.reviewed, Palette.chinese)
                 }
                 .entrance(2)
-                if summary.caught > 0 {
-                    Button {
-                        model.startStudySession(onlyIds: routine.caughtIds)
-                    } label: {
-                        VStack(spacing: 4) {
-                            Text(L.t("被抓包 \(summary.caught) 個", "\(summary.caught) caught")).font(.title3.weight(.bold))
-                            Text(L.t("現在再翻一次", "Flip them again now")).font(.headline)
-                        }
-                        .frame(maxWidth: .infinity)
-                    }
-                    .prominentAction(tint: Palette.review)
-                    .entrance(3)
-                    .accessibilityIdentifier("routine-caught")
-                }
                 RoutineCatLine(text: CatQuips.studyDone(reachedGoal: reachedGoal || model.goalDone, source: model.catLines),
                         mood: summary.caught == 0 ? .cheer : .smug)
                     .entrance(4)
@@ -756,27 +742,43 @@ struct RoutineSummaryView: View {
         .accessibilityIdentifier("routine-summary")
     }
 
-    /// Short of the goal, the next set leads; once it is met, Done. With
-    /// words caught, their button above leads instead.
+    /// The keys in the order every round ends with (RoundEndActions): the
+    /// words caught leading when there are any, Done, another set as a link.
+    /// Short of the goal, the next set leads instead.
+    @ViewBuilder
     private func buttons(left: Int, caught: Int) -> some View {
-        let doneButton = Button(action: done) {
-            Text(L.done).font(.title3.weight(.bold)).frame(maxWidth: .infinity)
-        }
-        .accessibilityIdentifier("routine-done")
-        let againButton = Button(action: again) {
-            Text(left > 0 ? L.t("繼續：再 \(left) 個", "Keep going: \(left) more") : L.nextSession)
-                .font(.headline).frame(maxWidth: .infinity)
-        }
-        .accessibilityIdentifier("routine-again")
-        return VStack(spacing: 12) {
-            if left > 0 {
-                if caught > 0 { againButton.secondaryAction() } else { againButton.prominentAction() }
-                doneButton.secondaryAction()
-            } else {
-                if caught > 0 { doneButton.secondaryAction() } else { doneButton.prominentAction() }
-                againButton.secondaryAction()
+        if left > 0 {
+            VStack(spacing: 12) {
+                Button(action: again) {
+                    Text(L.t("繼續：再 \(left) 個", "Keep going: \(left) more")).font(.title3.weight(.bold)).frame(maxWidth: .infinity)
+                }
+                .prominentAction()
+                .accessibilityIdentifier("routine-again")
+                if caught > 0 {
+                    Button(action: flipCaught) {
+                        Text(caughtTitle(caught)).font(.title3.weight(.bold)).frame(maxWidth: .infinity)
+                    }
+                    .secondaryAction(tint: Palette.review)
+                    .accessibilityIdentifier("routine-caught")
+                }
+                Button(action: done) {
+                    Text(L.done).font(.title3.weight(.bold)).frame(maxWidth: .infinity)
+                }
+                .secondaryAction()
+                .accessibilityIdentifier("routine-done")
             }
+        } else {
+            RoundEndActions(missed: caught, reviewMissed: flipCaught, reviewTitle: caughtTitle(caught), reviewId: "routine-caught",
+                            done: done, doneId: "routine-done", again: again, againId: "routine-again")
         }
+    }
+
+    private func caughtTitle(_ caught: Int) -> String {
+        L.t("被抓包 \(caught) 個，再翻一次", "\(caught) caught: flip them again")
+    }
+
+    private func flipCaught() {
+        model.startStudySession(onlyIds: routine.caughtIds)
     }
 
     private func tile(_ title: String, _ value: Int, _ tint: Color) -> some View {

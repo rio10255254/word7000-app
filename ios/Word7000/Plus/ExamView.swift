@@ -337,16 +337,9 @@ struct ExamView: View {
                 }
                 .card(padding: 16)
                 .entrance(2)
-                if !missedIds.isEmpty {
-                    Button { studyMissed(missedIds) } label: {
-                        Text(L.t("複習答錯的 \(missedIds.count) 個字", "Review the \(missedIds.count) missed words")).font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .prominentAction(tint: Palette.review)
-                }
-                Button { start() } label: {
-                    Text(L.t("再考一次", "Take another")).font(.headline).frame(maxWidth: .infinity)
-                }
-                .secondaryAction()
+                RoundEndActions(missed: missedIds.count, reviewMissed: { studyMissed(missedIds) }, reviewId: "exam-review-missed",
+                                done: { dismiss() }, doneId: "exam-done",
+                                again: { start() }, againTitle: L.t("再考一次", "Take another"), againId: "exam-again")
             }
         }
         .scrollIndicators(.hidden)

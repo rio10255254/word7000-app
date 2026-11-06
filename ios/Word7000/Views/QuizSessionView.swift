@@ -389,24 +389,9 @@ struct QuizSessionView: View {
                     .entrance(3)
             }
             Spacer()
-            VStack(spacing: 12) {
-                if missedIds.isEmpty {
-                    Button { dismiss() } label: {
-                        Text(L.done).font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .prominentAction()
-                } else {
-                    Button { studyMissed(missedIds) } label: {
-                        Text(L.practiceMissed(missedIds.count)).font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .prominentAction(tint: Palette.review)
-                }
-                Button { start() } label: {
-                    Text(L.anotherQuiz).font(.headline).frame(maxWidth: .infinity)
-                }
-                .secondaryAction()
-                .accessibilityIdentifier("quiz-again")
-            }
+            RoundEndActions(missed: missedIds.count, reviewMissed: { studyMissed(missedIds) }, reviewId: "quiz-review-missed",
+                            done: { dismiss() }, doneId: "quiz-done",
+                            again: { start() }, againTitle: L.anotherQuiz, againId: "quiz-again")
         }
         .accessibilityIdentifier("quiz-results")
         .overlay(alignment: .top) {

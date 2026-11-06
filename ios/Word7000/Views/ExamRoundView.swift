@@ -249,21 +249,10 @@ struct ExamRoundView: View {
                     .font(.title3.weight(.semibold))
             }
             Spacer(minLength: 0)
-            VStack(spacing: 12) {
-                if !missed.isEmpty {
-                    Button { studyMissed(missed) } label: {
-                        Text(L.t("錯的字再翻一次", "Flip the missed words again")).font(.title3.weight(.bold)).frame(maxWidth: .infinity)
-                    }
-                    .prominentAction()
-                    .accessibilityIdentifier("exam-round-again")
-                }
-                Button { dismiss() } label: {
-                    Text(L.done).font(.headline).frame(maxWidth: .infinity)
-                }
-                .modifier(SummaryDoneStyle(prominent: missed.isEmpty))
-                .accessibilityIdentifier("exam-round-done")
-            }
-            .padding(.bottom, 8)
+            RoundEndActions(missed: missed.count, reviewMissed: { studyMissed(missed) },
+                            reviewTitle: L.t("錯的字再翻一次", "Flip the missed words again"), reviewId: "exam-round-again",
+                            done: { dismiss() }, doneId: "exam-round-done")
+                .padding(.bottom, 8)
         }
         .overlay(alignment: .top) {
             if perfect, !reduceMotion { ConfettiBurst().allowsHitTesting(false) }
@@ -273,15 +262,4 @@ struct ExamRoundView: View {
     }
 }
 
-/// The summary's done button: the main action when nothing is left to do.
-private struct SummaryDoneStyle: ViewModifier {
-    var prominent: Bool
 
-    func body(content: Content) -> some View {
-        if prominent {
-            content.prominentAction(tint: Palette.known)
-        } else {
-            content.secondaryAction()
-        }
-    }
-}

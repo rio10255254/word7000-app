@@ -60,6 +60,13 @@ final class AppModel {
     /// The day the current set was built: a set left half done last night is
     /// replaced by today's (with today's reviews and checks), not carried on.
     private(set) var studySessionDay: String?
+    /// WordCat Next: whether the current set is the day's own (built from the
+    /// schedule), not a chosen list such as the missed words.
+    private var studySessionIsDaySet = false
+    /// Today's set, put aside unfinished while a round of missed words (or
+    /// another chosen list) runs, and taken back when Today starts the
+    /// cards again: a detour does not throw away the day's place or checks.
+    private var parkedDaySet: (session: StudySession, routine: WordRoutine?, day: String)?
     /// WordCat Next: the flip cards of a "today's words" session followed by
     /// spot checks. See `activeRoutine` for the one that belongs to the
     /// current session.
@@ -207,6 +214,7 @@ final class AppModel {
             model.restoreStudySession(saved)
             model.wordRoutine = snapshot?.wordRoutine
             model.studySessionDay = model.today
+            model.studySessionIsDaySet = snapshot?.wordRoutine != nil
         }
         if let cached = persistence.load(RemoteContent.self, from: "remote-content.json"), !AppRuntime.uiTesting {
             model.applyRemoteContent(cached)
@@ -565,7 +573,10 @@ final class AppModel {
     }
 
     var studyPlan: (fresh: Int, review: Int, total: Int) {
-        guard let session = studySession, studySessionDay == today, session.sourceKey == studySourceKey, !session.isComplete else {
+        // Today's set, also while it is put aside for a round of missed words.
+        let parked = parkedDaySet.flatMap { $0.day == today ? $0.session : nil }
+        guard let session = parked ?? (studySessionDay == today ? studySession : nil),
+              session.sourceKey == studySourceKey, !session.isComplete else {
             // Only the counts are shown, so skip building and shuffling the queue.
             return LearningEngine.studyQueueCounts(words: studyCandidates, state: progress, today: today, limit: nextSessionLimit,
                                                    startLevel: placementStart)
@@ -630,6 +641,19 @@ final class AppModel {
     /// filters changed since it was built.
     func ensureStudySession() {
         refreshToday()
+        // Back from a detour: today's set carries on where it was left.
+        if let parked = parkedDaySet {
+            parkedDaySet = nil
+            if parked.day == today, parked.session.sourceKey == studySourceKey {
+                studySession = parked.session
+                wordRoutine = parked.routine
+                studySessionDay = parked.day
+                studySessionIsDaySet = true
+                studyUndoStack = []
+                scheduleSave()
+                return
+            }
+        }
         if let session = studySession, studySessionDay == today, session.sourceKey == studySourceKey,
            !session.isComplete || routinePending { return }
         startStudySession()
@@ -651,6 +675,13 @@ final class AppModel {
 
     func startStudySession(onlyIds: [String]? = nil, limit: Int? = nil) {
         refreshToday()
+        // A chosen list over an unfinished day set: keep the day set aside.
+        if onlyIds != nil, studySessionIsDaySet, let session = studySession, studySessionDay == today,
+           !session.isComplete || routinePending {
+            parkedDaySet = (session, wordRoutine, today)
+        } else if onlyIds == nil {
+            parkedDaySet = nil
+        }
         let candidates: [WordEntry]
         if let onlyIds {
             let wanted = Set(onlyIds)
@@ -663,6 +694,7 @@ final class AppModel {
                                                   startLevel: onlyIds == nil ? placementStart : nil)
         studySession = StudySession(cardIds: queue.map(\.id), sourceKey: studySourceKey)
         studySessionDay = today
+        studySessionIsDaySet = onlyIds == nil
         wordRoutine = onlyIds == nil && studyMode == .english && AppRuntime.wordRoutine
             ? WordRoutine(cardIds: queue.map(\.id),
                           stagesBefore: Dictionary(queue.compactMap { word -> (String, Int)? in

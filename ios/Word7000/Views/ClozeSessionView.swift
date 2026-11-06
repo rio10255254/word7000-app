@@ -287,18 +287,7 @@ struct ClozeSessionView: View {
                 .multilineTextAlignment(.center)
                 .entrance(4)
             Spacer()
-            VStack(spacing: 12) {
-                Button { dismiss() } label: {
-                    Text(L.done).font(.headline).frame(maxWidth: .infinity)
-                }
-                .prominentAction()
-                .accessibilityIdentifier("cloze-done")
-                Button { start() } label: {
-                    Text(L.nextSession).font(.headline).frame(maxWidth: .infinity)
-                }
-                .secondaryAction()
-                .accessibilityIdentifier("cloze-again")
-            }
+            RoundEndActions(done: { dismiss() }, doneId: "cloze-done", again: { start() }, againId: "cloze-again")
         }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("cloze-results")

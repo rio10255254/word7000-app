@@ -651,6 +651,12 @@ struct SessionSummary: View {
     var again: () -> Void
     var startQuiz: () -> Void
 
+    /// Today's words in a quiz, while they are fresh.
+    private func quizTodaysWords() {
+        model.requestQuizOnTodaysWords()
+        startQuiz()
+    }
+
     var body: some View {
         let left = max(0, model.progress.dailyTarget - model.progress.studiedToday)
         ScrollView {
@@ -693,37 +699,11 @@ struct SessionSummary: View {
             Text(reachedGoal ? L.quizTodaysWordsHint : left == 0 ? L.sessionGoalDone : L.sessionGoalLeft(left))
                 .font(.subheadline.weight(.semibold))
                 .entrance(6)
-            VStack(spacing: 12) {
-                if reachedGoal {
-                    Button {
-                        model.requestQuizOnTodaysWords()
-                        startQuiz()
-                    } label: {
-                        Text(L.quizTodaysWords).font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .prominentAction(tint: Palette.known)
-                    .accessibilityIdentifier("study-quiz-today")
-                }
-                let doneButton = Button(action: done) {
-                    Text(L.done).font(.headline).frame(maxWidth: .infinity)
-                }
-                if reachedGoal {
-                    doneButton.secondaryAction().accessibilityIdentifier("study-done")
-                } else {
-                    doneButton.prominentAction().accessibilityIdentifier("study-done")
-                }
-                ButtonRow {
-                    Button(action: again) {
-                        Text(L.nextSession).font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .secondaryAction()
-                    Button(action: startQuiz) {
-                        Text(L.quickQuiz).font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .secondaryAction()
-                }
-            }
-            .padding(.top, 16)
+            RoundEndActions(done: done, doneId: "study-done",
+                            extra: reachedGoal ? quizTodaysWords : nil,
+                            extraTitle: L.quizTodaysWords, extraId: "study-quiz-today",
+                            again: again, againId: "study-again")
+                .padding(.top, 16)
           }
           .padding(.vertical, 24)
         }

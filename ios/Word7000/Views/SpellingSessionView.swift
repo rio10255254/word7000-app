@@ -361,24 +361,9 @@ struct SpellingSessionView: View {
                            kind: "spelling", total: words.count, correct: correctCount, missedIds: missedIds)
                 .entrance(3)
             Spacer()
-            VStack(spacing: 12) {
-                if missedIds.isEmpty {
-                    Button { dismiss() } label: {
-                        Text(L.done).font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .prominentAction()
-                } else {
-                    Button { studyMissed(missedIds) } label: {
-                        Text(L.practiceMissed(missedIds.count)).font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .prominentAction(tint: Palette.review)
-                }
-                Button { start() } label: {
-                    Text(L.nextSession).font(.headline).frame(maxWidth: .infinity)
-                }
-                .secondaryAction()
-                .accessibilityIdentifier("spelling-again")
-            }
+            RoundEndActions(missed: missedIds.count, reviewMissed: { studyMissed(missedIds) }, reviewId: "spelling-review-missed",
+                            done: { dismiss() }, doneId: "spelling-done",
+                            again: { start() }, againId: "spelling-again")
         }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("spelling-results")

@@ -191,7 +191,9 @@ struct ShadowStepView: View {
                 if chinese { await measureTones() }
                 guard let check, listener.isFinal else { return }
                 // Only a sentence said right all through moves on by itself.
-                if check.perfect { advancing = true; return }
+                // Every character recognized moves on: a tone measured off is
+                // shown to work on, but the pitch is not sure enough to hold it back.
+                if check.allRecognized { advancing = true; return }
                 // Otherwise, once there is something to fix, the key listens
                 // again by itself, until it is said right (Skip and Next still work).
                 guard listener.heardVoice, !listener.text.isEmpty else { return }
@@ -418,12 +420,13 @@ struct ShadowStepView: View {
     private func result(_ check: ShadowingCheck, tones: [Int: ToneAnalysis.Syllable]) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 8) {
-                Image(systemName: check.perfect ? "checkmark.seal.fill" : "arrow.counterclockwise.circle.fill")
-                    .foregroundStyle(check.perfect ? Palette.known : Palette.review)
+                Image(systemName: check.allRecognized ? "checkmark.seal.fill" : "arrow.counterclockwise.circle.fill")
+                    .foregroundStyle(check.allRecognized ? Palette.known : Palette.review)
                     .font(.title3)
                     .symbolEffect(.bounce, value: reduceMotion ? false : check.passed)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(check.perfect ? L.t("全部念對了！", "All of it, right!")
+                         : check.allRecognized ? L.t("都念出來了！黃色的字留意一下聲調", "All of it came across! Mind the tone on the yellow ones")
                          : listener.text.isEmpty && listener.support == .live ? L.t("沒聽清楚，靠近一點再說一次？", "Didn't catch that. Closer, and once more?")
                          : check.passed ? L.t("差一點，把黃色、紅色的字再念一次", "Almost. Say the yellow and red ones again")
                          : L.t("再念一次看看", "Once more"))
@@ -436,7 +439,7 @@ struct ShadowStepView: View {
                 Text("\(Int((check.score * 100).rounded()))%")
                     .font(.display(.title3, weight: .bold))
                     .monospacedDigit()
-                    .foregroundStyle(check.perfect ? Palette.known : Palette.review)
+                    .foregroundStyle(check.allRecognized ? Palette.known : Palette.review)
             }
             .accessibilityElement(children: .combine)
             .accessibilityIdentifier("shadow-result")
@@ -591,10 +594,14 @@ struct ShadowStepView: View {
         let pieces = listener.segments.map { (text: $0.text, start: $0.start, duration: $0.duration) }
         let measured = await Task.detached(priority: .userInitiated) { () -> [ToneAnalysis.Syllable?] in
             var spans = ToneAnalysis.spans(of: characters, in: pieces)
+            // Without the recognizer's timing the syllables are only shared out
+            // evenly: their pitch is drawn, but no tone is judged on a guess.
+            var judges = true
             if spans.allSatisfy({ $0 == nil }) {
                 spans = ToneAnalysis.evenSpans(samples: samples, rate: rate, count: characters.count)
+                judges = false
             }
-            return ToneAnalysis.analyze(samples: samples, rate: rate, spans: spans, expected: expected)
+            return ToneAnalysis.analyze(samples: samples, rate: rate, spans: spans, expected: expected, judges: judges)
         }.value
         guard check == current else { return }
         var found: [Int: ToneAnalysis.Syllable] = [:]

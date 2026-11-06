@@ -44,10 +44,18 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
     override init() {
         super.init()
         synthesizer.delegate = self
+        // A voice downloaded in Settings is used as soon as iOS has it,
+        // wherever the learner is, without opening the app again.
+        NotificationCenter.default.addObserver(forName: AVSpeechSynthesizer.availableVoicesDidChangeNotification,
+                                               object: nil, queue: .main) { _ in
+            Task { @MainActor in await Speaker.shared.refreshVoices(fresh: true) }
+        }
     }
 
-    func refreshVoices() async {
-        if let task = voicesTask { voices = await task.value; return }
+    /// Reads the installed voices again; `fresh` does not wait on a reading
+    /// already under way, which may predate a voice just downloaded.
+    func refreshVoices(fresh: Bool = false) async {
+        if !fresh, let task = voicesTask { voices = await task.value; return }
         let task = Task.detached(priority: .utility) { () -> [SpeechVoiceOption] in
             var options: [SpeechVoiceOption] = []
             for voice in AVSpeechSynthesisVoice.speechVoices() {
@@ -64,7 +72,7 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
         }
         voicesTask = task
         voices = await task.value
-        voicesTask = nil
+        if voicesTask == task { voicesTask = nil }
     }
 
     func selectedVoice(language: String, preferences: SpeechPreferences) -> SpeechVoiceOption? {

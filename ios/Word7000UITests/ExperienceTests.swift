@@ -162,12 +162,26 @@ final class ExperienceTests: XCTestCase {
         if snap { snapshot(app, "welcome-3-words") }
     }
 
+    /// Start, then past the last scene: how to download the natural voice,
+    /// which shows when the simulator only has a standard one.
+    private func startFromWelcome(_ app: XCUIApplication, snap: Bool = false) {
+        app.buttons["welcome-start"].tap()
+        let later = app.buttons["welcome-voice-done"]
+        guard later.waitForExistence(timeout: 4) else { return }
+        let steps = app.descendants(matching: .any)["welcome-voice-steps"]
+        let switched = app.descendants(matching: .any)["welcome-voice-switched"]
+        XCTAssertTrue(steps.exists || switched.exists, app.debugDescription)
+        if steps.exists { XCTAssertTrue(app.buttons["welcome-voice-settings"].exists) }
+        if snap { snapshot(app, "welcome-4-voice") }
+        later.tap()
+    }
+
     func testFirstPracticeHasFiveWordsAndWelcomeIsNotRepeated() {
         let app = XCUIApplication()
         app.launchArguments = ["-uiTestingReset", "-uiTestingOnboarding", "-uiTestingLight", "-uiTestingFakePlans"]
         app.launch()
         passWelcome(app, snap: true)
-        app.buttons["welcome-start"].tap()
+        startFromWelcome(app, snap: true)
         waitForReadyCard(app)
         XCTAssertEqual(app.staticTexts["study-position"].label, "1 / 5")
         XCUIDevice.shared.press(.home)
@@ -184,7 +198,7 @@ final class ExperienceTests: XCTestCase {
         app.launchArguments = ["-uiTestingReset", "-uiTestingOnboarding", "-uiTestingLight", "-uiTestingFakePlans", "-uiTestingChecklist"]
         app.launch()
         passWelcome(app)
-        app.buttons["welcome-start"].tap()
+        startFromWelcome(app)
         waitForReadyCard(app)
         snapshot(app, "polish-study-front")
         for _ in 0..<5 {

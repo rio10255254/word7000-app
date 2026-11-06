@@ -109,6 +109,15 @@ final class OnboardingLabTests: XCTestCase {
         let start = app.buttons["welcome-start"]
         for _ in 0..<3 where !start.isHittable { app.swipeUp() }
         start.tap()
+        // Last, when the simulator only has a standard voice: how to get the
+        // natural one, then on.
+        let later = app.buttons["welcome-voice-done"]
+        if later.waitForExistence(timeout: 4) {
+            XCTAssertTrue(app.descendants(matching: .any)["welcome-voice-steps"].exists
+                          || app.descendants(matching: .any)["welcome-voice-switched"].exists, app.debugDescription)
+            snap(app, "welcome-12b-voice")
+            later.tap()
+        }
         XCTAssertTrue(app.buttons["study-show-answer"].waitForExistence(timeout: 10))
         snap(app, "welcome-13-first-cards")
     }

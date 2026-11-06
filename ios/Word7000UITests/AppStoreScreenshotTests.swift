@@ -72,6 +72,13 @@ final class AppStoreScreenshotTests: XCTestCase {
                     sleep(1)
                     snap(app, "\(prefix)-4-speaking-shadow-result")
                 }
+                // A take with a tone slip stays and listens again until it is
+                // right; Next moves on (it waits while a take is under way).
+                let next = app.buttons["shadow-next"]
+                for _ in 0..<8 where !app.staticTexts["speaking-question"].exists {
+                    if next.exists, next.isEnabled, next.isHittable { next.tap() }
+                    sleep(1)
+                }
             } else {
                 skip.tap()
             }

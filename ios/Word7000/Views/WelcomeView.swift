@@ -1,3 +1,4 @@
+import AVFoundation
 import SwiftUI
 import Word7000Core
 
@@ -14,6 +15,12 @@ struct WelcomeView: View {
     @State private var known: Set<String> = []
     @State private var placement: [WordEntry] = []
     @State private var hop = 0
+    /// The iPhone has only a standard voice for the language learned, so the
+    /// last scene shows how to get the natural one. Settled before that scene,
+    /// so it does not change under the learner while they download it.
+    @State private var voicePlanned = false
+    /// How the welcome ends, kept while the voice scene is shown.
+    @State private var ending: (known: [String], learning: [String], practice: Bool)?
     /// WordCat Next: the exam being prepared for, and the level test.
     @State private var exam: WelcomeExam?
     @State private var test = PlacementTest()
@@ -34,21 +41,29 @@ struct WelcomeView: View {
     @FocusState private var spellFocused: Bool
     var finish: (_ mode: StudyMode, _ target: Int, _ knownIds: [String], _ learningIds: [String], _ practice: Bool) -> Void
 
-    enum Step: Int, CaseIterable { case hello, stage, exam, focus, goal, words, testIntro, test, spell, thinking, result }
+    enum Step: Int, CaseIterable { case hello, stage, exam, focus, goal, words, testIntro, test, spell, thinking, result, voice }
 
     /// The scenes in order. WordCat Next gets to know the learner of English
     /// (school, exam, what to get better at, how much a day), tests the
     /// level by meanings and then by spelling, and ends with a plan; the
     /// older welcome has three scenes.
     private var flow: [Step] {
-        guard AppRuntime.labOnboarding else { return [.hello, .goal, .words] }
-        return mode == .english
-            ? [.hello, .stage, .exam, .focus, .goal, .testIntro, .test, .spell, .thinking, .result]
-            : [.hello, .focus, .goal, .testIntro, .test, .thinking, .result]
+        var steps: [Step]
+        if !AppRuntime.labOnboarding {
+            steps = [.hello, .goal, .words]
+        } else {
+            steps = mode == .english
+                ? [.hello, .stage, .exam, .focus, .goal, .testIntro, .test, .spell, .thinking, .result]
+                : [.hello, .focus, .goal, .testIntro, .test, .thinking, .result]
+        }
+        // Last, when the iPhone only has a standard voice: how to get the natural one.
+        if voicePlanned { steps.append(.voice) }
+        return steps
     }
+    private var voiceLanguage: String { mode == .english ? "en-US" : "zh-TW" }
 
     /// Scenes that cannot be gone back from: a test under way, the result.
-    private var lockedSteps: Set<Step> { [.hello, .test, .spell, .thinking, .result] }
+    private var lockedSteps: Set<Step> { [.hello, .test, .spell, .thinking, .result, .voice] }
 
     private var position: Int { flow.firstIndex(of: step) ?? 0 }
 
@@ -79,6 +94,11 @@ struct WelcomeView: View {
                         case .spell: spellCheck
                         case .thinking: thinking
                         case .result: result
+                        case .voice:
+                            VoiceStep(language: voiceLanguage, chinese: chinese, hop: hop) {
+                                let end = ending ?? (Array(known), [], true)
+                                finish(mode, target, end.known, end.learning, end.practice)
+                            }
                         }
                     }
                     .id(step)
@@ -100,6 +120,12 @@ struct WelcomeView: View {
         .sensoryFeedback(.impact(weight: .light), trigger: step)
         .onAppear {
             if placement.isEmpty { placement = placementWords(for: mode) }
+        }
+        .task(id: mode) {
+            await Speaker.shared.refreshVoices()
+            guard step != .voice else { return }
+            voicePlanned = SpeechVoiceSelection.canSoundBetter(Speaker.shared.voices, language: voiceLanguage,
+                                                               enhancedQuality: AVSpeechSynthesisVoiceQuality.enhanced.rawValue)
         }
         .task {
             try? await Task.sleep(for: .milliseconds(450))
@@ -245,14 +271,14 @@ struct WelcomeView: View {
                 }
             }
             VStack(spacing: 10) {
-                Button { finish(mode, target, Array(known), [], true) } label: {
+                Button { end(Array(known), [], practice: true) } label: {
                     Label(text("開始，先背 5 個", "Start with 5 words"), systemImage: "arrow.right")
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                 }
                 .prominentAction()
                 .accessibilityIdentifier("welcome-start")
-                Button(text("先逛逛字庫", "Look around first")) { finish(mode, target, Array(known), [], false) }
+                Button(text("先逛逛字庫", "Look around first")) { end(Array(known), [], practice: false) }
                     .font(.subheadline.weight(.semibold))
                     .frame(minHeight: 44)
                     .accessibilityIdentifier("welcome-skip")
@@ -866,7 +892,160 @@ struct WelcomeView: View {
         model.settings.learnerProfile = profile
         model.settings.homeLead = profile.lead
         let learning = spellOutcomes.filter { $0.value == .missed }.map(\.key)
-        finish(mode, target, test.knownIds, learning, practice)
+        end(test.knownIds, learning, practice: practice)
+    }
+
+    /// On to the voice scene when it is wanted; otherwise the welcome is done.
+    private func end(_ known: [String], _ learning: [String], practice: Bool) {
+        guard voicePlanned else { finish(mode, target, known, learning, practice); return }
+        ending = (known, learning, practice)
+        go(.voice)
+    }
+}
+
+// MARK: 4. A natural voice
+
+/// How to download the iPhone's natural voice for what is learned (an app
+/// cannot download it), the voice as it sounds now, and the switch noticed
+/// the moment iOS has it: a tick, and the cat says hello in the new voice.
+private struct VoiceStep: View {
+    @Environment(AppModel.self) private var model
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var language: String
+    var chinese: Bool
+    var hop: Int
+    var done: () -> Void
+    @State private var switched = 0
+
+    private func text(_ zh: String, _ en: String) -> String { chinese ? zh : en }
+    private var preferences: SpeechPreferences { model.settings.speech ?? SpeechPreferences() }
+    private var learningChinese: Bool { language.hasPrefix("zh") }
+    private var upgraded: Bool {
+        !SpeechVoiceSelection.canSoundBetter(Speaker.shared.voices, language: language,
+                                             enhancedQuality: AVSpeechSynthesisVoiceQuality.enhanced.rawValue)
+    }
+    private var sample: String {
+        learningChinese ? "很高興認識你，我們一起學幾個字吧。" : "Nice to meet you. Let's learn a few words together."
+    }
+
+    var body: some View {
+        VStack(spacing: 20) {
+            CatLine(mood: upgraded ? .cheer : .happy, hop: hop + switched,
+                    text: upgraded ? text("換好了！聽聽看，是不是像真人多了？", "Done! Have a listen: more like a real person, right?")
+                                   : text("最後一件事：我的聲音可以更像真人。iPhone 的好聲音要你自己下載一次，免費。",
+                                          "One last thing: I can sound much more like a real person. The iPhone's natural voice is a free download you do once."))
+            if upgraded { switchedCard.transition(.scale(scale: 0.92).combined(with: .opacity)) } else { stepsCard }
+            Button {
+                Speaker.shared.speak(sample, language: language, preferences: preferences)
+            } label: {
+                Label(upgraded ? text("再聽一次", "Hear it again") : text("聽聽現在的聲音", "Hear the voice now"),
+                      systemImage: "speaker.wave.2.fill")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+            }
+            .secondaryAction()
+            .accessibilityIdentifier("welcome-voice-preview")
+            VStack(spacing: 10) {
+                if upgraded {
+                    Button(action: done) {
+                        Label(text("開始", "Start"), systemImage: "arrow.right")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                    }
+                    .prominentAction()
+                    .accessibilityIdentifier("welcome-voice-done")
+                } else {
+                    Button {
+                        if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
+                    } label: {
+                        Label(text("打開設定", "Open Settings"), systemImage: "gear")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                    }
+                    .prominentAction()
+                    .accessibilityIdentifier("welcome-voice-settings")
+                    Button(text("先開始，晚點再下載", "Start now, download later"), action: done)
+                        .font(.subheadline.weight(.semibold))
+                        .frame(minHeight: 44)
+                        .accessibilityIdentifier("welcome-voice-done")
+                }
+            }
+            .padding(.top, 4)
+        }
+        .animation(reduceMotion ? nil : Motion.reveal, value: upgraded)
+        // Back from Settings: look again, in case iOS has not said so yet.
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active { Task { await Speaker.shared.refreshVoices(fresh: true) } }
+        }
+        .onChange(of: upgraded) { _, now in
+            guard now else { return }
+            switched += 1
+            Speaker.shared.stop()
+            Speaker.shared.speak(sample, language: language, preferences: preferences)
+        }
+        .sensoryFeedback(.success, trigger: switched) { _, _ in model.settings.hapticsEnabled ?? true }
+        .onDisappear { Speaker.shared.stop() }
+    }
+
+    /// The three steps, with the voice named as Settings lists it.
+    private var stepsCard: some View {
+        let lines = [
+            text("打開 iPhone「設定」→「輔助使用」→「朗讀內容」→「聲音」",
+                 "Open iPhone Settings → Accessibility → Spoken Content → Voices"),
+            learningChinese
+                ? text("點「中文（台灣）」→「美佳」，下載「增強」版本", "Tap Chinese (Taiwan) → Meijia and download the Enhanced version")
+                : text("點「英文」→「Ava」，下載最大的那個（優質）", "Tap English → Ava and download the biggest one (Premium)"),
+            text("回到這裡就好，下載完會自動換上", "Come back here; it switches by itself once downloaded"),
+        ]
+        return VStack(alignment: .leading, spacing: 12) {
+            ForEach(Array(lines.enumerated()), id: \.offset) { index, line in
+                HStack(alignment: .top, spacing: 10) {
+                    Text("\(index + 1)")
+                        .font(.subheadline.weight(.heavy))
+                        .foregroundStyle(.white)
+                        .frame(width: 26, height: 26)
+                        .background(Palette.accent, in: Circle())
+                    Text(line)
+                        .font(.body.weight(.semibold))
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.top, 2)
+                }
+            }
+            Text(text("檔案有點大，建議連 Wi-Fi。下載在背景進行，可以先開始學。「打開設定」會先到單字貓的頁面，按左上角返回到最上層。",
+                      "It's a big file, so Wi-Fi is best. It downloads in the background, so you can start meanwhile. Open Settings lands on WordCat's page; go back at the top left to the main list."))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Palette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("welcome-voice-steps")
+    }
+
+    /// The natural voice is in: which one now reads.
+    private var switchedCard: some View {
+        let name = Speaker.shared.selectedVoice(language: language, preferences: preferences)?.name
+            ?? SpeechVoiceSelection.recommendedVoice(language: language).name
+        return HStack(spacing: 12) {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.title)
+                .foregroundStyle(Palette.known)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(text("已經換成自然的聲音", "Now using the natural voice"))
+                    .font(.headline)
+                Text(name)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(16)
+        .background(Palette.known.opacity(0.12), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("welcome-voice-switched")
     }
 }
 

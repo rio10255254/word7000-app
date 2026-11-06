@@ -305,21 +305,22 @@ struct ShadowStepView: View {
                 .buttonStyle(.plain)
                 .foregroundStyle(Palette.secondaryLabel)
                 .accessibilityIdentifier("shadow-skip")
+                // The same big key as everywhere else: it is where the eye goes.
                 ZStack {
                     if live && !reduceMotion {
                         Circle()
                             .stroke(Palette.miss.opacity(0.3), lineWidth: 3)
-                            .frame(width: 80, height: 80)
-                            .scaleEffect(1.12 + CGFloat(listener.level) * 0.3)
+                            .frame(width: 112, height: 112)
+                            .scaleEffect(1.15 + CGFloat(listener.level) * 0.35)
                             .animation(.spring(response: 0.2, dampingFraction: 0.6), value: listener.level)
                     }
-                    micButton(size: 76, symbol: 30)
+                    micButton(size: 112, symbol: 40)
                 }
-                .frame(width: 96, height: 96)
+                .frame(width: 136, height: 136)
                 // Hearing one's own take: a small key on the big one's corner.
                 .overlay(alignment: .bottomLeading) {
                     if listener.hasRecording && !live {
-                        playKey.scaleEffect(0.72).offset(x: -10, y: 8)
+                        playKey.scaleEffect(0.8).offset(x: -4, y: 4)
                             .transition(.scale.combined(with: .opacity))
                     }
                 }
@@ -328,11 +329,15 @@ struct ShadowStepView: View {
                         Text(L.t("下一步", "Next"))
                         Image(systemName: "arrow.down")
                     }
-                    .font(.headline).frame(maxWidth: .infinity, minHeight: 50)
+                    .font(.headline)
+                    .foregroundStyle(tried ? .white : Palette.tertiaryLabel)
+                    .frame(maxWidth: .infinity, minHeight: 46)
+                    .background(tried ? (said ? Palette.known : Palette.accent) : Palette.fill, in: Capsule())
+                    .overlay(alignment: .leading) { countdownFill.clipShape(Capsule()) }
                 }
-                .prominentAction(tint: said ? Palette.known : Palette.accent)
-                .overlay(alignment: .leading) { countdownFill }
+                .buttonStyle(SoftPressStyle())
                 .disabled(!tried || listener.busy)
+                .animation(reduceMotion ? nil : Motion.reveal, value: tried)
                 .accessibilityIdentifier("shadow-next")
             }
             if let message = listener.message {

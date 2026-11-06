@@ -400,21 +400,8 @@ struct SpeakingAnswerPanel: View {
     /// the word was used sit small under it, then the Check key.
     private var chatPad: some View {
         VStack(alignment: .trailing, spacing: 10) {
-            HStack(alignment: .bottom, spacing: 0) {
-                Spacer(minLength: 48)
-                answerEditor(ruled: false)
-                    .frame(minHeight: 44, maxHeight: 200)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 6)
-                    .background(Palette.accent.opacity(answerFocused ? 0.2 : 0.14), in: BubbleShape(tail: .trailing))
-                    .overlay {
-                        BubbleShape(tail: .trailing)
-                            .stroke(Palette.accent.opacity(answerFocused ? 0.5 : 0), lineWidth: 1.5)
-                    }
-            }
             if answerFocused {
-                // The keyboard hides the Check key below; it sits here while typing.
+                // The keyboard hides the Check key below; it sits above the bubble while typing.
                 HStack(spacing: 16) {
                     Spacer()
                     if provider.availability == .ready, hasText, !session.isWorking, !pendingSubmission {
@@ -436,6 +423,19 @@ struct SpeakingAnswerPanel: View {
                         .accessibilityLabel(L.t("收起鍵盤", "Dismiss keyboard"))
                         .accessibilityIdentifier("coach-keyboard-done")
                 }
+            }
+            HStack(alignment: .bottom, spacing: 0) {
+                Spacer(minLength: 48)
+                answerEditor(ruled: false)
+                    .frame(minHeight: 44, maxHeight: 200)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(Palette.accent.opacity(answerFocused ? 0.2 : 0.14), in: BubbleShape(tail: .trailing))
+                    .overlay {
+                        BubbleShape(tail: .trailing)
+                            .stroke(Palette.accent.opacity(answerFocused ? 0.5 : 0), lineWidth: 1.5)
+                    }
             }
             padTools
             padStatus

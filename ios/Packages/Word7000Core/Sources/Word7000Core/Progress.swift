@@ -440,7 +440,7 @@ public enum LearningEngine {
     /// chapter when there was one (new words then come mostly from it and
     /// the one above), otherwise `abilityPrior`.
     public static func abilityPrior(startLevel: Int?) -> Int {
-        guard let startLevel, startLevel > 1 else { return abilityPrior }
+        guard let startLevel, startLevel >= 1 else { return abilityPrior }
         return 2 * startLevel - 2
     }
 

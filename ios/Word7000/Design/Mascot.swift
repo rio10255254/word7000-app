@@ -838,6 +838,9 @@ struct MascotBubble: View {
     var pointing: Edge = .bottom
     /// Tapping it opens more (the companion's AI note): a sparkle and a chevron say so.
     var actionable = false
+    /// The question a whole screen asks (the welcome's): read first, so
+    /// big and bold rather than a small aside.
+    var large = false
     static let cream = Color(red: 1.0, green: 0.98, blue: 0.94)
 
     var body: some View {
@@ -855,15 +858,15 @@ struct MascotBubble: View {
                     .foregroundStyle(Palette.accent)
             }
         }
-            .font(.display(.footnote, weight: .semibold))
+            .font(large ? .display(.headline, weight: .bold) : .display(.footnote, weight: .semibold))
             .foregroundStyle(Color(red: 0.23, green: 0.15, blue: 0.11))
             // Room for a whole line from the cat: it is never cut off mid-sentence.
-            .lineLimit(5)
+            .lineLimit(large ? 6 : 5)
             .minimumScaleFactor(0.85)
-            .multilineTextAlignment(.center)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 7)
-            .background(Self.cream, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .multilineTextAlignment(large ? .leading : .center)
+            .padding(.horizontal, large ? 16 : 12)
+            .padding(.vertical, large ? 12 : 7)
+            .background(Self.cream, in: RoundedRectangle(cornerRadius: large ? 18 : 14, style: .continuous))
             .overlay(alignment: tailAlignment) {
                 MascotBubbleTail()
                     .fill(Self.cream)

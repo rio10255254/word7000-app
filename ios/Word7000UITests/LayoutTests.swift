@@ -46,10 +46,11 @@ final class LayoutTests: XCTestCase {
     /// The Me page's capsule buttons keep their labels on one line in the
     /// English interface at the largest standard text size: side by side
     /// when they fit, else one above the other, never "subscriptio / n".
+    /// Not subscribed: a subscriber manages Premium in Settings instead.
     func testMeButtonsKeepLabelsWhole() {
         let app = XCUIApplication()
         app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingFakePlans", "-uiTestingLight",
-                               "-uiTestingChineseMode", "-uiTestingPlus",
+                               "-uiTestingChineseMode",
                                "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryXXXL"]
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))

@@ -198,8 +198,8 @@ struct SpellingSessionView: View {
                     if !others.isEmpty {
                         Text("Also accepted: \(others.joined(separator: "、"))").font(.footnote).foregroundStyle(.secondary)
                     }
-                } else if !word.pronunciation.isEmpty {
-                    Text(word.pronunciation).foregroundStyle(.secondary)
+                } else if !WordFace.pronunciation(word).isEmpty {
+                    Text(WordFace.pronunciation(word)).foregroundStyle(.secondary)
                 }
                 if result != .correct {
                     Text(L.t("你的答案：\(input.trimmed)", "You typed: \(input.trimmed)"))

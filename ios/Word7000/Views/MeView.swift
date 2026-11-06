@@ -189,7 +189,9 @@ private struct LevelTrack: View {
 struct SettingsView: View {
     @Environment(AppModel.self) private var model
     @Environment(AccountModel.self) private var account
+    @Environment(PlusModel.self) private var plus
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var manageOpen = false
     private let dailyTargetOptions = [10, 20, 30, 50]
 
     var body: some View {
@@ -321,6 +323,19 @@ struct SettingsView: View {
                     Text(L.t("顯示與操作", "Display and feel"))
                 }
     
+                // Premium's subscription, for those paying: out of the
+                // profile card, where a big button took the eye every day.
+                if plus.subscribed {
+                    Section {
+                        Button { manageOpen = true } label: {
+                            SettingsLabel(P.manage, icon: "sparkles", tint: .orange)
+                        }
+                        .accessibilityIdentifier("settings-manage-subscription")
+                    } header: {
+                        Text("Premium")
+                    }
+                }
+
                 AccountSection(includeDeletion: true)
     
                 Section {
@@ -344,6 +359,7 @@ struct SettingsView: View {
         }
         .warmList()
         .navigationTitle(L.settings)
+        .modifier(PlusManageSheet(isPresented: $manageOpen, groupID: plus.subscriptionGroupID))
         .navigationBarTitleDisplayMode(.inline)
         .task { await account.checkReminderSupport() }
         .animation(reduceMotion ? nil : Motion.reveal, value: model.reminderEnabled)
@@ -590,7 +606,9 @@ private struct ProfileCard: View {
                 .secondaryAction()
                 .accessibilityIdentifier("me-sign-in")
             }
-            plusButton
+            // Subscribers manage it in Settings; a still-paying Apple ID
+            // not signed in keeps the button, to cancel it.
+            if !plus.subscribed { plusButton }
         }
         if plus.subscriptionAwaitsSignIn {
             Text(L.t("這個 Apple ID 還有 Premium 訂閱：用 Apple 登入就能使用。不想續訂，請按「管理訂閱」取消。",

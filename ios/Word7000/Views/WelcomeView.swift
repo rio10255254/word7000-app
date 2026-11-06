@@ -1128,7 +1128,7 @@ private struct CatLine: View {
     var body: some View {
         HStack(spacing: 10) {
             Mascot(mood: mood, size: 72, hop: hop)
-            MascotBubble(text: text, pointing: .leading)
+            MascotBubble(text: text, pointing: .leading, large: true)
                 .padding(.leading, 6)
                 .contentTransition(.opacity)
             Spacer(minLength: 0)

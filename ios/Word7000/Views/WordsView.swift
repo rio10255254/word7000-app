@@ -83,7 +83,8 @@ struct WordsView: View {
                 }
             } header: {
                 HStack {
-                    Text(filter.status == .all ? model.bankName : "\(model.bankName) · \(L.filterLabel(filter.status))")
+                    // The bank's name is on its card just above; here only what is listed.
+                    Text(filter.status == .all ? L.t("全部", "All") : L.filterLabel(filter.status))
                     Spacer()
                     // Only the count animates; the 7000-row list itself updates without animation.
                     Text(L.bankWordCount(results.count))

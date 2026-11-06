@@ -41,5 +41,9 @@ final class PlacementStartTests: XCTestCase {
         XCTAssertEqual(LearningEngine.favouredLevels(ability: estimate.ability).lowerBound, 13)
         XCTAssertEqual(LearningEngine.abilityEstimate(words: words(levels: 1...14), state: ProgressState()).ability,
                        LearningEngine.abilityPrior)
+        // A test that placed them at chapter 1 starts them there too, not
+        // at the middling guess made for someone untested.
+        let first = LearningEngine.abilityEstimate(words: words(levels: 1...14), state: ProgressState(), startLevel: 1)
+        XCTAssertEqual(LearningEngine.favouredLevels(ability: first.ability).lowerBound, 1)
     }
 }

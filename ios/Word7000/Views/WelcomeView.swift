@@ -39,7 +39,19 @@ struct WelcomeView: View {
     @State private var spellMisses = 0
     @State private var thinkingLines = 0
     @FocusState private var spellFocused: Bool
+    @Environment(\.dismiss) private var dismiss
+    /// WordCat Next: only the level test and the plan again, from My
+    /// learning plan; what is known about the learner is kept.
+    let retest: Bool
+    @State private var retestLoaded = false
     var finish: (_ mode: StudyMode, _ target: Int, _ knownIds: [String], _ learningIds: [String], _ practice: Bool) -> Void
+
+    init(retest: Bool = false,
+         finish: @escaping (_ mode: StudyMode, _ target: Int, _ knownIds: [String], _ learningIds: [String], _ practice: Bool) -> Void) {
+        self.retest = retest
+        self.finish = finish
+        _step = State(initialValue: retest ? .testIntro : .hello)
+    }
 
     enum Step: Int, CaseIterable { case hello, stage, exam, focus, goal, words, testIntro, test, spell, thinking, result, voice }
 
@@ -48,6 +60,9 @@ struct WelcomeView: View {
     /// level by meanings and then by spelling, and ends with a plan; the
     /// older welcome has three scenes.
     private var flow: [Step] {
+        if retest {
+            return mode == .english ? [.testIntro, .test, .spell, .thinking, .result] : [.testIntro, .test, .thinking, .result]
+        }
         var steps: [Step]
         if !AppRuntime.labOnboarding {
             steps = [.hello, .goal, .words]
@@ -119,11 +134,20 @@ struct WelcomeView: View {
         .sensoryFeedback(.selection, trigger: known)
         .sensoryFeedback(.impact(weight: .light), trigger: step)
         .onAppear {
+            if retest, !retestLoaded {
+                // The learner as they are: their language, goal, profile and exam.
+                retestLoaded = true
+                mode = model.studyMode
+                target = model.progress.dailyTarget
+                profile = model.settings.learnerProfile ?? LearnerProfile()
+                exam = profile.exam.flatMap(WelcomeExam.init(rawValue:))
+                test = PlacementTest(start: profile.stage?.testStart ?? 2)
+            }
             if placement.isEmpty { placement = placementWords(for: mode) }
         }
         .task(id: mode) {
             await Speaker.shared.refreshVoices()
-            guard step != .voice else { return }
+            guard step != .voice, !retest else { return }
             voicePlanned = SpeechVoiceSelection.canSoundBetter(Speaker.shared.voices, language: voiceLanguage,
                                                                enhancedQuality: AVSpeechSynthesisVoiceQuality.enhanced.rawValue)
         }
@@ -494,13 +518,20 @@ struct WelcomeView: View {
                 }
                 .prominentAction()
                 .accessibilityIdentifier("welcome-test-start")
-                Button(text("跳過，從第 1 章開始", "Skip it and start at chapter 1")) {
-                    test = PlacementTest()
-                    go(.thinking)
+                if retest {
+                    Button(text("先不要", "Not now")) { dismiss() }
+                        .font(.subheadline.weight(.semibold))
+                        .frame(minHeight: 44)
+                        .accessibilityIdentifier("welcome-retest-cancel")
+                } else {
+                    Button(text("跳過，從第 1 章開始", "Skip it and start at chapter 1")) {
+                        test = PlacementTest()
+                        go(.thinking)
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .frame(minHeight: 44)
+                    .accessibilityIdentifier("welcome-test-intro-skip")
                 }
-                .font(.subheadline.weight(.semibold))
-                .frame(minHeight: 44)
-                .accessibilityIdentifier("welcome-test-intro-skip")
             }
         }
     }
@@ -880,17 +911,25 @@ struct WelcomeView: View {
             planCard(plan)
                 .entrance(2)
             VStack(spacing: 10) {
-                Button { complete(practice: true) } label: {
-                    Label(text("開始今天的單字", "Start today's words"), systemImage: "arrow.right")
+                Button { complete(practice: !retest) } label: {
+                    Label(retest ? text("用這個新起點", "Use this new start") : text("開始今天的單字", "Start today's words"),
+                          systemImage: retest ? "checkmark" : "arrow.right")
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                 }
                 .prominentAction()
                 .accessibilityIdentifier("welcome-start")
-                Button(text("先逛逛", "Look around first")) { complete(practice: false) }
-                    .font(.subheadline.weight(.semibold))
-                    .frame(minHeight: 44)
-                    .accessibilityIdentifier("welcome-skip")
+                if retest {
+                    Button(text("維持原本的計畫", "Keep my plan")) { dismiss() }
+                        .font(.subheadline.weight(.semibold))
+                        .frame(minHeight: 44)
+                        .accessibilityIdentifier("welcome-retest-keep")
+                } else {
+                    Button(text("先逛逛", "Look around first")) { complete(practice: false) }
+                        .font(.subheadline.weight(.semibold))
+                        .frame(minHeight: 44)
+                        .accessibilityIdentifier("welcome-skip")
+                }
             }
             .padding(.top, 4)
         }
@@ -961,7 +1000,8 @@ struct WelcomeView: View {
         profile.startMode = mode.rawValue
         profile.exam = exam?.rawValue
         model.settings.learnerProfile = profile
-        model.settings.homeLead = profile.lead
+        // A new level check keeps the learner's own choice of what comes first.
+        if !retest { model.settings.homeLead = profile.lead }
         let learning = spellOutcomes.filter { $0.value == .missed }.map(\.key)
         end(test.knownIds, learning, practice: practice)
     }

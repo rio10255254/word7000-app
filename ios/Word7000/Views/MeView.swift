@@ -194,10 +194,25 @@ struct SettingsView: View {
     @State private var manageOpen = false
     private let dailyTargetOptions = [10, 20, 30, 50]
 
+    /// "第 3 章 · 每天 20 個", or the goal alone outside the built-in words.
+    private var planSummary: String {
+        let goal = L.t("每天 \(model.progress.dailyTarget) 個", "\(model.progress.dailyTarget) a day")
+        guard let chapter = model.placementStart ?? model.readingChapter.map({ $0 + 1 }) else { return goal }
+        return L.t("第 \(chapter) 章 · ", "Ch. \(chapter) · ") + goal
+    }
+
     var body: some View {
         Form {
             Group {
                 Section {
+                    // WordCat Next: the plan from the first launch, to read and change.
+                    NavigationLink {
+                        LearningPlanView()
+                    } label: {
+                        SettingsLabel(L.t("我的學習計畫", "My learning plan"), icon: "map.fill", tint: Palette.accent,
+                                      value: planSummary)
+                    }
+                    .accessibilityIdentifier("settings-plan")
                     Picker(selection: Binding(
                         get: { model.studyMode },
                         set: { model.setStudyMode($0) }

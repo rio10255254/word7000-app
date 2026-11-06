@@ -331,6 +331,32 @@ final class ExperienceTests: XCTestCase {
         XCTAssertEqual(savedAutoSpeak.value as? String, "1")
     }
 
+    /// WordCat Next: the plan from the first launch can be read and changed
+    /// in Settings, and the level check taken again (or not).
+    func testLearningPlanCanBeReadAndChanged() {
+        let app = launch()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
+        let settings = app.buttons["me-settings"]
+        for _ in 0..<5 where !settings.isHittable { app.swipeUp() }
+        settings.tap()
+        let plan = app.buttons["settings-plan"]
+        XCTAssertTrue(plan.waitForExistence(timeout: 5), app.debugDescription)
+        plan.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["plan-card"].firstMatch.waitForExistence(timeout: 5))
+        snapshot(app, "plan-top")
+        let spelling = app.buttons["plan-focus-spelling"]
+        for _ in 0..<4 where !spelling.isHittable { app.swipeUp() }
+        spelling.tap()
+        XCTAssertEqual(spelling.value as? String, "已選", "Picking spelling marks it")
+        let retest = app.buttons["plan-retest"]
+        for _ in 0..<4 where !retest.isHittable { app.swipeUp() }
+        snapshot(app, "plan-bottom")
+        retest.tap()
+        XCTAssertTrue(app.buttons["welcome-test-start"].waitForExistence(timeout: 5), "The level check opens on its first page")
+        app.buttons["welcome-retest-cancel"].tap()
+        XCTAssertTrue(retest.waitForExistence(timeout: 5), "Not now goes back to the plan")
+    }
+
     func testSettingsAreGroupedAndReachable() {
         let app = launch()
         app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()

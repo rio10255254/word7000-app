@@ -67,6 +67,8 @@ struct ShadowStepView: View {
     /// WordCat Next: on a later turn of a role-play the other person types
     /// for a moment before their line comes in, then the reply to say.
     @State private var partnerArrived = false
+    /// What the colours mean, under a take in a role-play, when asked.
+    @State private var legendShown = false
 
     private var language: String { chinese ? "zh-TW" : "en-US" }
     private var live: Bool { listener.listening }
@@ -120,10 +122,12 @@ struct ShadowStepView: View {
                 ScrollView {
                     VStack(spacing: 20) {
                         sentenceCard
-                        // The key waits for the line it answers.
-                        recorderKey.id(Self.recorderID)
-                            .opacity(arrived ? 1 : 0)
-                            .allowsHitTesting(arrived)
+                        if partner == nil {
+                            recorderKey.id(Self.recorderID)
+                        } else {
+                            // The chat's last line: the bottom bar holds the key.
+                            Color.clear.frame(height: 1).id(Self.recorderID)
+                        }
                     }
                     .padding(.bottom, 12)
                 }
@@ -155,19 +159,15 @@ struct ShadowStepView: View {
                     }
                 }
             }
-            ButtonRow {
-                Button { finish() } label: {
-                    Text(L.t("跳過", "Skip")).font(.headline).frame(maxWidth: .infinity)
+            if partner != nil {
+                chatBar
+                    .opacity(arrived ? 1 : 0.35)
+                    .allowsHitTesting(arrived)
+            } else {
+                ButtonRow {
+                    skipKey
+                    nextKey
                 }
-                .secondaryAction()
-                .accessibilityIdentifier("shadow-skip")
-                Button { finish() } label: {
-                    Text(L.t("下一步：回答問題", "Next: answer")).font(.headline).frame(maxWidth: .infinity)
-                }
-                .prominentAction(tint: said ? Palette.known : Palette.accent)
-                .overlay(alignment: .leading) { countdownFill }
-                .disabled(!tried || listener.busy)
-                .accessibilityIdentifier("shadow-next")
             }
         }
         .task { await listener.refresh(language: language) }
@@ -267,6 +267,81 @@ struct ShadowStepView: View {
             guard model.settings.hapticsEnabled ?? true else { return nil }
             return .impact(weight: new ? .medium : .light)
         }
+    }
+
+    private var skipKey: some View {
+        Button { finish() } label: {
+            Text(L.t("跳過", "Skip")).font(.headline).frame(maxWidth: .infinity)
+        }
+        .secondaryAction()
+        .accessibilityIdentifier("shadow-skip")
+    }
+
+    private var nextKey: some View {
+        Button { finish() } label: {
+            Text(L.t("下一步：回答問題", "Next: answer")).font(.headline).frame(maxWidth: .infinity)
+        }
+        .prominentAction(tint: said ? Palette.known : Palette.accent)
+        .overlay(alignment: .leading) { countdownFill }
+        .disabled(!tried || listener.busy)
+        .accessibilityIdentifier("shadow-next")
+    }
+
+    /// WordCat Next: a role-play's bottom bar, where a chat's input bar is:
+    /// what to do in one line, the record key in the middle (hearing one's
+    /// own take beside it), Skip on the left and Next on the right.
+    private var chatBar: some View {
+        VStack(spacing: 10) {
+            keyHint
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(live ? Palette.miss : Palette.secondaryLabel)
+                .lineLimit(1)
+                .minimumScaleFactor(0.75)
+                .contentTransition(.opacity)
+            HStack(alignment: .center, spacing: 12) {
+                Button { finish() } label: {
+                    Text(L.t("跳過", "Skip")).font(.headline).frame(maxWidth: .infinity, minHeight: 50)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(Palette.secondaryLabel)
+                .accessibilityIdentifier("shadow-skip")
+                ZStack {
+                    if live && !reduceMotion {
+                        Circle()
+                            .stroke(Palette.miss.opacity(0.3), lineWidth: 3)
+                            .frame(width: 80, height: 80)
+                            .scaleEffect(1.12 + CGFloat(listener.level) * 0.3)
+                            .animation(.spring(response: 0.2, dampingFraction: 0.6), value: listener.level)
+                    }
+                    micButton(size: 76, symbol: 30)
+                }
+                .frame(width: 96, height: 96)
+                // Hearing one's own take: a small key on the big one's corner.
+                .overlay(alignment: .bottomLeading) {
+                    if listener.hasRecording && !live {
+                        playKey.scaleEffect(0.72).offset(x: -10, y: 8)
+                            .transition(.scale.combined(with: .opacity))
+                    }
+                }
+                Button { finish() } label: {
+                    HStack(spacing: 4) {
+                        Text(L.t("下一步", "Next"))
+                        Image(systemName: "arrow.down")
+                    }
+                    .font(.headline).frame(maxWidth: .infinity, minHeight: 50)
+                }
+                .prominentAction(tint: said ? Palette.known : Palette.accent)
+                .overlay(alignment: .leading) { countdownFill }
+                .disabled(!tried || listener.busy)
+                .accessibilityIdentifier("shadow-next")
+            }
+            if let message = listener.message {
+                Text(message).font(.footnote).foregroundStyle(Palette.miss)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(.top, 6)
     }
 
     /// The Next key filling up while it counts down.
@@ -447,7 +522,76 @@ struct ShadowStepView: View {
     /// The first turn, a word, or reduced motion: no typing pause.
     private var arrived: Bool { partnerArrived || earlier.isEmpty || reduceMotion }
 
+    @ViewBuilder
     private func result(_ check: ShadowingCheck, tones: [Int: ToneAnalysis.Syllable]) -> some View {
+        if partner != nil {
+            chatResult(check, tones: tones)
+        } else {
+            cardResult(check, tones: tones)
+        }
+    }
+
+    /// Under the learner's bubble, on its side: the score as a small badge,
+    /// what to fix in a line, and what the colours mean only when asked.
+    private func chatResult(_ check: ShadowingCheck, tones: [Int: ToneAnalysis.Syllable]) -> some View {
+        VStack(alignment: .trailing, spacing: 4) {
+            HStack(spacing: 6) {
+                Spacer(minLength: 0)
+                Text(resultLine(check))
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(check.perfect ? Palette.known : Palette.review)
+                    .multilineTextAlignment(.trailing)
+                Text("\(Int((check.score * 100).rounded()))%")
+                    .font(.caption.weight(.heavy))
+                    .monospacedDigit()
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(check.perfect ? Palette.known : Palette.review, in: Capsule())
+                    .symbolEffect(.bounce, value: reduceMotion ? false : check.passed)
+                if check.heardCount < check.scoredCount {
+                    Button { withAnimation(reduceMotion ? nil : Motion.reveal) { legendShown.toggle() } } label: {
+                        Image(systemName: "questionmark.circle").font(.subheadline)
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(Palette.secondaryLabel)
+                    .accessibilityLabel(L.t("顏色的意思", "What the colours mean"))
+                }
+            }
+            .accessibilityElement(children: .combine)
+            .accessibilityIdentifier("shadow-result")
+            if let note = toneNote(check, tones: tones) {
+                Text(note).font(.footnote).foregroundStyle(Palette.review)
+            }
+            if legendShown, check.heardCount < check.scoredCount {
+                HStack(spacing: 10) {
+                    legend(Palette.known, L.t("聽到了", "Heard"))
+                    if check.toneCount > 0 { legend(Palette.review, L.t("聲調不同", "Other tone")) }
+                    if check.units.contains(where: { $0.mark == .missed }) { legend(Palette.miss, L.t("沒聽到", "Not heard")) }
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .transition(.opacity)
+            }
+            if PushRegistration.shared.isTester {
+                Text("\(diagnostics)・音高 \(tones.count)/\(check.scoredCount) 字")
+                    .font(.caption2.monospacedDigit())
+                    .foregroundStyle(.tertiary)
+                    .accessibilityIdentifier("shadow-diagnostics")
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .trailing)
+        .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 6)))
+    }
+
+    private func resultLine(_ check: ShadowingCheck) -> String {
+        check.perfect ? L.t("全部念對了！", "All of it, right!")
+            : listener.text.isEmpty && listener.support == .live ? L.t("沒聽清楚，靠近一點再說一次", "Didn't catch that. Closer, once more")
+            : check.passed ? L.t("差一點，黃色紅色的再念一次", "Almost. The yellow and red again")
+            : L.t("再念一次看看", "Once more")
+    }
+
+    private func cardResult(_ check: ShadowingCheck, tones: [Int: ToneAnalysis.Syllable]) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 8) {
                 Image(systemName: check.perfect ? "checkmark.seal.fill" : "arrow.counterclockwise.circle.fill")
@@ -524,45 +668,13 @@ struct ShadowStepView: View {
                             .scaleEffect(1.15 + CGFloat(listener.level) * 0.35)
                             .animation(.spring(response: 0.2, dampingFraction: 0.6), value: listener.level)
                     }
-                    Button {
-                        hold()
-                        if live { listener.stop() } else { sayAgain() }
-                    } label: {
-                        Image(systemName: live ? "stop.fill" : (tried ? "arrow.counterclockwise" : "mic.fill"))
-                            .font(.system(size: 40, weight: .semibold))
-                            .contentTransition(.symbolEffect(.replace))
-                    }
-                    .buttonStyle(MicKeyStyle(live: live))
-                    .disabled(listener.state == .requesting || listener.state == .finishing)
-                    .accessibilityLabel(live ? L.t("停止", "Stop") : tried ? L.t("再說一次", "Say it again") : L.t("開始說", "Start speaking"))
-                    .accessibilityIdentifier("shadow-record")
+                    micButton(size: 112, symbol: 40)
                 }
                 .frame(height: 136)
                 // Balances the play key so the big key stays centred.
                 Color.clear.frame(width: 48, height: 48)
             }
-            Group {
-                if live {
-                    Text(!retryFocus.isEmpty
-                         ? L.t("注意「\(retryFocus.prefix(3).joined(separator: "、"))」，說完會自動停", "Mind \(retryFocus.prefix(3).joined(separator: ", ")); it stops when you're done")
-                         : listener.text.isEmpty && !listener.heardVoice ? L.t("請說…", "Go ahead…")
-                         : L.t("繼續說，說完會自動停", "Keep going; it stops when you're done"))
-                } else if listener.state == .finishing {
-                    HStack(spacing: 6) { ProgressView(); Text(L.t("聽聽看你說了什麼…", "Listening back…")) }
-                } else if advancing {
-                    Text(L.t("馬上進入下一步", "On to the next step"))
-                } else if retrying {
-                    Text(L.t("馬上再聽你念一次…", "Listening again in a moment…"))
-                } else if tried {
-                    Text(L.t("按一下再說一次", "Tap to say it again"))
-                } else if earlier.isEmpty {
-                    // Once a line of the role-play has been said, the key explains itself.
-                    Text(L.t("聽完後，按一下跟著說", "Listen, then tap and say it"))
-                } else {
-                    // Keeps the line's room, so the page does not jump when it fills.
-                    Text(" ").accessibilityHidden(true)
-                }
-            }
+            keyHint
             .font(.headline)
             .lineLimit(1)
             .minimumScaleFactor(0.8)
@@ -583,6 +695,47 @@ struct ShadowStepView: View {
             }
         }
         .frame(maxWidth: .infinity)
+    }
+
+    private func micButton(size: CGFloat, symbol: CGFloat) -> some View {
+        Button {
+            hold()
+            if live { listener.stop() } else { sayAgain() }
+        } label: {
+            Image(systemName: live ? "stop.fill" : (tried ? "arrow.counterclockwise" : "mic.fill"))
+                .font(.system(size: symbol, weight: .semibold))
+                .contentTransition(.symbolEffect(.replace))
+        }
+        .buttonStyle(MicKeyStyle(live: live, size: size))
+        .disabled(listener.state == .requesting || listener.state == .finishing)
+        .accessibilityLabel(live ? L.t("停止", "Stop") : tried ? L.t("再說一次", "Say it again") : L.t("開始說", "Start speaking"))
+        .accessibilityIdentifier("shadow-record")
+    }
+
+    /// What the key does now, in one line.
+    private var keyHint: some View {
+        Group {
+                if live {
+                    Text(!retryFocus.isEmpty
+                         ? L.t("注意「\(retryFocus.prefix(3).joined(separator: "、"))」，說完會自動停", "Mind \(retryFocus.prefix(3).joined(separator: ", ")); it stops when you're done")
+                         : listener.text.isEmpty && !listener.heardVoice ? L.t("請說…", "Go ahead…")
+                         : L.t("繼續說，說完會自動停", "Keep going; it stops when you're done"))
+                } else if listener.state == .finishing {
+                    HStack(spacing: 6) { ProgressView(); Text(L.t("聽聽看你說了什麼…", "Listening back…")) }
+                } else if advancing {
+                    Text(L.t("馬上進入下一步", "On to the next step"))
+                } else if retrying {
+                    Text(L.t("馬上再聽你念一次…", "Listening again in a moment…"))
+                } else if tried {
+                    Text(L.t("按一下再說一次", "Tap to say it again"))
+                } else if earlier.isEmpty {
+                    // Once a line of the role-play has been said, the key explains itself.
+                    Text(L.t("聽完後，按一下跟著說", "Listen, then tap and say it"))
+                } else {
+                    // Keeps the line's room, so the page does not jump when it fills.
+                    Text(" ").accessibilityHidden(true)
+                }
+        }
     }
 
     private var playKey: some View {

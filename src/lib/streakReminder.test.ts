@@ -53,8 +53,8 @@ describe('streak reminder planning', () => {
       activityKind: 'streak',
       progressCurrent: 0,
       progressTarget: 1,
-      streakLabel: '連勝 8 天',
-      title: '你的連勝快中斷了',
+      streakLabel: '連續 8 天',
+      title: '你的連續天數快斷了',
     });
     expect(buildStreakLiveActivityProps(plan, 'chinese')).toMatchObject({
       activityKind: 'streak',

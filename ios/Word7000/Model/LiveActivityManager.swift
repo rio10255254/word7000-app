@@ -50,7 +50,7 @@ final class LiveActivityManager {
                     props.progressCurrent = 1
                     props.progressTarget = 1
                     props.streak = progress.streak
-                    props.title = chineseInterface ? "連勝保住了！" : "Streak saved!"
+                    props.title = chineseInterface ? "連續天數保住了！" : "Streak saved!"
                     props.keepStreakLabel = chineseInterface ? "今天也學了，繼續保持" : "You studied today. Keep it going"
                     props.streakLabel = chineseInterface ? "連續 \(progress.streak) 天" : "\(progress.streak)-day streak"
                     await activity.end(ActivityContent(state: LiveActivityAttributes.ContentState(props: props.json), staleDate: nil),

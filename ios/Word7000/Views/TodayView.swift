@@ -448,7 +448,7 @@ struct TodayView: View {
     private var notices: some View {
         if model.streakProtectionJustUsed {
             Label {
-                Text(L.t("連勝保護幫你保住了 \(model.progress.streak) 天連勝，今天學 1 個字就能延續。",
+                Text(L.t("連續天數保護幫你保住了 \(model.progress.streak) 天，今天學 1 個字就能延續。",
                          "Streak protection kept your \(model.progress.streak)-day streak. One word today keeps it going."))
                     .font(.footnote)
             } icon: {

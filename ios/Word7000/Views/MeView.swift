@@ -69,11 +69,11 @@ struct MeView: View {
 
     private var streakProtectionText: String {
         guard let ready = model.streakProtectionReadyOn else {
-            return L.t("連勝保護已就緒，漏學 1 天不會中斷", "Streak protection on: one missed day is covered")
+            return L.t("連續天數保護已就緒，漏學 1 天不會中斷", "Streak protection on: one missed day is covered")
         }
         let parts = ready.split(separator: "-").compactMap { Int($0) }
         let date = parts.count == 3 ? "\(parts[1])/\(parts[2])" : ready
-        return L.t("連勝保護 \(date) 起可再使用", "Streak protection returns on \(date)")
+        return L.t("連續天數保護 \(date) 起可再使用", "Streak protection returns on \(date)")
     }
 }
 

@@ -132,13 +132,13 @@ async function sendStartRequest(
         activityKind: 'streak',
         countdownLabel: chinese ? '剩餘時間' : 'Time left',
         expiresAt,
-        keepStreakLabel: chinese ? '完成 1 個單字即可保住連勝' : 'Study 1 word to keep it',
+        keepStreakLabel: chinese ? '學 1 個字就能保住連續天數' : 'Study 1 word to keep it',
         progressCurrent: 0,
         progressTarget: 1,
         startedAt,
         streak: device.streak,
-        streakLabel: chinese ? `連勝 ${device.streak} 天` : `${device.streak}-day streak`,
-        title: chinese ? '連勝要斷了，我就看著' : "Your streak is slipping. I'm watching.",
+        streakLabel: chinese ? `連續 ${device.streak} 天` : `${device.streak}-day streak`,
+        title: chinese ? '連續天數要斷了，我就看著' : "Your streak is slipping. I'm watching.",
       }
     : {
         activityKind: 'noon',
@@ -157,10 +157,10 @@ async function sendStartRequest(
         streak: device.streak,
         streakLabel: device.streak > 0
           ? chinese
-            ? `連勝 ${device.streak} 天`
+            ? `連續 ${device.streak} 天`
             : `${device.streak}-day streak`
           : chinese
-            ? '今天開始連勝'
+            ? '今天開始連續學習'
             : 'Start your streak today',
         title: chinese ? '單字不會自己背好喔' : "Those words won't learn themselves",
       };

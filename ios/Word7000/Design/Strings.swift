@@ -176,7 +176,7 @@ enum L {
     static var dailyTargetText: String { t("也是每組學習卡的張數。", "Also the size of each set.") }
     static func wordsPerDay(_ count: Int) -> String { t("\(count) 個", "\(count) words") }
     static var reminder: String { t("學習提醒", "Study reminder") }
-    static var reminderText: String { t("中午提醒；連勝快斷時鎖定畫面倒數。", "Noon reminder; lock screen countdown before a streak ends.") }
+    static var reminderText: String { t("中午提醒；連續天數快斷時，鎖定畫面會倒數。", "Noon reminder; lock screen countdown before a streak ends.") }
     static var appearance: String { t("外觀", "Appearance") }
     static var themeSystem: String { t("自動", "Automatic") }
     static var themeLight: String { t("淺色", "Light") }

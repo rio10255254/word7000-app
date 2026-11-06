@@ -1,0 +1,80 @@
+    t =   108.21s Terminate com.rio.word7000:50162
+    t =   109.25s Open com.rio.word7000
+    t =   109.25s     Launch com.rio.word7000
+2026-11-06 03:17:28.192 xcodebuild[38261:100650] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-06 03:17:28.192 xcodebuild[38261:100650] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =   109.59s         Setting up automation session
+    t =   113.07s         Wait for com.rio.word7000 to idle
+    t =   115.42s Waiting 10.0s for "today-start" Button to exist
+    t =   116.47s     Checking `Expect predicate `existsNoRetry == 1` for object "today-start" Button`
+    t =   116.47s         Checking existence of `"today-start" Button`
+    t =   117.77s Waiting 10.0s for "mascot-chat-input" Any to exist
+    t =   118.80s     Checking `Expect predicate `existsNoRetry == 1` for object "mascot-chat-input" Any`
+    t =   118.80s         Checking existence of `"mascot-chat-input" Any`
+    t =   119.91s Find the Target Application 'com.rio.word7000'
+    t =   120.26s Added attachment named 'store-en-7-cat'
+    t =   120.26s Terminate com.rio.word7000:51042
+    t =   121.27s Open com.rio.word7000
+    t =   121.27s     Launch com.rio.word7000
+2026-11-06 03:17:40.210 xcodebuild[38261:100650] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-06 03:17:40.210 xcodebuild[38261:100650] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =   121.61s         Setting up automation session
+    t =   125.04s         Wait for com.rio.word7000 to idle
+    t =   127.61s Waiting 10.0s for "today-start" Button to exist
+    t =   128.65s     Checking `Expect predicate `existsNoRetry == 1` for object "today-start" Button`
+    t =   128.65s         Checking existence of `"today-start" Button`
+    t =   129.79s Tap Button (Element at index 1)
+    t =   129.79s     Wait for com.rio.word7000 to idle
+    t =   129.79s     Find the Button (Element at index 1)
+    t =   129.85s     Check for interrupting elements affecting "books.vertical.fill" Button
+    t =   129.89s     Synthesize event
+    t =   130.25s     Wait for com.rio.word7000 to idle
+    t =   132.88s Waiting 5.0s for "words-scan" Button to exist
+    t =   133.94s     Checking `Expect predicate `existsNoRetry == 1` for object "words-scan" Button`
+    t =   133.94s         Checking existence of `"words-scan" Button`
+    t =   134.10s Tap "words-scan" Button
+    t =   134.10s     Wait for com.rio.word7000 to idle
+    t =   134.11s     Find the "words-scan" Button
+    t =   134.19s     Check for interrupting elements affecting "words-scan" Button
+    t =   134.27s     Synthesize event
+    t =   134.57s     Wait for com.rio.word7000 to idle
+    t =   134.73s Waiting 5.0s for "scan-read-pasted" Button to exist
+    t =   135.75s     Checking `Expect predicate `existsNoRetry == 1` for object "scan-read-pasted" Button`
+    t =   135.76s         Checking existence of `"scan-read-pasted" Button`
+    t =   135.92s Find the "scan-read-pasted" Button
+    t =   136.06s Find the "scan-read-pasted" Button
+    t =   136.20s Find the "scan-read-pasted" Button
+    t =   136.35s Find the "scan-read-pasted" Button
+    t =   136.50s Find the "scan-read-pasted" Button
+    t =   136.64s Checking existence of `"scan-read-pasted" Button`
+    t =   136.74s Find the "scan-read-pasted" Button
+    t =   137.00s Find the "scan-read-pasted" Button
+    t =   137.13s Tap "scan-read-pasted" Button
+    t =   137.13s     Wait for com.rio.word7000 to idle
+    t =   137.13s     Find the "scan-read-pasted" Button
+    t =   137.24s     Check for interrupting elements affecting "scan-read-pasted" Button
+    t =   137.34s     Synthesize event
+    t =   137.65s     Wait for com.rio.word7000 to idle
+    t =   137.76s Waiting 10.0s for "scan-save" Button to exist
+    t =   138.77s     Checking `Expect predicate `existsNoRetry == 1` for object "scan-save" Button`
+    t =   138.77s         Checking existence of `"scan-save" Button`
+    t =   139.98s Find the Target Application 'com.rio.word7000'
+    t =   140.27s Added attachment named 'store-en-6-scan'
+    t =   140.28s Tear Down
+Test Case '-[Word7000UITests.AppStoreScreenshotTests testStoreEnglish]' passed (141.168 seconds).
+Test Suite 'AppStoreScreenshotTests' passed at 2026-11-06 03:18:00.105.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 303.527 (303.585) seconds
+Test Suite 'Word7000UITests.xctest' passed at 2026-11-06 03:18:00.105.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 303.527 (303.586) seconds
+Test Suite 'Selected tests' passed at 2026-11-06 03:18:00.106.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 303.527 (303.587) seconds
+2026-11-06 03:18:01.080 xcodebuild[38261:100650] [MT] IDETestOperationsObserverDebug: 316.854 elapsed -- Testing started completed.
+2026-11-06 03:18:01.080 xcodebuild[38261:100650] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-06 03:18:01.081 xcodebuild[38261:100650] [MT] IDETestOperationsObserverDebug: 316.854 sec, +316.854 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/_temp/Word7000.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

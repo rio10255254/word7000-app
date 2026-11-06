@@ -191,11 +191,12 @@ final class LayoutTests: XCTestCase {
 
     /// The chat a tap on the cat opens, closed again.
     private func closeCatChat(_ app: XCUIApplication) {
-        XCTAssertTrue(app.descendants(matching: .any)["mascot-chat-input"].waitForExistence(timeout: 5), "A tap on the cat opens its chat")
+        // The chat opens on the cat working out its note, so its input may not
+        // be there yet: the sheet's Done key says it is open.
         let done = app.buttons.matching(NSPredicate(format: "label IN %@", ["完成", "Done"])).firstMatch
-        XCTAssertTrue(done.waitForExistence(timeout: 5))
+        XCTAssertTrue(done.waitForExistence(timeout: 5), "A tap on the cat opens its chat\n\(app.debugDescription)")
         done.tap()
-        XCTAssertTrue(app.descendants(matching: .any)["mascot-chat-input"].waitForNonExistence(timeout: 5))
+        XCTAssertTrue(done.waitForNonExistence(timeout: 5))
     }
 
     /// Wholly above the row of buttons at the bottom, not tucked under it.

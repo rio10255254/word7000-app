@@ -876,11 +876,11 @@ struct EarlierChatLine: View {
                 .truncationMode(.head)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
-                .background((line.mine ? Palette.accent.opacity(0.07) : Palette.fill.opacity(0.55)),
+                // The bubble as solid as the rest; only its words are quieter.
+                .background((line.mine ? Palette.accent.opacity(0.14) : Palette.fill),
                             in: BubbleShape(tail: line.mine ? .trailing : .leading))
             if !line.mine { Spacer(minLength: 56) }
         }
-        .opacity(0.8)
         .accessibilityLabel(L.t("上一句：\(line.text)", "Before: \(line.text)"))
         .accessibilityIdentifier("speaking-earlier-line")
     }

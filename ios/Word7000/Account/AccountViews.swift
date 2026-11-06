@@ -118,6 +118,8 @@ struct SignInSheet: View {
                 }
                 .padding(24)
             }
+            // On the app's paper, not a blank system sheet.
+            .background { AmbientBackground() }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(L.t("稍後", "Not now")) { dismiss() }
@@ -125,6 +127,8 @@ struct SignInSheet: View {
                 }
             }
         }
+        .compactSheet()
+        .presentationBackground(Palette.background)
         .interactiveDismissDisabled(account.busy)
         .onChange(of: account.status) { _, status in
             if case .error = status { failures += 1 }

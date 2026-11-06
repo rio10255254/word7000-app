@@ -135,13 +135,13 @@ struct QuizSessionView: View {
                                      ? CatQuips.right(index, combo: combo, word: face.prompt, source: catLines)
                                      : CatQuips.wrong(index, word: face.prompt, misses: model.progress(for: word.id).reviewCount, source: catLines)
                              })
-                // The run's badge floats just under the bar, clear of the question.
-                .overlay(alignment: .topLeading) {
+                // The run's badge sits at the bar's far end, beside it rather
+                // than over the start of a long word below.
+                .overlay(alignment: .topTrailing) {
                     if combo >= 3 {
                         comboBadge
-                            // Below the bar and the companion riding it.
-                            .offset(y: 34)
-                            .transition(reduceMotion ? .opacity : .scale(scale: 0.5, anchor: .leading).combined(with: .opacity))
+                            .offset(y: -10)
+                            .transition(reduceMotion ? .opacity : .scale(scale: 0.5, anchor: .trailing).combined(with: .opacity))
                     }
                 }
                 .padding(.top, 4)
@@ -238,7 +238,7 @@ struct QuizSessionView: View {
     private var comboBadge: some View {
         if appStyle == .collage {
             // Collage: a rubber stamp that grows a number with the run.
-            StampMark(size: 58, angle: -12) {
+            StampMark(size: 46, angle: -12) {
                 VStack(spacing: 0) {
                     Text(L.t("連對", "Streak")).font(.caption2.weight(.heavy))
                     Text("\(combo)").font(.display(.headline, weight: .heavy)).contentTransition(.numericText(value: Double(combo)))

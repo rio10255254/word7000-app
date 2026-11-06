@@ -108,7 +108,8 @@ struct SpeakingListenView: View {
             if playTask != nil {
                 Label(L.t("對話中", "Talking"), systemImage: "waveform")
                     .font(.caption.weight(.bold))
-                    .foregroundStyle(TodayView.speakingTint)
+                    // Adaptive, so it stays legible at night.
+                    .foregroundStyle(Palette.known)
                     .symbolEffect(.variableColor.iterative, isActive: !reduceMotion)
             }
         }
@@ -136,19 +137,20 @@ struct SpeakingListenView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(line.text)
                     .font(.title3.weight(.semibold))
-                    .foregroundStyle(line.mine ? .white : Palette.ink)
+                    .foregroundStyle(Palette.ink)
                 if !line.gloss.isEmpty {
                     Text(line.gloss)
                         .font(.subheadline)
-                        .foregroundStyle(line.mine ? Color.white.opacity(0.85) : Palette.secondaryLabel)
+                        .foregroundStyle(Palette.secondaryLabel)
                 }
             }
             .multilineTextAlignment(.leading)
             .padding(.horizontal, 14)
             .padding(.vertical, 11)
+            // The same bubbles as the steps after it (ShadowStepView's chat):
+            // the other person on the paper's fill, the learner in clay.
             .background {
-                shape.fill(line.mine ? TodayView.speakingTint : Palette.surface)
-                    .shadow(color: .black.opacity(0.08), radius: 3, y: 2)
+                shape.fill(line.mine ? Palette.accent.opacity(0.14) : Palette.fill)
             }
             .overlay { shape.strokeBorder(speaking ? Palette.accent : .clear, lineWidth: 2) }
             .scaleEffect(speaking && !reduceMotion ? 1.02 : 1)
@@ -174,7 +176,7 @@ struct SpeakingListenView: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 14)
-            .background(Palette.surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .background(Palette.fill, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
             Spacer(minLength: 0)
         }
     }

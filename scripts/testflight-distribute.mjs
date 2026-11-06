@@ -82,10 +82,16 @@ if (Object.values(notes).some(Boolean)) {
 // 3. Into the group.
 const group = (await api('GET', `/v1/betaGroups?filter[app]=${app.id}&filter[name]=${q(args.group)}&limit=1`)).data[0];
 if (!group) throw new Error(`No TestFlight group named "${args.group}"`);
-// Adding a build the group already has is fine.
-await api('POST', `/v1/betaGroups/${group.id}/relationships/builds`, { data: [{ type: 'builds', id: build.id }] })
-  .catch((error) => { if (error.status !== 409) throw error; });
-console.log(`Added to "${args.group}".`);
+if (group.attributes.isInternalGroup && group.attributes.hasAccessToAllBuilds) {
+  // An internal group with access to all builds (Rio Testing) already has it;
+  // Apple refuses to add a build to one by hand (422).
+  console.log(`"${args.group}" is an internal group with access to all builds: it has this build already.`);
+} else {
+  // Adding a build the group already has is fine.
+  await api('POST', `/v1/betaGroups/${group.id}/relationships/builds`, { data: [{ type: 'builds', id: build.id }] })
+    .catch((error) => { if (error.status !== 409) throw error; });
+  console.log(`Added to "${args.group}".`);
+}
 
 // 4. External groups need Beta App Review; later builds of an approved
 // version usually pass at once. Already submitted is fine.

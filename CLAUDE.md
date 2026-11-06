@@ -16,8 +16,8 @@
 
 | 線 | 分支 | 版本號 | TestFlight | 送審 |
 |---|---|---|---|---|
-| 正式線 | `master` | 目前的版本（2.0.2） | `Wordcat Public Testing 1` | 可以 |
-| 研發線（WordCat Next） | `claude/wizardly-thompson-s0lgzj` | 跟正式線同一個版本號 | 只發**內部**測試群組 | **永遠不送審** |
+| 正式線 | `master` | 目前的版本（2.0.2） | 先只發 `Rio Testing`，使用者試過再自己加到其他群組 | 可以 |
+| 研發線（WordCat Next） | `claude/wizardly-thompson-s0lgzj` | 跟正式線同一個版本號 | 先只發 `Rio Testing`；不進 `Wordcat Public Testing 1` | **永遠不送審** |
 
 研發線的計畫在研發分支的 `docs/WordCat-Next.md`；它的追蹤 PR 是 rio10255254/word7000-app#58，**永遠不要合併它**。
 
@@ -41,11 +41,14 @@
 - 改版本要同時改 `ios/Release/app.json` 的 `version` 和 `ios/Word7000.xcodeproj/project.pbxproj` 的四個 `MARKETING_VERSION`。
 - 建置號碼兩條線共用、依序往上（`scripts/next-build-number.mjs` 從 App Store Connect 取下一個號碼），所以同一個版本底下會混著兩條線的建置。例如 2.0.2：(11) 是正式線，(12) 是研發線，正式線下一個是 (13)。
 
-**發 TestFlight**
+**發 TestFlight：新建置一律先只發 `Rio Testing`（2026-11-06 使用者改定）**
 
-- GitHub Actions → `iOS release` → Run workflow，「Use workflow from」選要發的那條線的分支，operation 選 `native-testflight`。
-- 正式線發給 `Wordcat Public Testing 1`。
-- 研發線只發給內部測試群組（`testflight_group` 填內部群組的名字）。研發分支的發布流程會擋住發給 `Wordcat Public Testing 1`，並在測試說明開頭加上「研發版」。
+- 兩條線的每個新建置都只先發到內部群組 `Rio Testing`（使用者自己）。使用者自己試過沒問題，才**由使用者手動**在 App Store Connect 加到其他測試群組。
+- 不要自動把建置加到其他群組，也不要用 API 或 `testflight-submit` 加，除非使用者明確要求。其他群組有：
+  - `WordCat Internal`：內部群組，只收手動加入的建置。2026-11-06 取代了會自動收到所有建置的 `Word7000 Private Beta`。
+  - `Wordcat Public Testing 1`：外部群組。
+- 操作：GitHub Actions → `iOS release` → Run workflow，「Use workflow from」選要發的那條線的分支，operation 選 `native-testflight`，`testflight_group` 預設就是 `Rio Testing`，不用改。
+- 研發分支的發布流程會擋住發給 `Wordcat Public Testing 1`，並在測試說明開頭加上「研發版」。
 
 **送 App Store 審核：只用正式線的建置**
 

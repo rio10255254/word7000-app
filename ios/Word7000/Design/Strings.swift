@@ -35,6 +35,7 @@ enum L {
     static var extraAction: String { t("再學一組", "One more set") }
     static func todayPlan(due: Int, fresh: Int) -> String {
         // A half that is zero is left out ("20 個新字", not "0 個待複習 · 20 個新字").
+        if due == 0, fresh == 0 { return t("這個範圍沒有要學的字", "Nothing to study in this range") }
         if due == 0 { return t("\(fresh) 個新字", "\(fresh) new") }
         if fresh == 0 { return t("\(due) 個待複習", "\(due) to review") }
         return t("\(due) 個待複習 · \(fresh) 個新字", "\(due) to review · \(fresh) new")

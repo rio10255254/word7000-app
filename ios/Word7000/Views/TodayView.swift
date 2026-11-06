@@ -532,9 +532,14 @@ struct TodayView: View {
 
     private func mainButton(roomy: Bool) -> some View {
         let node = currentNode
-        return Button { goNext() } label: {
+        // Nothing left in the range studied (a filter, a small bank): the key
+        // says so and opens the range, rather than greying out unexplained.
+        let empty = node?.isWords == true && model.studyPlan.total == 0 && !model.routinePending
+        return Button {
+            if empty { studySettingsOpen = true } else { goNext() }
+        } label: {
             HStack(spacing: 8) {
-                Text(mainTitle)
+                Text(empty ? L.t("換個學習範圍", "Change what to study") : mainTitle)
                 Image(systemName: "arrow.right").symbolEffect(.bounce, value: greetingHops)
             }
             .font(.title3.weight(.heavy))
@@ -545,7 +550,6 @@ struct TodayView: View {
             .shadow(color: .black.opacity(0.25), radius: 10, y: 5)
         }
         .buttonStyle(SoftPressStyle())
-        .disabled(node?.isWords == true && model.studyPlan.total == 0 && !model.routinePending)
         .overlay(alignment: .topTrailing) {
             if model.settings.guideActive == true, model.progress.lastStudyDate == nil, !AppRuntime.catShowcase {
                 StartHereSticker().offset(x: -8, y: -16)

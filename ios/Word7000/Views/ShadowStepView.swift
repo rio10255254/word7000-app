@@ -49,8 +49,18 @@ struct ShadowStepView: View {
     @State private var showsTranslation = false
     /// Counting down to the next step after a sentence said well.
     @State private var advancing = false
+    /// After a take with mistakes: listening starts again by itself in a
+    /// moment, until the sentence is said right.
+    @State private var retrying = false
+    /// What to watch for on the next try: the characters (words) said wrong.
+    @State private var retryFocus: [String] = []
     /// Learning Chinese: each character's measured pitch, by unit id.
     @State private var tones: [Int: ToneAnalysis.Syllable] = [:]
+    /// The take before this one, kept while saying it again: its colours
+    /// stay on the characters not reached yet, and its note above the key,
+    /// so the learner sees what to fix while saying it.
+    @State private var lastTake: ShadowingCheck?
+    @State private var lastTones: [Int: ToneAnalysis.Syllable] = [:]
     /// Learning Chinese: the tone each character has as said in the phrase,
     /// by unit id, drawn under it as a guide before anything is said.
     @State private var guideTones: [Int: Int] = [:]
@@ -66,8 +76,10 @@ struct ShadowStepView: View {
 
     /// While listening, what was heard turns green as it comes, and what was
     /// skipped on the way (before the last word heard) red; the rest waits.
-    private var shownUnits: [ShadowingCheck.Unit] {
-        if let check, listener.isFinal { return check.units }
+    /// Saying it again, the characters not reached yet keep the last take's
+    /// colours (a little faded) until they are said.
+    private var shownUnits: [(unit: ShadowingCheck.Unit, carried: Bool)] {
+        if let check, listener.isFinal { return check.units.map { ($0, false) } }
         let units = (check ?? ShadowingCheck(target: sentence, chinese: chinese)).units
         let reached = units.lastIndex { unit in
             switch unit.mark {
@@ -75,11 +87,16 @@ struct ShadowStepView: View {
             default: false
             }
         }
+        let before = lastTake?.units
         return units.enumerated().map { index, unit in
             var shown = unit
-            if let reached, index <= reached { return shown }
+            if let reached, index <= reached { return (shown, false) }
+            if let before, before.indices.contains(index), before[index].id == unit.id, before[index].mark != nil {
+                shown.mark = before[index].mark
+                return (shown, true)
+            }
             shown.mark = nil
-            return shown
+            return (shown, false)
         }
     }
 
@@ -143,7 +160,10 @@ struct ShadowStepView: View {
             }
         }
         .task { await listener.refresh(language: language) }
-        .task(id: sentence) { guideTones = chinese ? Self.tonesAsSaid(in: sentence) : [:] }
+        .task(id: sentence) {
+            guideTones = chinese ? Self.tonesAsSaid(in: sentence) : [:]
+            lastTake = nil; lastTones = [:]; retryFocus = []
+        }
         .onAppear {
             #if DEBUG
             // A simulated take says the sentence back.
@@ -158,6 +178,8 @@ struct ShadowStepView: View {
         }
         .onChange(of: listener.isFinal) { _, final in
             guard final else { return }
+            // Nothing heard this time: the last take's colours stay to go by.
+            if !listener.text.isEmpty { lastTake = nil; lastTones = [:] }
             if !listener.text.isEmpty {
                 withAnimation(reduceMotion ? nil : .spring(duration: 0.5, bounce: 0.3)) {
                     check = ShadowingCheck(target: sentence, heard: listener.text, chinese: chinese)
@@ -167,7 +189,14 @@ struct ShadowStepView: View {
             }
             Task {
                 if chinese { await measureTones() }
-                if said { advancing = true }
+                guard let check, listener.isFinal else { return }
+                // Only a sentence said right all through moves on by itself.
+                if check.perfect { advancing = true; return }
+                // Otherwise, once there is something to fix, the key listens
+                // again by itself, until it is said right (Skip and Next still work).
+                guard listener.heardVoice, !listener.text.isEmpty else { return }
+                retryFocus = check.units.filter { $0.scored && $0.mark != .heard }.map(\.text)
+                retrying = true
             }
         }
         // Stops by itself: everything heard, or the learner stopped speaking
@@ -179,11 +208,22 @@ struct ShadowStepView: View {
                 guard listener.listening else { return }
                 let complete = check.map { $0.heardCount == $0.scoredCount && $0.scoredCount > 0 } ?? false
                 if complete, listener.quietFor > 0.35 { listener.stop(); return }
-                if listener.heardVoice, listener.silentFor > 1.2 { listener.stop(); return }
+                // The last character was reached, though some were missed on the way.
+                let lastScored = check?.units.last(where: \.scored)
+                let reachedEnd = lastScored.map { $0.mark != nil && $0.mark != .missed } ?? false
+                if reachedEnd, listener.quietFor > 0.6 { listener.stop(); return }
+                if listener.heardVoice, listener.silentFor > 1.0 { listener.stop(); return }
                 if listener.support == .live, !listener.text.isEmpty, listener.quietFor > 2.5 { listener.stop(); return }
                 if !listener.heardVoice, listener.text.isEmpty, listener.seconds > 8 { listener.stop(); return }
                 if listener.seconds > 30 { listener.stop(); return }
             }
+        }
+        .task(id: retrying) {
+            guard retrying else { return }
+            do { try await Task.sleep(for: .milliseconds(reduceMotion ? 1400 : 1800)) } catch { return }
+            guard retrying, !listener.busy, scenePhase == .active else { retrying = false; return }
+            retrying = false
+            sayAgain()
         }
         .task(id: advancing) {
             guard advancing else { return }
@@ -192,7 +232,7 @@ struct ShadowStepView: View {
             finish()
         }
         .onChange(of: scenePhase) { _, phase in
-            if phase == .background { advancing = false; listener.interrupt(); Speaker.shared.stop() }
+            if phase == .background { hold(); listener.interrupt(); Speaker.shared.stop() }
         }
         .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification)) { _ in listener.interrupt() }
         // A light tick for each newly heard word, a success at the end.
@@ -254,7 +294,7 @@ struct ShadowStepView: View {
             // Hear it, and see the whole exchange translated.
             VStack(spacing: 12) {
                 SpeakButton(text: partner.line, language: language)
-                    .simultaneousGesture(TapGesture().onEnded { advancing = false })
+                    .simultaneousGesture(TapGesture().onEnded { hold() })
                 translateKey
             }
             Spacer(minLength: 24)
@@ -270,7 +310,7 @@ struct ShadowStepView: View {
                 // Room for the sentence first, so a short one stays on one row.
                 Spacer(minLength: 0)
                 SpeakButton(text: sentence, language: language)
-                    .simultaneousGesture(TapGesture().onEnded { advancing = false })
+                    .simultaneousGesture(TapGesture().onEnded { hold() })
                     .accessibilityIdentifier("shadow-listen")
                 replyText
                     .padding(.horizontal, 14)
@@ -290,9 +330,11 @@ struct ShadowStepView: View {
         VStack(alignment: .leading, spacing: 6) {
             FlowLayout(spacing: chinese ? 1 : 7, lineSpacing: chinese ? 8 : 6, balanced: true) {
                 let size = textSize
-                ForEach(shownUnits) { unit in
-                    ShadowUnitView(unit: unit, chinese: chinese, showsPinyin: chinese, size: size,
-                                   tone: tones[unit.id], guide: guideTones[unit.id])
+                ForEach(shownUnits, id: \.unit.id) { shown in
+                    ShadowUnitView(unit: shown.unit, chinese: chinese, showsPinyin: chinese, size: size,
+                                   tone: shown.carried ? lastTones[shown.unit.id] : tones[shown.unit.id],
+                                   guide: guideTones[shown.unit.id])
+                        .opacity(shown.carried ? 0.6 : 1)
                 }
             }
             .accessibilityElement(children: .ignore)
@@ -312,7 +354,7 @@ struct ShadowStepView: View {
     private var replyKeys: some View {
         VStack(spacing: 12) {
             SpeakButton(text: sentence, language: language)
-                .simultaneousGesture(TapGesture().onEnded { advancing = false })
+                .simultaneousGesture(TapGesture().onEnded { hold() })
                 .accessibilityIdentifier("shadow-listen")
             translateKey
         }
@@ -332,8 +374,27 @@ struct ShadowStepView: View {
         }
     }
 
-    private func toggleTranslation() {
+    /// Another take: the last one's colours and notes stay until this one is
+    /// checked, so the learner knows what to fix while saying it.
+    private func sayAgain() {
+        Speaker.shared.stop()
+        if let check, listener.isFinal, !listener.text.isEmpty {
+            lastTake = check.perfect ? nil : check
+            lastTones = check.perfect ? [:] : tones
+            retryFocus = check.units.filter { $0.scored && $0.mark != .heard }.map(\.text)
+        }
+        check = nil; tones = [:]
+        listener.start()
+    }
+
+    /// Any touch on the sentence or its keys: stay on this step for now.
+    private func hold() {
         advancing = false
+        retrying = false
+    }
+
+    private func toggleTranslation() {
+        hold()
         guard !translation.isEmpty || !(partner?.gloss ?? "").isEmpty else { return }
         withAnimation(reduceMotion ? nil : Motion.reveal) { showsTranslation.toggle() }
     }
@@ -347,25 +408,27 @@ struct ShadowStepView: View {
             if let partner { partnerBubble(partner).modifier(ChatRise(step: 1)) }
             // Only a role-play rolls on like a chat.
             replyBlock.modifier(ChatRise(step: 2, enabled: partner != nil))
-            if let check, listener.isFinal { result(check) }
+            if let check, listener.isFinal { result(check, tones: tones) }
+            else if let lastTake { result(lastTake, tones: lastTones).opacity(0.6) }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .card(radius: Metrics.wordCardRadius, padding: 18)
     }
 
-    private func result(_ check: ShadowingCheck) -> some View {
+    private func result(_ check: ShadowingCheck, tones: [Int: ToneAnalysis.Syllable]) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 8) {
-                Image(systemName: check.passed ? "checkmark.seal.fill" : "arrow.counterclockwise.circle.fill")
-                    .foregroundStyle(check.passed ? Palette.known : Palette.review)
+                Image(systemName: check.perfect ? "checkmark.seal.fill" : "arrow.counterclockwise.circle.fill")
+                    .foregroundStyle(check.perfect ? Palette.known : Palette.review)
                     .font(.title3)
                     .symbolEffect(.bounce, value: reduceMotion ? false : check.passed)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(check.passed ? L.t("說得很好！", "Nicely said!")
+                    Text(check.perfect ? L.t("全部念對了！", "All of it, right!")
                          : listener.text.isEmpty && listener.support == .live ? L.t("沒聽清楚，靠近一點再說一次？", "Didn't catch that. Closer, and once more?")
-                         : L.t("差一點，再試一次？", "Almost. One more try?"))
+                         : check.passed ? L.t("差一點，把黃色、紅色的字再念一次", "Almost. Say the yellow and red ones again")
+                         : L.t("再念一次看看", "Once more"))
                         .font(.headline)
-                    if let note = toneNote(check) {
+                    if let note = toneNote(check, tones: tones) {
                         Text(note).font(.subheadline).foregroundStyle(Palette.review)
                     }
                 }
@@ -373,7 +436,7 @@ struct ShadowStepView: View {
                 Text("\(Int((check.score * 100).rounded()))%")
                     .font(.display(.title3, weight: .bold))
                     .monospacedDigit()
-                    .foregroundStyle(check.passed ? Palette.known : Palette.review)
+                    .foregroundStyle(check.perfect ? Palette.known : Palette.review)
             }
             .accessibilityElement(children: .combine)
             .accessibilityIdentifier("shadow-result")
@@ -387,9 +450,24 @@ struct ShadowStepView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
             }
+            // Test phones only: which recognizer listened, and whether text
+            // came while speaking (live colouring needs it).
+            if PushRegistration.shared.isTester {
+                Text("\(diagnostics)・音高 \(tones.count)/\(check.scoredCount) 字")
+                    .font(.caption2.monospacedDigit())
+                    .foregroundStyle(.tertiary)
+                    .accessibilityIdentifier("shadow-diagnostics")
+            }
         }
         .padding(.top, 4)
         .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 8)))
+    }
+
+    /// Test phones: which recognizers listened and how often each answered
+    /// while speaking (live colouring needs those answers).
+    private var diagnostics: String {
+        let used = ["new": "新版", "old": "舊版", "both": "新版＋舊版"][listener.recognizerUsed] ?? "無"
+        return "辨識：\(used)・\(listener.takePath)・即時 \(listener.liveUpdates) 次（新 \(listener.newUpdates)／舊 \(listener.oldUpdates)）"
     }
 
     private func legend(_ color: Color, _ text: String) -> some View {
@@ -415,8 +493,8 @@ struct ShadowStepView: View {
                             .animation(.spring(response: 0.2, dampingFraction: 0.6), value: listener.level)
                     }
                     Button {
-                        advancing = false
-                        if live { listener.stop() } else { Speaker.shared.stop(); check = nil; tones = [:]; listener.start() }
+                        hold()
+                        if live { listener.stop() } else { sayAgain() }
                     } label: {
                         Image(systemName: live ? "stop.fill" : (tried ? "arrow.counterclockwise" : "mic.fill"))
                             .font(.system(size: 40, weight: .semibold))
@@ -433,12 +511,16 @@ struct ShadowStepView: View {
             }
             Group {
                 if live {
-                    Text(listener.text.isEmpty && !listener.heardVoice ? L.t("請說…", "Go ahead…")
+                    Text(!retryFocus.isEmpty
+                         ? L.t("注意「\(retryFocus.prefix(3).joined(separator: "、"))」，說完會自動停", "Mind \(retryFocus.prefix(3).joined(separator: ", ")); it stops when you're done")
+                         : listener.text.isEmpty && !listener.heardVoice ? L.t("請說…", "Go ahead…")
                          : L.t("繼續說，說完會自動停", "Keep going; it stops when you're done"))
                 } else if listener.state == .finishing {
                     HStack(spacing: 6) { ProgressView(); Text(L.t("聽聽看你說了什麼…", "Listening back…")) }
                 } else if advancing {
                     Text(L.t("馬上進入下一步", "On to the next step"))
+                } else if retrying {
+                    Text(L.t("馬上再聽你念一次…", "Listening again in a moment…"))
                 } else if tried {
                     Text(L.t("按一下再說一次", "Tap to say it again"))
                 } else if earlier.isEmpty {
@@ -453,6 +535,11 @@ struct ShadowStepView: View {
             .lineLimit(1)
             .minimumScaleFactor(0.8)
             .contentTransition(.opacity)
+            if live, PushRegistration.shared.isTester {
+                Text(diagnostics)
+                    .font(.caption2.monospacedDigit())
+                    .foregroundStyle(.tertiary)
+            }
             if let message = listener.message {
                 Text(message).font(.footnote).foregroundStyle(Palette.miss)
                     .multilineTextAlignment(.center)
@@ -468,7 +555,7 @@ struct ShadowStepView: View {
 
     private var playKey: some View {
         Button {
-            advancing = false
+            hold()
             listener.togglePlayback()
         } label: {
             Image(systemName: listener.state == .playing ? "stop.fill" : "play.fill")
@@ -562,14 +649,14 @@ struct ShadowStepView: View {
     }
 
     /// "馬 sounded like a first tone", for the first tone slip.
-    private func toneNote(_ check: ShadowingCheck) -> String? {
+    private func toneNote(_ check: ShadowingCheck, tones: [Int: ToneAnalysis.Syllable]) -> String? {
         guard let unit = check.units.first(where: { if case .tone = $0.mark { true } else { false } }),
               let heard = tones[unit.id]?.heard else { return nil }
         return L.t("「\(unit.text)」聽起來像\(ToneAnalysis.toneName(heard))", "\u{201C}\(unit.text)\u{201D} sounded like tone \(heard)")
     }
 
     private func finish() {
-        advancing = false
+        hold()
         listener.interrupt()
         Speaker.shared.stop()
         onDone(said)
@@ -702,7 +789,7 @@ struct ShadowUnitView: View {
                     .font(characterFont)
                     .foregroundStyle(unit.scored ? color : Palette.secondaryLabel)
                 if unit.scored {
-                    ToneCurve(syllable: tone, expected: guide, color: color)
+                    ToneCurve(syllable: tone, expected: guide, color: color, judged: unit.mark != nil, heardTone: heardTone)
                         .frame(width: columnWidth - 6, height: 12)
                         .opacity(tone == nil && guide == nil ? 0 : 1)
                 } else {
@@ -722,6 +809,12 @@ struct ShadowUnitView: View {
                 .underline(unit.mark == .missed, color: Palette.miss)
                 .animation(.easeOut(duration: 0.2), value: unit.mark)
         }
+    }
+
+    /// The tone heard instead, when only the tone differed.
+    private var heardTone: Int? {
+        if case .tone(let heard) = unit.mark { return ToneAnalysis.tone(of: heard) }
+        return nil
     }
 
     /// The expected reading, or the one heard instead when only the tone differed.
@@ -821,6 +914,11 @@ struct ToneCurve: View {
     /// The tone the character should have.
     var expected: Int? = nil
     let color: Color
+    /// A take has marked this character: the shape takes its colour (green
+    /// when right), even where no pitch could be measured.
+    var judged = false
+    /// The tone recognition heard instead, drawn over the expected one.
+    var heardTone: Int? = nil
 
     var body: some View {
         Canvas { context, size in
@@ -838,13 +936,18 @@ struct ToneCurve: View {
                                style: StrokeStyle(lineWidth: 1.2, lineCap: .round, dash: [2, 2]))
                 context.stroke(path(syllable.contour), with: .color(color), style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
             } else if let expected {
-                let guide = Palette.secondaryLabel.opacity(0.75)
-                if expected == 5 {
+                let guide = judged ? color : Palette.secondaryLabel.opacity(0.75)
+                if let heardTone, heardTone != expected {
+                    context.stroke(path(ToneAnalysis.shape(of: expected)), with: .color(Palette.secondaryLabel.opacity(0.6)),
+                                   style: StrokeStyle(lineWidth: 1.2, lineCap: .round, dash: [2, 2]))
+                    context.stroke(path(ToneAnalysis.shape(of: heardTone)), with: .color(color),
+                                   style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
+                } else if expected == 5 {
                     let dot = CGRect(x: size.width / 2 - 2, y: size.height / 2 - 2, width: 4, height: 4)
                     context.fill(Path(ellipseIn: dot), with: .color(guide))
                 } else {
                     context.stroke(path(ToneAnalysis.shape(of: expected)), with: .color(guide),
-                                   style: StrokeStyle(lineWidth: 1.6, lineCap: .round, lineJoin: .round))
+                                   style: StrokeStyle(lineWidth: judged ? 2 : 1.6, lineCap: .round, lineJoin: .round))
                 }
             }
         }

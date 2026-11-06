@@ -405,7 +405,8 @@ private struct ProfileCard: View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(spacing: 12) {
                 MascotBuddy(mood: model.progress.studiedToday > 0 ? .happy : .smug, size: 56, lines: buddyLines,
-                            greeting: insightHeadline, tip: buddyTip, fidgets: true, speech: $spoken)
+                            greeting: insightHeadline, tip: buddyTip, fidgets: true, speech: $spoken,
+                            onOpen: { chatOpen = true })
                     .accessibilityIdentifier("me-mascot")
                 ZStack(alignment: .leading) {
                     identity

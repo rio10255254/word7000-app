@@ -455,6 +455,8 @@ private struct ChatLine: View {
                     .shadow(color: PremiumSurface.umber.opacity(0.12), radius: 6, y: 3)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+            // The bubble is cream in dark mode too: its text keeps the light-mode colours.
+            .environment(\.colorScheme, .light)
     }
 }
 
@@ -480,6 +482,7 @@ private struct ChatCard<Content: View>: View {
                 .fill(MascotBubble.cream)
                 .shadow(color: PremiumSurface.umber.opacity(0.12), radius: 6, y: 3)
         }
+        .environment(\.colorScheme, .light)
     }
 }
 
@@ -502,6 +505,7 @@ private struct TypingDots: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 13)
         .background(MascotBubble.cream, in: Capsule())
+        .environment(\.colorScheme, .light)
         .accessibilityLabel(L.t("傻貓正在想", "Silly Cat is thinking"))
     }
 }

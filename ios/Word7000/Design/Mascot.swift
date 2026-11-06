@@ -944,6 +944,10 @@ struct MascotBuddy: View {
     var speech: Binding<String?>? = nil
     /// Told when a run of smacks has been too much, e.g. to storm off.
     var onBeatenUp: (() -> Void)? = nil
+    /// When given, a tap opens this (its chat), and a quick second tap smacks
+    /// it instead; without it every tap is a smack.
+    var onOpen: (() -> Void)? = nil
+    @State private var opening: Task<Void, Never>?
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(AppModel.self) private var model
@@ -1007,10 +1011,25 @@ struct MascotBuddy: View {
                         .accessibilityHidden(true)
                 }
             }
-            .contentShape(Circle().inset(by: -size * 0.04))
+            // A generous target: it walks about, and a finger is bigger than it.
+            .contentShape(Circle().inset(by: -size * 0.12))
             .onTapGesture(coordinateSpace: .local) { location in
                 // Hit on its left, it flies right, and the other way round.
-                smack(from: location.x < size / 2 ? -1 : 1)
+                let side: CGFloat = location.x < size / 2 ? -1 : 1
+                guard let onOpen else { smack(from: side); return }
+                // A second tap in a moment, or more during a run of smacks: a smack.
+                if opening != nil || Date().timeIntervalSince(lastSlap) < 1.5 {
+                    opening?.cancel(); opening = nil
+                    smack(from: side)
+                    return
+                }
+                onInteract?()
+                opening = Task { @MainActor in
+                    try? await Task.sleep(for: .milliseconds(260))
+                    guard !Task.isCancelled else { return }
+                    opening = nil
+                    onOpen()
+                }
             }
             .onLongPressGesture(minimumDuration: 0.4, maximumDistance: 12) {
                 love()
@@ -1066,8 +1085,9 @@ struct MascotBuddy: View {
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(L.t("傻貓", "Silly Cat"))
             .accessibilityAddTraits(.isButton)
-            .accessibilityAction { poke() }
-            .accessibilityHint(L.t("點一下扁它", "Tap to smack it"))
+            .accessibilityAction { if let onOpen { onOpen() } else { poke() } }
+            .accessibilityHint(onOpen == nil ? L.t("點一下扁它", "Tap to smack it")
+                                : L.t("點一下跟它聊天，連點兩下扁它", "Tap to chat; double-tap to smack it"))
             .accessibilityActions {
                 if let tip { Button(tip.text) { tip.action() } }
             }

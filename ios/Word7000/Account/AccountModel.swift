@@ -351,12 +351,27 @@ final class AccountModel {
         return (try? await client.setPushTester(token: token, on: on, session: valid)) ?? false
     }
 
-    /// Reports which app version this account runs; quietly skipped offline.
+    /// Reports which app version this account runs, on which phone (model
+    /// and the app's own id for it, so two phones on one account are two);
+    /// quietly skipped offline.
     func reportAppVersion() async {
         guard let client, let current = session, !AppRuntime.uiTesting else { return }
         guard let valid = try? await validSession(client: client, current) else { return }
         try? await client.reportAppVersion(UpdateGate.version, build: UpdateGate.build,
-                                           os: UIDevice.current.systemVersion, language: L.zh ? "zh" : "en", session: valid)
+                                           os: UIDevice.current.systemVersion, language: L.zh ? "zh" : "en",
+                                           device: UIDevice.current.identifierForVendor?.uuidString,
+                                           model: Self.modelIdentifier, session: valid)
+    }
+
+    /// The phone's model identifier, e.g. "iPhone18,1" (the simulator's own
+    /// model when run there).
+    static var modelIdentifier: String {
+        if let simulated = ProcessInfo.processInfo.environment["SIMULATOR_MODEL_IDENTIFIER"] { return simulated }
+        var info = utsname()
+        uname(&info)
+        return withUnsafeBytes(of: &info.machine) { raw in
+            String(decoding: raw.prefix { $0 != 0 }, as: UTF8.self)
+        }
     }
 
     /// Sends the usage counts gathered since the last send (see Usage).

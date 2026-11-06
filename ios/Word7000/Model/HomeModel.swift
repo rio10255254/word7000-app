@@ -32,6 +32,33 @@ extension AppModel {
     /// The built-in list as fourteen chapters, with the words mastered in each.
     var shelfChapters: [ShelfChapter] { MasteryShelf.chapters(words: coreWords, state: progress) }
 
+    /// What the exam-style questions are called, after the exam the learner
+    /// said they prepare for (學測 by default).
+    var examStyleName: String {
+        switch settings.learnerProfile?.exam {
+        case "tvee": L.t("統測題型", "Exam style")
+        case "cap": L.t("會考題型", "Exam style")
+        case "proficiency": L.t("檢定題型", "Test style")
+        case "none": L.t("句子填空", "Fill the gap")
+        default: L.t("學測題型", "Exam style")
+        }
+    }
+
+    /// Words still to do today after the current set, for a set shorter than
+    /// the goal (the first one after the welcome); 0 once the goal is met, or
+    /// when the bank has fewer words than the goal and one set is all of it.
+    var wordsLeftForGoal: Int {
+        guard !goalDone, bank.words.count >= progress.dailyTarget else { return 0 }
+        return progress.dailyTarget - progress.studiedToday
+    }
+
+    /// The chapter of the built-in words being read (0-based), from where
+    /// the level test placed the learner; nil while another bank is studied.
+    var readingChapter: Int? {
+        guard settings.activeBankId == WordBanks.coreBankId else { return nil }
+        return MasteryShelf.current(shelfChapters, from: placementStart)
+    }
+
     /// The words a quiz outside today's routine asks about: the chosen bank's
     /// learned words, or for the weekly quiz everything studied this week.
     func examRoundIds(_ kind: ExamRoundKind, seed: String) -> [String] {
@@ -50,11 +77,16 @@ extension AppModel {
     var weeklyQuizDue: Bool {
         guard studyMode == .english else { return false }
         if ProcessInfo.processInfo.arguments.contains("-uiTestingWeeklyQuiz") { return true }
+        guard settings.weeklyQuizDoneOn != today else { return false }
         return ExamRound.weeklyDue(words: vocabularyWords, state: progress, today: today)
     }
 
     /// A finished quiz outside the routine, for the usage numbers.
     func noteExamRound(_ kind: ExamRoundKind, asked: Int, right: Int) {
+        if kind == .weekly {
+            settings.weeklyQuizDoneOn = today
+            scheduleSave()
+        }
         Usage.log("exam_round", "\(kind.rawValue).\(asked).\(right)")
     }
 

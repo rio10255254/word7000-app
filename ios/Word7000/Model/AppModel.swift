@@ -57,6 +57,9 @@ final class AppModel {
 
     // Study session state survives switching tabs.
     private(set) var studySession: StudySession?
+    /// The day the current set was built: a set left half done last night is
+    /// replaced by today's (with today's reviews and checks), not carried on.
+    private(set) var studySessionDay: String?
     /// WordCat Next: the flip cards of a "today's words" session followed by
     /// spot checks. See `activeRoutine` for the one that belongs to the
     /// current session.
@@ -203,6 +206,7 @@ final class AppModel {
         if snapshot?.sessionDay == model.today, let saved = snapshot?.studySession {
             model.restoreStudySession(saved)
             model.wordRoutine = snapshot?.wordRoutine
+            model.studySessionDay = model.today
         }
         if let cached = persistence.load(RemoteContent.self, from: "remote-content.json"), !AppRuntime.uiTesting {
             model.applyRemoteContent(cached)
@@ -564,7 +568,7 @@ final class AppModel {
     }
 
     var studyPlan: (fresh: Int, review: Int, total: Int) {
-        guard let session = studySession, session.sourceKey == studySourceKey, !session.isComplete else {
+        guard let session = studySession, studySessionDay == today, session.sourceKey == studySourceKey, !session.isComplete else {
             // Only the counts are shown, so skip building and shuffling the queue.
             return LearningEngine.studyQueueCounts(words: studyCandidates, state: progress, today: today, limit: nextSessionLimit,
                                                    startLevel: placementStart)
@@ -628,7 +632,9 @@ final class AppModel {
     /// The current session, or a fresh one when there is none or the bank or
     /// filters changed since it was built.
     func ensureStudySession() {
-        if let session = studySession, session.sourceKey == studySourceKey, !session.isComplete || routinePending { return }
+        refreshToday()
+        if let session = studySession, studySessionDay == today, session.sourceKey == studySourceKey,
+           !session.isComplete || routinePending { return }
         startStudySession()
     }
 
@@ -659,6 +665,7 @@ final class AppModel {
                                                   limit: limit ?? (onlyIds == nil ? nextSessionLimit : max(1, candidates.count)),
                                                   startLevel: onlyIds == nil ? placementStart : nil)
         studySession = StudySession(cardIds: queue.map(\.id), sourceKey: studySourceKey)
+        studySessionDay = today
         wordRoutine = onlyIds == nil && studyMode == .english && AppRuntime.wordRoutine
             ? WordRoutine(cardIds: queue.map(\.id),
                           stagesBefore: Dictionary(queue.compactMap { word -> (String, Int)? in
@@ -811,6 +818,16 @@ final class AppModel {
 
     var reviewWordIds: [String] {
         bank.words.filter { progress.words[$0.id]?.status == .review }.map(\.id)
+    }
+
+    /// WordCat Next: one round of the missed words, the most often forgotten
+    /// first, at most fifteen, so a month's misses are not one long sitting.
+    var missedRoundIds: [String] {
+        let ranked = reviewWordIds.enumerated().sorted { a, b in
+            let la = progress.words[a.element]?.lapses ?? 0, lb = progress.words[b.element]?.lapses ?? 0
+            return la != lb ? la > lb : a.offset < b.offset
+        }
+        return ranked.prefix(15).map(\.element)
     }
 
     func recordQuizAnswer(wordId: String, correct: Bool) {
@@ -1106,7 +1123,7 @@ final class AppModel {
         if keep { savedLearning = (syncedProgress, customSets) }
         let snapshot = AppSnapshot(progress: keep ? syncedProgress : savedLearning.progress,
                                    customSets: keep ? customSets : savedLearning.customSets,
-                                   settings: settings, studySession: keep ? studySession : nil, sessionDay: today,
+                                   settings: settings, studySession: keep ? studySession : nil, sessionDay: studySessionDay ?? today,
                                    wordRoutine: keep ? wordRoutine : nil)
         persistence.store.enqueue(snapshot, to: "snapshot.json") { [weak self] saved in
             Task { @MainActor in self?.storageFailed = !saved }

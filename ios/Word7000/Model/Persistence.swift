@@ -79,6 +79,12 @@ struct AppSettings: Codable, Equatable, Sendable {
     var learnerProfile: LearnerProfile?
     /// WordCat Next: sounds for answers and celebrations; nil means on.
     var soundEffectsEnabled: Bool?
+    /// WordCat Next: the day the learner said "not now" to a daily reminder;
+    /// the summary asks again a week later, not after every round.
+    var reminderAskDeclinedOn: String?
+    /// WordCat Next: the day the weekly quiz was last taken, so its note
+    /// leaves Today once done.
+    var weeklyQuizDoneOn: String?
 
     var speakingHistoryOwnerKey: String {
         Self.speakingHistoryKey(ownerId: localOwnerId, anonymous: localOwnerIsAnonymous)

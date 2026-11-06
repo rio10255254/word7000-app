@@ -837,8 +837,11 @@ struct SpeakingSessionView: View {
     private var finished: some View {
         let result = stageResult ?? SpeakingPath.Result(words: count, answered: answered)
         let path = model.speakingPath
-        let streak = path.currentStreak(today: model.today)
+        // The same streak as the flame on Today and today's stamp.
+        let streak = model.progress.streak
         let ref = scenarioRef
+        // The stage that finishes the day leads to its stamp, not to another stage.
+        let wrapsUpTheDay = result.cleared && ref != nil && model.dayCompleteDue
         return VStack(spacing: 18) {
             Spacer()
             Mascot(mood: result.cleared ? .cheer : .encourage, size: 96, hop: finishedBounce)
@@ -858,7 +861,8 @@ struct SpeakingSessionView: View {
                 .entrance(2)
             if result.cleared {
                 if let ref { StagePathView(current: ref, progress: path).entrance(3) }
-                Label(path.clearedToday(model.today)
+                Label(streak < 1 ? L.t("今天的關卡完成", "Today's stage done")
+                      : path.clearedToday(model.today)
                       ? L.t("今天的關卡完成 · 連續 \(streak) 天", "Today's stage done · \(streak)-day streak")
                       : L.t("連續 \(streak) 天", "\(streak)-day streak"),
                       systemImage: "flame.fill")
@@ -880,22 +884,35 @@ struct SpeakingSessionView: View {
             }
             Spacer()
             VStack(spacing: 12) {
-                Button {
+                if wrapsUpTheDay {
+                    Button { dismiss() } label: {
+                        Text(L.done).font(.headline).frame(maxWidth: .infinity)
+                    }
+                    .prominentAction()
+                    .accessibilityIdentifier("speaking-done")
+                }
+                let nextButton = Button {
                     // Next on the path; the same stage again when not cleared;
                     // another set of words in word practice.
                     let again: Source? = ref == nil ? .words : result.cleared ? nil : source
                     start(again)
                 } label: {
-                    Text(ref == nil ? L.nextSession : result.cleared ? L.t("下一關", "Next stage") : L.t("再試一次", "Try again"))
+                    Text(ref == nil ? L.nextSession
+                         : result.cleared ? (wrapsUpTheDay ? L.t("再一關", "One more stage") : L.t("下一關", "Next stage"))
+                         : L.t("再試一次", "Try again"))
                         .font(.headline).frame(maxWidth: .infinity)
                 }
-                .prominentAction()
                 .accessibilityIdentifier("speaking-again")
-                Button { dismiss() } label: {
-                    Text(result.cleared ? L.t("今天先到這裡", "That's it for today") : L.done)
-                        .font(.headline).frame(maxWidth: .infinity)
+                if wrapsUpTheDay {
+                    nextButton.secondaryAction()
+                } else {
+                    nextButton.prominentAction()
+                    Button { dismiss() } label: {
+                        Text(result.cleared ? L.t("今天先到這裡", "That's it for today") : L.done)
+                            .font(.headline).frame(maxWidth: .infinity)
+                    }
+                    .secondaryAction()
                 }
-                .secondaryAction()
             }
         }
         .overlay(alignment: .top) {

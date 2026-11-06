@@ -257,11 +257,16 @@ struct TodayView: View {
 
     private func isDone(_ node: TodayNode) -> Bool {
         let routine = model.activeRoutine
-        let wordsDone = model.goalDone && (routine == nil || routine?.step == .done)
+        let routineDone = routine?.step == .done
+        // A set shorter than the goal (the first after the welcome) leaves
+        // today's words to do until the goal is met; a bank smaller than the
+        // goal is done with one set.
+        let enough = model.goalDone || (routineDone && model.wordsLeftForGoal == 0)
+        let wordsDone = enough && (routine == nil || routineDone)
         switch node {
-        case .cards: return routine.map { $0.step != .flip } ?? model.goalDone
-        case .spell: return wordsDone || routine?.step == .exam || routine?.step == .done
-        case .quiz: return wordsDone || routine?.step == .done
+        case .cards: return wordsDone || routine?.step == .spell || routine?.step == .exam
+        case .spell: return wordsDone || routine?.step == .exam
+        case .quiz: return wordsDone
         case .speaking: return model.speakingDoneToday
         case .weekly, .mockExam, .chest: return false
         }
@@ -316,7 +321,7 @@ struct TodayView: View {
         case .speaking: return L.t("今天的口說", "Today's speaking")
         case nil: return L.t("今天的份", "Today")
         default:
-            let chapter = MasteryShelf.current(model.shelfChapters).map { $0 + 1 }
+            let chapter = model.readingChapter.map { $0 + 1 }
             return chapter.map { L.t("今天的單字 · 第 \($0) 章", "Today's words · chapter \($0)") } ?? L.t("今天的單字", "Today's words")
         }
     }
@@ -342,7 +347,7 @@ struct TodayView: View {
             return left > 0 ? L.t("剛學的 \(left) 個字，寫給貓看", "\(left) new words. Spell them for the cat") : L.t("剛學的字，寫給貓看", "Spell the new words for the cat")
         case .quiz:
             let left = routine?.examLeft.count ?? 0
-            return left > 0 ? L.t("學測題型 \(left) 題", "\(left) exam-style questions") : L.t("學測題型", "Exam style")
+            return left > 0 ? L.t("\(model.examStyleName) \(left) 題", "\(left) exam-style questions") : model.examStyleName
         case .speaking: return L.t("聽、跟讀、回答、用今天的字", "Listen, repeat, answer, use a word")
         case nil: return L.t("單字 \(model.progress.studiedToday) 個・想加碼就再一組", "\(model.progress.studiedToday) words. One more set?")
         default: return ""
@@ -462,7 +467,8 @@ struct TodayView: View {
                      title: L.t("週日週考", "Sunday quiz"), detail: L.t("這週學過的字，最多 \(ExamRound.weeklyCount) 題", "This week's words, up to \(ExamRound.weeklyCount)")) {
                 start(.weeklyExam)
             }
-        } else if let days = memory.daysToExam, days <= 30 {
+        } else if let days = memory.daysToExam, days <= 30, plus.decide(.examPractice) == .allowed {
+            // The mock exam is Premium: a free learner keeps the missed words here.
             noteSlip(id: "today-exam", icon: "timer", tint: Palette.review, paper: .peach,
                      title: L.t("離考試 \(days) 天", "\(days) days to the exam"), detail: L.t("來一場完整模擬考", "Take a full mock exam")) {
                 start(.exam)
@@ -470,7 +476,7 @@ struct TodayView: View {
         } else if model.stats.review > 0 {
             noteSlip(id: "today-review", icon: "arrow.counterclockwise", tint: Palette.miss, paper: .ruled,
                      title: L.t("錯題本", "Missed words"), detail: L.t("\(model.stats.review) 個還不熟的字", "\(model.stats.review) still shaky")) {
-                model.startStudySession(onlyIds: model.reviewWordIds)
+                model.startStudySession(onlyIds: model.missedRoundIds)
                 start(.study)
             }
         }
@@ -552,11 +558,18 @@ struct TodayView: View {
         case .cards, .spell, .quiz:
             model.ensureStudySession()
             start(.study)
-        case .speaking: start(.speaking)
+        case .speaking: startSpeakingPath()
         case .weekly: start(.weeklyExam)
         case .mockExam: start(.exam)
         case .chest: break
         }
+    }
+
+    /// Today's speaking is always the next scenario stage, whichever track
+    /// the Practice tab opened last time.
+    private func startSpeakingPath() {
+        model.settings.speakingWordsTab = false
+        start(.speaking)
     }
 
     /// A stop tapped out of turn: a round of its own.
@@ -568,7 +581,7 @@ struct TodayView: View {
         case .spell: start(model.studyMode == .english ? .cloze : .spelling)
         case .quiz:
             if model.studyMode == .english { start(.quickExam) } else { quizSetupOpen = true }
-        case .speaking: start(.speaking)
+        case .speaking: startSpeakingPath()
         case .weekly: start(.weeklyExam)
         case .mockExam: start(.exam)
         case .chest: if isDone(.chest) { open(.week) }
@@ -589,9 +602,6 @@ struct TodayView: View {
     // MARK: Speaking
 
     private var speakingStage: (number: Int?, title: String) {
-        if model.settings.speakingWordsTab == true, !model.speakingDoneToday {
-            return (nil, L.t("單字口說", "Word practice"))
-        }
         guard let next = SpeakingScenarios.next(after: model.speakingPath), let scenario = SpeakingScenarios.scenario(next) else {
             return (nil, L.t("開口說說看", "Say it out loud"))
         }
@@ -652,7 +662,7 @@ struct TodayView: View {
         let chapters = model.shelfChapters
         let mastered = chapters.reduce(0) { $0 + $1.mastered }
         let total = chapters.reduce(0) { $0 + $1.total }
-        let current = MasteryShelf.current(chapters)
+        let current = MasteryShelf.current(chapters, from: model.placementStart)
         return VStack(spacing: 16) {
                 Text(L.t("已掌握 \(mastered.formatted()) / \(total.formatted())", "\(mastered.formatted()) of \(total.formatted()) mastered"))
                     .font(.display(.title2, weight: .heavy))
@@ -719,6 +729,11 @@ struct TodayView: View {
         let call = catLines.context?.callout ?? ""
         let day = Calendar.current.ordinality(of: .day, in: .year, for: Date()) ?? 0
         if model.goalDone { return L.t("\(call)嗯，勉強及格。不要得意。", "\(call)fine. You passed. Don't get cocky.") }
+        // Back after a missed day the cat's can covered: say so, once it matters.
+        if model.streakProtectionJustUsed, progress.studiedToday == 0, progress.streak > 0 {
+            return L.t("哼，貓罐頭幫你保住了連續 \(progress.streak) 天。今天學 1 個字就續上。",
+                       "Hmph. The cat's can saved your \(progress.streak)-day streak. One word today keeps it going.")
+        }
         // Every other day, a line written for today; the exam countdown when there is one.
         if day % 2 == 0, let line = (progress.studiedToday == 0 ? catLines.pack?.nudge : catLines.pack?.greeting)?.first {
             return line

@@ -28,7 +28,7 @@ struct PracticeView: View {
             items.append(Item(id: "practice-missed", icon: "arrow.counterclockwise", tint: Palette.miss,
                               title: L.t("錯題本", "Missed words"),
                               detail: L.t("\(model.stats.review) 個還不熟的字", "\(model.stats.review) still shaky")) {
-                model.startStudySession(onlyIds: model.reviewWordIds)
+                model.startStudySession(onlyIds: model.missedRoundIds)
                 start(.study)
             })
         }
@@ -42,7 +42,7 @@ struct PracticeView: View {
         if english {
             items.append(Item(id: "practice-exam-style", icon: "checklist", tint: Palette.chinese,
                               title: L.t("考 10 題", "10 exam questions"),
-                              detail: L.t("學測題型，學過的字", "Exam style, words you've learned")) {
+                              detail: L.t("\(model.examStyleName)，學過的字", "Exam style, words you've learned")) {
                 start(.quickExam)
             })
         }

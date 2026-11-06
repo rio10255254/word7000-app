@@ -106,8 +106,8 @@ enum CatTip: String, CaseIterable, Sendable {
                          "Search Chinese, English or examples. Hold a bank to manage it.")
         case .wordDetail: L.t("點喇叭聽發音，點星星收藏。",
                               "Tap the speaker to hear it, the star to save it.")
-        case .speaking: L.t("看題目開口說，說完按「我說完了」。",
-                            "Read the prompt, answer out loud, then tap when you're done.")
+        case .speaking: L.t("按麥克風開口說，說完會自動停。",
+                            "Tap the mic and speak; it stops when you're done.")
         case .quiz: L.t("選錯沒關係，我會說你選的那個是什麼意思。", "Wrong is fine: I'll say what the one you picked means.")
         case .spelling: L.t("把單字拼出來；卡住就按提示，一次多給一個字母。",
                             "Write the Chinese for the word; each hint shows one more syllable.")

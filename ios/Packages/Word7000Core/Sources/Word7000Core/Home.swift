@@ -115,6 +115,18 @@ public enum MasteryShelf {
     public static func current(_ chapters: [ShelfChapter]) -> Int? {
         chapters.firstIndex { $0.fraction < readFraction }
     }
+
+    /// WordCat Next: the chapter being read for a learner the level test
+    /// placed at chapter `start` (1-based): new words come from there on, so
+    /// the chapters below it were skipped rather than left unread. Once every
+    /// chapter from there is read through, the first unread one below.
+    public static func current(_ chapters: [ShelfChapter], from start: Int?) -> Int? {
+        if let start, start > 1, start - 1 < chapters.count,
+           let index = chapters[(start - 1)...].firstIndex(where: { $0.fraction < readFraction }) {
+            return index
+        }
+        return current(chapters)
+    }
 }
 
 /// A short quiz of exam-style questions outside today's routine.

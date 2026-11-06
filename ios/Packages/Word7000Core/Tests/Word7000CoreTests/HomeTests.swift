@@ -70,6 +70,17 @@ final class HomeTests: XCTestCase {
         XCTAssertNil(MasteryShelf.current([ShelfChapter(group: "Core 1", total: 5, mastered: 5)]))
     }
 
+    func testAPlacedLearnerReadsFromTheChapterTheTestGave() {
+        let chapters = (1...5).map { ShelfChapter(group: "Core \($0)", total: 10, mastered: $0 == 3 ? 9 : 0) }
+        XCTAssertEqual(MasteryShelf.current(chapters, from: nil), 0)
+        XCTAssertEqual(MasteryShelf.current(chapters, from: 1), 0)
+        XCTAssertEqual(MasteryShelf.current(chapters, from: 2), 1, "the chapters below the start were skipped, not unread")
+        XCTAssertEqual(MasteryShelf.current(chapters, from: 3), 3, "chapter 3 is read through, so chapter 4")
+        XCTAssertEqual(MasteryShelf.current(chapters, from: 9), 0, "a start past the last chapter falls back")
+        let readFromThree = (1...5).map { ShelfChapter(group: "Core \($0)", total: 10, mastered: $0 >= 3 ? 9 : 0) }
+        XCTAssertEqual(MasteryShelf.current(readFromThree, from: 3), 0, "all read from the start: back to the first unread")
+    }
+
     // MARK: Quizzes outside the routine
 
     func testTheQuickQuizAsksLearnedWordsDueSoonestAndNeverNewOnes() {

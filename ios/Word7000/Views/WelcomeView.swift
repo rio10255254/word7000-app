@@ -433,7 +433,7 @@ struct WelcomeView: View {
     private static let focuses: [(focus: LearnerProfile.Focus, icon: String, zh: String, zhDetail: String, en: String, enDetail: String)] = [
         (.vocabulary, "books.vertical.fill", "單字量", "每天多學一點新字", "More words", "A few more new words a day"),
         (.spelling, "pencil.line", "拼字", "翻卡後多抽幾個字拼給我看", "Spelling", "More words to spell after the cards"),
-        (.exam, "checklist", "考試題型", "多做學測題型的題目", "Exam questions", "More exam-style questions"),
+        (.exam, "checklist", "考試題型", "翻卡後多考幾題選擇題", "Exam questions", "More multiple choice after the cards"),
         (.speaking, "mic.fill", "口說", "每天先練口說", "Speaking", "Speaking first every day"),
     ]
 
@@ -959,6 +959,7 @@ struct WelcomeView: View {
         // Only a test actually taken sets where new words start.
         profile.startChapter = test.answers.isEmpty ? nil : plan.startChapter
         profile.startMode = mode.rawValue
+        profile.exam = exam?.rawValue
         model.settings.learnerProfile = profile
         model.settings.homeLead = profile.lead
         let learning = spellOutcomes.filter { $0.value == .missed }.map(\.key)

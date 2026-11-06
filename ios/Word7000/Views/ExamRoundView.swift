@@ -105,7 +105,7 @@ struct ExamRoundView: View {
                                  hop: asked, remark: nil)
                 RoutineCatLine(text: index == 0 && chosen == nil && kind == .weekly
                                    ? L.t("週考！這週學的字，看你記住幾個。", "Weekly quiz! This week's words: let's see what stuck.")
-                                   : ExamQuestionBody.catLine(question, chosen: chosen),
+                                   : ExamQuestionBody.catLine(question, chosen: chosen, style: model.examStyleName),
                                mood: chosen == nil ? .thinking : chosen == question.answerIndex ? .cheer : .encourage)
                 ExamQuestionBody(word: word, question: question, chosen: chosen, meanings: meanings) { choose($0, question) }
                     .id(index)

@@ -60,6 +60,9 @@ public struct LearnerProfile: Codable, Equatable, Sendable {
     /// The study mode that test was in ("english" or "chinese"): the start
     /// chapter only applies to that mode's words.
     public var startMode: String?
+    /// The exam the learner prepares for (`WelcomeExam`'s raw value: gsat,
+    /// tvee, cap, proficiency or none), which names the exam-style questions.
+    public var exam: String?
 
     public init(stage: Stage? = nil, focus: [Focus] = [], spelling: Double? = nil) {
         self.stage = stage

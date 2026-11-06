@@ -119,7 +119,7 @@ struct RoutineChecksView: View {
                 RoutineExamView(routine: routine)
             } else {
                 handOff(title: routine.spellIds.isEmpty ? L.t("翻卡完成！", "Cards done!") : L.t("拼字完成！", "Spelling done!"),
-                        line: L.t("這 \(routine.examIds.count) 個字你學過一陣子了。\n用學測題型考考看。",
+                        line: L.t("這 \(routine.examIds.count) 個字你學過一陣子了。\n用\(model.examStyleName)考考看。",
                                   "You learned these \(routine.examIds.count) a while ago.\nTry them exam style."),
                         action: L.t("開始考考看", "Start the quiz"), step: .exam)
             }
@@ -451,7 +451,7 @@ struct RoutineExamView: View {
             VStack(spacing: 16) {
                 RoutineStepStrip(routine: model.activeRoutine ?? routine)
                     .padding(.top, 4)
-                RoutineCatLine(text: ExamQuestionBody.catLine(question, chosen: chosen),
+                RoutineCatLine(text: ExamQuestionBody.catLine(question, chosen: chosen, style: model.examStyleName),
                                mood: chosen == nil ? .thinking : chosen == question.answerIndex ? .cheer : .encourage)
                 ExamQuestionBody(word: word, question: question, chosen: chosen, meanings: meanings) { choose($0, question) }
                     .id(question.wordId)
@@ -547,8 +547,8 @@ struct ExamQuestionBody: View {
     }
 
     /// What the cat says above the question.
-    static func catLine(_ question: ExamQuestion, chosen: Int?) -> String {
-        guard let chosen else { return L.t("學測題型：選出最適合的字。", "Exam style: pick the word that fits.") }
+    static func catLine(_ question: ExamQuestion, chosen: Int?, style: String) -> String {
+        guard let chosen else { return L.t("\(style)：選出最適合的字。", "\(style): pick the word that fits.") }
         return chosen == question.answerIndex
             ? L.t("對！這種題目考試最愛。", "Right! Exams love this one.")
             : L.t("抓到了！這兩個字常被拿來一起考。", "Caught you! These two often come up together.")
@@ -695,10 +695,19 @@ struct RoutineSummaryView: View {
                             .accessibilityLabel(L.t("全部答對", "All right"))
                         }
                     }
-                Text(reachedGoal || model.goalDone ? L.goalReachedTitle : L.t("今天的單字完成！", "Today's words done!"))
-                    .font(.display(.title, weight: .bold))
-                    .multilineTextAlignment(.center)
-                    .entrance(1)
+                let left = reachedGoal ? 0 : model.wordsLeftForGoal
+                VStack(spacing: 6) {
+                    Text(reachedGoal || model.goalDone ? L.goalReachedTitle
+                         : left > 0 ? L.t("這組完成！", "Set done!") : L.t("今天的單字完成！", "Today's words done!"))
+                        .font(.display(.title, weight: .bold))
+                        .multilineTextAlignment(.center)
+                    if left > 0 {
+                        Text(L.t("再 \(left) 個就達成今天的目標", "\(left) more for today's goal"))
+                            .font(.headline)
+                            .foregroundStyle(Palette.secondaryLabel)
+                    }
+                }
+                .entrance(1)
                 HStack(spacing: 10) {
                     tile(L.t("本來就會", "Knew"), summary.alreadyKnew, Palette.known)
                     tile(L.t("新學", "Learned"), summary.learned, Palette.accent)
@@ -722,7 +731,7 @@ struct RoutineSummaryView: View {
                 RoutineCatLine(text: CatQuips.studyDone(reachedGoal: reachedGoal || model.goalDone, source: model.catLines),
                         mood: summary.caught == 0 ? .cheer : .smug)
                     .entrance(4)
-                if AppRuntime.labOnboarding, model.settings.pushAsked != true {
+                if AppRuntime.labOnboarding, model.reminderAskDue {
                     ReminderAskCard()
                         .entrance(4)
                 }
@@ -730,22 +739,8 @@ struct RoutineSummaryView: View {
                     GuestKeepCard(count: routine.cardIds.count) { signInOpen = true }
                         .entrance(4)
                 }
-                VStack(spacing: 12) {
-                    let doneButton = Button(action: done) {
-                        Text(L.done).font(.title3.weight(.bold)).frame(maxWidth: .infinity)
-                    }
-                    if summary.caught > 0 {
-                        doneButton.secondaryAction().accessibilityIdentifier("routine-done")
-                    } else {
-                        doneButton.prominentAction().accessibilityIdentifier("routine-done")
-                    }
-                    Button(action: again) {
-                        Text(L.nextSession).font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .secondaryAction()
-                    .accessibilityIdentifier("routine-again")
-                }
-                .padding(.top, 8)
+                buttons(left: left, caught: summary.caught)
+                    .padding(.top, 8)
             }
             .padding(.vertical, 16)
         }
@@ -757,6 +752,29 @@ struct RoutineSummaryView: View {
         .soundEffect(trigger: appeared) { (_: Bool, now: Bool) -> SoundEffect? in now ? .complete : nil }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("routine-summary")
+    }
+
+    /// Short of the goal, the next set leads; once it is met, Done. With
+    /// words caught, their button above leads instead.
+    private func buttons(left: Int, caught: Int) -> some View {
+        let doneButton = Button(action: done) {
+            Text(L.done).font(.title3.weight(.bold)).frame(maxWidth: .infinity)
+        }
+        .accessibilityIdentifier("routine-done")
+        let againButton = Button(action: again) {
+            Text(left > 0 ? L.t("繼續：再 \(left) 個", "Keep going: \(left) more") : L.nextSession)
+                .font(.headline).frame(maxWidth: .infinity)
+        }
+        .accessibilityIdentifier("routine-again")
+        return VStack(spacing: 12) {
+            if left > 0 {
+                if caught > 0 { againButton.secondaryAction() } else { againButton.prominentAction() }
+                doneButton.secondaryAction()
+            } else {
+                if caught > 0 { doneButton.secondaryAction() } else { doneButton.prominentAction() }
+                againButton.secondaryAction()
+            }
+        }
     }
 
     private func tile(_ title: String, _ value: Int, _ tint: Color) -> some View {
@@ -771,6 +789,17 @@ struct RoutineSummaryView: View {
         .frame(maxWidth: .infinity)
         .padding(.vertical, 16)
         .background(Palette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+    }
+}
+
+extension AppModel {
+    /// The summary offers a daily reminder until notifications have been
+    /// asked about, at most once a week after a "not now".
+    var reminderAskDue: Bool {
+        guard settings.pushAsked != true else { return false }
+        guard let declined = settings.reminderAskDeclinedOn.flatMap(DayMath.dayNumber),
+              let now = DayMath.dayNumber(today) else { return true }
+        return now - declined >= 7
     }
 }
 
@@ -797,6 +826,7 @@ struct ReminderAskCard: View {
                 .prominentAction()
                 .accessibilityIdentifier("reminder-set")
                 Button(L.t("先不用", "Not now")) {
+                    model.settings.reminderAskDeclinedOn = model.today
                     withAnimation { answered = true }
                 }
                 .font(.subheadline.weight(.semibold))

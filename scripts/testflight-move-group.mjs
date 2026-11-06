@@ -19,6 +19,8 @@ const fromName = arg('from');
 const toName = arg('to');
 const publicName = arg('public', 'Wordcat Public Testing 1');
 const deleteOld = arg('delete-old') === 'yes';
+// Build numbers (of any version) people still run, to add to the new group.
+const extraBuilds = arg('add-builds').split(',').map((x) => x.trim()).filter(Boolean);
 if (!fromName || !toName || fromName === toName) throw new Error('--from and --to are required and must differ');
 
 const { ASC_KEY_ID: keyId, ASC_ISSUER_ID: issuer, ASC_PRIVATE_KEY: privateKey, GITHUB_STEP_SUMMARY: summary } = process.env;
@@ -58,8 +60,26 @@ const publicGroup = named(publicName);
 
 say(`## TestFlight：把「${fromName}」搬到「${toName}」`);
 say('');
+async function addBuilds(group) {
+  if (!extraBuilds.length) return;
+  const all = (await api('GET', `/v1/builds?filter[app]=${app.id}&sort=-uploadedDate&limit=200`)).data;
+  const added = [], missing = [];
+  for (const number of extraBuilds) {
+    const build = all.find((b) => b.attributes.version === number && b.attributes.processingState === 'VALID' && !b.attributes.expired);
+    if (!build) { missing.push(number); continue; }
+    await api('POST', `/v1/betaGroups/${group.id}/relationships/builds`, { data: [{ type: 'builds', id: build.id }] })
+      .catch((error) => { if (error.status !== 409) throw error; });
+    added.push(number);
+  }
+  say(`- 加入還有人在用的建置：${added.map((n) => `(${n})`).join('、') || '（沒有）'}`);
+  if (missing.length) say(`- ⚠️ 找不到或已過期，沒加：${missing.map((n) => `(${n})`).join('、')}`);
+}
 if (!from) {
-  if (to) { say(`「${fromName}」已經不在了；「${toName}」還在。沒有要做的事。`); process.exit(0); }
+  if (to) {
+    say(`「${fromName}」已經不在了；沿用「${toName}」。`);
+    await addBuilds(to);
+    process.exit(0);
+  }
   throw new Error(`No TestFlight group named "${fromName}"`);
 }
 if (!from.attributes.isInternalGroup) throw new Error(`"${fromName}" is not an internal group; only internal groups are moved`);
@@ -103,6 +123,8 @@ if (production) {
 } else {
   say(`- ⚠️ 在「${publicName}」找不到可用的建置，沒有加入建置。`);
 }
+
+await addBuilds(to);
 
 // 4. Check before anything is deleted.
 const toTesters = new Set((await api('GET', `/v1/betaGroups/${to.id}/betaTesters?limit=200`)).data.map((t) => t.id));

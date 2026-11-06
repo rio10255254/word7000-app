@@ -33,7 +33,7 @@ on:
         type: string
         default: ''
       submit_build:
-        description: 'testflight-submit: build number already uploaded to add to the group and submit for Beta App Review. store-prepare: build to put on the App Store version (empty: newest processed)'
+        description: 'testflight-submit: build number already uploaded to add to the group and submit for Beta App Review. store-prepare: build to put on the App Store version (empty: newest processed). move-internal-group: build numbers people still run, comma-separated, to add to the new group'
         type: string
         default: ''
       delete_old_group:
@@ -97,10 +97,11 @@ jobs:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
           DELETE_OLD: ${{ inputs.delete_old_group && 'yes' || 'no' }}
+          ADD_BUILDS: ${{ inputs.submit_build }}
         run: |
           node scripts/testflight-move-group.mjs --bundle com.rio.word7000 \
             --from "Word7000 Private Beta" --to "WordCat Internal" \
-            --public "Wordcat Public Testing 1" --delete-old "$DELETE_OLD"
+            --public "Wordcat Public Testing 1" --delete-old "$DELETE_OLD" --add-builds "$ADD_BUILDS"
       - name: TestFlight builds and Beta App Review (read-only)
         if: inputs.operation == 'beta-status'
         env:

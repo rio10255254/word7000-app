@@ -413,12 +413,29 @@ struct SpeakingAnswerPanel: View {
                             .stroke(Palette.accent.opacity(answerFocused ? 0.5 : 0), lineWidth: 1.5)
                     }
             }
-            if answerFocused, provider.availability == .ready, hasText, !session.isWorking, !pendingSubmission {
-                Button { dismissKeyboard() } label: { Image(systemName: "keyboard.chevron.compact.down") }
-                    .buttonStyle(.borderless)
-                    .frame(minWidth: 44, minHeight: 44)
-                    .accessibilityLabel(L.t("收起鍵盤", "Dismiss keyboard"))
-                    .accessibilityIdentifier("coach-keyboard-done")
+            if answerFocused {
+                // The keyboard hides the Check key below; it sits here while typing.
+                HStack(spacing: 16) {
+                    Spacer()
+                    if provider.availability == .ready, hasText, !session.isWorking, !pendingSubmission {
+                        Button {
+                            guard canSubmitAnswer else { return }
+                            needsTranscriptReview = false
+                            submit()
+                        } label: {
+                            Label(L.t("批改", "Check"), systemImage: "sparkles")
+                                .font(.subheadline.weight(.bold))
+                        }
+                        .buttonStyle(.borderless)
+                        .disabled(!canSubmitAnswer)
+                        .accessibilityIdentifier("coach-submit")
+                    }
+                    Button { dismissKeyboard() } label: { Image(systemName: "keyboard.chevron.compact.down") }
+                        .buttonStyle(.borderless)
+                        .frame(minWidth: 44, minHeight: 44)
+                        .accessibilityLabel(L.t("收起鍵盤", "Dismiss keyboard"))
+                        .accessibilityIdentifier("coach-keyboard-done")
+                }
             }
             padTools
             padStatus

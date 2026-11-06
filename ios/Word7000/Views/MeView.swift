@@ -461,6 +461,8 @@ private struct ProfileCard: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
                 membershipBadge
+                    .fixedSize()
+                    .layoutPriority(1)
             }
             Label(account.message, systemImage: syncSymbol)
                 .font(.caption)

@@ -367,6 +367,17 @@ describe('Learning insights', () => {
     expect(refined.focusWords).toEqual([{ word: 'abandon', tip: '想成放棄' }, { word: 'Achieve', tip: '達成' }]);
   });
 
+  it('passes on where a level test placed a new learner, and keeps the plan consistent', () => {
+    expect(JSON.parse(planTask('insights', input).user).totals.levelTestChapter).toBe(0);
+    const placed = planTask('insights', { ...input, mastered: 16, quizCorrect: 0, quizTotal: 0, placementChapter: 13 });
+    expect(JSON.parse(placed.user).totals).toMatchObject({ levelTestChapter: 13, wordsKnown: 16, quizTotal: 0 });
+    expect(placed.system).toContain('never call them a beginner');
+    expect(placed.system).toContain('do not mention accuracy');
+    expect(placed.system).toContain('the reviews alone meet it');
+    expect(JSON.parse(planTask('insights', { ...input, placementChapter: 15 }).user).totals.levelTestChapter).toBe(14);
+    expect(() => planTask('insights', { ...input, placementChapter: -1 })).toThrow(InputError);
+  });
+
   it('rejects malformed numbers and oversized lists', () => {
     expect(() => planTask('insights', { ...input, streak: -1 })).toThrow(InputError);
     expect(() => planTask('insights', { ...input, mastered: '120' })).toThrow(InputError);

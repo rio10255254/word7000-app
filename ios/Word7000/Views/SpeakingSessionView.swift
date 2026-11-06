@@ -234,7 +234,7 @@ struct SpeakingSessionView: View {
                 start(.scenario(picked))
             }
         }
-        .catTip(.speaking, at: .top, inset: 60)
+        .catTip(.speaking, at: .top)
     }
 
     private var scopeNarrowed: Bool {

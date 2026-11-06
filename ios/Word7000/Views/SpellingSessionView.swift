@@ -79,7 +79,7 @@ struct SpellingSessionView: View {
             return new == .correct ? .success : .error
         }
         .sensoryFeedback(.selection, trigger: hints) { _, new in new > 0 && (model.settings.hapticsEnabled ?? true) }
-        .catTip(.spelling, at: .top, inset: 60)
+        .catTip(.spelling, at: .top)
     }
 
     // MARK: Question
@@ -194,8 +194,8 @@ struct SpellingSessionView: View {
                     if !others.isEmpty {
                         Text("Also accepted: \(others.joined(separator: "、"))").font(.footnote).foregroundStyle(.secondary)
                     }
-                } else if !word.pronunciation.isEmpty {
-                    Text(word.pronunciation).foregroundStyle(.secondary)
+                } else if !WordFace.pronunciation(word).isEmpty {
+                    Text(WordFace.pronunciation(word)).foregroundStyle(.secondary)
                 }
                 if result != .correct {
                     Text(L.t("你的答案：\(input.trimmed)", "You typed: \(input.trimmed)"))

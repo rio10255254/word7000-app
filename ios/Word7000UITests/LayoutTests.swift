@@ -75,7 +75,7 @@ final class LayoutTests: XCTestCase {
         let app = launch()
         let mascot = app.buttons["today-mascot"]
         XCTAssertTrue(mascot.exists)
-        mascot.tap()
+        openAndCloseChat(app, from: mascot)
 
         let chip = app.buttons["today-study-filter"]
         XCTAssertTrue(chip.isHittable)
@@ -86,7 +86,8 @@ final class LayoutTests: XCTestCase {
         sheet.buttons["完成"].tap()
         XCTAssertTrue(sheet.waitForNonExistence(timeout: 5), "The study scope did not close")
 
-        mascot.tap()
+        // Two quick taps smack it instead, and leave its bubble up.
+        mascot.doubleTap()
         let chinese = app.buttons["today-language-zh"]
         XCTAssertTrue(chinese.isHittable)
         chinese.tap()
@@ -110,7 +111,8 @@ final class LayoutTests: XCTestCase {
         let app = launch()
         let mascot = app.buttons["today-mascot"]
         XCTAssertTrue(mascot.exists)
-        mascot.tap()
+        openAndCloseChat(app, from: mascot)
+        mascot.doubleTap()
         mascot.press(forDuration: 0.8)
         let from = mascot.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
         from.press(forDuration: 0.05, thenDragTo: from.withOffset(CGVector(dx: -60, dy: 30)))
@@ -119,6 +121,17 @@ final class LayoutTests: XCTestCase {
         XCTAssertTrue(app.buttons["today-start"].isHittable)
         app.buttons["today-start"].tap()
         XCTAssertTrue(app.buttons["study-show-answer"].waitForExistence(timeout: 5), "Study did not open after playing with the companion")
+    }
+
+    /// A tap on the companion opens its chat; Done closes it again.
+    private func openAndCloseChat(_ app: XCUIApplication, from mascot: XCUIElement) {
+        mascot.tap()
+        let done = app.navigationBars.buttons["完成"].firstMatch
+        XCTAssertTrue(done.waitForExistence(timeout: 5), "A tap on the companion did not open its chat")
+        snap(app, "layout-companion-chat")
+        done.tap()
+        XCTAssertTrue(mascot.waitForExistence(timeout: 5))
+        XCTAssertTrue(done.waitForNonExistence(timeout: 5), "The chat did not close")
     }
 
     // MARK: Checks

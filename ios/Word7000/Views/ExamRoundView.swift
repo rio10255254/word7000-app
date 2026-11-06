@@ -110,6 +110,10 @@ struct ExamRoundView: View {
                 ExamQuestionBody(word: word, question: question, chosen: chosen, meanings: meanings) { choose($0, question) }
                     .id(index)
                     .transition(.questionSwap(reduceMotion))
+                if let chosen, chosen != question.answerIndex {
+                    AskCatChip(word: word)
+                        .transition(.opacity)
+                }
             }
             .padding(.bottom, 16)
         }

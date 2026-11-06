@@ -458,6 +458,10 @@ struct RoutineExamView: View {
                 ExamQuestionBody(word: word, question: question, chosen: chosen, meanings: meanings) { choose($0, question) }
                     .id(question.wordId)
                     .transition(.questionSwap(reduceMotion))
+                if let chosen, chosen != question.answerIndex {
+                    AskCatChip(word: word)
+                        .transition(.opacity)
+                }
             }
             .padding(.bottom, 16)
         }

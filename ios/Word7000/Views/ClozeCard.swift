@@ -207,6 +207,48 @@ struct ClozeCard: View {
     }
 }
 
+/// WordCat Next: right after a wrong answer, when wanting to know why is
+/// strongest, the cat offers to explain the word: its AI explanation with
+/// Premium, the paywall (for that very feature) without.
+struct AskCatChip: View {
+    @Environment(PlusModel.self) private var plus
+    var word: WordEntry
+    @State private var explaining: WordEntry?
+
+    var body: some View {
+        let unlocked = plus.decide(.smartAI) == .allowed
+        Button {
+            Usage.log("ask_cat_chip", unlocked ? "open" : "paywall")
+            plus.require(.smartAI) { explaining = word }
+        } label: {
+            HStack(spacing: 8) {
+                Mascot(mood: .smug, size: 24)
+                Text(L.t("為什麼錯？問傻貓", "Why? Ask Silly Cat"))
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(Palette.ink)
+                if !unlocked {
+                    Text("Premium")
+                        .font(.caption2.weight(.heavy))
+                        .foregroundStyle(Palette.surface)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(PlusStyle.gradient, in: Capsule())
+                }
+                Spacer(minLength: 4)
+                Image(systemName: "sparkles").font(.subheadline.weight(.bold)).foregroundStyle(Palette.review)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background(Palette.review.opacity(0.12), in: Capsule())
+            .overlay(Capsule().strokeBorder(Palette.review.opacity(0.4), lineWidth: 1))
+            .contentShape(Capsule())
+        }
+        .buttonStyle(SoftPressStyle())
+        .sheet(item: $explaining) { word in AIWordSheet(word: word).compactSheet() }
+        .accessibilityIdentifier("ask-cat-why")
+    }
+}
+
 /// A line from the cat, big enough to read at a glance: the cat's face and
 /// a bubble. Used in place of small captions to say what to do.
 struct RoutineCatLine: View {

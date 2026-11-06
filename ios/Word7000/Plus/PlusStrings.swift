@@ -66,7 +66,8 @@ enum P {
     static func perMonth(_ price: String) -> String { L.t("每月只要 \(price)", "Just \(price) a month") }
     static var perYear: String { L.t("每年", "per year") }
     static var perMonthUnit: String { L.t("每月", "per month") }
-    static func saveMonths(_ months: Int) -> String { L.t("省 \(months) 個月", "\(months) months free") }
+    static func saveMonths(_ months: Int) -> String { L.t("最划算 · 省 \(months) 個月", "Best value · \(months) months free") }
+    static func perMonthAndDay(_ month: String, _ day: String) -> String { L.t("每月 \(month) · 每天只要 \(day)", "\(month) a month · just \(day) a day") }
     static func cta(_ plan: PlusPlan?) -> String {
         guard let plan else { return L.t("訂閱 Premium", "Subscribe") }
         if let days = plan.freeTrialDays { return L.t("免費試用 \(days) 天", "Try free for \(days) days") }
@@ -91,6 +92,33 @@ enum P {
     static var failed: String { L.t("目前無法確認購買結果。若已完成付款，請使用「恢復購買」或稍後再試。", "We could not confirm the purchase. If payment completed, restore purchases or try again shortly.") }
     static var restoreFailed: String { L.t("目前無法恢復購買，請稍後再試。", "Purchases could not be restored right now. Please try again shortly.") }
     static var nothingToRestore: String { L.t("這個 Apple 帳號沒有可恢復的訂閱。", "No subscription to restore for this Apple Account.") }
+
+    // Trial timeline
+    static var timelineToday: String { L.t("今天", "Today") }
+    static var timelineTodayDetail: String { L.t("AI 老師、掃描、模擬考、完整紀錄全部解鎖", "The AI tutor, scanning, mock exams and full history unlock") }
+    static func timelineBefore(_ days: Int) -> String { L.t("第 \(max(1, days - 1)) 天", "Day \(max(1, days - 1))") }
+    static var timelineBeforeDetail: String { L.t("試用快結束；不想續用，在「設定」取消就好", "The trial is nearly over; cancel in Settings if it's not for you") }
+    static func timelineCharge(_ days: Int) -> String { L.t("第 \(days) 天", "Day \(days)") }
+    static func timelineChargeDetail(_ price: String, yearly: Bool) -> String {
+        yearly ? L.t("才開始收費 \(price)／年，之前取消不收任何錢", "The first charge, \(price) a year; nothing if cancelled before")
+               : L.t("才開始收費 \(price)／月，之前取消不收任何錢", "The first charge, \(price) a month; nothing if cancelled before")
+    }
+    static func examCountdown(_ days: Int) -> String {
+        L.t("離考試只剩 \(days) 天 · 模擬考找出最弱的章", days == 1 ? "1 day to the exam · find your weakest chapter" : "\(days) days to the exam · find your weakest chapter")
+    }
+
+    // The cat's goodbye, once a day, when the paywall is closed unbought
+    static var goodbyeTitle: String { L.t("真的要走？", "Leaving already?") }
+    static func goodbyeText(mastered: Int, trialDays: Int?) -> String {
+        let trial = trialDays.map { L.t("前 \($0) 天免費，隨時可以取消。", "The first \($0) days are free; cancel anytime.") } ?? ""
+        return mastered > 0
+            ? L.t("你都已經會 \(mastered) 個字了，就差一個 AI 老師。\(trial)沒關係，我習慣被拋棄了。",
+                  "You already know \(mastered) words; all you're missing is an AI tutor. \(trial)It's fine. I'm used to being left.")
+            : L.t("我的 AI 腦袋就在這裡，你卻要走。\(trial)沒關係，我習慣被拋棄了。",
+                  "My AI brain is right here and you're leaving. \(trial)It's fine. I'm used to being left.")
+    }
+    static var goodbyeStay: String { L.t("再看看", "Stay a bit") }
+    static var goodbyeLeave: String { L.t("狠心離開", "Leave anyway") }
 
     // Welcome
     static var welcomeTitle: String { L.t("歡迎加入 Premium", "Welcome to Premium") }
@@ -139,7 +167,7 @@ enum P {
     static func nudgeText(_ nudge: PlusPolicy.Nudge) -> String {
         switch nudge {
         case .scansUsedUp, .lastScan: L.t("訂閱 Premium 就能無限掃描單字表和手寫筆記。", "Premium scans word lists and handwriting without limits.")
-        case .trialEnding: L.t("到期後 AI、掃描和模擬考會鎖起來。", "When it ends, the AI, scanning and mock exams lock.")
+        case .trialEnding: L.t("到期後 AI 老師、掃描和模擬考都會鎖起來，你又要一個人背了。", "When it ends, the AI tutor, scanning and mock exams lock, and you're on your own again.")
         case .trialEnded: plusPitch.text
         }
     }
@@ -147,17 +175,18 @@ enum P {
     /// Today's reason to try Plus: one benefit a day, in turn, so the
     /// reminder says something new each time.
     static var plusPitch: (title: String, text: String) {
+        // In the cat's own voice: what it could do for you, if only you let it.
         let pitches: [(String, String)] = [
-            (L.t("讓傻貓當你的 AI 老師", "Make Silly Cat your AI tutor"),
-             L.t("卡住的字直接問：用法、例句、跟哪個字搞混，Premium 每天 \(PlusAI.plusDaily) 次。", "Ask about any word: usage, examples, what it gets mixed up with. \(PlusAI.plusDaily) a day with Premium.")),
-            (L.t("課本單字表，拍一下就變字庫", "Snap a word list into a bank"),
-             L.t("講義、手寫筆記都讀得懂，還幫你補詞性和翻譯。", "Handouts and handwriting too, with parts of speech and meanings filled in.")),
-            (L.t("AI 口說教練幫你改句子", "An AI coach for your speaking"),
-             L.t("說完一題，它幫你改得更自然，再追問一題讓你多練。", "Answer a prompt and it makes it sound natural, then asks a follow-up.")),
-            (L.t("考前來場 15 分鐘模擬考", "A 15-minute mock exam"),
-             L.t("交卷就知道哪一章還不熟，對症下藥。", "Hand it in and see which chapters still need work.")),
-            (L.t("看清楚自己進步多少", "See how far you've come"),
-             L.t("30、90 天趨勢和一直忘的字，Premium 都幫你記著。", "30- and 90-day trends and the words you keep forgetting.")),
+            (L.t("我可以當你的家教，只是你沒請", "I could be your tutor. You just never asked."),
+             L.t("卡住的字直接問我：用法、例句、跟哪個字搞混。Premium 每天 \(PlusAI.plusDaily) 次。", "Ask me about any word: usage, examples, what it gets mixed up with. \(PlusAI.plusDaily) a day with Premium.")),
+            (L.t("講義拍一下就變字庫，你還在手打？", "Still typing your word lists by hand?"),
+             L.t("手寫筆記也讀得懂，詞性和翻譯我幫你補好。", "Snap a handout, handwriting too; I fill in parts of speech and meanings.")),
+            (L.t("你的口說，我想改很久了", "I've been dying to fix your speaking."),
+             L.t("AI 口說教練把你的句子改自然，再追問一題逼你多講。", "The AI coach makes your answer sound natural, then pushes you with a follow-up.")),
+            (L.t("考前不模擬，考場見真章", "No mock exam? See you in the exam hall."),
+             L.t("15 分鐘 50 題，交卷就知道哪一章最弱。", "50 questions in 15 minutes, and you'll know your weakest chapter.")),
+            (L.t("你到底有沒有進步？我都有記", "Are you even improving? I've kept count."),
+             L.t("30、90 天趨勢和你一直忘的字，Premium 才看得到。", "30- and 90-day trends and the words you keep forgetting, with Premium.")),
         ]
         let day = Calendar.current.ordinality(of: .day, in: .year, for: Date()) ?? 0
         return pitches[day % pitches.count]

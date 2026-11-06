@@ -24,6 +24,9 @@ struct PaywallView: View {
     @State private var appeared = false
     /// Bumped when a purchase or restore fails, so the button gives a small shake.
     @State private var failures = 0
+    /// The cat's goodbye: asked once a day, when the paywall is closed unbought.
+    @State private var leaving = false
+    @AppStorage("paywallGoodbyeDay") private var goodbyeDay = ""
 
     private var selected: PlusPlan? { plus.plans.first { $0.id == selectedID } ?? plus.plans.first }
 
@@ -60,9 +63,13 @@ struct PaywallView: View {
         ScrollView {
             VStack(spacing: 18) {
                 hero
+                // What it is worth first, then what it costs and how the trial goes.
+                benefits
+                if let days = selected?.freeTrialDays, let plan = selected {
+                    TrialTimeline(days: days, price: plan.displayPrice, yearly: plan.yearly)
+                }
                 plans
                     .disabled(busy)
-                benefits
                 PlusComparison()
                     .padding(14)
                     .card()
@@ -105,7 +112,7 @@ struct PaywallView: View {
         .safeAreaInset(edge: .top, spacing: 0) {
             HStack {
                 Spacer()
-                Button { dismiss() } label: {
+                Button { close() } label: {
                     Image(systemName: "xmark")
                         .font(.system(size: 14, weight: .bold))
                         .foregroundStyle(.secondary)
@@ -122,6 +129,21 @@ struct PaywallView: View {
             .padding(.vertical, 4)
             .background { PaperBarBackground(edge: .top) }
         }
+        .alert(P.goodbyeTitle, isPresented: $leaving) {
+            Button(P.goodbyeStay, role: .cancel) {}
+            Button(P.goodbyeLeave, role: .destructive) { dismiss() }
+        } message: {
+            Text(P.goodbyeText(mastered: model.stats.mastered, trialDays: selected?.freeTrialDays))
+        }
+    }
+
+    /// Closing without buying: once a day the cat has a word first.
+    private func close() {
+        let today = DayMath.today()
+        guard !plus.subscribed, goodbyeDay != today, !AppRuntime.uiTesting else { dismiss(); return }
+        goodbyeDay = today
+        Usage.log("paywall_goodbye", reason.usageSource)
+        leaving = true
     }
 
     private var hero: some View {
@@ -144,6 +166,17 @@ struct PaywallView: View {
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
+            // With an exam coming: the days left, the most honest urgency there is.
+            if let days = CatMemory.shared.daysToExam, days <= 180 {
+                Label(P.examCountdown(days), systemImage: "timer")
+                    .font(.footnote.weight(.bold))
+                    .foregroundStyle(Palette.miss)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Palette.miss.opacity(0.12), in: Capsule())
+                    .popIn(delay: 0.25)
+                    .accessibilityIdentifier("paywall-exam-countdown")
+            }
             if let line = P.progressLine(mastered: model.stats.mastered, streak: model.progress.streak) {
                 Label(line, systemImage: "flame.fill")
                     .font(.footnote.weight(.semibold))
@@ -450,9 +483,11 @@ struct PlanCard: View {
                     .symbolEffect(.bounce, value: reduceMotion ? false : selected)
                 VStack(alignment: .leading, spacing: 3) {
                     Text(plan.yearly ? P.yearly : P.monthly).font(.headline)
-                    Text(plan.perMonth.map(P.perMonth) ?? P.monthlyDetail)
+                    Text(plan.perMonth.map { month in plan.perDay.map { P.perMonthAndDay(month, $0) } ?? P.perMonth(month) } ?? P.monthlyDetail)
                         .font(.footnote)
                         .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.85)
                 }
                 Spacer(minLength: 8)
                 VStack(alignment: .trailing, spacing: 3) {
@@ -470,7 +505,7 @@ struct PlanCard: View {
                 if plan.monthsSaved > 0 {
                     Text(P.saveMonths(plan.monthsSaved))
                         .font(.caption2.weight(.bold))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Palette.surface)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
                         .background(Palette.review, in: Capsule())
@@ -485,6 +520,49 @@ struct PlanCard: View {
         .buttonStyle(SoftPressStyle())
         .accessibilityAddTraits(selected ? .isSelected : [])
         .accessibilityIdentifier(plan.yearly ? "plan-yearly" : "plan-monthly")
+    }
+}
+
+/// A free trial step by step, as the best paywalls show it, so starting one
+/// feels safe: everything today, a reminder of when it ends, and the day
+/// the first payment would come (nothing if cancelled before).
+struct TrialTimeline: View {
+    var days: Int
+    var price: String
+    var yearly: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            step(icon: "lock.open.fill", tint: Palette.known, title: P.timelineToday, detail: P.timelineTodayDetail, last: false)
+            step(icon: "bell.fill", tint: Palette.review, title: P.timelineBefore(days), detail: P.timelineBeforeDetail, last: false)
+            step(icon: "creditcard.fill", tint: Palette.accent, title: P.timelineCharge(days), detail: P.timelineChargeDetail(price, yearly: yearly), last: true)
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background { PremiumSurface(radius: Metrics.cardRadius) }
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("paywall-trial-timeline")
+    }
+
+    private func step(icon: String, tint: Color, title: String, detail: String, last: Bool) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            VStack(spacing: 0) {
+                Image(systemName: icon)
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundStyle(Palette.surface)
+                    .frame(width: 30, height: 30)
+                    .background(tint, in: Circle())
+                if !last {
+                    Rectangle().fill(tint.opacity(0.35)).frame(width: 3).frame(minHeight: 18)
+                }
+            }
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title).font(.subheadline.weight(.bold)).foregroundStyle(Palette.ink)
+                Text(detail).font(.footnote).foregroundStyle(Palette.secondaryLabel)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(.bottom, last ? 0 : 10)
+        }
     }
 }
 

@@ -398,7 +398,13 @@ final class ExperienceTests: XCTestCase {
         snapshot(app, "plan-suggestion")
         apply.tap()
         XCTAssertTrue(apply.waitForNonExistence(timeout: 5))
-        XCTAssertTrue(app.descendants(matching: .any)["plan-card"].firstMatch.label.contains("30"), "the goal is now 30 a day")
+        // The plan card is up at the top: back up to it, then read the goal.
+        let card = app.descendants(matching: .any)["plan-card"].firstMatch
+        for _ in 0..<4 where !card.exists { app.swipeDown() }
+        XCTAssertTrue(card.waitForExistence(timeout: 5))
+        XCTAssertTrue(card.label.contains("30"), "the goal is now 30 a day: \(card.label)")
+        let spellingAgain = app.buttons["plan-focus-spelling"]
+        for _ in 0..<4 where !spellingAgain.isHittable { app.swipeUp() }
         let retest = app.buttons["plan-retest"]
         for _ in 0..<4 where !retest.isHittable { app.swipeUp() }
         snapshot(app, "plan-bottom")

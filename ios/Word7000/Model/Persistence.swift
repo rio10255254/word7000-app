@@ -221,6 +221,9 @@ struct AppSnapshot: Codable, Sendable {
     var sessionDay: String?
     /// WordCat Next (3.x) only; a 2.x build ignores and drops it.
     var wordRoutine: WordRoutine? = nil
+    /// WordCat Next: whether the saved session is today's set (not a round
+    /// of chosen words). Optional: older snapshots lack it.
+    var sessionIsDaySet: Bool? = nil
 }
 
 struct Persistence: Sendable {

@@ -218,7 +218,8 @@ final class AppModel {
             model.restoreStudySession(saved)
             model.wordRoutine = snapshot?.wordRoutine
             model.studySessionDay = model.today
-            model.studySessionIsDaySet = snapshot?.wordRoutine != nil
+            // Saved since WordCat Next; before it, a set with a routine was the day's.
+            model.studySessionIsDaySet = snapshot?.sessionIsDaySet ?? (snapshot?.wordRoutine != nil)
         }
         #if DEBUG
         if arguments.contains("-uiTestingOfficialBank") { model.applyRemoteContent(SampleData.officialContent) }
@@ -1217,7 +1218,7 @@ final class AppModel {
         let snapshot = AppSnapshot(progress: keep ? syncedProgress : savedLearning.progress,
                                    customSets: keep ? customSets : savedLearning.customSets,
                                    settings: settings, studySession: keep ? studySession : nil, sessionDay: studySessionDay ?? today,
-                                   wordRoutine: keep ? wordRoutine : nil)
+                                   wordRoutine: keep ? wordRoutine : nil, sessionIsDaySet: studySessionIsDaySet)
         persistence.store.enqueue(snapshot, to: "snapshot.json") { [weak self] saved in
             Task { @MainActor in self?.storageFailed = !saved }
         }

@@ -69,6 +69,9 @@ public struct ProgressState: Codable, Equatable, Sendable {
     public var words: [String: WordProgress]
     /// The last missed day covered by the shared seven-day streak protection.
     public var streakFreezeDate: String?
+    /// When the daily goal was last changed, so the newest change wins a
+    /// sync instead of whichever device studied more that day.
+    public var dailyTargetUpdatedAt: String?
 
     public init(
         analytics: LearningAnalyticsState? = nil,
@@ -78,7 +81,8 @@ public struct ProgressState: Codable, Equatable, Sendable {
         dailyProgressDate: String? = nil,
         lastStudyDate: String? = nil,
         words: [String: WordProgress] = [:],
-        streakFreezeDate: String? = nil
+        streakFreezeDate: String? = nil,
+        dailyTargetUpdatedAt: String? = nil
     ) {
         self.analytics = analytics
         self.dailyTarget = dailyTarget
@@ -88,6 +92,7 @@ public struct ProgressState: Codable, Equatable, Sendable {
         self.lastStudyDate = lastStudyDate
         self.words = words
         self.streakFreezeDate = streakFreezeDate
+        self.dailyTargetUpdatedAt = dailyTargetUpdatedAt
     }
 
     public static let empty = ProgressState()
@@ -295,16 +300,21 @@ public enum LearningEngine {
         }
 
         let streak = StreakProtection.reconcile(available, fallback: dailySource)
+        // The goal last changed on purpose wins; a goal never changed since
+        // this field came in follows the day's source, as before.
+        let goalSource = available.filter { $0.dailyTargetUpdatedAt != nil }
+            .max { ($0.dailyTargetUpdatedAt ?? "") < ($1.dailyTargetUpdatedAt ?? "") }
         return ProgressState(
             analytics: LearningAnalyticsState.merge(available.map(\.analytics)),
-            dailyTarget: dailySource.dailyTarget,
+            dailyTarget: goalSource?.dailyTarget ?? dailySource.dailyTarget,
             streak: streak.streak,
             studiedToday: studiedToday,
             dailyProgressDate: dailySource.dailyProgressDate,
             lastStudyDate: streak.lastStudyDate,
             words: words,
             // The latest use on any device, so protection is never used twice in a week.
-            streakFreezeDate: streak.streakFreezeDate
+            streakFreezeDate: streak.streakFreezeDate,
+            dailyTargetUpdatedAt: goalSource?.dailyTargetUpdatedAt
         )
     }
 

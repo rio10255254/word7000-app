@@ -10,6 +10,17 @@ struct LearningPlanView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var memory = CatMemory.shared
     @State private var retestOpen = false
+    /// New words met over the next month, and by the exam, counted the way
+    /// sessions are built (LearningEngine.projectedNewWords).
+    @State private var monthNew: Int?
+    @State private var examNew: Int?
+    /// What a focus just picked suggests, offered once, applied only on a tap.
+    @State private var suggestion: Suggestion?
+
+    enum Suggestion: Equatable {
+        case target(Int)
+        case lead(Pillar)
+    }
 
     private let dailyTargetOptions = [10, 20, 30, 50]
 
@@ -23,8 +34,11 @@ struct LearningPlanView: View {
         model.placementStart ?? (model.readingChapter.map { $0 + 1 } ?? 1)
     }
 
-    /// New words on an ordinary day, reviews taking the rest (see PersonalPlan).
-    private var newPerDay: Int { max(1, (model.progress.dailyTarget * 3 + 4) / 5) }
+    /// Counts the pace again: after a change to the goal or the start.
+    private func project() {
+        monthNew = model.projectedNewWords(days: 30)
+        examNew = memory.daysToExam.map { model.projectedNewWords(days: $0) }
+    }
 
     private func update(_ change: (inout LearnerProfile) -> Void) {
         var changed = profile
@@ -47,6 +61,10 @@ struct LearningPlanView: View {
             .listRowBackground(StyledRowBackground())
         }
         .warmList()
+        .onAppear(perform: project)
+        .onChange(of: model.progress.dailyTarget) { _, _ in project() }
+        .onChange(of: startChapter) { _, _ in project() }
+        .onChange(of: memory.examDate) { _, _ in project() }
         .navigationTitle(L.t("我的學習計畫", "My learning plan"))
         .navigationBarTitleDisplayMode(.inline)
         .fullScreenCover(isPresented: $retestOpen) {
@@ -73,7 +91,10 @@ struct LearningPlanView: View {
                     L.t("換回 7000 單字才照章節走", "Chapters follow the 7000-word list"))
             }
             row("plus.circle.fill", L.t("每天 \(model.progress.dailyTarget) 個字", "\(model.progress.dailyTarget) words a day"),
-                L.t("新字和該複習的字一起算", "New words and reviews together"))
+                monthNew.map { month in
+                    L.t("新字和複習一起算；接下來一個月平均每天約 \(max(1, (month + 15) / 30)) 個新字",
+                        "New words and reviews together; about \(max(1, (month + 15) / 30)) new a day this month")
+                } ?? L.t("新字和該複習的字一起算", "New words and reviews together"))
             if english {
                 row("pencil.line", L.t("翻卡後拼 \(profile.spellChecks) 個、考 \(profile.examChecks) 題", "Then spell \(profile.spellChecks) and answer \(profile.examChecks)"),
                     L.t("拼字穩了就少抽，退步了就多抽", "Fewer when spelling holds, more when it slips"))
@@ -81,10 +102,10 @@ struct LearningPlanView: View {
             row(model.settings.homeLead == .speaking ? "mic.fill" : "rectangle.on.rectangle.angled",
                 model.settings.homeLead == .speaking ? L.t("每天先練口說", "Speaking first each day") : L.t("單字先，口說後", "Words first, then speaking"),
                 L.t("兩個每天都有", "Both, every day"))
-            if let days = memory.daysToExam, usesBuiltInWords {
-                let reach = PlacementTest.chaptersReached(from: startChapter, wordsPerDay: newPerDay, days: days)
+            if let days = memory.daysToExam, usesBuiltInWords, let examNew {
+                let reach = PlacementTest.chaptersReached(from: startChapter, newWords: examNew)
                 row("graduationcap.fill", L.t("\(exam?.title ?? "考試")前讀到第 \(reach) 章", "Chapter \(reach) by the exam"),
-                    L.t("還有 \(days) 天，照這個速度", "\(days) days left, at this pace"))
+                    L.t("還有 \(days) 天，每天都學、複習也做完的話", "\(days) days left, studying every day with the reviews done"))
                     .accessibilityIdentifier("plan-reach")
             }
         }
@@ -196,6 +217,7 @@ struct LearningPlanView: View {
                 let on = profile.focus.contains(item.focus)
                 Button {
                     update { $0.toggle(item.focus) }
+                    suggest(after: item.focus)
                 } label: {
                     HStack(spacing: 12) {
                         SettingsLabel(item.title, icon: item.icon, tint: on ? Palette.accent : Palette.secondaryLabel)
@@ -212,11 +234,66 @@ struct LearningPlanView: View {
                 .accessibilityHint(item.detail)
                 .accessibilityIdentifier("plan-focus-\(item.focus.rawValue)")
             }
+            if let suggestion { suggestionRow(suggestion) }
         } header: {
             Text(L.t("想加強的（最多兩個）", "What to get better at (up to two)"))
         } footer: {
-            Text(L.t("選的會改變每天翻卡後拼幾個、考幾題。", "Your picks change how many words you spell and answer after the cards."))
+            Text(L.t("拼字、考試題型：改變每天翻卡後拼幾個、考幾題。單字量、口說：會建議每天的量和先做什麼，按「套用」才會改。",
+                     "Spelling and exam questions change how many checks follow the cards. More words and speaking suggest your daily goal and what comes first; nothing changes until you tap Apply."))
         }
+    }
+
+    /// After a pick: what it suggests, when that differs from the plan now.
+    private func suggest(after focus: LearnerProfile.Focus) {
+        let picked = profile.focus.contains(focus)
+        var next: Suggestion?
+        switch focus {
+        case .vocabulary:
+            let wanted = profile.suggestedTarget
+            if picked ? model.progress.dailyTarget < wanted : model.progress.dailyTarget > wanted { next = .target(wanted) }
+        case .speaking:
+            if profile.lead != (model.settings.homeLead ?? .words) { next = .lead(profile.lead) }
+        case .spelling, .exam:
+            next = nil
+        }
+        withAnimation(reduceMotion ? nil : Motion.reveal) { suggestion = next }
+    }
+
+    private func suggestionRow(_ suggestion: Suggestion) -> some View {
+        let text: String
+        switch suggestion {
+        case .target(let count):
+            text = L.t("建議每天 \(count) 個字（現在 \(model.progress.dailyTarget) 個）", "Suggested: \(count) words a day (now \(model.progress.dailyTarget))")
+        case .lead(let lead):
+            text = lead == .speaking ? L.t("建議每天先練口說", "Suggested: speaking first each day")
+                                     : L.t("建議每天先背單字", "Suggested: words first each day")
+        }
+        return HStack(spacing: 10) {
+            Image(systemName: "lightbulb.fill").foregroundStyle(Palette.review)
+            Text(text).font(.subheadline.weight(.semibold)).foregroundStyle(Palette.ink)
+                .fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 6)
+            Button(L.t("不用", "No")) {
+                withAnimation(reduceMotion ? nil : Motion.reveal) { self.suggestion = nil }
+            }
+            .buttonStyle(.borderless)
+            .foregroundStyle(Palette.secondaryLabel)
+            .accessibilityIdentifier("plan-suggestion-dismiss")
+            Button(L.t("套用", "Apply")) {
+                switch suggestion {
+                case .target(let count): model.setDailyTarget(count)
+                case .lead(let lead): model.settings.homeLead = lead
+                }
+                model.scheduleSave()
+                withAnimation(reduceMotion ? nil : Motion.reveal) { self.suggestion = nil }
+            }
+            .buttonStyle(.borderless)
+            .font(.subheadline.weight(.bold))
+            .foregroundStyle(Palette.accent)
+            .accessibilityIdentifier("plan-suggestion-apply")
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("plan-suggestion")
     }
 
     // MARK: Where new words start

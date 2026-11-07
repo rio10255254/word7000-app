@@ -45,6 +45,9 @@ struct ClozeCard: View {
     var comeBack: String?
     /// The word was missed earlier in this round.
     var secondLook = false
+    /// A learner of Chinese: the English sentence on top with the gloss
+    /// marked, the Chinese sentence below with the blank.
+    var chinese = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.appStyle) private var appStyle
 
@@ -72,12 +75,12 @@ struct ClozeCard: View {
                         }
                     }
                 }
-                chineseSentence
+                (chinese ? englishPrompt : chineseSentence)
                     .font(.title2)
                     .accessibilityIdentifier("cloze-chinese")
-                if Cloze.cue(for: word) == nil {
+                if chinese ? !Self.glossShows(in: word) : Cloze.cue(for: word) == nil {
                     // No marked part: say which word is wanted.
-                    Text(ChineseDisplay.conciseMeaning(word.meaningZh))
+                    Text(chinese ? word.word : ChineseDisplay.conciseMeaning(word.meaningZh))
                         .font(.headline)
                         .foregroundStyle(Palette.accent)
                         .padding(.horizontal, 12)
@@ -98,7 +101,7 @@ struct ClozeCard: View {
                     // UI tests read the answer here to type it.
                     .accessibilityValue(AppRuntime.uiTesting ? sentence.answer : "")
                 if attempt.solved {
-                    SpeakButton(text: word.example)
+                    SpeakButton(text: chinese ? word.exampleZh : word.example, language: chinese ? "zh-TW" : "en-US")
                 }
             }
             .padding(20)
@@ -127,6 +130,28 @@ struct ClozeCard: View {
         marked.foregroundColor = Palette.ink
         return Text(AttributedString(cue.before) + marked + AttributedString(cue.after))
     }
+
+    /// For a learner of Chinese: the English example, the gloss marked.
+    private var englishPrompt: Text {
+        guard let range = Self.glossRange(in: word) else { return Text(word.example) }
+        var marked = AttributedString(String(word.example[range]))
+        marked.backgroundColor = Palette.review.opacity(0.35)
+        marked.foregroundColor = Palette.ink
+        return Text(AttributedString(String(word.example[..<range.lowerBound])) + marked
+                    + AttributedString(String(word.example[range.upperBound...])))
+    }
+
+    /// Where one of the entry's English glosses stands in its example.
+    static func glossRange(in word: WordEntry) -> Range<String.Index>? {
+        for gloss in word.word.split(separator: ";").map({ $0.trimmingCharacters(in: .whitespaces) })
+            .filter({ !$0.isEmpty }).sorted(by: { $0.count > $1.count }) {
+            let bare = gloss.hasPrefix("to ") ? String(gloss.dropFirst(3)) : gloss
+            if let range = word.example.range(of: bare, options: .caseInsensitive) { return range }
+        }
+        return nil
+    }
+
+    static func glossShows(in word: WordEntry) -> Bool { glossRange(in: word) != nil }
 
     private var englishSentence: Text {
         var text = AttributedString()
@@ -179,20 +204,21 @@ struct ClozeCard: View {
     }
 
     /// What to say after a try that was not right, or when the answer is up.
-    static func message(for word: WordEntry, attempt: ClozeAttempt) -> (text: String, tint: Color)? {
+    static func message(for word: WordEntry, attempt: ClozeAttempt, chinese: Bool = false) -> (text: String, tint: Color)? {
         guard !attempt.solved else { return nil }
         if attempt.answerShown {
             return (L.t("看一下答案，自己打一次。", "Look at the answer, then type it yourself."), Palette.review)
         }
         guard let verdict = attempt.lastVerdict else { return nil }
-        let wanted = Cloze.cue(for: word)?.cue ?? ChineseDisplay.conciseMeaning(word.meaningZh)
+        let wanted = chinese ? word.word : Cloze.cue(for: word)?.cue ?? ChineseDisplay.conciseMeaning(word.meaningZh)
         switch verdict {
         case .correct:
             return nil
         case .otherForm:
             return (L.t("字對了！但這句要用另一個形式。", "Right word, but this sentence needs another form of it."), Palette.review)
         case .almost:
-            return (L.t("差一個字母，再看一下。", "One letter off. Look again."), Palette.review)
+            return chinese ? (L.t("差一個字，再看一下。", "One character off. Look again."), Palette.review)
+                           : (L.t("差一個字母，再看一下。", "One letter off. Look again."), Palette.review)
         case .otherWord(let other, let meaning):
             let gloss = ChineseDisplay.conciseMeaning(meaning)
             return (L.t("\(other) 是「\(gloss)」。「\(wanted)」是哪個字？",

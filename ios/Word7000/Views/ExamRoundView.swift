@@ -90,7 +90,7 @@ struct ExamRoundView: View {
 
     private func start() {
         guard !started else { return }
-        meanings = ExamQuestionBody.meanings(model.coreWords)
+        meanings = ExamQuestionBody.meanings(model.coreWords, chinese: model.learnsChinese)
         ids = model.examRoundIds(kind, seed: SeededRandom.runtimeSeed())
         started = true
     }
@@ -107,7 +107,7 @@ struct ExamRoundView: View {
                                    ? L.t("週考！這週學的字，看你記住幾個。", "Weekly quiz! This week's words: let's see what stuck.")
                                    : ExamQuestionBody.catLine(question, chosen: chosen, style: model.examStyleName),
                                mood: chosen == nil ? .thinking : chosen == question.answerIndex ? .cheer : .encourage)
-                ExamQuestionBody(word: word, question: question, chosen: chosen, meanings: meanings) { choose($0, question) }
+                ExamQuestionBody(word: word, question: question, chosen: chosen, meanings: meanings, chinese: model.learnsChinese) { choose($0, question) }
                     .id(index)
                     .transition(.questionSwap(reduceMotion))
                 if let chosen, chosen != question.answerIndex {
@@ -166,7 +166,7 @@ struct ExamRoundView: View {
         var at = index
         while at < ids.count {
             if let word = model.word(id: ids[at]),
-               let built = ExamQuestions.make(for: word, pool: pool, seed: "\(model.today):\(kind.rawValue):\(word.id)") {
+               let built = ExamQuestions.make(for: word, pool: pool, seed: "\(model.today):\(kind.rawValue):\(word.id)", style: model.examStyle) {
                 if at != index { index = at }
                 withAnimation(reduceMotion ? nil : Motion.swap) { question = built }
                 return

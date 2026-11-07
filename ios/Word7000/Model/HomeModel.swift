@@ -64,12 +64,12 @@ extension AppModel {
     func examRoundIds(_ kind: ExamRoundKind, seed: String) -> [String] {
         refreshToday()
         let words = kind == .weekly ? vocabularyWords : bank.words
-        return ExamRound.pick(kind, words: words, state: progress, today: today, seed: seed)
+        return ExamRound.pick(kind, words: words, state: progress, today: today, seed: seed, chinese: learnsChinese)
     }
 
     /// Words the quick quiz could ask now.
     var quickQuizWordCount: Int {
-        ExamRound.available(.quick, words: bank.words, state: progress, today: today)
+        ExamRound.available(.quick, words: bank.words, state: progress, today: today, chinese: learnsChinese)
     }
 
     /// Sunday's weekly quiz is waiting (learners of English: the questions
@@ -78,7 +78,7 @@ extension AppModel {
         guard studyMode == .english else { return false }
         if ProcessInfo.processInfo.arguments.contains("-uiTestingWeeklyQuiz") { return true }
         guard settings.weeklyQuizDoneOn != today else { return false }
-        return ExamRound.weeklyDue(words: vocabularyWords, state: progress, today: today)
+        return ExamRound.weeklyDue(words: vocabularyWords, state: progress, today: today, chinese: learnsChinese)
     }
 
     /// A finished quiz outside the routine, for the usage numbers.
@@ -104,7 +104,10 @@ extension AppModel {
     /// Today's word said in a sentence at the end of a speaking stage (or skipped).
     func recordTodaysWordUse(wordId: String?, used: Bool) {
         Usage.log("speaking_word_use", used ? "used" : "skipped")
-        if used { recordSpeaking(completed: true) }
+        if used {
+            recordSpeaking(completed: true)
+            if let wordId { creditWordUse(wordId) }
+        }
     }
 
     /// Today's words and speaking are both done and the stamp not shown yet.

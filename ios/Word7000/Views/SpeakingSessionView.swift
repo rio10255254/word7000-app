@@ -396,6 +396,13 @@ struct SpeakingSessionView: View {
         started = true
     }
 
+    /// Whether the answer has the practice word in it: the English word (or
+    /// a form of it) for a learner of English, the Chinese for a learner of Chinese.
+    private func usedPracticeWord(_ word: WordEntry) -> Bool {
+        if model.learnsChinese { return coachAnswer.contains(ExamQuestions.chineseForm(word)) }
+        return TodaysWordUse.check(heard: coachAnswer, word: word.word).counts
+    }
+
     private func clearCoach() {
         coachContextID = UUID()
         coachSession.reset()
@@ -787,6 +794,11 @@ struct SpeakingSessionView: View {
         guard index < count else { return }
         // Saying the model or answering is the practice; skipping is not.
         model.recordSpeaking(completed: attempted || shadowedThisWord)
+        // Word practice: the word itself said in the answer counts as a review
+        // of it (read before the answer is cleared below).
+        if scenarioRef == nil, attempted, usedPracticeWord(words[index]) {
+            model.creditWordUse(words[index].id)
+        }
         if attempted { answered += 1 }
         if scenarioRef != nil, attempted, !coachAnswer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             replies[index] = coachAnswer

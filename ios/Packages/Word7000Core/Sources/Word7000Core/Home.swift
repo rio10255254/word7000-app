@@ -145,8 +145,10 @@ public enum ExamRound {
 
     /// The words to ask about, in the order to ask them. Only words with an
     /// example sentence to blank out are asked.
-    public static func pick(_ kind: ExamRoundKind, words: [WordEntry], state: ProgressState, today: String, seed: String) -> [String] {
-        let askable = words.filter { Cloze.sentence(for: $0) != nil }
+    /// `chinese`: a learner of Chinese, asked in the Chinese sentence.
+    public static func pick(_ kind: ExamRoundKind, words: [WordEntry], state: ProgressState, today: String, seed: String,
+                            chinese: Bool = false) -> [String] {
+        let askable = words.filter { Cloze.sentence(for: $0, chinese: chinese) != nil }
         switch kind {
         case .quick:
             let learned = askable.compactMap { word -> (id: String, due: String, stage: Int)? in
@@ -168,8 +170,9 @@ public enum ExamRound {
     }
 
     /// How many words a quiz of this kind could ask about now.
-    public static func available(_ kind: ExamRoundKind, words: [WordEntry], state: ProgressState, today: String) -> Int {
-        let askable = words.filter { Cloze.sentence(for: $0) != nil }
+    public static func available(_ kind: ExamRoundKind, words: [WordEntry], state: ProgressState, today: String,
+                                 chinese: Bool = false) -> Int {
+        let askable = words.filter { Cloze.sentence(for: $0, chinese: chinese) != nil }
         switch kind {
         case .quick: return askable.filter { (state.words[$0.id]?.status ?? .new) != .new }.count
         case .weekly: return studiedThisWeek(askable, state: state, today: today).count
@@ -177,8 +180,8 @@ public enum ExamRound {
     }
 
     /// Sunday's weekly quiz is offered when the week gave it enough words.
-    public static func weeklyDue(words: [WordEntry], state: ProgressState, today: String) -> Bool {
-        WeekStamps.weekdayIndex(today) == 6 && available(.weekly, words: words, state: state, today: today) >= minimumWords
+    public static func weeklyDue(words: [WordEntry], state: ProgressState, today: String, chinese: Bool = false) -> Bool {
+        WeekStamps.weekdayIndex(today) == 6 && available(.weekly, words: words, state: state, today: today, chinese: chinese) >= minimumWords
     }
 
     private static func studiedThisWeek(_ words: [WordEntry], state: ProgressState, today: String) -> [String] {

@@ -964,9 +964,10 @@ final class AppModel {
         let profile = settings.learnerProfile ?? LearnerProfile()
         routine.planChecks(knownIds: session.knownIds, unsureIds: session.reviewIds,
                            maxSpell: profile.spellChecks, maxExam: profile.examChecks,
-                           canSpell: { [self] id in word(id: id).flatMap { Cloze.sentence(for: $0) } != nil },
+                           canSpell: { [self] id in word(id: id).flatMap { Cloze.sentence(for: $0, chinese: learnsChinese) } != nil },
                            canExam: { [self] id in
-                               guard let word = word(id: id), Cloze.sentence(for: word) != nil else { return false }
+                               guard let word = word(id: id), Cloze.sentence(for: word, chinese: learnsChinese) != nil else { return false }
+                               if learnsChinese { return true }
                                let text = Spelling.normalized(word.word)
                                return text.count >= 2 && text.allSatisfy(\.isLetter)
                            })
@@ -989,6 +990,22 @@ final class AppModel {
         scheduleSave()
         Usage.log("routine_check", "\(exam ? "exam" : "spell").\(outcome.rawValue)")
     }
+
+    /// A check that cannot be asked after all: the next word marked known
+    /// takes its place rather than the check being waved through.
+    func replaceUnaskableCheck(_ wordId: String) {
+        guard var routine = activeRoutine else { return }
+        routine.replaceUnaskable(wordId)
+        wordRoutine = routine
+        scheduleSave()
+        Usage.log("routine_check_replaced", studyMode.rawValue)
+    }
+
+    /// Checks and questions are in the language being learned.
+    var learnsChinese: Bool { studyMode == .chinese }
+
+    /// The shape of exam questions, from the exam in the learner's plan.
+    var examStyle: ExamStyle { ExamStyle(exam: settings.learnerProfile?.exam) }
 
     /// Ends the current check step (spelling, then the exam questions).
     func advanceRoutine() {
@@ -1023,12 +1040,40 @@ final class AppModel {
         let key = "\(studyMode.rawValue)|\(contentRevision)|\(coreWords.count)"
         if let cached = examPoolCache, cached.key == key { return cached.pool }
         let words = coreWords
-        let pool = await Task.detached(priority: .userInitiated) { ExamPool(words) }.value
+        let chinese = studyMode == .chinese
+        let pool = await Task.detached(priority: .userInitiated) { ExamPool(words, chinese: chinese) }.value
         examPoolCache = (key, pool)
         return pool
     }
 
-    /// Speaking practice counts as activity but does not change word progress.
+    /// A word said in a sentence of the learner's own while speaking: it
+    /// counts as a right answer where one would (see LearningEngine.creditUse).
+    func creditWordUse(_ wordId: String) {
+        refreshToday()
+        let changed = LearningEngine.creditUse(progress, wordId: wordId, today: today)
+        guard changed != progress else { return }
+        progress = changed
+        scheduleSave()
+        Usage.log("speaking_word_credit", studyMode.rawValue)
+    }
+
+    /// New words a learner meets by `days` from now studying every day, by
+    /// the same rules sessions are built with, from the reviews already due.
+    func projectedNewWords(days: Int) -> Int {
+        refreshToday()
+        // New words left to meet, the easier chapters skipped as sessions skip them.
+        let unseen = studyCandidates.filter { (progress.words[$0.id]?.status ?? .new) == .new }
+        var fresh = unseen.count
+        if let start = placementStart, start > 1 {
+            let fromStart = unseen.filter { LearningEngine.coreLevel($0.group).map { $0 >= start } ?? true }.count
+            if fromStart > 0 { fresh = fromStart }
+        }
+        return LearningEngine.projectedNewWords(state: progress, today: today, dailyTarget: progress.dailyTarget,
+                                                days: days, freshAvailable: fresh)
+    }
+
+    /// Speaking practice counts as activity; a word used in it is credited
+    /// separately (creditWordUse).
     func recordSpeaking(completed: Bool) {
         refreshToday()
         let changed = completed ? LearningEngine.recordPracticeDay(progress, today: today) : progress

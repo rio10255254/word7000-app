@@ -98,6 +98,49 @@ final class RoutineTests: XCTestCase {
         snap(app, "routine-10-today-after")
     }
 
+    /// A learner of Chinese is checked in Chinese: the blank is in the
+    /// Chinese sentence, the English one sits above it, and the help gives
+    /// the first character.
+    func testLearnersOfChineseAreCheckedInChinese() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingSampleProgress", "-uiTestingFakePlans",
+                               "-uiTestingRoutine", "-uiTestingChineseMode"]
+        app.launch()
+        let start = app.buttons["today-start"]
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        start.tap()
+        let handOff = app.descendants(matching: .any)["routine-hand-off"]
+        var flipped = 0
+        while !handOff.exists, flipped < 40 {
+            let show = app.buttons["study-show-answer"]
+            guard show.waitForExistence(timeout: 5) else { break }
+            let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true"), object: show)
+            XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 10), .completed)
+            show.tap()
+            let known = app.buttons["study-grade-known"]
+            XCTAssertTrue(known.waitForExistence(timeout: 5))
+            known.tap()
+            flipped += 1
+            _ = handOff.waitForExistence(timeout: 1)
+        }
+        XCTAssertTrue(handOff.waitForExistence(timeout: 10), app.debugDescription)
+        snap(app, "routine-zh-1-hand-off")
+        app.buttons["routine-begin"].tap()
+
+        let input = app.textFields["routine-input"]
+        XCTAssertTrue(input.waitForExistence(timeout: 8), app.debugDescription)
+        let answer = app.staticTexts["cloze-sentence"].value as? String ?? ""
+        XCTAssertTrue(answer.unicodeScalars.contains { (0x4E00...0x9FFF).contains($0.value) },
+                      "the answer is the Chinese word, not English: \(answer)")
+        let prompt = app.staticTexts["cloze-chinese"].label
+        XCTAssertTrue(prompt.contains(where: { $0.isASCII && $0.isLetter }), "the English sentence is the prompt: \(prompt)")
+        let help = app.buttons["routine-help"]
+        XCTAssertTrue(help.exists)
+        XCTAssertTrue(help.label.contains("character") || help.label.contains("字"), help.label)
+        sleep(1)
+        snap(app, "routine-zh-2-write")
+    }
+
     private func snap(_ app: XCUIApplication, _ name: String) {
         let screenshot = app.screenshot()
         let attachment = XCTAttachment(screenshot: screenshot)

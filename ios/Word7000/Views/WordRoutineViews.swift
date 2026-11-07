@@ -115,9 +115,12 @@ struct RoutineChecksView: View {
                 RoutineSpellView(routine: routine)
             } else {
                 handOff(title: L.t("翻卡完成！", "Cards done!"),
-                        line: L.t("你說認識 \(routine.knownIds.count) 個字。\n我抽 \(routine.spellIds.count) 個，寫給我看。",
+                        line: model.learnsChinese
+                            ? L.t("你說認識 \(routine.knownIds.count) 個字。\n我抽 \(routine.spellIds.count) 個，寫中文給我看。",
+                                  "You said you know \(routine.knownIds.count).\nI'll pick \(routine.spellIds.count). Write them in Chinese.")
+                            : L.t("你說認識 \(routine.knownIds.count) 個字。\n我抽 \(routine.spellIds.count) 個，寫給我看。",
                                   "You said you know \(routine.knownIds.count).\nI'll pick \(routine.spellIds.count). Spell them for me."),
-                        action: L.t("開始拼字", "Start spelling"), step: .spell)
+                        action: model.learnsChinese ? L.t("開始寫字", "Start writing") : L.t("開始拼字", "Start spelling"), step: .spell)
             }
         case .exam:
             if begun == .exam || !routine.examResults.isEmpty {
@@ -210,7 +213,7 @@ struct RoutineSpellView: View {
 
     var body: some View {
         Group {
-            if let wordId, let word = model.word(id: wordId), let sentence = Cloze.sentence(for: word), let attempt {
+            if let wordId, let word = model.word(id: wordId), let sentence = Cloze.sentence(for: word, chinese: model.learnsChinese), let attempt {
                 question(word, sentence, attempt)
             } else {
                 ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -241,7 +244,7 @@ struct RoutineSpellView: View {
                 RoutineStepStrip(routine: model.activeRoutine ?? routine)
                     .padding(.top, 4)
                 RoutineCatLine(text: catLine(word, attempt), mood: attempt.solved ? (attempt.outcome == .missed ? .encourage : .cheer) : .thinking)
-                ClozeCard(word: word, sentence: sentence, attempt: attempt, input: input, comeBack: comeBack)
+                ClozeCard(word: word, sentence: sentence, attempt: attempt, input: input, comeBack: comeBack, chinese: model.learnsChinese)
                     .shake(trigger: misses, enabled: !reduceMotion)
                     .pulse(trigger: solves, scale: 1.03, enabled: !reduceMotion)
                     .id(word.id)
@@ -257,7 +260,7 @@ struct RoutineSpellView: View {
         .safeAreaInset(edge: .bottom) {
             VStack(spacing: 10) {
                 // What was wrong sits right on the answer box, never scrolled under it.
-                if let message = ClozeCard.message(for: word, attempt: attempt) {
+                if let message = ClozeCard.message(for: word, attempt: attempt, chinese: model.learnsChinese) {
                     Text(message.text)
                         .font(.headline)
                         .foregroundStyle(message.tint)
@@ -277,7 +280,8 @@ struct RoutineSpellView: View {
     }
 
     private func inputField(_ attempt: ClozeAttempt) -> some View {
-        TextField(L.t("輸入英文單字", "Type the English word"), text: Binding(
+        // A learner of Chinese writes the Chinese, on their own keyboard.
+        TextField(model.learnsChinese ? L.t("輸入中文", "Type it in Chinese") : L.t("輸入英文單字", "Type the English word"), text: Binding(
             get: { input },
             set: { if !attempt.solved { input = $0 } }
         ))
@@ -285,7 +289,7 @@ struct RoutineSpellView: View {
         .multilineTextAlignment(.center)
         .textInputAutocapitalization(.never)
         .autocorrectionDisabled()
-        .keyboardType(.asciiCapable)
+        .keyboardType(model.learnsChinese ? .default : .asciiCapable)
         .submitLabel(attempt.solved ? .next : .done)
         .focused($focused)
         .onSubmit {
@@ -312,6 +316,9 @@ struct RoutineSpellView: View {
             default: return L.t("抓到了！等一下再翻一次。", "Caught you! We'll flip it again.")
             }
         }
+        if model.learnsChinese {
+            return L.t("「\(word.word)」你說你認識？寫中文給我看。", "You said you know \u{201C}\(word.word)\u{201D}? Write it in Chinese.")
+        }
         let wanted = Cloze.cue(for: word)?.cue ?? ChineseDisplay.conciseMeaning(word.meaningZh)
         return L.t("「\(wanted)」你說你認識？寫給我看。", "You said you know \u{201C}\(wanted)\u{201D}? Spell it.")
     }
@@ -321,7 +328,8 @@ struct RoutineSpellView: View {
             if !attempt.solved {
                 if let help = attempt.nextHelp {
                     Button(action: takeHelp) {
-                        Label(help == .firstLetter ? L.t("第一個字母", "First letter") : L.t("看答案", "Show answer"),
+                        Label(help == .firstLetter ? (model.learnsChinese ? L.t("第一個字", "First character") : L.t("第一個字母", "First letter"))
+                                                   : L.t("看答案", "Show answer"),
                               systemImage: help == .firstLetter ? "lightbulb" : "eye")
                             .font(.title3.weight(.bold))
                             .frame(maxWidth: .infinity)
@@ -352,9 +360,10 @@ struct RoutineSpellView: View {
         comeBack = nil
         wordId = id
         guard let id else { model.advanceRoutine(); return }
-        guard let word = model.word(id: id), let sentence = Cloze.sentence(for: word) else {
-            // A word that can no longer be asked (its sentence changed): let it pass.
-            model.recordRoutineCheck(wordId: id, outcome: .knew, exam: false)
+        guard let word = model.word(id: id), let sentence = Cloze.sentence(for: word, chinese: model.learnsChinese) else {
+            // A word that can no longer be asked (its sentence changed): the
+            // next word marked known takes its place.
+            model.replaceUnaskableCheck(id)
             load(model.activeRoutine?.spellLeft.first)
             return
         }
@@ -430,7 +439,7 @@ struct RoutineExamView: View {
             }
         }
         .onAppear {
-            if meanings.isEmpty { meanings = ExamQuestionBody.meanings(model.coreWords) }
+            if meanings.isEmpty { meanings = ExamQuestionBody.meanings(model.coreWords, chinese: model.learnsChinese) }
             if wordId == nil { wordId = routine.examLeft.first ?? "" }
         }
         .task(id: wordId) { await load() }
@@ -457,7 +466,8 @@ struct RoutineExamView: View {
                     .padding(.top, 4)
                 RoutineCatLine(text: ExamQuestionBody.catLine(question, chosen: chosen, style: model.examStyleName),
                                mood: chosen == nil ? .thinking : chosen == question.answerIndex ? .cheer : .encourage)
-                ExamQuestionBody(word: word, question: question, chosen: chosen, meanings: meanings) { choose($0, question) }
+                ExamQuestionBody(word: word, question: question, chosen: chosen, meanings: meanings,
+                                 chinese: model.learnsChinese) { choose($0, question) }
                     .id(question.wordId)
                     .transition(.questionSwap(reduceMotion))
                 if let chosen, chosen != question.answerIndex {
@@ -496,9 +506,10 @@ struct RoutineExamView: View {
         guard let wordId else { return }
         guard !wordId.isEmpty, let word = model.word(id: wordId) else { model.advanceRoutine(); return }
         let pool = await model.examPool()
-        guard let built = ExamQuestions.make(for: word, pool: pool, seed: "\(routine.day):\(wordId)") else {
-            // Too few look-alikes for this one: let it pass.
-            model.recordRoutineCheck(wordId: wordId, outcome: .knew, exam: true)
+        guard let built = ExamQuestions.make(for: word, pool: pool, seed: "\(routine.day):\(wordId)", style: model.examStyle) else {
+            // Too few words could stand in for this one: the next word
+            // marked known takes its place rather than it being waved through.
+            model.replaceUnaskableCheck(wordId)
             self.wordId = model.activeRoutine?.examLeft.first ?? ""
             return
         }
@@ -548,15 +559,28 @@ struct ExamQuestionBody: View {
     var chosen: Int?
     /// Meanings by normalized spelling, for the explanation.
     var meanings: [String: String]
+    /// A learner of Chinese: Chinese options, and the English sentence shown
+    /// from the start, so the one word it says is the answer.
+    var chinese = false
     var choose: (Int) -> Void
 
-    static func meanings(_ words: [WordEntry]) -> [String: String] {
-        Dictionary(words.map { (Spelling.normalized($0.word), $0.meaningZh) }, uniquingKeysWith: { first, _ in first })
+    /// For a learner of English the Chinese meaning of each word; for a
+    /// learner of Chinese the English gloss of each Chinese word.
+    static func meanings(_ words: [WordEntry], chinese: Bool = false) -> [String: String] {
+        if chinese {
+            return Dictionary(words.map { (Spelling.normalized(ExamQuestions.chineseForm($0)), $0.word) }, uniquingKeysWith: { first, _ in first })
+        }
+        return Dictionary(words.map { (Spelling.normalized($0.word), $0.meaningZh) }, uniquingKeysWith: { first, _ in first })
     }
 
     /// What the cat says above the question.
     static func catLine(_ question: ExamQuestion, chosen: Int?, style: String) -> String {
-        guard let chosen else { return L.t("\(style)：選出最適合的字。", "\(style): pick the word that fits.") }
+        guard let chosen else {
+            if question.wordForm {
+                return L.t("\(style)：這句要哪種詞性？選對的形式。", "\(style): which form does the sentence need?")
+            }
+            return L.t("\(style)：選出最適合的字。", "\(style): pick the word that fits.")
+        }
         return chosen == question.answerIndex
             ? L.t("對！這種題目考試最愛。", "Right! Exams love this one.")
             : L.t("抓到了！這兩個字常被拿來一起考。", "Caught you! These two often come up together.")
@@ -569,7 +593,12 @@ struct ExamQuestionBody: View {
                     .font(.title2)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .accessibilityIdentifier("routine-exam-sentence")
-                if chosen != nil, let cue = Cloze.cue(for: word) {
+                if chinese {
+                    Text(word.example)
+                        .font(.title3)
+                        .foregroundStyle(Palette.secondaryLabel)
+                        .accessibilityIdentifier("routine-exam-english")
+                } else if chosen != nil, let cue = Cloze.cue(for: word) {
                     Text(marked(cue))
                         .font(.title3)
                         .foregroundStyle(Palette.secondaryLabel)
@@ -657,7 +686,7 @@ struct ExamQuestionBody: View {
     private func explanation(_ chosen: Int) -> some View {
         let lines = (chosen == question.answerIndex ? [question.answerIndex] : [question.answerIndex, chosen]).map { index -> String in
             let option = question.options[index]
-            let meaning = meanings[Spelling.normalized(option)].map(ChineseDisplay.conciseMeaning) ?? ""
+            let meaning = meanings[Spelling.normalized(option)].map { chinese ? $0 : ChineseDisplay.conciseMeaning($0) } ?? ""
             return meaning.isEmpty ? option : "\(option)\u{3000}\(meaning)"
         }
         return VStack(alignment: .leading, spacing: 6) {

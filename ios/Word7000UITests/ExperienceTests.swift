@@ -364,6 +364,14 @@ final class ExperienceTests: XCTestCase {
         for _ in 0..<4 where !spelling.isHittable { app.swipeUp() }
         spelling.tap()
         XCTAssertEqual(spelling.value as? String, "已選", "Picking spelling marks it")
+        // More words suggests a bigger goal, applied only on a tap.
+        app.buttons["plan-focus-vocabulary"].tap()
+        let apply = app.buttons["plan-suggestion-apply"]
+        XCTAssertTrue(apply.waitForExistence(timeout: 5), "picking more words suggests a bigger goal")
+        snapshot(app, "plan-suggestion")
+        apply.tap()
+        XCTAssertTrue(apply.waitForNonExistence(timeout: 5))
+        XCTAssertTrue(app.descendants(matching: .any)["plan-card"].firstMatch.label.contains("30"), "the goal is now 30 a day")
         let retest = app.buttons["plan-retest"]
         for _ in 0..<4 where !retest.isHittable { app.swipeUp() }
         snapshot(app, "plan-bottom")

@@ -91,10 +91,7 @@ struct LearningPlanView: View {
                     L.t("換回 7000 單字才照章節走", "Chapters follow the 7000-word list"))
             }
             row("plus.circle.fill", L.t("每天 \(model.progress.dailyTarget) 個字", "\(model.progress.dailyTarget) words a day"),
-                monthNew.map { month in
-                    L.t("新字和複習一起算；接下來一個月平均每天約 \(max(1, (month + 15) / 30)) 個新字",
-                        "New words and reviews together; about \(max(1, (month + 15) / 30)) new a day this month")
-                } ?? L.t("新字和該複習的字一起算", "New words and reviews together"))
+                dailyDetail)
             if english {
                 row("pencil.line", L.t("翻卡後拼 \(profile.spellChecks) 個、考 \(profile.examChecks) 題", "Then spell \(profile.spellChecks) and answer \(profile.examChecks)"),
                     L.t("拼字穩了就少抽，退步了就多抽", "Fewer when spelling holds, more when it slips"))
@@ -115,6 +112,14 @@ struct LearningPlanView: View {
         .contentTransition(.numericText())
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("plan-card")
+    }
+
+    /// Under the daily goal: how many of it are new words this month.
+    private var dailyDetail: String {
+        guard let monthNew else { return L.t("新字和該複習的字一起算", "New words and reviews together") }
+        let perDay = max(1, (monthNew + 15) / 30)
+        return L.t("新字和複習一起算；接下來一個月平均每天約 \(perDay) 個新字",
+                   "New words and reviews together; about \(perDay) new a day this month")
     }
 
     private func row(_ icon: String, _ title: String, _ detail: String) -> some View {

@@ -245,9 +245,6 @@ public enum LearningEngine {
                StreakProtection.covers(missed: missed, in: next) {
                 next.streakFreezeDate = missed
             } else {
-                // A cover the learner never studied after did not keep the
-                // streak: it is given back rather than left on its cooldown.
-                if let used = next.streakFreezeDate, used > last { next.streakFreezeDate = nil }
                 next.streak = 0
             }
         }

@@ -89,11 +89,9 @@ final class StreakProtectionTests: XCTestCase {
                      old: ProgressState(streak: 5, lastStudyDate: "2026-10-01", streakFreezeDate: "2026-09-28"),
                      incoming: ProgressState(streak: 1, dailyProgressDate: "2026-10-03", lastStudyDate: "2026-10-03"),
                      streak: 1, freeze: "2026-09-28", last: "2026-10-03"),
-            // Opened on the 3rd (the 2nd covered) but nothing studied by the
-            // 4th: the streak ends and the cover, which saved nothing, is given back.
-            Scenario(name: "expired open gives the cover back", old: protected,
+            Scenario(name: "expired open stays expired", old: protected,
                      incoming: ProgressState(streak: 0, dailyProgressDate: "2026-10-04", lastStudyDate: "2026-10-01"),
-                     streak: 0, freeze: nil),
+                     streak: 0, freeze: "2026-10-02"),
             Scenario(name: "distant study starts over",
                      old: ProgressState(streak: 100, lastStudyDate: "2026-10-01", streakFreezeDate: "2026-10-02"),
                      incoming: ProgressState(streak: 1, dailyProgressDate: "2026-10-04", lastStudyDate: "2026-10-04"),

@@ -145,7 +145,9 @@ struct WelcomeView: View {
                     .frame(maxWidth: .infinity, minHeight: proxy.size.height * 0.88)
                 }
                 .scrollBounceBehavior(.basedOnSize)
+                .scrollDismissesKeyboard(.never)
             }
+            .safeAreaInset(edge: .bottom, spacing: 0) { spellBar }
         }
         .background { AmbientBackground() }
         .sensoryFeedback(.selection, trigger: target)
@@ -767,11 +769,31 @@ struct WelcomeView: View {
                     .accessibilityIdentifier("welcome-spell-position")
                 ClozeCard(word: word, sentence: sentence, attempt: attempt, input: spellInput, comeBack: nil)
                     .id(word.id)
+            } else {
+                ProgressView().frame(minHeight: 200)
+            }
+        }
+        .onAppear {
+            guard spellAttempt == nil else { return }
+            let words = model.englishCoreWords
+            spellWords = test.spellingWords(from: words, count: 3, seed: testSeed)
+            spellOutcomes = [:]
+            loadSpelling(0)
+        }
+        .sensoryFeedback(trigger: spellAttempt?.solved) { _, solved in solved == true ? .success : nil }
+        .sensoryFeedback(.error, trigger: spellMisses)
+    }
+
+    /// The answer box and its keys, pinned right above the keyboard (as in
+    /// the spelling round), so the keyboard never hides them.
+    @ViewBuilder private var spellBar: some View {
+        if step == .spell, let attempt = spellAttempt {
+            VStack(spacing: 10) {
                 TextField(text("輸入英文單字", "Type the English word"), text: Binding(
                     get: { spellInput },
                     set: { if !attempt.solved && !attempt.answerShown { spellInput = $0 } }
                 ))
-                .font(.title.weight(.semibold))
+                .font(.title2.weight(.semibold))
                 .multilineTextAlignment(.center)
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
@@ -781,8 +803,8 @@ struct WelcomeView: View {
                 .onSubmit { checkSpelling() }
                 .padding(.vertical, 12)
                 .padding(.horizontal, 16)
-                .background(Palette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .background(Palette.surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous)
                     .stroke(spellFocused ? Palette.accent.opacity(0.45) : .clear, lineWidth: 2))
                 .accessibilityIdentifier("welcome-spell-input")
                 ButtonRow {
@@ -799,19 +821,13 @@ struct WelcomeView: View {
                     .disabled(spellInput.trimmed.isEmpty || attempt.solved || attempt.answerShown)
                     .accessibilityIdentifier("welcome-spell-check")
                 }
-            } else {
-                ProgressView().frame(minHeight: 200)
             }
+            .padding(.horizontal, Metrics.gutter)
+            .padding(.vertical, 8)
+            .frame(maxWidth: 560)
+            .frame(maxWidth: .infinity)
+            .background { PaperBarBackground() }
         }
-        .onAppear {
-            guard spellAttempt == nil else { return }
-            let words = model.englishCoreWords
-            spellWords = test.spellingWords(from: words, count: 3, seed: testSeed)
-            spellOutcomes = [:]
-            loadSpelling(0)
-        }
-        .sensoryFeedback(trigger: spellAttempt?.solved) { _, solved in solved == true ? .success : nil }
-        .sensoryFeedback(.error, trigger: spellMisses)
     }
 
     private func spellLine(_ word: WordEntry, _ attempt: ClozeAttempt) -> String {

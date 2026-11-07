@@ -762,15 +762,18 @@ struct ActivityCalendarView: View {
 
     private let gap: CGFloat = 3
     private let labelWidth: CGFloat = 16
-    private let monthHeight: CGFloat = 14
+    private let monthHeight: CGFloat = 13
+    /// Each day is short and wide: the weeks fill the width, the seven
+    /// rows stay flat.
+    private let rowHeight: CGFloat = 10
 
-    /// As GitHub draws it: small squares, a week to a column, Monday on top;
-    /// as big as the width allows, never above 13 points.
+    /// As GitHub lays it out, a week to a column, Monday on top, but the
+    /// columns stretched across the card.
     private var side: CGFloat {
         let count = CGFloat(max(1, weeks.count))
-        return min(13, max(6, (width - labelWidth - gap * count) / count))
+        return min(44, max(6, (width - labelWidth - gap * (count + 1)) / count))
     }
-    private var gridWidth: CGFloat { labelWidth + gap + CGFloat(weeks.count) * (side + gap) }
+    private var gridWidth: CGFloat { labelWidth + gap + CGFloat(weeks.count) * (side + gap) - gap }
 
     var body: some View {
         let active = weeks.joined().compactMap { $0 }.filter { $0 > 0 }.count
@@ -780,7 +783,6 @@ struct ActivityCalendarView: View {
                 .accessibilityLabel(L.t("最近 \(weeks.count) 週學了 \(active) 天", "\(active) days in the last \(weeks.count) weeks"))
                 .accessibilityIdentifier("me-calendar")
                 .overlay(alignment: .topLeading) { tooltip }
-                .frame(maxWidth: .infinity)
             legend
         }
         .background {
@@ -811,7 +813,7 @@ struct ActivityCalendarView: View {
                         Text(day % 2 == 0 && day < 6 ? weekdayName(day) : "")
                             .font(.system(size: 8, weight: .semibold))
                             .foregroundStyle(Palette.tertiaryLabel)
-                            .frame(width: labelWidth, height: side, alignment: .leading)
+                            .frame(width: labelWidth, height: rowHeight, alignment: .leading)
                     }
                 }
                 ForEach(Array(weeks.enumerated()), id: \.offset) { week, days in
@@ -829,7 +831,7 @@ struct ActivityCalendarView: View {
     private func square(_ cell: Cell, actions: Int?) -> some View {
         RoundedRectangle(cornerRadius: 2.5, style: .continuous)
             .fill(color(actions))
-            .frame(width: side, height: side)
+            .frame(width: side, height: rowHeight)
             .overlay {
                 if selected == cell {
                     RoundedRectangle(cornerRadius: 2.5, style: .continuous).stroke(Palette.ink, lineWidth: 1.5)
@@ -847,8 +849,8 @@ struct ActivityCalendarView: View {
         if let selected, weeks.indices.contains(selected.week), weeks[selected.week].indices.contains(selected.day),
            let actions = weeks[selected.week][selected.day] {
             let x = labelWidth + gap + CGFloat(selected.week) * (side + gap) + side / 2
-            let top = monthHeight + 2 + CGFloat(selected.day) * (side + gap)
-            let y = selected.day >= 3 ? top - 22 : top + side + 22
+            let top = monthHeight + 2 + CGFloat(selected.day) * (rowHeight + gap)
+            let y = selected.day >= 3 ? top - 22 : top + rowHeight + 22
             VStack(spacing: 1) {
                 Text(dayTitle(selected)).font(.caption2.weight(.bold))
                 Text(actions > 0 ? L.t("練習 \(actions) 次", "\(actions) practised") : L.t("沒有練習", "No practice"))

@@ -137,39 +137,32 @@ struct StagePathView: View {
     }
 }
 
-/// Every scenario and its stages with their stars, to play any of them.
+/// Every scenario and its stages with their stars, to play any of them:
+/// how far along the path is and the next stage on top, then each scenario
+/// on its own card in its own colour, the stage up next marked.
 struct ScenarioPickerView: View {
     @Environment(\.dismiss) private var dismiss
     let progress: SpeakingPath.Progress
     let current: SpeakingScenarios.StageRef?
     let onPick: (SpeakingScenarios.StageRef) -> Void
 
+    private static let tints: [Color] = [Palette.accent, TodayView.speakingTint, Palette.chinese, Palette.review, Palette.known, Palette.miss]
+
     var body: some View {
         let next = SpeakingScenarios.next(after: progress)
         NavigationStack {
-            List {
-              Group {
-                ForEach(Array(SpeakingScenarios.all.enumerated()), id: \.element.id) { scenarioIndex, scenario in
-                    Section {
-                        ForEach(scenario.stages.indices, id: \.self) { stageIndex in
-                            let ref = SpeakingScenarios.StageRef(scenario: scenarioIndex, stage: stageIndex)
-                            Button { onPick(ref) } label: {
-                                row(ref, title: L.t(scenario.stages[stageIndex].title.zh, scenario.stages[stageIndex].title.en), next: ref == next)
-                            }
-                            .buttonStyle(.plain)
-                            .accessibilityIdentifier("speaking-stage-\(SpeakingScenarios.key(ref))")
-                        }
-                    } header: {
-                        Label(L.t(scenario.title.zh, scenario.title.en), systemImage: scenario.icon)
-                            .font(.headline)
-                            .foregroundStyle(Palette.accent)
-                            .textCase(nil)
+            ScrollView {
+                VStack(spacing: 16) {
+                    hero(next: next)
+                    ForEach(Array(SpeakingScenarios.all.enumerated()), id: \.element.id) { index, scenario in
+                        card(scenario, index: index, next: next)
                     }
                 }
-              }
-              .listRowBackground(StyledRowBackground())
+                .padding(.horizontal, Metrics.gutter)
+                .padding(.top, 8)
+                .padding(.bottom, 32)
             }
-            .warmList()
+            .background { AmbientBackground(tint: TodayView.speakingTint) }
             .navigationTitle(L.t("生活情境", "Everyday scenarios"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -180,29 +173,154 @@ struct ScenarioPickerView: View {
         }
     }
 
-    private func row(_ ref: SpeakingScenarios.StageRef, title: String, next: Bool) -> some View {
+    // MARK: The path so far
+
+    private func hero(next: SpeakingScenarios.StageRef?) -> some View {
+        let total = SpeakingScenarios.path.count
+        let cleared = progress.cleared
+        return VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 12) {
+                Mascot(mood: cleared == 0 ? .smug : .happy, size: 60)
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(L.t("已過 \(cleared) / \(total) 關", "\(cleared) of \(total) stages"))
+                        .font(.display(.title3, weight: .heavy))
+                        .foregroundStyle(TodayView.cream)
+                        .monospacedDigit()
+                    Text(cleared == 0 ? L.t("從點餐開始，開口就對了。", "Start with ordering. Just open your mouth.")
+                                      : L.t("一關一關來，我記著你的星星。", "One stage at a time. I'm counting your stars."))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(TodayView.cream.opacity(0.85))
+                }
+            }
+            GeometryReader { proxy in
+                Capsule().fill(TodayView.cream.opacity(0.2))
+                    .overlay(alignment: .leading) {
+                        Capsule().fill(TodayView.cream)
+                            .frame(width: max(cleared > 0 ? 8 : 0, proxy.size.width * Double(cleared) / Double(max(1, total))))
+                    }
+            }
+            .frame(height: 8)
+            if let next, let scenario = SpeakingScenarios.scenario(next) {
+                Button { onPick(next) } label: {
+                    HStack(spacing: 10) {
+                        Image(systemName: "play.fill")
+                        Text(L.t("下一關：\(stageTitle(next))", "Next: \(stageTitle(next))"))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                        Spacer(minLength: 4)
+                        Image(systemName: scenario.icon)
+                    }
+                    .font(.headline)
+                    .foregroundStyle(TodayView.speakingTint)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 13)
+                    .background(TodayView.cream, in: Capsule())
+                }
+                .buttonStyle(SoftPressStyle())
+                .accessibilityIdentifier("speaking-scenarios-next")
+            }
+        }
+        .padding(18)
+        .background { HeroBackground(tone: .speaking) }
+        .accessibilityElement(children: .contain)
+    }
+
+    // MARK: A scenario
+
+    private func card(_ scenario: SpeakingScenarios.Scenario, index: Int, next: SpeakingScenarios.StageRef?) -> some View {
+        let tint = Self.tints[index % Self.tints.count]
+        let refs = scenario.stages.indices.map { SpeakingScenarios.StageRef(scenario: index, stage: $0) }
+        let done = refs.filter { progress.stars(SpeakingScenarios.key($0)) > 0 }.count
+        let stars = refs.map { progress.stars(SpeakingScenarios.key($0)) }.reduce(0, +)
+        return VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 12) {
+                Image(systemName: scenario.icon)
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(Palette.surface)
+                    .frame(width: 42, height: 42)
+                    .background { RaisedFill(shape: RoundedRectangle(cornerRadius: 12, style: .continuous), tint: tint, depth: 3) }
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(L.t(scenario.title.zh, scenario.title.en))
+                        .font(.display(.headline, weight: .bold))
+                        .foregroundStyle(Palette.ink)
+                    Text(L.t("\(done)/\(refs.count) 關 · ★ \(stars)/\(refs.count * 3)", "\(done)/\(refs.count) stages · ★ \(stars)/\(refs.count * 3)"))
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Palette.secondaryLabel)
+                        .monospacedDigit()
+                }
+                Spacer(minLength: 4)
+                if done == refs.count, !refs.isEmpty {
+                    Image(systemName: "checkmark.seal.fill")
+                        .font(.title2)
+                        .foregroundStyle(Palette.known)
+                        .accessibilityLabel(L.t("全部過關", "All cleared"))
+                }
+            }
+            ForEach(refs, id: \.self) { ref in
+                Button { onPick(ref) } label: {
+                    row(ref, title: stageTitle(ref), tint: tint, next: ref == next, current: ref == current)
+                }
+                .buttonStyle(SoftPressStyle())
+                .accessibilityIdentifier("speaking-stage-\(SpeakingScenarios.key(ref))")
+            }
+        }
+        .padding(14)
+        .background { PremiumSurface(radius: 22) }
+    }
+
+    private func stageTitle(_ ref: SpeakingScenarios.StageRef) -> String {
+        guard let scenario = SpeakingScenarios.scenario(ref), scenario.stages.indices.contains(ref.stage) else { return "" }
+        let title = scenario.stages[ref.stage].title
+        return L.t(title.zh, title.en)
+    }
+
+    private func row(_ ref: SpeakingScenarios.StageRef, title: String, tint: Color, next: Bool, current: Bool) -> some View {
         let stars = progress.stars(SpeakingScenarios.key(ref))
         return HStack(spacing: 12) {
             Text("\(SpeakingScenarios.number(ref))")
                 .font(.display(.subheadline, weight: .bold))
                 .monospacedDigit()
-                .foregroundStyle(stars > 0 || next ? .white : Palette.secondaryLabel)
+                .foregroundStyle(stars > 0 || next ? Palette.surface : Palette.secondaryLabel)
                 .frame(width: 30, height: 30)
-                .background(Circle().fill(stars > 0 ? Palette.known : next ? Palette.accent : Palette.fill))
+                .background(Circle().fill(stars > 0 ? Palette.known : next ? tint : Palette.fill))
             VStack(alignment: .leading, spacing: 2) {
-                Text(title).foregroundStyle(.primary)
-                if next { Text(L.t("下一關", "Up next")).font(.caption.weight(.semibold)).foregroundStyle(Palette.accent) }
-            }
-            Spacer()
-            HStack(spacing: 2) {
-                ForEach(0..<3, id: \.self) { star in
-                    Image(systemName: star < stars ? "star.fill" : "star")
-                        .font(.caption)
-                        .foregroundStyle(star < stars ? Palette.review : Palette.khaki)
+                Text(title)
+                    .font(.body.weight(next ? .bold : .regular))
+                    .foregroundStyle(Palette.ink)
+                if next {
+                    Text(L.t("下一關", "Up next")).font(.caption.weight(.heavy)).foregroundStyle(tint)
+                } else if current {
+                    Text(L.t("正在練", "Playing now")).font(.caption.weight(.semibold)).foregroundStyle(Palette.secondaryLabel)
                 }
             }
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel(L.t("\(stars) 顆星", "\(stars) of 3 stars"))
+            Spacer(minLength: 4)
+            if next {
+                Image(systemName: "play.circle.fill")
+                    .font(.title2)
+                    .foregroundStyle(tint)
+            } else {
+                HStack(spacing: 2) {
+                    ForEach(0..<3, id: \.self) { star in
+                        Image(systemName: star < stars ? "star.fill" : "star")
+                            .font(.caption)
+                            .foregroundStyle(star < stars ? Palette.review : Palette.khaki)
+                    }
+                }
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(L.t("\(stars) 顆星", "\(stars) of 3 stars"))
+            }
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .background {
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(next ? tint.opacity(0.14) : Palette.fill.opacity(0.5))
+        }
+        .overlay {
+            if next {
+                RoundedRectangle(cornerRadius: 14, style: .continuous).strokeBorder(tint.opacity(0.6), lineWidth: 1.5)
+            }
         }
         .contentShape(Rectangle())
     }

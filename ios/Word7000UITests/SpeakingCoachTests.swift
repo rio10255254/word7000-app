@@ -82,6 +82,8 @@ final class SpeakingCoachTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["speaking-stage"].label.contains("Restaurant"), "The path starts at the restaurant")
         XCTAssertTrue(app.staticTexts["shadow-partner-line"].waitForExistence(timeout: 5), "A role-play opens on what the server says")
         tap(app.buttons["speaking-scenarios"], in: app)
+        // The list leads with the path so far and the next stage to play.
+        XCTAssertTrue(app.buttons["speaking-scenarios-next"].waitForExistence(timeout: 5))
         let shopping = app.buttons["speaking-stage-shopping-1"]
         // Gentle swipes: on the iPhone SE a full flick carried the list past the
         // stage to the bottom (run 376). If it still overshoots, come back up.

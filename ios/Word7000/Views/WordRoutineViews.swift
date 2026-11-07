@@ -46,6 +46,8 @@ struct RoutineStepStrip: View {
                         BuddyProgressBar(fraction: fill, mood: rider.mood, hop: rider.hop, size: 24,
                                          remark: rider.remark, barHeight: 8)
                             .frame(maxWidth: .infinity)
+                            // The cat's remark runs past its part: over the parts after it, not under.
+                            .zIndex(1)
                     } else {
                         GeometryReader { proxy in
                             Capsule().fill(Palette.fill)

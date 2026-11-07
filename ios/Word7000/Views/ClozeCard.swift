@@ -159,10 +159,16 @@ struct ClozeCard: View {
             content = Spelling.pattern(sentence.answer, revealed: attempt.lettersShown).replacingOccurrences(of: " ", with: nbsp)
             tint = Palette.secondaryLabel
         }
-        var blank = AttributedString(nbsp + content + nbsp)
+        // Word joiners between every character: the blank never breaks
+        // across lines, so its highlight is never left behind on its own.
+        let glued = (nbsp + content + nbsp).map(String.init).joined(separator: "\u{2060}")
+        var blank = AttributedString(glued)
         blank.foregroundColor = tint
         blank.backgroundColor = fill
-        blank.underlineStyle = Text.LineStyle.single
+        // The letter slots are underscores already; typed letters get the line.
+        if attempt.solved || !typed.isEmpty || attempt.answerShown {
+            blank.underlineStyle = Text.LineStyle.single
+        }
         return blank
     }
 

@@ -11,6 +11,9 @@ struct PracticeView: View {
     var start: (Activity) -> Void
     @State private var quizSetupOpen = false
     @State private var quizQueued = false
+    /// The page's height, so the tiles grow into it rather than leave the
+    /// bottom half empty.
+    @State private var pageHeight: CGFloat = 0
 
     /// One way to practise, as the page shows it.
     private struct Item {
@@ -83,19 +86,26 @@ struct PracticeView: View {
         let words = wordItems
         // Short tiles, icon beside the name, so the whole page fits one
         // screen; it still scrolls at the large text sizes.
+        let rows = CGFloat((max(0, words.count - 1) + 1) / 2 + (speakingItems.count + 1) / 2)
+        // What is left for the tiles once the card, the headers, the gaps and
+        // the tab bar are counted, shared by the rows: never below the short
+        // tile, never a slab.
+        let spare = pageHeight - 118 - 96 - 2 * 34 - 4 * 10 - (rows - 2) * 10
+        let tileHeight = dynamicTypeSize.isAccessibilitySize ? 68 : min(150, max(68, spare / max(1, rows)))
         ScrollView {
             VStack(alignment: .leading, spacing: 10) {
                 if let featured = words.first { featuredCard(featured) }
                 header(L.t("單字", "Words")).padding(.top, 8)
-                grid(Array(words.dropFirst()))
+                grid(Array(words.dropFirst()), height: tileHeight)
                 header(L.t("口說", "Speaking")).padding(.top, 8)
-                grid(speakingItems)
+                grid(speakingItems, height: tileHeight)
             }
             .padding(.horizontal, Metrics.gutter)
             .padding(.top, 8)
             .padding(.bottom, 110)
         }
         .scrollBounceBehavior(.basedOnSize)
+        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { pageHeight = $0 }
         .background { AmbientBackground() }
         .navigationTitle(L.t("練習", "Practice"))
         .sheet(isPresented: $quizSetupOpen, onDismiss: {
@@ -153,11 +163,11 @@ struct PracticeView: View {
         .accessibilityIdentifier(item.id)
     }
 
-    private func grid(_ items: [Item]) -> some View {
+    private func grid(_ items: [Item], height: CGFloat) -> some View {
         // One column at the accessibility text sizes, where two cut the titles short.
         let columns = dynamicTypeSize.isAccessibilitySize ? 1 : 2
         return LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: columns), spacing: 10) {
-            ForEach(items, id: \.id) { tile($0) }
+            ForEach(items, id: \.id) { tile($0, height: height) }
         }
     }
 
@@ -178,32 +188,27 @@ struct PracticeView: View {
     ]
 
     /// A tile on the same plain paper as the rest, laid down a little by hand.
-    private func tile(_ item: Item) -> some View {
+    private func tile(_ item: Item, height: CGFloat) -> some View {
         let tilt = Self.tilts[item.id] ?? 0
+        let tall = height >= 104
         return Button(action: item.action) {
-            HStack(spacing: 10) {
-                Image(systemName: item.icon)
-                    .font(.system(size: 17, weight: .bold))
-                    .foregroundStyle(Palette.surface)
-                    .frame(width: 40, height: 40)
-                    .background { RaisedFill(shape: RoundedRectangle(cornerRadius: 12, style: .continuous), tint: item.tint, depth: 3) }
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(item.title)
-                        .font(.display(.subheadline, weight: .bold))
-                        .foregroundStyle(Palette.ink)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.75)
-                    Text(item.detail)
-                        .font(.caption)
-                        .foregroundStyle(Palette.secondaryLabel)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.8)
-                }
-                Spacer(minLength: 0)
+            Group {
+                if tall { tallTile(item) } else { shortTile(item) }
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 12)
-            .frame(maxWidth: .infinity, minHeight: 68, alignment: .leading)
+            .padding(tall ? 14 : 12)
+            .frame(maxWidth: .infinity, minHeight: height, maxHeight: dynamicTypeSize.isAccessibilitySize ? nil : height, alignment: .topLeading)
+            .background(alignment: .bottomTrailing) {
+                // A big faint copy of the icon in the corner, so a tall tile is not bare.
+                if tall {
+                    Image(systemName: item.icon)
+                        .font(.system(size: 64, weight: .bold))
+                        .foregroundStyle(item.tint.opacity(0.13))
+                        .rotationEffect(.degrees(-10))
+                        .offset(x: 8, y: 10)
+                        .accessibilityHidden(true)
+                }
+            }
+            .clipped()
             .background { PracticePaper(paper: .ivory) }
             .overlay(alignment: .topTrailing) {
                 if item.locked { PlusBadge(compact: true).padding(6) }
@@ -213,6 +218,54 @@ struct PracticeView: View {
         }
         .buttonStyle(SoftPressStyle())
         .accessibilityIdentifier(item.id)
+    }
+}
+
+extension PracticeView {
+    /// Icon on top, the name, and two lines on what it is.
+    private func tallTile(_ item: Item) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            icon(item, size: 46)
+            Spacer(minLength: 6)
+            Text(item.title)
+                .font(.display(.headline, weight: .bold))
+                .foregroundStyle(Palette.ink)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+            Text(item.detail)
+                .font(.caption)
+                .foregroundStyle(Palette.secondaryLabel)
+                .lineLimit(2)
+        }
+    }
+
+    /// Icon beside the name, for a short screen.
+    private func shortTile(_ item: Item) -> some View {
+        HStack(spacing: 10) {
+            icon(item, size: 40)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(item.title)
+                    .font(.display(.subheadline, weight: .bold))
+                    .foregroundStyle(Palette.ink)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
+                Text(item.detail)
+                    .font(.caption)
+                    .foregroundStyle(Palette.secondaryLabel)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
+            Spacer(minLength: 0)
+        }
+        .frame(maxHeight: .infinity)
+    }
+
+    private func icon(_ item: Item, size: CGFloat) -> some View {
+        Image(systemName: item.icon)
+            .font(.system(size: size * 0.43, weight: .bold))
+            .foregroundStyle(Palette.surface)
+            .frame(width: size, height: size)
+            .background { RaisedFill(shape: RoundedRectangle(cornerRadius: size * 0.3, style: .continuous), tint: item.tint, depth: 3) }
     }
 }
 

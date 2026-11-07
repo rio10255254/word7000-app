@@ -1,7 +1,7 @@
 import Foundation
 
 /// How a Chinese meaning is shown on a card: the first two senses, the rest,
-/// and toneless pinyin for the first two. Port of `src/lib/chineseDisplay.ts`.
+/// and toneless pinyin for the first two. First ported from the web app.
 public struct ChineseMeaningDisplay: Equatable, Hashable, Sendable {
     public var primary: String
     public var supplemental: String

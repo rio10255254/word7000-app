@@ -9,9 +9,9 @@ final class ExperienceTests: XCTestCase {
         super.tearDown()
     }
 
-    private func launch() -> XCUIApplication {
+    private func launch(_ extra: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingSampleProgress", "-uiTestingFakePlans"]
+        app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingSampleProgress", "-uiTestingFakePlans"] + extra
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
         return app
@@ -31,7 +31,7 @@ final class ExperienceTests: XCTestCase {
         app.buttons["today-start"].tap()
         waitForReadyCard(app)
         // The card's own identifier covers its children, so find the chip by its text.
-        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label IN %@", ["新字", "還不熟", "複習"])).firstMatch.exists)
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label IN %@", ["新字", "還不熟", "已會"])).firstMatch.exists)
         app.buttons["study-show-answer"].tap()
         app.buttons["study-grade-known"].doubleTap()
         waitForReadyCard(app)
@@ -42,6 +42,50 @@ final class ExperienceTests: XCTestCase {
         app.scrollViews["study-card"].swipeRight()
         waitForReadyCard(app)
         XCTAssertTrue(app.staticTexts["study-position"].label.hasPrefix("4 /"))
+    }
+
+    /// A screen's first tip dims everything and stays until "Got it":
+    /// nothing is half covered and it does not slip away unread.
+    func testCatTipDimsTheScreenUntilGotIt() {
+        let app = launch(["-uiTestingTips"])
+        app.buttons["today-start"].tap()
+        let tip = app.descendants(matching: .any)["cat-tip-study"].firstMatch
+        XCTAssertTrue(tip.waitForExistence(timeout: 5), app.debugDescription)
+        sleep(1)
+        snapshot(app, "cat-tip-coach-mark")
+        // Still there well after the old banner would have gone.
+        sleep(9)
+        XCTAssertTrue(tip.exists, "the tip waits for the learner")
+        app.buttons["cat-tip-close"].tap()
+        XCTAssertTrue(tip.waitForNonExistence(timeout: 3))
+        XCTAssertTrue(app.buttons["study-show-answer"].waitForExistence(timeout: 5))
+    }
+
+    /// A round of the missed words, opened with today's set half done,
+    /// plays the missed words (it used to be swapped back to today's set the
+    /// moment it opened); Today's button then brings today's set back.
+    func testMissedWordsRoundIsNotSwappedForTodaysSet() {
+        let app = launch(["-uiTestingRoutine"])
+        app.buttons["today-start"].tap()
+        waitForReadyCard(app)
+        XCTAssertTrue(app.descendants(matching: .any)["routine-steps"].firstMatch.exists, "today's set has its steps")
+        app.buttons["study-show-answer"].tap()
+        let known = app.buttons["study-grade-known"]
+        XCTAssertTrue(known.waitForExistence(timeout: 5))
+        known.tap()
+        app.buttons["study-close"].tap()
+
+        app.openPractice("practice-missed")
+        XCTAssertTrue(app.staticTexts["study-position"].waitForExistence(timeout: 5), "the missed words, counted on their own")
+        XCTAssertFalse(app.descendants(matching: .any)["routine-steps"].firstMatch.exists, "not today's set")
+        snapshot(app, "missed-round")
+        app.buttons["study-close"].tap()
+
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["今天", "Today"])).firstMatch.tap()
+        let start = app.buttons["today-start"]
+        XCTAssertTrue(start.waitForExistence(timeout: 5))
+        start.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["routine-steps"].firstMatch.waitForExistence(timeout: 5), "today's set comes back")
     }
 
     func testAutoRevealShowsAnswersWithoutATap() {
@@ -87,7 +131,7 @@ final class ExperienceTests: XCTestCase {
 
     func testQuizLengthAndPersistentTopNextAction() {
         let app = launch()
-        app.buttons["today-quiz"].tap()
+        app.openPractice("practice-meaning")
         XCTAssertTrue(app.buttons["quiz-start"].waitForExistence(timeout: 5))
         app.segmentedControls["quiz-question-count"].buttons["20"].tap()
         app.buttons["quiz-start"].tap()
@@ -98,16 +142,14 @@ final class ExperienceTests: XCTestCase {
         app.buttons["quiz-next-toolbar"].tap()
         XCTAssertTrue(app.staticTexts["2 / 20"].waitForExistence(timeout: 5))
         app.buttons["quiz-close"].tap()
-        app.buttons["today-quiz"].tap()
+        app.openPractice("practice-meaning")
         XCTAssertTrue(app.segmentedControls["quiz-question-count"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.segmentedControls["quiz-question-count"].buttons["20"].isSelected)
     }
 
     func testExamUsesConciseOptionsAndCanBeSubmittedOnSmallScreens() {
         let app = launch()
-        let exam = app.buttons["today-exam"]
-        exam.scrollIntoView(in: app, swipes: 4)
-        exam.tap()
+        app.openPractice("practice-mock")
         let first = app.buttons["exam-option-0"]
         XCTAssertTrue(first.waitForExistence(timeout: 10))
         for index in 0..<4 {
@@ -116,12 +158,18 @@ final class ExperienceTests: XCTestCase {
         first.tap()
         XCTAssertTrue(app.staticTexts["exam-position"].label.hasPrefix("2 /"))
         app.buttons["exam-submit"].tap()
+        // Questions are left: Submit asks once.
+        let confirm = app.alerts.buttons.matching(NSPredicate(format: "label IN %@", ["交卷", "Submit"])).firstMatch
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
+        confirm.tap()
         XCTAssertTrue(app.staticTexts["exam-summary"].waitForExistence(timeout: 5))
         snapshot(app, "exam-results-small-screen")
     }
 
+    /// Writing practice for learners of Chinese, the word card's second step
+    /// (learners of English spell inside sentences instead; RoutineTests).
     func testSpellingChecksEachAnswerAndReachesResults() {
-        let app = launch()
+        let app = launch(["-uiTestingChineseMode"])
         let spelling = app.buttons["today-spelling"]
         spelling.scrollIntoView(in: app, swipes: 4)
         spelling.tap()
@@ -148,11 +196,10 @@ final class ExperienceTests: XCTestCase {
         XCTAssertTrue(english.waitForExistence(timeout: 10), app.debugDescription)
         if snap { snapshot(app, "welcome-1-language") }
         english.tap()
-        let next = app.buttons["welcome-next"]
-        XCTAssertTrue(next.waitForExistence(timeout: 5))
-        app.buttons["welcome-goal-30"].tap()
+        let goal = app.buttons["welcome-goal-30"]
+        XCTAssertTrue(goal.waitForExistence(timeout: 5))
         if snap { snapshot(app, "welcome-2-goal") }
-        next.tap()
+        goal.tap()
         let start = app.buttons["welcome-start"]
         XCTAssertTrue(start.waitForExistence(timeout: 5))
         let word = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'welcome-word-'")).firstMatch
@@ -162,12 +209,26 @@ final class ExperienceTests: XCTestCase {
         if snap { snapshot(app, "welcome-3-words") }
     }
 
+    /// Start, then past the last scene: how to download the natural voice,
+    /// which shows when the simulator only has a standard one.
+    private func startFromWelcome(_ app: XCUIApplication, snap: Bool = false) {
+        app.buttons["welcome-start"].tap()
+        let later = app.buttons["welcome-voice-done"]
+        guard later.waitForExistence(timeout: 4) else { return }
+        let steps = app.descendants(matching: .any)["welcome-voice-steps"]
+        let switched = app.descendants(matching: .any)["welcome-voice-switched"]
+        XCTAssertTrue(steps.exists || switched.exists, app.debugDescription)
+        if steps.exists { XCTAssertTrue(app.buttons["welcome-voice-settings"].exists) }
+        if snap { snapshot(app, "welcome-4-voice") }
+        later.tap()
+    }
+
     func testFirstPracticeHasFiveWordsAndWelcomeIsNotRepeated() {
         let app = XCUIApplication()
         app.launchArguments = ["-uiTestingReset", "-uiTestingOnboarding", "-uiTestingLight", "-uiTestingFakePlans"]
         app.launch()
         passWelcome(app, snap: true)
-        app.buttons["welcome-start"].tap()
+        startFromWelcome(app, snap: true)
         waitForReadyCard(app)
         XCTAssertEqual(app.staticTexts["study-position"].label, "1 / 5")
         XCUIDevice.shared.press(.home)
@@ -184,7 +245,7 @@ final class ExperienceTests: XCTestCase {
         app.launchArguments = ["-uiTestingReset", "-uiTestingOnboarding", "-uiTestingLight", "-uiTestingFakePlans", "-uiTestingChecklist"]
         app.launch()
         passWelcome(app)
-        app.buttons["welcome-start"].tap()
+        startFromWelcome(app)
         waitForReadyCard(app)
         snapshot(app, "polish-study-front")
         for _ in 0..<5 {
@@ -200,20 +261,17 @@ final class ExperienceTests: XCTestCase {
         snapshot(app, "polish-session-summary")
         app.buttons["study-done"].tap()
 
-        // After a new learner's first round, the cat suggests the quiz next
-        // and circles its tile.
-        let quiz = app.buttons["today-quiz"]
-        XCTAssertTrue(quiz.waitForExistence(timeout: 10))
+        // After a new learner's first round, the cat suggests speaking next
+        // (spelling and quizzes are steps of the words) and circles it.
+        let speaking = app.buttons["today-speaking"]
+        XCTAssertTrue(speaking.waitForExistence(timeout: 10))
         let suggested = NSPredicate(format: "value == '傻貓推薦'")
-        XCTAssertEqual(XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: suggested, object: quiz)], timeout: 5), .completed,
-                       String(describing: quiz.value))
-        // The starter checklist shows the first round ticked and the quiz next.
-        XCTAssertTrue(app.descendants(matching: .any)["guide-checklist"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["guide-checklist-go"].exists)
+        XCTAssertEqual(XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: suggested, object: speaking)], timeout: 5), .completed,
+                       String(describing: speaking.value))
         sleep(2)
-        snapshot(app, "guide-quiz-next")
+        snapshot(app, "guide-speaking-next")
 
-        app.tabBars.buttons.element(boundBy: 1).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["單字", "Words"])).firstMatch.tap()
         XCTAssertTrue(app.buttons["words-scan"].waitForExistence(timeout: 5))
         app.cells.element(boundBy: 2).tap()
         let progress = app.descendants(matching: .any)["word-progress"].firstMatch
@@ -222,8 +280,12 @@ final class ExperienceTests: XCTestCase {
         snapshot(app, "polish-word-progress")
         app.navigationBars.buttons.element(boundBy: 0).tap()
 
-        app.tabBars.buttons.element(boundBy: 2).tap()
-        XCTAssertTrue(app.descendants(matching: .any)["me-week-strip"].firstMatch.waitForExistence(timeout: 5))
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
+        // WordCat Next: the weeks as squares; today's practice fills a square.
+        let calendar = app.descendants(matching: .any)["me-calendar"].firstMatch
+        for _ in 0..<4 where !calendar.exists { app.swipeUp() }
+        XCTAssertTrue(calendar.waitForExistence(timeout: 5))
+        XCTAssertTrue(calendar.label.contains("學了 1 天") || calendar.label.hasPrefix("1 days"), calendar.label)
         snapshot(app, "polish-me-week")
     }
 
@@ -249,14 +311,14 @@ final class ExperienceTests: XCTestCase {
         XCTAssertTrue(app.buttons["study-grade-review"].isHittable)
         app.buttons["study-close"].tap()
 
-        app.tabBars.buttons.element(boundBy: 2).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
         sleep(1)
         snapshot(app, "large-text-4-me")
     }
 
     func testLibrarySearchKeepsKeyboardAndExactMatch() {
         let app = launch()
-        app.tabBars.buttons.element(boundBy: 1).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["單字", "Words"])).firstMatch.tap()
         let search = app.searchFields.firstMatch
         XCTAssertTrue(search.waitForExistence(timeout: 5))
         search.tap()
@@ -312,9 +374,49 @@ final class ExperienceTests: XCTestCase {
         XCTAssertEqual(savedAutoSpeak.value as? String, "1")
     }
 
+    /// WordCat Next: the plan from the first launch can be read and changed
+    /// in Settings, and the level check taken again (or not).
+    func testLearningPlanCanBeReadAndChanged() {
+        let app = launch()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
+        let settings = app.buttons["me-settings"]
+        for _ in 0..<5 where !settings.isHittable { app.swipeUp() }
+        settings.tap()
+        let plan = app.buttons["settings-plan"]
+        XCTAssertTrue(plan.waitForExistence(timeout: 5), app.debugDescription)
+        plan.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["plan-card"].firstMatch.waitForExistence(timeout: 5))
+        snapshot(app, "plan-top")
+        let spelling = app.buttons["plan-focus-spelling"]
+        for _ in 0..<4 where !spelling.isHittable { app.swipeUp() }
+        spelling.tap()
+        XCTAssertEqual(spelling.value as? String, "已選", "Picking spelling marks it")
+        // More words suggests a bigger goal, applied only on a tap.
+        app.buttons["plan-focus-vocabulary"].tap()
+        let apply = app.buttons["plan-suggestion-apply"]
+        XCTAssertTrue(apply.waitForExistence(timeout: 5), "picking more words suggests a bigger goal")
+        snapshot(app, "plan-suggestion")
+        apply.tap()
+        XCTAssertTrue(apply.waitForNonExistence(timeout: 5))
+        // The plan card is up at the top: back up to it, then read the goal.
+        let card = app.descendants(matching: .any)["plan-card"].firstMatch
+        for _ in 0..<4 where !card.exists { app.swipeDown() }
+        XCTAssertTrue(card.waitForExistence(timeout: 5))
+        XCTAssertTrue(card.label.contains("30"), "the goal is now 30 a day: \(card.label)")
+        let spellingAgain = app.buttons["plan-focus-spelling"]
+        for _ in 0..<4 where !spellingAgain.isHittable { app.swipeUp() }
+        let retest = app.buttons["plan-retest"]
+        for _ in 0..<4 where !retest.isHittable { app.swipeUp() }
+        snapshot(app, "plan-bottom")
+        retest.tap()
+        XCTAssertTrue(app.buttons["welcome-test-start"].waitForExistence(timeout: 5), "The level check opens on its first page")
+        app.buttons["welcome-retest-cancel"].tap()
+        XCTAssertTrue(retest.waitForExistence(timeout: 5), "Not now goes back to the plan")
+    }
+
     func testSettingsAreGroupedAndReachable() {
         let app = launch()
-        app.tabBars.buttons.element(boundBy: 2).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
         let settings = app.buttons["me-settings"]
         for _ in 0..<5 where !settings.isHittable { app.swipeUp() }
         settings.tap()
@@ -325,19 +427,23 @@ final class ExperienceTests: XCTestCase {
         let speech = app.buttons["settings-speech"]
         for _ in 0..<3 where !speech.isHittable { app.swipeUp() }
         XCTAssertTrue(speech.isHittable)
+        // WordCat Next: sound effects, on until turned off.
+        let sounds = app.switches["settings-sounds"]
+        for _ in 0..<3 where !sounds.isHittable { app.swipeUp() }
+        XCTAssertEqual(sounds.value as? String, "1", app.debugDescription)
         app.swipeUp()
         app.swipeUp()
         snapshot(app, "settings-bottom")
         app.swipeDown()
         app.swipeDown()
         let intelligence = app.buttons["settings-intelligence"]
-        for _ in 0..<3 where !intelligence.isHittable { app.swipeDown() }
+        for _ in 0..<5 where !intelligence.isHittable { app.swipeDown() }
         intelligence.tap()
         XCTAssertTrue(app.switches["settings-ai-toggle"].waitForExistence(timeout: 5))
     }
 
     private func openSpeechSettings(_ app: XCUIApplication) {
-        app.tabBars.buttons.element(boundBy: 2).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
         let settings = app.buttons["me-settings"]
         settings.scrollIntoView(in: app, swipes: 5)
         XCTAssertTrue(settings.waitForExistence(timeout: 5))

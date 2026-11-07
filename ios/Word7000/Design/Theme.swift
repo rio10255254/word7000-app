@@ -53,6 +53,12 @@ enum WarmTone {
         navigation.titleTextAttributes = [.font: serif(.headline), .foregroundColor: ink]
         navigation.tintColor = clay
         UITabBar.appearance().tintColor = clay
+        // Segmented pickers on the warm paper rather than system grey.
+        let segments = UISegmentedControl.appearance()
+        segments.selectedSegmentTintColor = ivory
+        segments.backgroundColor = khakiFill
+        segments.setTitleTextAttributes([.foregroundColor: inkSoft], for: .normal)
+        segments.setTitleTextAttributes([.foregroundColor: ink], for: .selected)
     }
 
     private static func serif(_ style: UIFont.TextStyle) -> UIFont {
@@ -92,6 +98,116 @@ enum Motion {
     /// The parts of a screen settling in one after another.
     static func entrance(_ order: Int) -> Animation {
         .spring(response: 0.5, dampingFraction: 0.8).delay(0.05 + Double(order) * 0.06)
+    }
+}
+
+extension Motion {
+    /// One question giving way to the next: the new one comes in from the
+    /// right as the old one leaves to the left, both fading.
+    static let swap = Animation.spring(response: 0.42, dampingFraction: 0.9)
+}
+
+extension AnyTransition {
+    static func questionSwap(_ reduceMotion: Bool) -> AnyTransition {
+        reduceMotion ? .opacity : .asymmetric(insertion: .offset(x: 36).combined(with: .opacity),
+                                              removal: .offset(x: -36).combined(with: .opacity))
+    }
+}
+
+/// WordCat Next: after a right answer the next question comes by itself,
+/// so a run of right answers flows without a tap each time. A wrong answer
+/// waits, so the explanation can be read. Off in UI tests: a slow test
+/// machine could take longer than the wait between finding Next and tapping
+/// it, and the question would move on under the test.
+enum AutoAdvance {
+    static var enabled: Bool { !AppRuntime.uiTesting }
+    static var delay: Duration { .milliseconds(1300) }
+    static var seconds: Double { 1.3 }
+}
+
+/// A key's face filling from the left while the next question is on its way.
+struct CountdownFillOverlay: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.appStyle) private var appStyle
+    var active: Bool
+    var seconds: Double = AutoAdvance.seconds
+    @State private var progress: CGFloat = 0
+
+    var body: some View {
+        GeometryReader { proxy in
+            Rectangle()
+                .fill(.white.opacity(0.24))
+                .frame(width: proxy.size.width * progress)
+        }
+        // The shape of the action button it fills: a paper slip or a capsule.
+        .clipShape(appStyle == .collage ? AnyShape(RoundedRectangle(cornerRadius: 7, style: .continuous)) : AnyShape(Capsule()))
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+        .onChange(of: active, initial: true) { _, now in
+            progress = 0
+            guard now, !reduceMotion else { return }
+            withAnimation(.linear(duration: seconds)) { progress = 1 }
+        }
+    }
+}
+
+/// A number that rolls up from zero when it appears.
+struct CountUpText: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var value: Int
+    var delay: Double = 0
+    @State private var shown = 0
+
+    var body: some View {
+        Text("\(shown)")
+            .monospacedDigit()
+            .contentTransition(.numericText(value: Double(shown)))
+            .task(id: value) {
+                guard !reduceMotion, value > 0 else { shown = value; return }
+                try? await Task.sleep(for: .milliseconds(Int(delay * 1000)))
+                withAnimation(.snappy(duration: 0.7)) { shown = value }
+            }
+            .accessibilityLabel("\(value)")
+    }
+}
+
+/// Pressed on like a rubber stamp: big and tilted, then down hard with a
+/// small bounce and a thud.
+struct StampSlam: ViewModifier {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(AppModel.self) private var model
+    var delay: Double = 0
+    @State private var down = false
+
+    func body(content: Content) -> some View {
+        content
+            .scaleEffect(down || reduceMotion ? 1 : 2.2)
+            .rotationEffect(.degrees(down || reduceMotion ? 0 : -18))
+            .opacity(down || reduceMotion ? 1 : 0)
+            .sensoryFeedback(.impact(weight: .heavy, intensity: 1), trigger: down) { _, now in
+                now && (model.settings.hapticsEnabled ?? true)
+            }
+            .soundEffect(trigger: down) { (_: Bool, now: Bool) -> SoundEffect? in now ? .stamp : nil }
+            .task {
+                guard !reduceMotion else { down = true; return }
+                try? await Task.sleep(for: .milliseconds(Int(delay * 1000)))
+                withAnimation(.spring(response: 0.28, dampingFraction: 0.55)) { down = true }
+            }
+    }
+}
+
+/// A spinner that only appears when loading takes a moment, so a quick swap
+/// between questions does not flash it.
+struct DelayedProgress: View {
+    @State private var shown = false
+
+    var body: some View {
+        ZStack { if shown { ProgressView().transition(.opacity) } }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .task {
+                try? await Task.sleep(for: .milliseconds(450))
+                withAnimation { shown = true }
+            }
     }
 }
 
@@ -375,7 +491,9 @@ private struct CollageButtonBody: View {
         let shape = RoundedRectangle(cornerRadius: 7, style: .continuous)
         configuration.label
             .font(.headline)
-            .foregroundStyle(prominent ? Color.white : tint)
+            // Ivory by day; dark at night, where the tints are lighter and
+            // white on green or ochre was hard to read (2.2–2.5:1).
+            .foregroundStyle(prominent ? Palette.surface : tint)
             .padding(.horizontal, 16)
             .padding(.vertical, 13)
             .frame(minHeight: 50)
@@ -518,9 +636,47 @@ enum AppRuntime {
     /// Screenshot tests of the cat's chat, memory and study tip, which need
     /// the online AI: sample content stands in for it.
     static let catShowcase = ProcessInfo.processInfo.arguments.contains("-uiTestingCatShowcase")
+    /// WordCat Next: today's words end with spot checks. Off under UI tests
+    /// written for the flip cards alone, unless a test asks for it.
+    static let wordRoutine = !uiTesting || ProcessInfo.processInfo.arguments.contains("-uiTestingRoutine")
+    /// WordCat Next: a speaking stage opens with listening to the whole
+    /// conversation and ends with using one of today's words. UI tests of
+    /// the stage itself start straight on its first turn.
+    static let speakingRoutine = !uiTesting || ProcessInfo.processInfo.arguments.contains("-uiTestingSpeakingRoutine")
+    /// WordCat Next: the first launch asks about the exam and which pillar
+    /// comes first, and checks the level with a short adaptive test. UI tests
+    /// of the older welcome keep its three scenes.
+    static let labOnboarding = !uiTesting || ProcessInfo.processInfo.arguments.contains("-uiTestingLabOnboarding")
+    /// WordCat Next: a stamp when today's words and speaking are both done.
+    static let dayComplete = !uiTesting || ProcessInfo.processInfo.arguments.contains("-uiTestingDayComplete")
+}
+
+/// A sheet exactly as tall as what it holds: a note or a few rows does
+/// not open on half a screen of empty paper.
+private struct FittedSheet: ViewModifier {
+    @State private var height: CGFloat = 300
+
+    func body(content: Content) -> some View {
+        content
+            .fixedSize(horizontal: false, vertical: true)
+            .background {
+                GeometryReader { proxy in
+                    Color.clear
+                        .onAppear { height = proxy.size.height }
+                        .onChange(of: proxy.size.height) { _, value in height = value }
+                }
+            }
+            .frame(maxHeight: .infinity, alignment: .top)
+            .presentationDetents([.height(height)])
+            .presentationDragIndicator(.visible)
+            .presentationCornerRadius(28)
+            .presentationBackground(Palette.background)
+    }
 }
 
 extension View {
+    func fittedSheet() -> some View { modifier(FittedSheet()) }
+
     /// A short sheet for a few settings or a note: opens at half height with a
     /// grabber, and can be pulled up to full height when there is more to see.
     func compactSheet() -> some View {

@@ -24,6 +24,8 @@ struct QuizSessionView: View {
     /// The score on the results screen, counted up once it is shown.
     @State private var shownScore = 0
     @State private var finished = false
+    /// A right answer (not the last) moves on by itself, as in today's words.
+    @State private var advancing = false
     @State private var seed = SeededRandom.runtimeSeed()
     @State private var configured = false
     /// Set up already (in the sheet on Today): skip straight to the questions.
@@ -86,7 +88,18 @@ struct QuizSessionView: View {
         .sensoryFeedback(.success, trigger: finished) { _, new in
             new && missedIds.isEmpty && (model.settings.hapticsEnabled ?? true)
         }
-        .catTip(.quiz, at: .top, inset: 60)
+        .soundEffect(trigger: chosen) { _, new -> SoundEffect? in
+            guard let new else { return nil }
+            return new.correct ? SoundEffect.correct : SoundEffect.wrong
+        }
+        .soundEffect(trigger: finished) { (_: Bool, new: Bool) -> SoundEffect? in new && missedIds.isEmpty ? .complete : nil }
+        .task(id: advancing) {
+            guard advancing else { return }
+            do { try await Task.sleep(for: AutoAdvance.delay) } catch { return }
+            guard advancing else { return }
+            next()
+        }
+        .catTip(.quiz)
     }
 
     private func start() {
@@ -122,13 +135,13 @@ struct QuizSessionView: View {
                                      ? CatQuips.right(index, combo: combo, word: face.prompt, source: catLines)
                                      : CatQuips.wrong(index, word: face.prompt, misses: model.progress(for: word.id).reviewCount, source: catLines)
                              })
-                // The run's badge floats just under the bar, clear of the question.
-                .overlay(alignment: .topLeading) {
+                // The run's badge sits at the bar's far end, beside it rather
+                // than over the start of a long word below.
+                .overlay(alignment: .topTrailing) {
                     if combo >= 3 {
                         comboBadge
-                            // Below the bar and the companion riding it.
-                            .offset(y: 34)
-                            .transition(reduceMotion ? .opacity : .scale(scale: 0.5, anchor: .leading).combined(with: .opacity))
+                            .offset(y: -10)
+                            .transition(reduceMotion ? .opacity : .scale(scale: 0.5, anchor: .trailing).combined(with: .opacity))
                     }
                 }
                 .padding(.top, 4)
@@ -207,13 +220,14 @@ struct QuizSessionView: View {
             if let chosen {
                 Button(action: next) {
                     Text(index + 1 >= questions.count ? L.seeResults : L.nextQuestion)
-                        .font(.headline)
+                        .font(.title3.weight(.bold))
                         .frame(maxWidth: .infinity)
                 }
                 .prominentAction(tint: chosen.correct ? Palette.known : Palette.accent)
+                .overlay { CountdownFillOverlay(active: advancing) }
                 .accessibilityIdentifier("quiz-next")
                 .padding(.vertical, 8)
-                .background { Palette.background.overlay { PaperGrain() } }
+                .background { PaperBarBackground() }
                 .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
             }
         }
@@ -224,7 +238,7 @@ struct QuizSessionView: View {
     private var comboBadge: some View {
         if appStyle == .collage {
             // Collage: a rubber stamp that grows a number with the run.
-            StampMark(size: 58, angle: -12) {
+            StampMark(size: 46, angle: -12) {
                 VStack(spacing: 0) {
                     Text(L.t("連對", "Streak")).font(.caption2.weight(.heavy))
                     Text("\(combo)").font(.display(.headline, weight: .heavy)).contentTransition(.numericText(value: Double(combo)))
@@ -317,9 +331,11 @@ struct QuizSessionView: View {
         let wordId = questions[index].id
         model.recordQuizAnswer(wordId: wordId, correct: option.correct)
         if option.correct { correctCount += 1 } else { missedIds.append(wordId) }
+        advancing = AutoAdvance.enabled && option.correct && index + 1 < questions.count
     }
 
     private func next() {
+        advancing = false
         guard chosen != nil else { return }
         Speaker.shared.stop()
         if index + 1 >= questions.count {
@@ -373,24 +389,9 @@ struct QuizSessionView: View {
                     .entrance(3)
             }
             Spacer()
-            VStack(spacing: 12) {
-                if missedIds.isEmpty {
-                    Button { dismiss() } label: {
-                        Text(L.done).font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .prominentAction()
-                } else {
-                    Button { studyMissed(missedIds) } label: {
-                        Text(L.practiceMissed(missedIds.count)).font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .prominentAction(tint: Palette.review)
-                }
-                Button { start() } label: {
-                    Text(L.anotherQuiz).font(.headline).frame(maxWidth: .infinity)
-                }
-                .secondaryAction()
-                .accessibilityIdentifier("quiz-again")
-            }
+            RoundEndActions(missed: missedIds.count, reviewMissed: { studyMissed(missedIds) }, reviewId: "quiz-review-missed",
+                            done: { dismiss() }, doneId: "quiz-done",
+                            again: { start() }, againTitle: L.anotherQuiz, againId: "quiz-again")
         }
         .accessibilityIdentifier("quiz-results")
         .overlay(alignment: .top) {

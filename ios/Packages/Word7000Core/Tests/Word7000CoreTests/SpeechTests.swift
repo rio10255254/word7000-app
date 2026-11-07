@@ -38,6 +38,29 @@ final class SpeechTests: XCTestCase {
         XCTAssertFalse(SpeechVoiceSelection.canSoundBetter(withAva, language: "en-US", enhancedQuality: 2))
     }
 
+    func testSoundingBetterGoesByTheVoiceThatWouldSpeak() {
+        // An enhanced British voice, but American English is read by the
+        // standard Samantha: Ava is still worth downloading.
+        let british = [
+            SpeechVoiceOption(id: "com.apple.voice.compact.en-US.Samantha", name: "Samantha", language: "en-US", quality: 1),
+            SpeechVoiceOption(id: "com.apple.voice.enhanced.en-GB.Daniel", name: "Daniel (Enhanced)", language: "en-GB", quality: 2),
+        ]
+        XCTAssertTrue(SpeechVoiceSelection.canSoundBetter(british, language: "en-US", enhancedQuality: 2))
+        // An enhanced mainland voice, but Taiwan Mandarin is read by the
+        // standard Meijia.
+        let mainland = [
+            SpeechVoiceOption(id: "com.apple.voice.compact.zh-TW.Meijia", name: "Meijia", language: "zh-TW", quality: 1),
+            SpeechVoiceOption(id: "com.apple.voice.enhanced.zh-CN.Tingting", name: "Tingting (Enhanced)", language: "zh-CN", quality: 2),
+        ]
+        XCTAssertTrue(SpeechVoiceSelection.canSoundBetter(mainland, language: "zh-TW", enhancedQuality: 2))
+        let enhancedMeijia = mainland + [SpeechVoiceOption(id: "com.apple.voice.enhanced.zh-TW.Meijia", name: "Meijia (Enhanced)", language: "zh-TW", quality: 2)]
+        XCTAssertFalse(SpeechVoiceSelection.canSoundBetter(enhancedMeijia, language: "zh-TW", enhancedQuality: 2))
+        // Nothing installed for the language at all: a download helps too.
+        XCTAssertTrue(SpeechVoiceSelection.canSoundBetter([], language: "en-US", enhancedQuality: 2))
+        XCTAssertEqual(SpeechVoiceSelection.recommendedVoice(language: "en-US").name, "Ava")
+        XCTAssertEqual(SpeechVoiceSelection.recommendedVoice(language: "zh-TW").nameZh, "美佳")
+    }
+
     func testDoesNotSubstituteCantoneseForMandarin() {
         let unavailableTaiwan = voices.filter { $0.id != "tw-basic" }
         XCTAssertEqual(SpeechVoiceSelection.preferred(unavailableTaiwan, language: "zh-TW", selectedID: "hk-premium", systemDefaultID: nil)?.id, "cn-premium")

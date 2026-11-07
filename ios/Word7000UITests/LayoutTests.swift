@@ -8,6 +8,9 @@ import XCTest
 final class LayoutTests: XCTestCase {
     override func setUp() { continueAfterFailure = true }
 
+    /// WordCat Next: the controls on Today besides the header and today-start.
+    private static let home = ["today-streak", "today-shelf", "today-node-cards", "today-spelling", "today-quiz", "today-speaking"]
+
     private func launch(_ extra: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
         let theme = extra.contains("-uiTestingDark") ? [] : ["-uiTestingLight"]
@@ -21,36 +24,60 @@ final class LayoutTests: XCTestCase {
 
     func testTodayFitsInEnglishMode() {
         let app = launch()
-        checkToday(app, name: "layout-english", tiles: ["today-quiz", "today-speaking", "today-spelling", "today-exam"])
+        checkToday(app, name: "layout-english", tiles: Self.home)
     }
 
     func testTodayFitsInChineseMode() {
         let app = launch(["-uiTestingChineseMode"])
-        checkToday(app, name: "layout-chinese", tiles: ["today-quiz", "today-speaking", "today-spelling", "today-exam"])
+        checkToday(app, name: "layout-chinese", tiles: Self.home)
     }
 
     /// The other look, leather (the others run in the default, the collage).
     func testTodayFitsInLeather() {
         let app = launch(["-uiTestingLeather"])
-        checkToday(app, name: "layout-leather", tiles: ["today-quiz", "today-speaking", "today-spelling", "today-exam"])
+        checkToday(app, name: "layout-leather", tiles: Self.home)
     }
 
     func testTodayFitsInDarkMode() {
         let app = launch(["-uiTestingDark"])
-        checkToday(app, name: "layout-dark", tiles: ["today-quiz", "today-speaking", "today-spelling", "today-exam"])
+        checkToday(app, name: "layout-dark", tiles: Self.home)
+    }
+
+    /// The Practice tab fits one screen: every way to practise above the
+    /// tab bar, with nothing to scroll for.
+    func testPracticeFitsWithoutScrolling() {
+        let app = launch()
+        let tab = app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["練習", "Practice"])).firstMatch
+        XCTAssertTrue(tab.waitForExistence(timeout: 5))
+        tab.tap()
+        let last = app.buttons["practice-word-speaking"]
+        XCTAssertTrue(last.waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "layout-practice")
+        let window = app.windows.firstMatch.frame
+        let tabBar = app.tabBars.firstMatch
+        let bottom = tabBar.exists ? tabBar.frame.minY : window.maxY
+        for id in ["practice-missed", "practice-spell", "practice-exam-style", "practice-meaning", "practice-mock",
+                   "practice-scenarios", "practice-word-speaking"] {
+            let row = app.buttons[id]
+            guard row.exists else { continue }
+            onScreen(row, in: window, id)
+            XCTAssertLessThanOrEqual(row.frame.maxY, bottom + 1, "\(id) sits under the tab bar")
+        }
     }
 
     /// The Me page's capsule buttons keep their labels on one line in the
     /// English interface at the largest standard text size: side by side
     /// when they fit, else one above the other, never "subscriptio / n".
+    /// Not subscribed: a subscriber manages Premium in Settings instead.
     func testMeButtonsKeepLabelsWhole() {
         let app = XCUIApplication()
         app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingFakePlans", "-uiTestingLight",
-                               "-uiTestingChineseMode", "-uiTestingPlus",
+                               "-uiTestingChineseMode",
                                "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryXXXL"]
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
-        app.tabBars.buttons.element(boundBy: 2).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
         let plus = app.buttons["me-plus"]
         XCTAssertTrue(plus.waitForExistence(timeout: 5))
         sleep(1)
@@ -75,34 +102,31 @@ final class LayoutTests: XCTestCase {
         let app = launch()
         let mascot = app.buttons["today-mascot"]
         XCTAssertTrue(mascot.exists)
-        openAndCloseChat(app, from: mascot)
+        // WordCat Next: a tap opens the chat with the cat; closing it leaves Today working.
+        mascot.tap()
+        closeCatChat(app)
 
+        // The word bank is in the shelf sheet, opened from the top.
+        let shelf = app.buttons["today-shelf"]
+        XCTAssertTrue(shelf.isHittable)
+        shelf.tap()
         let chip = app.buttons["today-study-filter"]
-        XCTAssertTrue(chip.isHittable)
+        XCTAssertTrue(chip.waitForExistence(timeout: 5))
         chip.tap()
         let sheet = app.navigationBars["學習範圍"]
-        XCTAssertTrue(sheet.waitForExistence(timeout: 5), "The study scope did not open from the header chip")
+        XCTAssertTrue(sheet.waitForExistence(timeout: 5), "The study scope did not open from the shelf sheet")
         snap(app, "layout-scope-sheet")
         sheet.buttons["完成"].tap()
         XCTAssertTrue(sheet.waitForNonExistence(timeout: 5), "The study scope did not close")
 
-        // Two quick taps smack it instead, and leave its bubble up.
-        mascot.doubleTap()
-        let chinese = app.buttons["today-language-zh"]
-        XCTAssertTrue(chinese.isHittable)
-        chinese.tap()
+        // WordCat Next: the language is chosen in Settings, not on Today.
         // Learning Chinese: the interface turns English, and spelling becomes
-        // writing the Chinese (characters or pinyin), so the tile stays.
-        let selected = NSPredicate(format: "isSelected == true")
-        expectation(for: selected, evaluatedWith: app.buttons["today-language-zh"])
-        waitForExpectations(timeout: 5)
-        XCTAssertTrue(app.buttons["today-spelling"].waitForExistence(timeout: 5), "Writing practice should stay when learning Chinese")
-        snap(app, "layout-switched-to-chinese")
-
-        app.buttons["today-language-en"].tap()
-        expectation(for: selected, evaluatedWith: app.buttons["today-language-en"])
-        waitForExpectations(timeout: 5)
-        XCTAssertTrue(app.buttons["today-spelling"].waitForExistence(timeout: 5))
+        // writing the Chinese (characters or pinyin), so the step stays.
+        app.terminate()
+        let chinese = launch(["-uiTestingChineseMode"])
+        XCTAssertFalse(chinese.buttons["today-language-zh"].exists)
+        XCTAssertTrue(chinese.buttons["today-spelling"].waitForExistence(timeout: 5), "Writing practice should stay when learning Chinese")
+        snap(chinese, "layout-switched-to-chinese")
     }
 
     /// Plays with the companion: a tap, a drag, and a press and hold. None of
@@ -111,8 +135,8 @@ final class LayoutTests: XCTestCase {
         let app = launch()
         let mascot = app.buttons["today-mascot"]
         XCTAssertTrue(mascot.exists)
-        openAndCloseChat(app, from: mascot)
-        mascot.doubleTap()
+        mascot.tap()
+        closeCatChat(app)
         mascot.press(forDuration: 0.8)
         let from = mascot.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
         from.press(forDuration: 0.05, thenDragTo: from.withOffset(CGVector(dx: -60, dy: 30)))
@@ -121,17 +145,6 @@ final class LayoutTests: XCTestCase {
         XCTAssertTrue(app.buttons["today-start"].isHittable)
         app.buttons["today-start"].tap()
         XCTAssertTrue(app.buttons["study-show-answer"].waitForExistence(timeout: 5), "Study did not open after playing with the companion")
-    }
-
-    /// A tap on the companion opens its chat; Done closes it again.
-    private func openAndCloseChat(_ app: XCUIApplication, from mascot: XCUIElement) {
-        mascot.tap()
-        let done = app.navigationBars.buttons["完成"].firstMatch
-        XCTAssertTrue(done.waitForExistence(timeout: 5), "A tap on the companion did not open its chat")
-        snap(app, "layout-companion-chat")
-        done.tap()
-        XCTAssertTrue(mascot.waitForExistence(timeout: 5))
-        XCTAssertTrue(done.waitForNonExistence(timeout: 5), "The chat did not close")
     }
 
     // MARK: Checks
@@ -157,23 +170,22 @@ final class LayoutTests: XCTestCase {
         onScreen(app.buttons["study-grade-review"], in: window, "study-grade-review")
         app.buttons["study-close"].tap()
 
+        // The word card's quiz step: exam-style questions on learned words.
         let quiz = app.buttons["today-quiz"]
         XCTAssertTrue(quiz.waitForExistence(timeout: 5))
         quiz.tap()
-        let start = app.buttons["quiz-start"]
-        XCTAssertTrue(start.waitForExistence(timeout: 5))
+        let lastOption = app.buttons["routine-option-3"]
+        XCTAssertTrue(lastOption.waitForExistence(timeout: 10))
         sleep(1)
-        snap(app, "tour-3-quiz-setup")
-        onScreen(start, in: window, "quiz-start")
-        start.tap()
-        XCTAssertTrue(app.buttons["quiz-option-0"].waitForExistence(timeout: 5))
-        app.buttons["quiz-option-0"].tap()
-        let next = app.buttons["quiz-next"]
+        snap(app, "tour-3-quiz")
+        onScreen(lastOption, in: window, "routine-option-3")
+        app.buttons["routine-option-0"].tap()
+        let next = app.buttons["routine-next"]
         XCTAssertTrue(next.waitForExistence(timeout: 5))
         sleep(1)
         snap(app, "tour-4-quiz-answered")
-        onScreen(next, in: window, "quiz-next")
-        app.buttons["quiz-close"].tap()
+        onScreen(next, in: window, "routine-next")
+        app.buttons["exam-round-close"].tap()
 
         let speaking = app.buttons["today-speaking"]
         XCTAssertTrue(speaking.waitForExistence(timeout: 5))
@@ -185,7 +197,7 @@ final class LayoutTests: XCTestCase {
         onScreen(record, in: window, "shadow-record")
         let skip = app.buttons["shadow-skip"]
         onScreen(skip, in: window, "shadow-skip")
-        above(record, skip, "shadow-record")
+        // WordCat Next: in a role-play the key sits in the bottom bar, beside Skip.
         skip.tap()
         let moveOn = app.buttons["speaking-next"]
         XCTAssertTrue(moveOn.waitForExistence(timeout: 5))
@@ -199,8 +211,16 @@ final class LayoutTests: XCTestCase {
         snap(app, "tour-7-speaking-turn2")
         XCTAssertTrue(app.descendants(matching: .any)["speaking-earlier-line"].firstMatch.exists, "The line said before stays above")
         onScreen(app.buttons["shadow-record"], in: window, "shadow-record (turn 2)")
-        // With three bubbles the page scrolls itself so the key is clear of the buttons below.
-        above(app.buttons["shadow-record"], skip, "shadow-record (turn 2)")
+    }
+
+    /// The chat a tap on the cat opens, closed again.
+    private func closeCatChat(_ app: XCUIApplication) {
+        // The chat opens on the cat working out its note, so its input may not
+        // be there yet: the sheet's Done key says it is open.
+        let done = app.buttons.matching(NSPredicate(format: "label IN %@", ["完成", "Done"])).firstMatch
+        XCTAssertTrue(done.waitForExistence(timeout: 5), "A tap on the cat opens its chat\n\(app.debugDescription)")
+        done.tap()
+        XCTAssertTrue(done.waitForNonExistence(timeout: 5))
     }
 
     /// Wholly above the row of buttons at the bottom, not tucked under it.
@@ -222,8 +242,7 @@ final class LayoutTests: XCTestCase {
         let window = app.windows.firstMatch.frame
         let tabBar = app.tabBars.firstMatch
         let bottom = tabBar.exists ? tabBar.frame.minY : window.maxY
-        var ids = ["today-language-en", "today-language-zh", "today-study-filter", "today-start"] + tiles
-        if app.buttons["today-review"].exists { ids.insert("today-review", at: 4) }
+        let ids = ["today-start"] + tiles
 
         var frames: [String: CGRect] = [:]
         for id in ids {

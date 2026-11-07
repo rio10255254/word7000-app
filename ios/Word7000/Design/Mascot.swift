@@ -838,6 +838,9 @@ struct MascotBubble: View {
     var pointing: Edge = .bottom
     /// Tapping it opens more (the companion's AI note): a sparkle and a chevron say so.
     var actionable = false
+    /// The question a whole screen asks (the welcome's): read first, so
+    /// big and bold rather than a small aside.
+    var large = false
     static let cream = Color(red: 1.0, green: 0.98, blue: 0.94)
 
     var body: some View {
@@ -855,15 +858,15 @@ struct MascotBubble: View {
                     .foregroundStyle(Palette.accent)
             }
         }
-            .font(.display(.footnote, weight: .semibold))
+            .font(large ? .display(.headline, weight: .bold) : .display(.footnote, weight: .semibold))
             .foregroundStyle(Color(red: 0.23, green: 0.15, blue: 0.11))
             // Room for a whole line from the cat: it is never cut off mid-sentence.
-            .lineLimit(5)
+            .lineLimit(large ? 6 : 5)
             .minimumScaleFactor(0.85)
-            .multilineTextAlignment(.center)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 7)
-            .background(Self.cream, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .multilineTextAlignment(large ? .leading : .center)
+            .padding(.horizontal, large ? 16 : 12)
+            .padding(.vertical, large ? 12 : 7)
+            .background(Self.cream, in: RoundedRectangle(cornerRadius: large ? 18 : 14, style: .continuous))
             .overlay(alignment: tailAlignment) {
                 MascotBubbleTail()
                     .fill(Self.cream)
@@ -912,6 +915,21 @@ struct MascotTip {
 /// little hearts float up, grudgingly.
 /// Its speech bubble takes no touches unless it carries the companion's tip,
 /// and then only where it floats over nothing tappable.
+/// A double tap, only when asked for: declared before the single tap, so a
+/// single tap waits to see whether a second follows.
+private struct DoubleTapSmack: ViewModifier {
+    var enabled: Bool
+    var action: (CGPoint) -> Void
+
+    func body(content: Content) -> some View {
+        if enabled {
+            content.onTapGesture(count: 2, coordinateSpace: .local) { location in action(location) }
+        } else {
+            content
+        }
+    }
+}
+
 struct MascotBuddy: View {
     var mood: Mascot.Mood = .idle
     var size: CGFloat = 64
@@ -944,10 +962,9 @@ struct MascotBuddy: View {
     var speech: Binding<String?>? = nil
     /// Told when a run of smacks has been too much, e.g. to storm off.
     var onBeatenUp: (() -> Void)? = nil
-    /// When given, a tap opens this (its chat), and a quick second tap smacks
-    /// it instead; without it every tap is a smack.
-    var onOpen: (() -> Void)? = nil
-    @State private var opening: Task<Void, Never>?
+    /// WordCat Next: when given, a tap does this (e.g. opens the chat)
+    /// instead of a smack. Holding and dragging still play.
+    var onTap: (() -> Void)? = nil
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(AppModel.self) private var model
@@ -1011,25 +1028,19 @@ struct MascotBuddy: View {
                         .accessibilityHidden(true)
                 }
             }
-            // A generous target: it walks about, and a finger is bigger than it.
-            .contentShape(Circle().inset(by: -size * 0.12))
+            .contentShape(Circle().inset(by: -size * 0.04))
+            // With a tap action (Today: the chat), a double tap smacks it.
+            .modifier(DoubleTapSmack(enabled: onTap != nil) { location in
+                smack(from: location.x < size / 2 ? -1 : 1)
+            })
             .onTapGesture(coordinateSpace: .local) { location in
-                // Hit on its left, it flies right, and the other way round.
-                let side: CGFloat = location.x < size / 2 ? -1 : 1
-                guard let onOpen else { smack(from: side); return }
-                // A second tap in a moment, or more during a run of smacks: a smack.
-                if opening != nil || Date().timeIntervalSince(lastSlap) < 1.5 {
-                    opening?.cancel(); opening = nil
-                    smack(from: side)
+                if let onTap {
+                    onInteract?()
+                    onTap()
                     return
                 }
-                onInteract?()
-                opening = Task { @MainActor in
-                    try? await Task.sleep(for: .milliseconds(260))
-                    guard !Task.isCancelled else { return }
-                    opening = nil
-                    onOpen()
-                }
+                // Hit on its left, it flies right, and the other way round.
+                smack(from: location.x < size / 2 ? -1 : 1)
             }
             .onLongPressGesture(minimumDuration: 0.4, maximumDistance: 12) {
                 love()
@@ -1085,9 +1096,8 @@ struct MascotBuddy: View {
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(L.t("傻貓", "Silly Cat"))
             .accessibilityAddTraits(.isButton)
-            .accessibilityAction { if let onOpen { onOpen() } else { poke() } }
-            .accessibilityHint(onOpen == nil ? L.t("點一下扁它", "Tap to smack it")
-                                : L.t("點一下跟它聊天，連點兩下扁它", "Tap to chat; double-tap to smack it"))
+            .accessibilityAction { if let onTap { onTap() } else { poke() } }
+            .accessibilityHint(onTap == nil ? L.t("點一下扁它", "Tap to smack it") : L.t("點一下和傻貓聊天，點兩下扁它", "Tap to chat with Silly Cat; double-tap to smack it"))
             .accessibilityActions {
                 if let tip { Button(tip.text) { tip.action() } }
             }

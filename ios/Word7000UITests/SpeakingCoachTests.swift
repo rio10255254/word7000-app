@@ -82,6 +82,8 @@ final class SpeakingCoachTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["speaking-stage"].label.contains("Restaurant"), "The path starts at the restaurant")
         XCTAssertTrue(app.staticTexts["shadow-partner-line"].waitForExistence(timeout: 5), "A role-play opens on what the server says")
         tap(app.buttons["speaking-scenarios"], in: app)
+        // The list leads with the path so far and the next stage to play.
+        XCTAssertTrue(app.buttons["speaking-scenarios-next"].waitForExistence(timeout: 5))
         let shopping = app.buttons["speaking-stage-shopping-1"]
         // Gentle swipes: on the iPhone SE a full flick carried the list past the
         // stage to the bottom (run 376). If it still overshoots, come back up.
@@ -95,16 +97,18 @@ final class SpeakingCoachTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.descendants(matching: .any)["speaking-role"].firstMatch.exists)
         snapshot(app, "speaking-scenario-question-en")
-        // Word practice is the other tab, and is remembered for next time.
+        // Word speaking is the other tab.
         app.segmentedControls["speaking-track"].buttons["Words"].tap()
-        wait(app.staticTexts["speaking-stage"], matching: "label == 'Word practice'")
+        wait(app.staticTexts["speaking-stage"], matching: "label == 'Word speaking'")
         XCTAssertFalse(app.buttons["speaking-scenarios"].exists, "The scenario list belongs to the scenario tab")
         XCTAssertTrue(app.buttons["speaking-filters"].exists)
         app.buttons["speaking-close"].tap()
+        // WordCat Next: Today's speaking is always the next scenario stage,
+        // whichever tab was used last; word speaking is in the Practice tab.
         tap(app.buttons["today-speaking"], in: app)
-        wait(app.staticTexts["speaking-stage"], matching: "label == 'Word practice'")
-        app.segmentedControls["speaking-track"].buttons["Scenarios"].tap()
         wait(app.staticTexts["speaking-stage"], matching: "label CONTAINS 'Restaurant'")
+        app.segmentedControls["speaking-track"].buttons["Words"].tap()
+        wait(app.staticTexts["speaking-stage"], matching: "label == 'Word speaking'")
     }
 
     func testMockSuccessTypingCheckAndProgressInLightEnglishUI() {
@@ -329,7 +333,7 @@ final class SpeakingCoachTests: XCTestCase {
 
     func testAISettingsDisableSuggestionsButKeepRecordingAndText() {
         let app = launch(coach: "success", englishUI: true)
-        app.tabBars.buttons.element(boundBy: 2).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
         tap(app.buttons["me-settings"], in: app)
         tap(app.buttons["settings-intelligence"], in: app)
         let toggle = app.switches["settings-ai-toggle"]
@@ -353,7 +357,7 @@ final class SpeakingCoachTests: XCTestCase {
     func testEditorialNotesAreReachableInBothLanguages() {
         for englishUI in [false, true] {
             let app = launch(dark: englishUI, englishUI: englishUI)
-            app.tabBars.buttons.element(boundBy: 1).tap()
+            app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["單字", "Words"])).firstMatch.tap()
             let search = app.searchFields.firstMatch
             XCTAssertTrue(search.waitForExistence(timeout: 5))
             search.tap()
@@ -478,11 +482,24 @@ final class SpeakingCoachTests: XCTestCase {
     }
 
     private func weeklySpeakingCount(_ app: XCUIApplication) -> String {
-        app.tabBars.buttons.element(boundBy: 2).tap()
-        let count = app.descendants(matching: .any)["me-week-speaking"].firstMatch
-        reveal(count, in: app)
-        XCTAssertFalse(count.label.isEmpty)
-        return count.label
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
+        // WordCat Next: the week's counts are in the full history, a tap from Me.
+        let history = app.buttons["me-history"]
+        reveal(history, in: app)
+        history.tap()
+        let count = app.descendants(matching: .any)["history-selected-speaking"].firstMatch
+        let empty = app.descendants(matching: .any)["history-chart-empty"].firstMatch
+        // With nothing practised yet the history shows its empty state instead of counts.
+        let label: String
+        if count.waitForExistence(timeout: 5) {
+            label = count.label
+        } else {
+            XCTAssertTrue(empty.exists, "the history shows neither counts nor its empty state")
+            label = "empty"
+        }
+        XCTAssertFalse(label.isEmpty)
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        return label
     }
 
     private func wait(_ element: XCUIElement, matching predicate: String,

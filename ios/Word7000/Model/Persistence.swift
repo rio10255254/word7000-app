@@ -66,6 +66,25 @@ struct AppSettings: Codable, Equatable, Sendable {
     var guideHidden: Bool?
     /// Progress has been split between learning English and Chinese.
     var splitModeProgress: Bool?
+    /// WordCat Next: which of words and speaking the learner wants first on
+    /// the home page (nil: words).
+    var homeLead: Pillar?
+    /// WordCat Next: the speaking card on the home page (nil: shown).
+    var homeShowsSpeaking: Bool?
+    /// WordCat Next: the day today's stamp was last shown.
+    var dayCompleteShownOn: String?
+    /// WordCat Next: what the first launch learned about the learner (school,
+    /// what they want to get better at, how well they spell), used to shape
+    /// each day's checks. Only added to; an older build drops it.
+    var learnerProfile: LearnerProfile?
+    /// WordCat Next: sounds for answers and celebrations; nil means on.
+    var soundEffectsEnabled: Bool?
+    /// WordCat Next: the day the learner said "not now" to a daily reminder;
+    /// the summary asks again a week later, not after every round.
+    var reminderAskDeclinedOn: String?
+    /// WordCat Next: the day the weekly quiz was last taken, so its note
+    /// leaves Today once done.
+    var weeklyQuizDoneOn: String?
 
     var speakingHistoryOwnerKey: String {
         Self.speakingHistoryKey(ownerId: localOwnerId, anonymous: localOwnerIsAnonymous)
@@ -200,6 +219,11 @@ struct AppSnapshot: Codable, Sendable {
     var settings: AppSettings
     var studySession: StudySession?
     var sessionDay: String?
+    /// WordCat Next (3.x) only; a 2.x build ignores and drops it.
+    var wordRoutine: WordRoutine? = nil
+    /// WordCat Next: whether the saved session is today's set (not a round
+    /// of chosen words). Optional: older snapshots lack it.
+    var sessionIsDaySet: Bool? = nil
 }
 
 struct Persistence: Sendable {

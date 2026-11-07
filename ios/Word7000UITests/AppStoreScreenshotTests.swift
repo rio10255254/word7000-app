@@ -36,9 +36,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 
         // A quiz answered wrong, with the cat explaining the mix-up.
         app = launch(chineseMode: chineseMode)
-        let quiz = app.buttons["today-quiz"]
-        quiz.scrollIntoView(in: app, swipes: 4)
-        quiz.tap()
+        app.openPractice("practice-meaning")
         XCTAssertTrue(app.buttons["quiz-start"].waitForExistence(timeout: 5))
         app.buttons["quiz-start"].tap()
         // The page is about getting one wrong: answer until a miss shows the contrast.
@@ -85,7 +83,11 @@ final class AppStoreScreenshotTests: XCTestCase {
                 skip.tap()
             }
         }
-        // The question follows by itself after a short countdown.
+        // The question follows by itself after a short countdown once all of
+        // the sentence was right; a take with a tone off waits for Next.
+        if !app.staticTexts["speaking-question"].waitForExistence(timeout: 8), app.buttons["shadow-next"].exists {
+            app.buttons["shadow-next"].tap()
+        }
         XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 12), app.debugDescription)
         sleep(1)
         snap(app, "\(prefix)-4-speaking-question")
@@ -150,7 +152,7 @@ final class AppStoreScreenshotTests: XCTestCase {
             ? "hospital n. 醫院\npharmacy n. 藥局\nfever n. 發燒\nregister v. 掛號"
             : "objectively adv. 客觀地\nobjective n. 目標\ncarefully adv. 小心地\nconsiderable adj. 相當大的"
         app = launch(chineseMode: chineseMode, ["-uiTestingScanText"], environment: ["WORD7000_SCAN_TEST_TEXT": sheet])
-        app.tabBars.buttons.element(boundBy: 1).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["單字", "Words"])).firstMatch.tap()
         XCTAssertTrue(app.buttons["words-scan"].waitForExistence(timeout: 5))
         app.buttons["words-scan"].tap()
         let read = app.buttons["scan-read-pasted"]

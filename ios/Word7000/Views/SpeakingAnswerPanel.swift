@@ -24,6 +24,10 @@ struct SpeakingAnswerPanel: View {
     var scrollTo: (String) -> Void
     /// Called once something was said or written for this question.
     var onAttempt: () -> Void
+    /// WordCat Next: in a role-play's chat the answer is the learner's own
+    /// chat bubble (the words heard stay in it, and it can be edited there)
+    /// instead of a notepad.
+    var chat = false
 
     @State private var recording = LiveListener()
     /// This take was started from the notepad (record again), so its words
@@ -92,7 +96,7 @@ struct SpeakingAnswerPanel: View {
     var body: some View {
         VStack(spacing: 16) {
             if let followUpQuestion { followUpBanner(followUpQuestion) }
-            if showsPad { pad } else { recorderKey }
+            if showsPad { if chat { chatPad } else { pad } } else { recorderKey }
             if provider.availability == .ready, let message = visibleFailure {
                 HStack(alignment: .top) {
                     Image(systemName: "exclamationmark.circle").accessibilityHidden(true)
@@ -389,6 +393,90 @@ struct SpeakingAnswerPanel: View {
         }
         .modifier(AnswerPaper(kind: .sage, seed: 5))
         .id(Self.padAnchor)
+    }
+
+    /// The answer as the learner's chat bubble: the words just heard stay in
+    /// it as they came, a tap edits them; replay, record again and whether
+    /// the word was used sit small under it, then the Check key.
+    private var chatPad: some View {
+        VStack(alignment: .trailing, spacing: 10) {
+            if answerFocused {
+                // The keyboard hides the Check key below; it sits above the bubble while typing.
+                HStack(spacing: 16) {
+                    Spacer()
+                    if provider.availability == .ready, hasText, !session.isWorking, !pendingSubmission {
+                        Button {
+                            guard canSubmitAnswer else { return }
+                            needsTranscriptReview = false
+                            submit()
+                        } label: {
+                            Label(L.t("批改", "Check"), systemImage: "sparkles")
+                                .font(.subheadline.weight(.bold))
+                        }
+                        .buttonStyle(.borderless)
+                        .disabled(!canSubmitAnswer)
+                        .accessibilityIdentifier("coach-submit")
+                    }
+                    Button { dismissKeyboard() } label: { Image(systemName: "keyboard.chevron.compact.down") }
+                        .buttonStyle(.borderless)
+                        .frame(minWidth: 44, minHeight: 44)
+                        .accessibilityLabel(L.t("收起鍵盤", "Dismiss keyboard"))
+                        .accessibilityIdentifier("coach-keyboard-done")
+                }
+            }
+            HStack(alignment: .bottom, spacing: 0) {
+                Spacer(minLength: 48)
+                answerEditor(ruled: false)
+                    .frame(minHeight: 44, maxHeight: 200)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(Palette.accent.opacity(answerFocused ? 0.2 : 0.14), in: BubbleShape(tail: .trailing))
+                    .overlay {
+                        BubbleShape(tail: .trailing)
+                            .stroke(Palette.accent.opacity(answerFocused ? 0.5 : 0), lineWidth: 1.5)
+                    }
+            }
+            padTools
+            padStatus
+            checkArea
+        }
+        .id(Self.padAnchor)
+    }
+
+    private func answerEditor(ruled: Bool) -> some View {
+        let placeholder = live ? L.t("請說…", "Go ahead…")
+            : chinese ? L.t("在這裡用中文寫下你的回答", "Write your answer in Chinese here")
+            : L.t("在這裡用英文寫下你的回答", "Write your answer in English here")
+        return PracticeAnswerEditor(text: $answer, focused: $answerFocused,
+                                    editable: !live && recording.state != .finishing,
+                                    ruled: ruled,
+                                    onEdit: { text in
+                                        if text != submittedAnswer { session.reset() }
+                                        if !fixes.isEmpty { fixes = [] }
+                                        inputCommitFailed = false
+                                        Speaker.shared.stop()
+                                    }, onCommit: { finishInput(committedText: $0) },
+                                    committedOverride: {
+                                        #if DEBUG
+                                        return pendingSubmission ? provider.testingCommittedAnswer : nil
+                                        #else
+                                        return nil
+                                        #endif
+                                    })
+            .accessibilityLabel(L.t("你的回答", "Your answer"))
+            .accessibilityIdentifier("coach-answer")
+            .overlay(alignment: .topLeading) {
+                if answer.isEmpty {
+                    Text(placeholder)
+                        .foregroundStyle(.tertiary)
+                        .padding(.top, 8)
+                        .padding(.leading, 5)
+                        .allowsHitTesting(false)
+                        .accessibilityHidden(true)
+                }
+            }
+
     }
 
     private var notepad: some View {

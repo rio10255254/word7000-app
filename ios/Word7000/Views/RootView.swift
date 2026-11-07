@@ -2,7 +2,7 @@ import SwiftUI
 import Word7000Core
 
 enum AppTab: Hashable {
-    case today, words, me
+    case today, practice, words, me
 }
 
 /// What runs full screen on top of the tabs.
@@ -15,6 +15,12 @@ enum Activity: Identifiable, Hashable {
     case spelling
     case exam
     case scan
+    /// WordCat Next: today's round as fill-in-the-blank questions.
+    case cloze
+    /// WordCat Next: exam-style questions on learned words, from the word card.
+    case quickExam
+    /// WordCat Next: Sunday's quiz on the week's words.
+    case weeklyExam
 
     var id: Self { self }
 }
@@ -38,6 +44,8 @@ struct RootView: View {
     @State private var plansAfterRecap = false
     @State private var welcomeOpen = false
     @State private var studyAfterWelcome = false
+    /// WordCat Next: today's stamp, once words and speaking are done.
+    @State private var dayCompleteOpen = false
 
     var body: some View {
         TabView(selection: $tab) {
@@ -51,9 +59,22 @@ struct RootView: View {
                 } else {
                     activity = next
                 }
-            })
+            }, showWords: { tab = .words })
             .tabItem { Label(L.tabToday, systemImage: "sun.max.fill") }
             .tag(AppTab.today)
+
+            // WordCat Next: every way to practise outside today's path.
+            NavigationStack {
+                PracticeView(start: { next in
+                    if next == .exam {
+                        plus.require(.examPractice) { activity = .exam }
+                    } else {
+                        activity = next
+                    }
+                })
+            }
+            .tabItem { Label(L.t("練習", "Practice"), systemImage: "dumbbell.fill") }
+            .tag(AppTab.practice)
 
             NavigationStack {
                 WordsView(scan: openScan, study: { activity = .study })
@@ -90,7 +111,10 @@ struct RootView: View {
             if let new, let step = GuideStep(activity: new) { model.noteTried(step) }
         }
         .fullScreenCover(item: $activity, onDismiss: {
-            guard let next = pendingActivity else { openRequestedPractice(); return }
+            guard let next = pendingActivity else {
+                if model.dayCompleteDue { dayCompleteOpen = true } else { openRequestedPractice() }
+                return
+            }
             pendingActivity = nil
             activity = next
         }) { activity in
@@ -116,7 +140,21 @@ struct RootView: View {
                 })
             case .scan:
                 ScanView(onStudy: { switchTo(.study) })
+            case .cloze:
+                ClozeSessionView()
+            case .quickExam, .weeklyExam:
+                ExamRoundView(kind: activity == .weeklyExam ? .weekly : .quick, studyMissed: { ids in
+                    model.startStudySession(onlyIds: ids)
+                    switchTo(.study)
+                })
             }
+        }
+        .fullScreenCover(isPresented: $dayCompleteOpen, onDismiss: openRequestedPractice) {
+            DayCompleteView()
+        }
+        .task {
+            // The screenshot tests show the stamp straight away.
+            if ProcessInfo.processInfo.arguments.contains("-uiTestingDayCompleteNow") { dayCompleteOpen = true }
         }
         .sheet(isPresented: Binding(get: { model.styleChoiceDue && activity == nil && !welcomeOpen && !signInForScan
                                            && plus.paywallReason == nil && !plus.trialRecapPending },
@@ -130,12 +168,12 @@ struct RootView: View {
                 activity = .study
             } else { openRequestedPractice() }
         }) {
-            WelcomeView { mode, target, knownIds, practice in
+            WelcomeView { mode, target, knownIds, learningIds, practice in
                 model.settings.onboardingComplete = true
                 model.settings.guideActive = true
                 model.setStudyMode(mode)
                 model.setDailyTarget(target)
-                model.applyPlacement(knownIds: knownIds)
+                model.applyPlacement(knownIds: knownIds, learningIds: learningIds)
                 if practice { model.startStudySession(limit: 5) }
                 studyAfterWelcome = practice
                 if !practice { tab = .words }
@@ -148,6 +186,9 @@ struct RootView: View {
         // developer's announcements reach every learner from the start.
         .task {
             try? await Task.sleep(for: .seconds(1))
+            // WordCat Next tries asking after the first words routine instead,
+            // once a time is picked (ReminderAskCard).
+            guard !AppRuntime.labOnboarding else { return }
             await PushRegistration.shared.askOnce(model)
         }
         .onChange(of: PracticeLaunch.shared.requested) { _, _ in openRequestedPractice() }
@@ -186,7 +227,7 @@ struct RootView: View {
             UpdateWindow.shared.show(required, style: model.settings.appStyle ?? .standard,
                                      scheme: model.settings.theme.colorScheme)
         }
-        .fullScreenCover(item: Binding(get: { (updateGate.required == nil && activity == nil && !welcomeOpen && plus.paywallReason == nil && !plus.trialRecapPending
+        .fullScreenCover(item: Binding(get: { (updateGate.required == nil && activity == nil && !welcomeOpen && !dayCompleteOpen && plus.paywallReason == nil && !plus.trialRecapPending
                                      && !model.styleChoiceDue && !signInForScan) ? announcements.current : nil },
                              set: { if $0 == nil, let shown = announcements.current { announcements.markSeen(shown) } }),
                onDismiss: {

@@ -92,7 +92,7 @@ struct BankManagementView: View {
             .listRowBackground(StyledRowBackground())
         }
         .warmList()
-        .navigationTitle(L.t("管理單字集", "Manage bank"))
+        .navigationTitle(L.t("管理字庫", "Manage bank"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -153,7 +153,7 @@ struct BankManagementView: View {
     }
 
     private func transferMenu(move: Bool) -> some View {
-        Menu(move ? L.t("移至單字集", "Move to bank") : L.t("複製至單字集", "Copy to bank")) {
+        Menu(move ? L.t("移到其他字庫", "Move to bank") : L.t("複製到其他字庫", "Copy to bank")) {
             ForEach(model.customSets.sets.filter { $0.id != setId }) { target in
                 Button(target.name) {
                     let count = selected.count

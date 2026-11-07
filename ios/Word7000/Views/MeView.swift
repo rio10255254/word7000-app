@@ -765,7 +765,7 @@ struct ActivityCalendarView: View {
     private let monthHeight: CGFloat = 13
     /// Each day is short and wide: the weeks fill the width, the seven
     /// rows stay flat.
-    private let rowHeight: CGFloat = 10
+    private let rowHeight: CGFloat = 12
 
     /// As GitHub lays it out, a week to a column, Monday on top, but the
     /// columns stretched across the card.
@@ -810,7 +810,7 @@ struct ActivityCalendarView: View {
             HStack(alignment: .top, spacing: gap) {
                 VStack(spacing: gap) {
                     ForEach(0..<7, id: \.self) { day in
-                        Text(day % 2 == 0 && day < 6 ? weekdayName(day) : "")
+                        Text(day % 2 == 0 && day < 6 ? weekdayInitial(day) : "")
                             .font(.system(size: 8, weight: .semibold))
                             .foregroundStyle(Palette.tertiaryLabel)
                             .frame(width: labelWidth, height: rowHeight, alignment: .leading)
@@ -908,6 +908,11 @@ struct ActivityCalendarView: View {
             : date(week - 1, 0)?.month != month
         guard starts, (1...12).contains(month) else { return nil }
         return L.t("\(month)月", Self.englishMonths[month - 1])
+    }
+
+    /// One letter beside the rows, so it fits the narrow column in English too.
+    private func weekdayInitial(_ day: Int) -> String {
+        L.t(["一", "二", "三", "四", "五", "六", "日"][day], ["M", "T", "W", "T", "F", "S", "S"][day])
     }
 
     private func weekdayName(_ day: Int) -> String {

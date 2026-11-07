@@ -210,8 +210,10 @@ struct BuddyProgressBar: View {
                             .id(milestone)
                             .position(x: proxy.size.width * milestoneAt, y: proxy.size.height / 2)
                     }
-                    // The bubble opens toward the room: right of it early on, left of it near the end.
-                    let opensRight = x < proxy.size.width * 0.55
+                    // The bubble opens toward the room, judged on the screen rather
+                    // than this bar (a routine step is a third of the width):
+                    // right of the cat on the left half, left of it beyond.
+                    let opensRight = proxy.frame(in: .global).minX + x < 200
                     Mascot(mood: mood, size: size, hop: hop)
                         .overlay(alignment: opensRight ? .leading : .trailing) {
                             if let saying {

@@ -322,12 +322,12 @@ jobs:
           cd "$GITHUB_WORKSPACE/screenshots"
           echo "${{ github.sha }} run ${{ github.run_number }}" > SOURCE.txt
           git init -q
-          git checkout -q -b lab-native-screenshots
+          git checkout -q -b "${{ github.ref_name == 'claude/wizardly-thompson-s0lgzj' && 'lab-native-screenshots' || 'native-screenshots' }}"
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
           git add -A
           git commit -q -m "Screenshots for ${{ github.sha }}"
-          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" lab-native-screenshots
+          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" "${{ github.ref_name == 'claude/wizardly-thompson-s0lgzj' && 'lab-native-screenshots' || 'native-screenshots' }}"
 
   # App Store screens (checks: store) go to their own branch, for
   # scripts/generate-app-store-screenshots.mjs.
@@ -349,12 +349,12 @@ jobs:
           cd "$GITHUB_WORKSPACE/screenshots"
           echo "${{ github.sha }} run ${{ github.run_number }}" > SOURCE.txt
           git init -q
-          git checkout -q -b lab-native-store-screenshots
+          git checkout -q -b "${{ github.ref_name == 'claude/wizardly-thompson-s0lgzj' && 'lab-native-store-screenshots' || 'native-store-screenshots' }}"
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
           git add -A
           git commit -q -m "App Store screenshots for ${{ github.sha }}"
-          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" lab-native-store-screenshots
+          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" "${{ github.ref_name == 'claude/wizardly-thompson-s0lgzj' && 'lab-native-store-screenshots' || 'native-store-screenshots' }}"
 
   # Today must fit every iPhone. Runs the layout checks on phones of each
   # size (standard, Pro Max, SE, mini, Air) and pushes the screenshots to
@@ -462,9 +462,9 @@ jobs:
           cd "$RUNNER_TEMP/screenshots"
           echo "${{ github.sha }} run ${{ github.run_number }}" > SOURCE.txt
           git init -q
-          git checkout -q -b lab-native-layout-screenshots
+          git checkout -q -b "${{ github.ref_name == 'claude/wizardly-thompson-s0lgzj' && 'lab-native-layout-screenshots' || 'native-layout-screenshots' }}"
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
           git add -A
           git commit -q -m "Layout screenshots for ${{ github.sha }}"
-          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" lab-native-layout-screenshots
+          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" "${{ github.ref_name == 'claude/wizardly-thompson-s0lgzj' && 'lab-native-layout-screenshots' || 'native-layout-screenshots' }}"

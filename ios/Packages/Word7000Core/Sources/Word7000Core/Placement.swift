@@ -38,10 +38,15 @@ public enum Placement {
         for id in knownIds where result.progress(for: id).status == .new && !learningIds.contains(id) {
             let graded = LearningEngine.markKnown(result, wordId: id, today: today)
             result.words[id] = graded.words[id]
+            // Not studied today: a sync counts today's words by their last
+            // study day, and these would swell the day's goal.
+            result.words[id]?.lastStudied = nil
         }
         for id in learningIds where result.progress(for: id).status == .new {
             let marked = LearningEngine.markReview(result, wordId: id, today: today)
             result.words[id] = marked.words[id]
+            // Due and not studied yet today, so the first cards open with them.
+            result.words[id]?.lastStudied = nil
         }
         return result
     }

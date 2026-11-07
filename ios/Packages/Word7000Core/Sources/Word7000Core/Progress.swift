@@ -227,6 +227,8 @@ public enum LearningEngine {
     public static func projectedNewWords(state: ProgressState, today: String, dailyTarget: Int, days: Int,
                                          freshAvailable: Int) -> Int {
         let size = max(0, dailyTarget)
+        // Ten years at most: an exam date picked far off must not hang the plan.
+        let days = min(days, 3650)
         guard size > 0, days > 0, freshAvailable > 0, let start = DayMath.dayNumber(today) else { return 0 }
         let stages = reviewIntervalDays.count
         // Reviews by day, counted per stage.

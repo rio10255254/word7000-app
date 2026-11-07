@@ -78,9 +78,9 @@ struct ClozeCard: View {
                 (chinese ? englishPrompt : chineseSentence)
                     .font(.title2)
                     .accessibilityIdentifier("cloze-chinese")
-                if chinese ? !Self.glossShows(in: word) : Cloze.cue(for: word) == nil {
+                if let wanted = wantedChip {
                     // No marked part: say which word is wanted.
-                    Text(chinese ? word.word : ChineseDisplay.conciseMeaning(word.meaningZh))
+                    Text(wanted)
                         .font(.headline)
                         .foregroundStyle(Palette.accent)
                         .padding(.horizontal, 12)
@@ -129,6 +129,12 @@ struct ClozeCard: View {
         marked.backgroundColor = Palette.review.opacity(0.35)
         marked.foregroundColor = Palette.ink
         return Text(AttributedString(cue.before) + marked + AttributedString(cue.after))
+    }
+
+    /// The word wanted, when the sentence on top has no part marked for it.
+    private var wantedChip: String? {
+        if chinese { return Self.glossShows(in: word) ? nil : word.word }
+        return Cloze.cue(for: word) == nil ? ChineseDisplay.conciseMeaning(word.meaningZh) : nil
     }
 
     /// For a learner of Chinese: the English example, the gloss marked.

@@ -98,17 +98,16 @@ enum P {
     static var timelineTodayDetail: String { L.t("AI 老師、掃描、模擬考、完整紀錄全部解鎖", "The AI tutor, scanning, mock exams and full history unlock") }
     static func timelineBefore(_ days: Int) -> String { L.t("第 \(max(1, days - 1)) 天", "Day \(max(1, days - 1))") }
     static var timelineBeforeDetail: String { L.t("試用快結束；不想續用，在「設定」取消就好", "The trial is nearly over; cancel in Settings if it's not for you") }
-    static func timelineCharge(_ days: Int) -> String { L.t("第 \(days) 天", "Day \(days)") }
+    static func timelineCharge(_ days: Int) -> String { L.t("第 \(days) 天後", "After day \(days)") }
     static func timelineChargeDetail(_ price: String, yearly: Bool) -> String {
-        yearly ? L.t("才開始收費 \(price)／年，之前取消不收任何錢", "The first charge, \(price) a year; nothing if cancelled before")
-               : L.t("才開始收費 \(price)／月，之前取消不收任何錢", "The first charge, \(price) a month; nothing if cancelled before")
+        yearly ? L.t("試用結束才開始收 \(price)／年；在那之前取消，不收任何錢", "The first charge, \(price) a year, once the trial ends; nothing if cancelled before")
+               : L.t("試用結束才開始收 \(price)／月；在那之前取消，不收任何錢", "The first charge, \(price) a month, once the trial ends; nothing if cancelled before")
     }
     static func examCountdown(_ days: Int) -> String {
         L.t("離考試只剩 \(days) 天 · 模擬考找出最弱的章", days == 1 ? "1 day to the exam · find your weakest chapter" : "\(days) days to the exam · find your weakest chapter")
     }
 
-    // The cat's goodbye, once a day, when the paywall is closed unbought
-    static var goodbyeTitle: String { L.t("真的要走？", "Leaving already?") }
+    // The cat's word at the foot of the paywall, for anyone about to close it
     static func goodbyeText(mastered: Int, trialDays: Int?) -> String {
         let trial = trialDays.map { L.t("前 \($0) 天免費，隨時可以取消。", "The first \($0) days are free; cancel anytime.") } ?? ""
         return mastered > 0
@@ -117,8 +116,6 @@ enum P {
             : L.t("我的 AI 腦袋就在這裡，你卻要走。\(trial)沒關係，我習慣被拋棄了。",
                   "My AI brain is right here and you're leaving. \(trial)It's fine. I'm used to being left.")
     }
-    static var goodbyeStay: String { L.t("再看看", "Stay a bit") }
-    static var goodbyeLeave: String { L.t("狠心離開", "Leave anyway") }
 
     // Welcome
     static var welcomeTitle: String { L.t("歡迎加入 Premium", "Welcome to Premium") }

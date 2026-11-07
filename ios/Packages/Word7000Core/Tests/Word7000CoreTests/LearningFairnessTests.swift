@@ -202,6 +202,30 @@ final class LearningFairnessTests: XCTestCase {
         XCTAssertEqual(routine.cardIds, ["a"])
     }
 
+    func testACheckThatCatchesANewWordIsNoLapse() {
+        let today = "2026-11-07"
+        var state = LearningEngine.markKnown(ProgressState(), wordId: "new", today: today)
+        state = LearningEngine.applyCheck(state, wordId: "new", today: today, wasNew: true, outcome: .missed)
+        XCTAssertEqual(state.words["new"]?.status, .review)
+        XCTAssertEqual(state.words["new"]?.lapses ?? 0, 0, "never known, so not forgotten")
+        var old = LearningEngine.markKnown(ProgressState(), wordId: "old", today: "2026-10-01")
+        old = LearningEngine.markKnown(old, wordId: "old", today: today)
+        old = LearningEngine.applyCheck(old, wordId: "old", today: today, wasNew: false, outcome: .missed)
+        XCTAssertEqual(old.words["old"]?.lapses, 1)
+    }
+
+    func testLevelCheckWordsAreNotTodaysStudy() {
+        let today = "2026-11-07"
+        let placed = Placement.apply(knownIds: ["a", "b"], learningIds: ["b"], to: ProgressState(dailyProgressDate: today), today: today)
+        XCTAssertNil(placed.words["a"]?.lastStudied)
+        XCTAssertNil(placed.words["b"]?.lastStudied)
+        XCTAssertEqual(LearningEngine.merge([placed, ProgressState(dailyProgressDate: today)]).studiedToday, 0)
+        // The ones recognised but not spelled open the first cards.
+        let words = ["a", "b", "c", "d", "e", "f"].map { WordEntry(id: $0, word: $0, partOfSpeech: "n.", pronunciation: "", meaningZh: "", example: "", exampleZh: "", group: "Core 1") }
+        let queue = LearningEngine.buildStudyQueue(words: words, state: placed, today: today, limit: 2, seed: "s")
+        XCTAssertTrue(queue.map(\.id).contains("b"))
+    }
+
     // MARK: Speaking counts
 
     func testUsingAWordInSpeakingCountsWhereAnAnswerWould() {
@@ -247,5 +271,8 @@ final class LearningFairnessTests: XCTestCase {
                                                         freshAvailable: 25), 25)
         XCTAssertEqual(PlacementTest.chaptersReached(from: 3, newWords: 1200), 5)
         XCTAssertEqual(PlacementTest.chaptersReached(from: 13, newWords: 5000), PlacementTest.topLevel)
+        // An exam date far off is counted up to ten years, not forever.
+        XCTAssertGreaterThan(LearningEngine.projectedNewWords(state: ProgressState(), today: day, dailyTarget: 20, days: 1_000_000,
+                                                              freshAvailable: 100_000), 0)
     }
 }

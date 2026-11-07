@@ -20,8 +20,54 @@ struct DayCompleteView: View {
     private static let cream = Color(red: 1.0, green: 0.96, blue: 0.88)
 
     var body: some View {
+        // Scrolls only when it does not fit (an SE, large text), so Keep it
+        // is always reachable; otherwise the page fills the screen as before.
+        GeometryReader { proxy in
+            ScrollView {
+                page
+                    .frame(minHeight: proxy.size.height)
+            }
+            .scrollBounceBehavior(.basedOnSize)
+        }
+        .background { background }
+        .overlay(alignment: .top) {
+            if rolled, !reduceMotion { ConfettiBurst(colors: ConfettiBurst.gold).allowsHitTesting(false).ignoresSafeArea() }
+        }
+        // A second popper as today's square is stamped.
+        .overlay(alignment: .top) {
+            if todayStamped, !reduceMotion { ConfettiBurst(colors: ConfettiBurst.paper).allowsHitTesting(false).ignoresSafeArea() }
+        }
+        .task {
+            guard !stamped else { return }
+            guard !reduceMotion else {
+                withAnimation(.easeOut(duration: 0.3)) { stamped = true; rolled = true; todayStamped = true }
+                return
+            }
+            do {
+                try await Task.sleep(for: .milliseconds(350))
+                withAnimation(.spring(response: 0.45, dampingFraction: 0.55)) { stamped = true }
+                try await Task.sleep(for: .milliseconds(480))
+                withAnimation(.snappy(duration: 0.5)) { rolled = true }
+                try await Task.sleep(for: .milliseconds(520))
+                withAnimation(.spring(response: 0.35, dampingFraction: 0.5)) { todayStamped = true }
+                // The cat keeps dancing while the screen is up.
+                while !Task.isCancelled {
+                    danceStart = Date().timeIntervalSinceReferenceDate
+                    try await Task.sleep(for: .seconds(MascotAntic.dance.duration + 1.4))
+                }
+            } catch { return }
+        }
+        .sensoryFeedback(.success, trigger: stamped) { _, new in new && haptics }
+        .sensoryFeedback(.impact(weight: .medium), trigger: todayStamped) { _, new in new && haptics }
+        .soundEffect(trigger: stamped) { (_: Bool, now: Bool) -> SoundEffect? in now ? .stamp : nil }
+        .soundEffect(trigger: rolled) { (_: Bool, now: Bool) -> SoundEffect? in now ? .complete : nil }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("day-complete")
+    }
+
+    private var page: some View {
         let streak = model.progress.streak
-        VStack(spacing: 22) {
+        return VStack(spacing: 22) {
             Spacer(minLength: 8)
             VStack(spacing: 8) {
                 Text(L.t("今天的份完成！", "Today's done!"))
@@ -85,41 +131,7 @@ struct DayCompleteView: View {
             .padding(.bottom, 8)
         }
         .padding(.horizontal, Metrics.gutter)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background { background }
-        .overlay(alignment: .top) {
-            if rolled, !reduceMotion { ConfettiBurst(colors: ConfettiBurst.gold).allowsHitTesting(false).ignoresSafeArea() }
-        }
-        // A second popper as today's square is stamped.
-        .overlay(alignment: .top) {
-            if todayStamped, !reduceMotion { ConfettiBurst(colors: ConfettiBurst.paper).allowsHitTesting(false).ignoresSafeArea() }
-        }
-        .task {
-            guard !stamped else { return }
-            guard !reduceMotion else {
-                withAnimation(.easeOut(duration: 0.3)) { stamped = true; rolled = true; todayStamped = true }
-                return
-            }
-            do {
-                try await Task.sleep(for: .milliseconds(350))
-                withAnimation(.spring(response: 0.45, dampingFraction: 0.55)) { stamped = true }
-                try await Task.sleep(for: .milliseconds(480))
-                withAnimation(.snappy(duration: 0.5)) { rolled = true }
-                try await Task.sleep(for: .milliseconds(520))
-                withAnimation(.spring(response: 0.35, dampingFraction: 0.5)) { todayStamped = true }
-                // The cat keeps dancing while the screen is up.
-                while !Task.isCancelled {
-                    danceStart = Date().timeIntervalSinceReferenceDate
-                    try await Task.sleep(for: .seconds(MascotAntic.dance.duration + 1.4))
-                }
-            } catch { return }
-        }
-        .sensoryFeedback(.success, trigger: stamped) { _, new in new && haptics }
-        .sensoryFeedback(.impact(weight: .medium), trigger: todayStamped) { _, new in new && haptics }
-        .soundEffect(trigger: stamped) { (_: Bool, now: Bool) -> SoundEffect? in now ? .stamp : nil }
-        .soundEffect(trigger: rolled) { (_: Bool, now: Bool) -> SoundEffect? in now ? .complete : nil }
-        .accessibilityElement(children: .contain)
-        .accessibilityIdentifier("day-complete")
+        .frame(maxWidth: .infinity)
     }
 
     private var haptics: Bool { model.settings.hapticsEnabled ?? true }

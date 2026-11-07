@@ -41,15 +41,16 @@ struct PracticeView: View {
                           title: english ? L.t("拼字", "Spelling") : L.t("寫字", "Writing"),
                           detail: english ? L.t("看中文拼出句中字", "Type the missing word")
                                           : L.t("看英文寫中文", "Write the Chinese")) {
-            start(english ? .cloze : .spelling)
+            // Fill-the-gap needs example sentences; a scanned or own list
+            // without them is spelled from its meanings instead.
+            start(english && model.clozeAvailable ? .cloze : .spelling)
         })
-        if english {
-            items.append(Item(id: "practice-exam-style", icon: "checklist", tint: Palette.chinese,
-                              title: L.t("考 10 題", "10 exam questions"),
-                              detail: L.t("\(model.examStyleName)題型", "Exam style")) {
-                start(.quickExam)
-            })
-        }
+        // Both languages: a learner of Chinese is asked in the Chinese sentence.
+        items.append(Item(id: "practice-exam-style", icon: "checklist", tint: Palette.chinese,
+                          title: L.t("考 10 題", "10 exam questions"),
+                          detail: model.examStyleName) {
+            start(.quickExam)
+        })
         items.append(Item(id: "practice-meaning", icon: "list.bullet.rectangle", tint: Palette.known,
                           title: L.t("看字選意思", "Pick the meaning"), detail: L.t("快速四選一", "Quick multiple choice")) {
             quizSetupOpen = true

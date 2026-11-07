@@ -53,9 +53,10 @@ struct LearningPlanView: View {
                 Section { planCard }
                     .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
                     .listRowBackground(Color.clear)
-                examSection
+                // The exams are Taiwan's English exams: learners of English only.
+                if english { examSection }
                 dailySection
-                if english { focusSection }
+                focusSection
                 startSection
             }
             .listRowBackground(StyledRowBackground())
@@ -92,10 +93,9 @@ struct LearningPlanView: View {
             }
             row("plus.circle.fill", L.t("每天 \(model.progress.dailyTarget) 個字", "\(model.progress.dailyTarget) words a day"),
                 dailyDetail)
-            if english {
-                row("pencil.line", L.t("翻卡後拼 \(profile.spellChecks) 個、考 \(profile.examChecks) 題", "Then spell \(profile.spellChecks) and answer \(profile.examChecks)"),
-                    L.t("拼字穩了就少抽，退步了就多抽", "Fewer when spelling holds, more when it slips"))
-            }
+            row("pencil.line", english ? L.t("翻卡後拼 \(profile.spellChecks) 個、考 \(profile.examChecks) 題", "Then spell \(profile.spellChecks) and answer \(profile.examChecks)")
+                                       : L.t("翻卡後寫 \(profile.spellChecks) 個、考 \(profile.examChecks) 題", "Then write \(profile.spellChecks) and answer \(profile.examChecks)"),
+                L.t("寫得穩就少抽，退步了就多抽", "Fewer when it holds, more when it slips"))
             row(model.settings.homeLead == .speaking ? "mic.fill" : "rectangle.on.rectangle.angled",
                 model.settings.homeLead == .speaking ? L.t("每天先練口說", "Speaking first each day") : L.t("單字先，口說後", "Words first, then speaking"),
                 L.t("兩個每天都有", "Both, every day"))
@@ -144,11 +144,9 @@ struct LearningPlanView: View {
                 set: { choice in
                     update { $0.exam = choice.rawValue }
                     // The usual day of a school exam; an English test's day is the learner's own.
-                    if let day = choice.date(after: Date()) {
-                        memory.examDate = day
-                    } else if choice == .none {
-                        memory.examDate = nil
-                    }
+                    // The usual day of a school exam; an English test's day is
+                    // the learner's own to set below, so the old date goes.
+                    memory.examDate = choice.date(after: Date())
                 }
             )) {
                 ForEach(WelcomeExam.allCases, id: \.self) { choice in
@@ -211,7 +209,7 @@ struct LearningPlanView: View {
 
     private static var focuses: [(focus: LearnerProfile.Focus, icon: String, title: String, detail: String)] { [
         (.vocabulary, "books.vertical.fill", L.t("單字量", "More words"), L.t("建議每天多背一點", "A bigger daily goal is suggested")),
-        (.spelling, "pencil.line", L.t("拼字", "Spelling"), L.t("翻卡後多抽幾個字拼", "More words to spell after the cards")),
+        (.spelling, "pencil.line", L.t("拼字", "Writing"), L.t("翻卡後多抽幾個字拼", "More words to write after the cards")),
         (.exam, "checklist", L.t("考試題型", "Exam questions"), L.t("翻卡後多考幾題", "More questions after the cards")),
         (.speaking, "mic.fill", L.t("口說", "Speaking"), L.t("口說的比重高一點", "More weight on speaking")),
     ] }
@@ -327,7 +325,8 @@ struct LearningPlanView: View {
         } header: {
             Text(L.t("程度", "Level"))
         } footer: {
-            Text(L.t("兩分鐘看字選意思，再拼 3 個字；測完會換成新的起點。", "Two minutes of meanings and three words to spell; the result sets a new start."))
+            Text(english ? L.t("兩分鐘看字選意思，再拼 3 個字；測完會換成新的起點。", "Two minutes of meanings and three words to spell; the result sets a new start.")
+                         : L.t("兩分鐘看字選意思；測完會換成新的起點。", "Two minutes of picking meanings; the result sets a new start."))
         }
     }
 }

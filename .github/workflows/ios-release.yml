@@ -69,12 +69,19 @@ jobs:
       # This branch is the research line. Its builds go to an internal testing
       # group only; the public testers get master's builds, which are the only
       # ones submitted for review.
-      - name: Keep the research line out of the public testers' group
-        if: inputs.operation == 'native-testflight' || inputs.operation == 'testflight-submit'
+      # Tied to the branch, so the guard goes away by itself once the research
+      # line is merged into master (CLAUDE.md, 換線).
+      - name: Keep the research line out of the public testers' group and the App Store
+        if: github.ref_name == 'claude/wizardly-thompson-s0lgzj' && (inputs.operation == 'native-testflight' || inputs.operation == 'testflight-submit' || inputs.operation == 'store-prepare')
         env:
           GROUP: ${{ inputs.testflight_group }}
+          OPERATION: ${{ inputs.operation }}
         run: |
           set -euo pipefail
+          if [ "$OPERATION" = "store-prepare" ]; then
+            echo "::error::This is the research line. Its builds are never put on the App Store version; that is master's."
+            exit 1
+          fi
           if [ "$GROUP" = "Wordcat Public Testing 1" ]; then
             echo "::error::This is the research line. Send it to an internal testing group; the public testers get master's builds."
             exit 1
@@ -180,12 +187,19 @@ jobs:
       # This branch is the research line. Its builds go to an internal testing
       # group only; the public testers get master's builds, which are the only
       # ones submitted for review.
-      - name: Keep the research line out of the public testers' group
-        if: inputs.operation == 'native-testflight' || inputs.operation == 'testflight-submit'
+      # Tied to the branch, so the guard goes away by itself once the research
+      # line is merged into master (CLAUDE.md, 換線).
+      - name: Keep the research line out of the public testers' group and the App Store
+        if: github.ref_name == 'claude/wizardly-thompson-s0lgzj' && (inputs.operation == 'native-testflight' || inputs.operation == 'testflight-submit' || inputs.operation == 'store-prepare')
         env:
           GROUP: ${{ inputs.testflight_group }}
+          OPERATION: ${{ inputs.operation }}
         run: |
           set -euo pipefail
+          if [ "$OPERATION" = "store-prepare" ]; then
+            echo "::error::This is the research line. Its builds are never put on the App Store version; that is master's."
+            exit 1
+          fi
           if [ "$GROUP" = "Wordcat Public Testing 1" ]; then
             echo "::error::This is the research line. Send it to an internal testing group; the public testers get master's builds."
             exit 1
@@ -358,6 +372,10 @@ jobs:
           NOTES_ZH: ${{ inputs.what_to_test }}
           NOTES_EN: ${{ inputs.what_to_test_en }}
         run: |
+          # Research builds say so at the top of What to Test, the sign that
+          # keeps them out of review; master's builds carry no prefix.
+          PREFIX_ZH=""; PREFIX_EN=""
+          if [ "$GITHUB_REF_NAME" = "claude/wizardly-thompson-s0lgzj" ]; then PREFIX_ZH="研發版。"; PREFIX_EN="Research build. "; fi
           set -euo pipefail
           if [ -z "$ASC_KEY_ID" ] || [ -z "$ASC_ISSUER_ID" ] || [ -z "$ASC_PRIVATE_KEY" ]; then
             echo "::warning::No App Store Connect API key; add the build to \"$GROUP\" by hand."
@@ -366,7 +384,7 @@ jobs:
           VERSION=$(node -p 'require("./ios/Release/app.json").expo.version')
           BUILD=$(node -p 'require(process.argv[1])[0].appBuildVersion' "$RUNNER_TEMP/native-build.json")
           node scripts/testflight-distribute.mjs --bundle com.rio.word7000 --version "$VERSION" --build "$BUILD" \
-            --group "$GROUP" --notes-zh "研發版。$NOTES_ZH" --notes-en "Research build. $NOTES_EN" --wait-minutes 45
+            --group "$GROUP" --notes-zh "$PREFIX_ZH$NOTES_ZH" --notes-en "$PREFIX_EN$NOTES_EN" --wait-minutes 45
 
       - name: Save the native release verification receipt
         if: always() && inputs.operation == 'native-testflight'

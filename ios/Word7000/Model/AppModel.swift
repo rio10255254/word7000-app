@@ -210,14 +210,15 @@ final class AppModel {
 
         let model = AppModel(coreWords: words, chineseWords: loadBundledWords(named: "words-zh"), progress: progress, customSets: sets,
                              settings: settings, persistence: persistence)
+        // The official banks first: a set of their words can only be restored once they are there.
+        if let cached = persistence.load(RemoteContent.self, from: "remote-content.json"), !AppRuntime.uiTesting {
+            model.applyRemoteContent(cached)
+        }
         if snapshot?.sessionDay == model.today, let saved = snapshot?.studySession {
             model.restoreStudySession(saved)
             model.wordRoutine = snapshot?.wordRoutine
             model.studySessionDay = model.today
             model.studySessionIsDaySet = snapshot?.wordRoutine != nil
-        }
-        if let cached = persistence.load(RemoteContent.self, from: "remote-content.json"), !AppRuntime.uiTesting {
-            model.applyRemoteContent(cached)
         }
         #if DEBUG
         if arguments.contains("-uiTestingOfficialBank") { model.applyRemoteContent(SampleData.officialContent) }
@@ -638,9 +639,16 @@ final class AppModel {
     // MARK: Study
 
     /// The current session, or a fresh one when there is none or the bank or
-    /// filters changed since it was built.
-    func ensureStudySession() {
+    /// filters changed since it was built. `daySet`: today's set is asked for
+    /// (Today's button), so it comes back from beside a round of chosen words.
+    func ensureStudySession(daySet: Bool = false) {
         refreshToday()
+        let current = studySession.flatMap { session in
+            studySessionDay == today && session.sourceKey == studySourceKey ? session : nil
+        }
+        // A round of chosen words (the missed words) just begun plays first:
+        // the study screen opening must not swap today's set back over it.
+        if !daySet, let current, !studySessionIsDaySet, !current.isComplete { return }
         // Back from a detour: today's set carries on where it was left.
         if let parked = parkedDaySet {
             parkedDaySet = nil
@@ -654,8 +662,7 @@ final class AppModel {
                 return
             }
         }
-        if let session = studySession, studySessionDay == today, session.sourceKey == studySourceKey,
-           !session.isComplete || routinePending { return }
+        if let session = current, !daySet || studySessionIsDaySet, !session.isComplete || routinePending { return }
         startStudySession()
     }
 
@@ -695,7 +702,8 @@ final class AppModel {
         studySession = StudySession(cardIds: queue.map(\.id), sourceKey: studySourceKey)
         studySessionDay = today
         studySessionIsDaySet = onlyIds == nil
-        wordRoutine = onlyIds == nil && studyMode == .english && AppRuntime.wordRoutine
+        // Both languages: a learner of Chinese is checked in Chinese.
+        wordRoutine = onlyIds == nil && AppRuntime.wordRoutine
             ? WordRoutine(cardIds: queue.map(\.id),
                           stagesBefore: Dictionary(queue.compactMap { word -> (String, Int)? in
                               guard let saved = progress.words[word.id], saved.status != .new else { return nil }
@@ -930,6 +938,11 @@ final class AppModel {
         Usage.log("cloze_answer", "\(studyMode.rawValue).\(outcome.rawValue)")
     }
 
+    /// Whether the study range has words with an example to blank out.
+    var clozeAvailable: Bool {
+        studyMode == .english && studyCandidates.contains { Cloze.sentence(for: $0) != nil }
+    }
+
     // MARK: Words routine (WordCat Next)
 
     /// The routine of the current flip cards: same day, same source and the
@@ -1044,6 +1057,12 @@ final class AppModel {
         let pool = await Task.detached(priority: .userInitiated) { ExamPool(words, chinese: chinese) }.value
         examPoolCache = (key, pool)
         return pool
+    }
+
+    /// Whether saying the word now would count (see LearningEngine.creditUse),
+    /// so the screen says so only when it does.
+    func wordUseCounts(_ wordId: String) -> Bool {
+        LearningEngine.creditUse(progress, wordId: wordId, today: today) != progress
     }
 
     /// A word said in a sentence of the learner's own while speaking: it

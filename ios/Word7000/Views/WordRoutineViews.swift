@@ -323,14 +323,17 @@ struct RoutineSpellView: View {
         return L.t("「\(wanted)」你說你認識？寫給我看。", "You said you know \u{201C}\(wanted)\u{201D}? Spell it.")
     }
 
+    private func helpTitle(_ help: ClozeAttempt.Help) -> String {
+        guard help == .firstLetter else { return L.t("看答案", "Show answer") }
+        return model.learnsChinese ? L.t("第一個字", "First character") : L.t("第一個字母", "First letter")
+    }
+
     private func actions(_ attempt: ClozeAttempt) -> some View {
         ButtonRow {
             if !attempt.solved {
                 if let help = attempt.nextHelp {
                     Button(action: takeHelp) {
-                        Label(help == .firstLetter ? (model.learnsChinese ? L.t("第一個字", "First character") : L.t("第一個字母", "First letter"))
-                                                   : L.t("看答案", "Show answer"),
-                              systemImage: help == .firstLetter ? "lightbulb" : "eye")
+                        Label(helpTitle(help), systemImage: help == .firstLetter ? "lightbulb" : "eye")
                             .font(.title3.weight(.bold))
                             .frame(maxWidth: .infinity)
                     }

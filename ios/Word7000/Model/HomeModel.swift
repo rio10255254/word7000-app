@@ -35,6 +35,8 @@ extension AppModel {
     /// What the exam-style questions are called, after the exam the learner
     /// said they prepare for (學測 by default).
     var examStyleName: String {
+        // Learners of Chinese prepare for no exam here: a plain fill-in-the-gap.
+        if learnsChinese { return L.t("句子填空", "Fill the gap") }
         switch settings.learnerProfile?.exam {
         case "tvee": L.t("統測題型", "Exam style")
         case "cap": L.t("會考題型", "Exam style")
@@ -46,10 +48,12 @@ extension AppModel {
 
     /// Words still to do today after the current set, for a set shorter than
     /// the goal (the first one after the welcome); 0 once the goal is met, or
-    /// when the bank has fewer words than the goal and one set is all of it.
+    /// once every word the study range holds has been studied today (five
+    /// favourites cannot make a goal of twenty).
     var wordsLeftForGoal: Int {
-        guard !goalDone, bank.words.count >= progress.dailyTarget else { return 0 }
-        return progress.dailyTarget - progress.studiedToday
+        guard !goalDone else { return 0 }
+        let left = studyCandidates.lazy.filter { [today, progress] in progress.words[$0.id]?.lastStudied != today }.count
+        return min(progress.dailyTarget - progress.studiedToday, left)
     }
 
     /// The chapter of the built-in words being read (0-based), from where
@@ -72,10 +76,8 @@ extension AppModel {
         ExamRound.available(.quick, words: bank.words, state: progress, today: today, chinese: learnsChinese)
     }
 
-    /// Sunday's weekly quiz is waiting (learners of English: the questions
-    /// are English sentences).
+    /// Sunday's weekly quiz is waiting (in the language being learned).
     var weeklyQuizDue: Bool {
-        guard studyMode == .english else { return false }
         if ProcessInfo.processInfo.arguments.contains("-uiTestingWeeklyQuiz") { return true }
         guard settings.weeklyQuizDoneOn != today else { return false }
         return ExamRound.weeklyDue(words: vocabularyWords, state: progress, today: today, chinese: learnsChinese)

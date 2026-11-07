@@ -61,6 +61,33 @@ final class ExperienceTests: XCTestCase {
         XCTAssertTrue(app.buttons["study-show-answer"].waitForExistence(timeout: 5))
     }
 
+    /// A round of the missed words, opened with today's set half done,
+    /// plays the missed words (it used to be swapped back to today's set the
+    /// moment it opened); Today's button then brings today's set back.
+    func testMissedWordsRoundIsNotSwappedForTodaysSet() {
+        let app = launch(["-uiTestingRoutine"])
+        app.buttons["today-start"].tap()
+        waitForReadyCard(app)
+        XCTAssertTrue(app.descendants(matching: .any)["routine-steps"].firstMatch.exists, "today's set has its steps")
+        app.buttons["study-show-answer"].tap()
+        let known = app.buttons["study-grade-known"]
+        XCTAssertTrue(known.waitForExistence(timeout: 5))
+        known.tap()
+        app.buttons["study-close"].tap()
+
+        app.openPractice("practice-missed")
+        XCTAssertTrue(app.staticTexts["study-position"].waitForExistence(timeout: 5), "the missed words, counted on their own")
+        XCTAssertFalse(app.descendants(matching: .any)["routine-steps"].firstMatch.exists, "not today's set")
+        snapshot(app, "missed-round")
+        app.buttons["study-close"].tap()
+
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["今天", "Today"])).firstMatch.tap()
+        let start = app.buttons["today-start"]
+        XCTAssertTrue(start.waitForExistence(timeout: 5))
+        start.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["routine-steps"].firstMatch.waitForExistence(timeout: 5), "today's set comes back")
+    }
+
     func testAutoRevealShowsAnswersWithoutATap() {
         let app = launch()
         app.buttons["today-start"].tap()

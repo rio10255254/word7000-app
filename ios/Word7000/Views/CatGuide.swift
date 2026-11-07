@@ -276,7 +276,9 @@ private struct CatTipModifier: ViewModifier {
             .task {
                 guard model.tipDue(tip) else { return }
                 try? await Task.sleep(for: .milliseconds(700))
-                guard !Task.isCancelled else { return }
+                // Asked again: the screen may have taught it another way meanwhile
+                // (the first card's swipe demo marks the study tip seen).
+                guard !Task.isCancelled, model.tipDue(tip) else { return }
                 // Seen once shown: it never comes back.
                 model.noteTipSeen(tip)
                 withAnimation(reduceMotion ? nil : .easeOut(duration: 0.25)) { shown = true }

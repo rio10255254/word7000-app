@@ -25,8 +25,6 @@ struct PaywallView: View {
     /// Bumped when a purchase or restore fails, so the button gives a small shake.
     @State private var failures = 0
     /// The cat's goodbye: asked once a day, when the paywall is closed unbought.
-    @State private var leaving = false
-    @AppStorage("paywallGoodbyeDay") private var goodbyeDay = ""
 
     private var selected: PlusPlan? { plus.plans.first { $0.id == selectedID } ?? plus.plans.first }
 
@@ -93,6 +91,15 @@ struct PaywallView: View {
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 8)
+                if !plus.subscribed {
+                    // The cat's word for anyone about to close, right where they look last.
+                    HStack(alignment: .center, spacing: 8) {
+                        Mascot(mood: .smug, size: 40)
+                        MascotBubble(text: P.goodbyeText(mastered: model.stats.mastered, trialDays: selected?.freeTrialDays), pointing: .leading)
+                    }
+                    .accessibilityElement(children: .combine)
+                    .accessibilityIdentifier("paywall-cat-goodbye")
+                }
             }
             .padding(.horizontal, 20)
             .padding(.top, 4)
@@ -129,21 +136,12 @@ struct PaywallView: View {
             .padding(.vertical, 4)
             .background { PaperBarBackground(edge: .top) }
         }
-        .alert(P.goodbyeTitle, isPresented: $leaving) {
-            Button(P.goodbyeStay, role: .cancel) {}
-            Button(P.goodbyeLeave, role: .destructive) { dismiss() }
-        } message: {
-            Text(P.goodbyeText(mastered: model.stats.mastered, trialDays: selected?.freeTrialDays))
-        }
     }
 
-    /// Closing without buying: once a day the cat has a word first.
+    /// Closing never asks twice: the cat has its word on the page instead
+    /// (a dialog in the way of leaving is the kind of pressure App Review rejects).
     private func close() {
-        let today = DayMath.today()
-        guard !plus.subscribed, goodbyeDay != today, !AppRuntime.uiTesting else { dismiss(); return }
-        goodbyeDay = today
-        Usage.log("paywall_goodbye", reason.usageSource)
-        leaving = true
+        dismiss()
     }
 
     private var hero: some View {
@@ -402,9 +400,12 @@ enum PlusStyle {
 /// A soft, slowly drifting wash of the Plus colors behind the header.
 struct PlusGlow: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// It drifts for a little while, then rests: a blur this size redrawn
+    /// for as long as the page is open costs battery for nothing.
+    @State private var resting = false
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1 / 30, paused: reduceMotion)) { context in
+        TimelineView(.animation(minimumInterval: 1 / 30, paused: reduceMotion || resting)) { context in
             let t = reduceMotion ? 0 : context.date.timeIntervalSinceReferenceDate
             ZStack {
                 Circle().fill(Palette.accent.opacity(0.28))
@@ -417,6 +418,10 @@ struct PlusGlow: View {
         }
         .mask(LinearGradient(colors: [.black, .clear], startPoint: .top, endPoint: .bottom))
         .accessibilityHidden(true)
+        .task {
+            try? await Task.sleep(for: .seconds(12))
+            resting = true
+        }
     }
 }
 
@@ -534,7 +539,7 @@ struct TrialTimeline: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             step(icon: "lock.open.fill", tint: Palette.known, title: P.timelineToday, detail: P.timelineTodayDetail, last: false)
-            step(icon: "bell.fill", tint: Palette.review, title: P.timelineBefore(days), detail: P.timelineBeforeDetail, last: false)
+            step(icon: "calendar.badge.clock", tint: Palette.review, title: P.timelineBefore(days), detail: P.timelineBeforeDetail, last: false)
             step(icon: "creditcard.fill", tint: Palette.accent, title: P.timelineCharge(days), detail: P.timelineChargeDetail(price, yearly: yearly), last: true)
         }
         .padding(16)

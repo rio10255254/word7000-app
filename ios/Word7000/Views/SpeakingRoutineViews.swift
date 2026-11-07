@@ -571,9 +571,13 @@ struct UseTodaysWordView: View {
                         .font(.subheadline)
                         .foregroundStyle(Palette.known)
                 }
-                if verdict.counts {
-                    // Saying it is the strongest recall: it counts as a review.
-                    Label(L.t("說得出來才是真的會，這次算你複習一次。", "Saying it is knowing it: that counts as a review."),
+                if verdict.counts, let word {
+                    // Saying it is the strongest recall: it counts as a review
+                    // when one is due (or the word was shaky); a word just
+                    // learned keeps its wait, and the line says that instead.
+                    Label(model.wordUseCounts(word.id)
+                          ? L.t("說得出來才是真的會，這次算你複習一次。", "Saying it is knowing it: that counts as a review.")
+                          : L.t("說得出來，這個字就更牢了。", "Said it: that word is sticking."),
                           systemImage: "arrow.up.circle.fill")
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(Palette.known)

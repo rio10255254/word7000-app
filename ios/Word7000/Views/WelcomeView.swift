@@ -21,6 +21,8 @@ struct WelcomeView: View {
     @State private var voicePlanned = false
     /// Whether the welcome asks about the daily reminder (and notifications).
     @State private var notifyPlanned = true
+    @State private var notifyAnswered = false
+    @State private var lastAnswerAt = Date.distantPast
     @State private var remindAt = Calendar.current.date(bySettingHour: 20, minute: 0, second: 0, of: Date()) ?? Date()
     /// How the welcome ends, kept while the voice scene is shown.
     @State private var ending: (known: [String], learning: [String], practice: Bool)?
@@ -83,7 +85,10 @@ struct WelcomeView: View {
     private var voiceLanguage: String { mode == .english ? "en-US" : "zh-TW" }
 
     /// Scenes that cannot be gone back from: a test under way, the result.
-    private var lockedSteps: Set<Step> { [.hello, .test, .spell, .thinking, .result, .voice] }
+    private var lockedSteps: Set<Step> {
+        // A retest opens on its intro: nothing before it to go back to.
+        retest ? [.testIntro, .test, .spell, .thinking, .result] : [.hello, .test, .spell, .thinking, .result, .voice]
+    }
 
     private var position: Int { flow.firstIndex(of: step) ?? 0 }
 
@@ -292,6 +297,8 @@ struct WelcomeView: View {
     }
 
     private func skipTest() {
+        // Skipping a retest keeps the plan as it was rather than a start at chapter 1.
+        if retest { dismiss(); return }
         test = PlacementTest()
         go(.thinking)
     }
@@ -589,6 +596,8 @@ struct WelcomeView: View {
                 .prominentAction()
                 .accessibilityIdentifier("welcome-notify-allow")
                 Button(text("先不要", "Not now")) {
+                    guard !notifyAnswered else { return }
+                    notifyAnswered = true
                     model.settings.reminderAskDeclinedOn = model.today
                     advance()
                 }
@@ -600,6 +609,9 @@ struct WelcomeView: View {
     }
 
     private func allowReminders() {
+        // Once: a second tap while the system asks must not skip the next scene.
+        guard step == .notify, !notifyAnswered else { return }
+        notifyAnswered = true
         let parts = Calendar.current.dateComponents([.hour, .minute], from: remindAt)
         let minute = (parts.hour ?? 20) * 60 + (parts.minute ?? 0)
         model.settings.reminderMinute = minute
@@ -731,7 +743,10 @@ struct WelcomeView: View {
 
     /// An answer (nil: don't know): shown for a moment, then the next word.
     private func answer(_ index: Int?) {
-        guard let question, picked == nil else { return }
+        // "Don't know" leaves nothing picked: a quick second tap must not
+        // answer the next question too.
+        guard let question, picked == nil, Date().timeIntervalSince(lastAnswerAt) > 0.4 else { return }
+        lastAnswerAt = Date()
         let knew = index == question.answerIndex
         test.record(wordId: question.word.id, level: question.level, knew: knew)
         guard let index else { advanceTest(); return }
@@ -1072,7 +1087,8 @@ struct WelcomeView: View {
     private func complete(practice: Bool) {
         var profile = profile
         // Only a test actually taken sets where new words start.
-        profile.startChapter = test.answers.isEmpty ? nil : plan.startChapter
+        // (A retest with no answers keeps the start it had.)
+        profile.startChapter = test.answers.isEmpty ? (retest ? profile.startChapter : nil) : plan.startChapter
         profile.startMode = mode.rawValue
         profile.exam = exam?.rawValue
         model.settings.learnerProfile = profile

@@ -195,7 +195,11 @@ extension LearningEngine {
             next.words[wordId] = progress
             return next
         case .missed:
-            return markReview(state, wordId: wordId, today: today, changedAt: changedAt)
+            var next = markReview(state, wordId: wordId, today: today, changedAt: changedAt)
+            // A word met for the first time today was never known: being
+            // caught is learning it, not forgetting it.
+            if wasNew { next.words[wordId]?.lapses = state.words[wordId]?.lapses }
+            return next
         }
     }
 }

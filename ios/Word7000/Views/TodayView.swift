@@ -571,13 +571,13 @@ struct TodayView: View {
     /// The button: the next stop, or another set once all are done.
     private func goNext() {
         guard let node = currentNode else {
-            model.ensureStudySession()
+            model.ensureStudySession(daySet: true)
             start(.study)
             return
         }
         switch node {
         case .cards, .spell, .quiz:
-            model.ensureStudySession()
+            model.ensureStudySession(daySet: true)
             start(.study)
         case .speaking: startSpeakingPath()
         case .weekly: start(.weeklyExam)
@@ -597,11 +597,11 @@ struct TodayView: View {
     private func open(_ node: TodayNode) {
         switch node {
         case .cards:
-            model.ensureStudySession()
+            model.ensureStudySession(daySet: true)
             start(.study)
-        case .spell: start(model.studyMode == .english ? .cloze : .spelling)
+        case .spell: start(model.studyMode == .english && model.clozeAvailable ? .cloze : .spelling)
         case .quiz:
-            if model.studyMode == .english { start(.quickExam) } else { quizSetupOpen = true }
+            start(.quickExam)
         case .speaking: startSpeakingPath()
         case .weekly: start(.weeklyExam)
         case .mockExam: start(.exam)

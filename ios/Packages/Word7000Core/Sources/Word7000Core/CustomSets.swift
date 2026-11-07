@@ -1,7 +1,7 @@
 import Foundation
 
 /// Editing and merging the learner's own word sets, ported from
-/// `src/lib/customSets.ts`. Every change stamps `updatedAt` so two devices can
+/// the web app's customSets.ts. Every change stamps `updatedAt` so two devices can
 /// merge by "newest wins".
 extension CustomSetState {
     public func creatingSet(named name: String, now: String = DayMath.timestamp()) -> (state: CustomSetState, id: String) {

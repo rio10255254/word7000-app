@@ -4,7 +4,7 @@ public enum StudyGrade: String, Codable, Sendable {
     case known, review
 }
 
-/// One run through a stack of cards, ported from `src/lib/studySession.ts`.
+/// One run through a stack of cards.
 public struct StudySession: Codable, Equatable, Sendable {
     /// A missed card comes back once, a few cards later, while the answer is
     /// still fresh enough to be worth a second look but not so soon that it

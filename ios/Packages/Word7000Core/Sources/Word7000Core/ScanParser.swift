@@ -38,7 +38,7 @@ public struct ScannedWordCandidate: Equatable, Identifiable, Sendable {
 
 /// Turns text recognised on a photo of a vocabulary sheet into word / meaning
 /// pairs. The meaning is the one printed on the paper; nothing is translated.
-/// Shares the original parser rules with `src/lib/scanParser.ts`.
+/// The parser rules first written for the web app.
 public enum ScanParser {
     struct Pair: Equatable {
         var meaningZh: String

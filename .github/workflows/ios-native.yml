@@ -1,6 +1,5 @@
 # Builds and checks the native SwiftUI app (ios/) on a Mac:
-#   1. the learning engine's tests, including the golden results shared with
-#      the React Native app (parity.json),
+#   1. the learning engine's tests,
 #   2. a simulator build plus a UI walk-through that screenshots every main
 #      screen in light and dark mode on iOS 18, 26, and 27.
 # Screenshots are uploaded as an artifact and pushed to the
@@ -20,10 +19,6 @@ on:
     paths:
       - 'ios/**'
       - 'src/data/words.ts'
-      - 'src/lib/progress.ts'
-      - 'src/lib/studySession.ts'
-      - 'src/lib/scanParser.ts'
-      - 'src/nativeParity.test.ts'
       - 'scripts/export-native-words.mjs'
       - 'scripts/verify-native-release.py'
       - 'scripts/test_verify_native_release.py'

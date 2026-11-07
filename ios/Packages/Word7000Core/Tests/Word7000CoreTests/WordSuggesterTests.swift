@@ -27,7 +27,7 @@ final class WordSuggesterTests: XCTestCase {
     }
 
     func testPreservesCompleteWordsMissingFromTheBuiltInList() {
-        let dictionary = WordSuggester(words: ParityTests.words.map(\.word))
+        let dictionary = WordSuggester(words: BundledWords.words.map(\.word))
         for word in ["objectively", "subjectively", "carefully", "declined", "easily"] {
             XCTAssertNil(dictionary.correction(for: word), word)
         }

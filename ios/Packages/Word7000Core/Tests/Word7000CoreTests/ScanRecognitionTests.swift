@@ -63,7 +63,7 @@ final class ScanRecognitionTests: XCTestCase {
         let merged = ScanGrounding.merging(primary: primary, supplemental: primary)
         XCTAssertEqual(merged.map(\.word), ["objective", "objectively", "run", "running"])
         XCTAssertFalse(merged.contains(where: \.needsReview))
-        let entries = WordBanks.buildScannedWords(merged.map { ReviewedScanWord(meaningZh: $0.meaningZh, partOfSpeech: $0.partOfSpeech, word: $0.word) }, coreWords: ParityTests.words, requireMatchingExample: true)
+        let entries = WordBanks.buildScannedWords(merged.map { ReviewedScanWord(meaningZh: $0.meaningZh, partOfSpeech: $0.partOfSpeech, word: $0.word) }, coreWords: BundledWords.words, requireMatchingExample: true)
         XCTAssertEqual(entries.map(\.word), merged.map(\.word))
     }
 }

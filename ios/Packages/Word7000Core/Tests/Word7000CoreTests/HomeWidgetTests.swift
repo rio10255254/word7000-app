@@ -2,7 +2,7 @@ import XCTest
 @testable import Word7000Core
 
 final class HomeWidgetTests: XCTestCase {
-    let words = Array(ParityTests.words.prefix(50))
+    let words = Array(BundledWords.words.prefix(50))
 
     func testSnapshotCarriesTodayAndTurnsOverAtMidnight() {
         let progress = ProgressState(dailyTarget: 20, streak: 3, studiedToday: 8, dailyProgressDate: "2026-10-20", lastStudyDate: "2026-10-20")

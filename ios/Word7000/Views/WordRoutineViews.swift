@@ -88,7 +88,7 @@ struct RoutineStepStrip: View {
     private var label: String {
         switch routine.step {
         case .flip: return flipped.map { L.t("翻卡 \($0.done)/\($0.total)", "Cards \($0.done)/\($0.total)") } ?? L.t("翻卡", "Cards")
-        case .spell: return L.t("拼字 \(routine.spellResults.count)/\(routine.spellIds.count)", "Spelling \(routine.spellResults.count)/\(routine.spellIds.count)")
+        case .spell: return L.t("拼字 \(routine.spellResults.count)/\(routine.spellIds.count)", "Writing \(routine.spellResults.count)/\(routine.spellIds.count)")
         case .exam: return L.t("考考看 \(routine.examResults.count)/\(routine.examIds.count)", "Quiz \(routine.examResults.count)/\(routine.examIds.count)")
         case .done: return L.t("完成", "Done")
         }

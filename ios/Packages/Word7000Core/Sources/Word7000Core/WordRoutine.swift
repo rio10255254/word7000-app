@@ -36,6 +36,11 @@ public struct WordRoutine: Codable, Equatable, Sendable {
     /// How each spelling check went, and whether each exam question was right.
     public private(set) var spellResults: [String: ClozeRound.Outcome] = [:]
     public private(set) var examResults: [String: Bool] = [:]
+    /// Words marked known that could be checked too, in order, beyond the
+    /// day's number: one takes the place of a check that cannot be asked
+    /// after all. Optional so routines saved before them still load.
+    public private(set) var spellReserve: [String]?
+    public private(set) var examReserve: [String]?
 
     public init(cardIds: [String], stagesBefore: [String: Int], sourceKey: String, day: String) {
         var seen = Set<String>()
@@ -62,10 +67,13 @@ public struct WordRoutine: Codable, Equatable, Sendable {
         let young = knownIds.filter { (stagesBefore[$0] ?? -1) < Self.examStage }
         let old = knownIds.filter { (stagesBefore[$0] ?? -1) >= Self.examStage }
         // New words first: they are the ones the flip card alone vouches for.
-        spellIds = young.filter(canSpell)
+        let spellable = young.filter(canSpell)
             .sorted { (stagesBefore[$0] ?? -1, order[$0] ?? 0) < (stagesBefore[$1] ?? -1, order[$1] ?? 0) }
-            .prefix(max(0, maxSpell)).map { $0 }
-        examIds = old.filter(canExam).sorted { (order[$0] ?? 0) < (order[$1] ?? 0) }.prefix(max(0, maxExam)).map { $0 }
+        let examinable = old.filter(canExam).sorted { (order[$0] ?? 0) < (order[$1] ?? 0) }
+        spellIds = Array(spellable.prefix(max(0, maxSpell)))
+        spellReserve = Array(spellable.dropFirst(max(0, maxSpell)))
+        examIds = Array(examinable.prefix(max(0, maxExam)))
+        examReserve = Array(examinable.dropFirst(max(0, maxExam)))
         step = !spellIds.isEmpty ? .spell : !examIds.isEmpty ? .exam : .done
     }
 
@@ -88,6 +96,31 @@ public struct WordRoutine: Codable, Equatable, Sendable {
     public mutating func finishExam() {
         guard step == .exam else { return }
         step = .done
+    }
+
+    /// A check that cannot be asked after all (its sentence changed, or too
+    /// few words could stand in for it): the next word in reserve takes its
+    /// place, so it is neither waved through nor counted as checked. With
+    /// none left, the step is simply one shorter.
+    public mutating func replaceUnaskable(_ wordId: String) {
+        switch step {
+        case .spell:
+            guard let index = spellIds.firstIndex(of: wordId), spellResults[wordId] == nil else { return }
+            spellIds.remove(at: index)
+            if var reserve = spellReserve, !reserve.isEmpty {
+                spellIds.insert(reserve.removeFirst(), at: index)
+                spellReserve = reserve
+            }
+        case .exam:
+            guard let index = examIds.firstIndex(of: wordId), examResults[wordId] == nil else { return }
+            examIds.remove(at: index)
+            if var reserve = examReserve, !reserve.isEmpty {
+                examIds.insert(reserve.removeFirst(), at: index)
+                examReserve = reserve
+            }
+        case .flip, .done:
+            return
+        }
     }
 
     /// Leaves the rest of the checks for another day.
@@ -176,8 +209,44 @@ public struct ExamQuestion: Equatable, Sendable {
     public let sentence: Cloze.Sentence
     public let options: [String]
     public let answerIndex: Int
+    /// The options are forms of one word family (decide, decision,
+    /// decisive): the sentence's grammar decides, as in TOEIC part 5.
+    public var wordForm = false
 
     public var answer: String { options[answerIndex] }
+}
+
+/// WordCat Next: the exam the learner prepares for, and so how its
+/// vocabulary questions are built. The sentence is always the word's own
+/// example with a blank; what the wrong options are differs.
+public enum ExamStyle: String, Equatable, Sendable {
+    /// 學測: four words that look alike (adapt, adopt, adjust), so spelling
+    /// alone cannot decide; the meaning has to.
+    case gsat
+    /// 統測: the same shape as 學測's vocabulary section.
+    case tvee
+    /// 會考: words of the same kind and about the same level that do not
+    /// look alike; the question is whether the meaning is understood.
+    case cap
+    /// 英檢・多益: forms of the same word family where the list has them
+    /// (decide, decision, decisive), else words of the same level.
+    case proficiency
+    /// No exam: a plain fill-in-the-gap, in 學測's shape.
+    case open
+
+    /// From the profile's stored exam (`LearnerProfile.exam`).
+    public init(exam: String?) {
+        switch exam {
+        case "tvee": self = .tvee
+        case "cap": self = .cap
+        case "proficiency": self = .proficiency
+        case "none": self = .open
+        default: self = .gsat
+        }
+    }
+
+    /// Whether wrong options are chosen for looking like the answer.
+    var lookAlikes: Bool { self == .gsat || self == .tvee || self == .open }
 }
 
 /// The word list prepared once for picking exam options: each single word's
@@ -195,20 +264,25 @@ public struct ExamPool: Sendable {
     }
 
     let items: [String: [Item]]
+    /// Built from a Chinese bank for learners of Chinese: the options are the
+    /// Chinese words and their senses the English glosses.
+    public let chinese: Bool
 
-    public init(_ words: [WordEntry]) {
+    public init(_ words: [WordEntry], chinese: Bool = false) {
         var items: [String: [Item]] = [:]
         var seen = Set<String>()
         for word in words {
-            let text = Spelling.normalized(word.word)
-            guard text.count >= 2, text.allSatisfy(\.isLetter), seen.insert(text).inserted else { continue }
+            let text = chinese ? ExamQuestions.chineseForm(word) : Spelling.normalized(word.word)
+            guard text.count >= (chinese ? 1 : 2), text.allSatisfy(\.isLetter), seen.insert(text).inserted else { continue }
             let pos = QuizBuilder.primaryPartOfSpeech(word.partOfSpeech)
             items[pos, default: []].append(Item(text: text, letters: Array(text),
-                                                senses: ExamQuestions.trimmedSenses(ExamQuestions.senses(word)),
+                                                senses: chinese ? ExamQuestions.glosses(word)
+                                                    : ExamQuestions.trimmedSenses(ExamQuestions.senses(word)),
                                                 level: LearningEngine.coreLevel(word.group),
                                                 hash: SeededRandom.hash(text)))
         }
         self.items = items
+        self.chinese = chinese
     }
 }
 
@@ -222,21 +296,63 @@ public enum ExamQuestions {
         make(for: word, pool: ExamPool(pool), seed: seed)
     }
 
-    public static func make(for word: WordEntry, pool: ExamPool, seed: String) -> ExamQuestion? {
+    public static func make(for word: WordEntry, pool: ExamPool, seed: String, style: ExamStyle = .gsat) -> ExamQuestion? {
+        if pool.chinese { return makeChinese(for: word, pool: pool, seed: seed) }
         guard let sentence = Cloze.sentence(for: word) else { return nil }
         let answer = Spelling.normalized(word.word)
         guard answer.count >= 2, answer.allSatisfy(\.isLetter) else { return nil }
         let pos = QuizBuilder.primaryPartOfSpeech(word.partOfSpeech)
         let senses = trimmedSenses(Self.senses(word) + (Cloze.cue(for: word).map { [$0.cue] } ?? []))
-        let contrast = WordNotes.note(for: answer)?.contrast
         let level = LearningEngine.coreLevel(word.group)
+        let seedHash = SeededRandom.hash(seed)
+
+        var wrong: [String]
+        var wordForm = false
+        switch style {
+        case .gsat, .tvee, .open:
+            guard let picked = lookAlikes(answer: answer, pos: pos, senses: senses, level: level, pool: pool, seed: seed) else { return nil }
+            wrong = picked
+        case .cap:
+            guard let picked = sameLevel(answer: answer, pos: pos, senses: senses, level: level, pool: pool,
+                                         seed: seed, seedHash: seedHash, count: optionCount - 1) else { return nil }
+            wrong = picked
+        case .proficiency:
+            let family = Array(SeededRandom.shuffle(familyForms(of: answer, pos: pos, pool: pool), seed: "\(seed):family").prefix(optionCount - 1))
+            if family.count >= 2 {
+                // Two forms or more: a word-form question, the rest filled
+                // with words of the same kind and level.
+                wordForm = true
+                let rest = optionCount - 1 - family.count
+                let fill = rest == 0 ? [] : sameLevel(answer: answer, pos: pos, senses: senses, level: level, pool: pool,
+                                                      seed: seed, seedHash: seedHash, count: rest, avoiding: Set(family)) ?? []
+                guard fill.count == rest else { return nil }
+                wrong = family + fill
+            } else {
+                guard let picked = sameLevel(answer: answer, pos: pos, senses: senses, level: level, pool: pool,
+                                             seed: seed, seedHash: seedHash, count: optionCount - 1) else { return nil }
+                wrong = picked
+            }
+        }
+        guard wrong.count == optionCount - 1 else { return nil }
+
+        // Options take the sentence's capitalisation (a blank that starts it).
+        let capitalised = sentence.answer.first?.isUppercase ?? false
+        let shape: (String) -> String = { capitalised ? $0.prefix(1).uppercased() + $0.dropFirst() : $0 }
+        let options = SeededRandom.shuffle([sentence.answer] + wrong.map(shape), seed: "\(seed):order")
+        guard let answerIndex = options.firstIndex(of: sentence.answer) else { return nil }
+        var question = ExamQuestion(wordId: word.id, sentence: sentence, options: options, answerIndex: answerIndex)
+        question.wordForm = wordForm
+        return question
+    }
+
+    /// 學測's shape: rank every word of the same part of speech by how much
+    /// it looks like the answer (ties in a seeded order), then walk down the
+    /// list and keep the first few that are not another form of the answer
+    /// and do not share a sense with it. Only those few need the slower checks.
+    static func lookAlikes(answer: String, pos: String, senses: [String], level: Int?, pool: ExamPool, seed: String) -> [String]? {
+        let contrast = WordNotes.note(for: answer)?.contrast
         let letters = Array(answer)
         let stem = answer.dropLast()
-
-        // Rank every word of the same part of speech by how much it looks
-        // like the answer (ties in a seeded order), then walk down the list
-        // and keep the first few that are not another form of the answer and
-        // do not share a sense with it. Only those few need the slower checks.
         let seedHash = SeededRandom.hash(seed)
         var scored: [(score: Int, order: UInt32, item: ExamPool.Item)] = []
         for item in pool.items[pos] ?? [] where item.text != answer {
@@ -257,19 +373,131 @@ public enum ExamQuestions {
         }
         // The look-alikes first; a seeded shuffle among the closest keeps the
         // same question from always offering the same three.
-        let ranked = candidates
-        guard ranked.count >= optionCount - 1 else { return nil }
-        let pinned = ranked.prefix { $0.text == contrast }.map(\.text)
-        let close = ranked.filter { $0.text != contrast }.prefix(6).map(\.text)
+        guard candidates.count >= optionCount - 1 else { return nil }
+        let pinned = candidates.prefix { $0.text == contrast }.map(\.text)
+        let close = candidates.filter { $0.text != contrast }.prefix(6).map(\.text)
         let wrong = Array((pinned + SeededRandom.shuffle(close, seed: "\(seed):pick")).prefix(optionCount - 1))
-        guard wrong.count == optionCount - 1 else { return nil }
+        return wrong.count == optionCount - 1 ? wrong : nil
+    }
 
-        // Options take the sentence's capitalisation (a blank that starts it).
-        let capitalised = sentence.answer.first?.isUppercase ?? false
-        let shape: (String) -> String = { capitalised ? $0.prefix(1).uppercased() + $0.dropFirst() : $0 }
-        let options = SeededRandom.shuffle([sentence.answer] + wrong.map(shape), seed: "\(seed):order")
-        guard let answerIndex = options.firstIndex(of: sentence.answer) else { return nil }
+    /// 會考's shape, and the filler for a word-form question: words of the
+    /// same part of speech, nearest the answer's level, that do not look
+    /// like it (no spelling trap) and do not mean the same.
+    static func sameLevel(answer: String, pos: String, senses: [String], level: Int?, pool: ExamPool,
+                          seed: String, seedHash: UInt32, count: Int, avoiding: Set<String> = []) -> [String]? {
+        let letters = Array(answer)
+        var scored: [(distance: Int, order: UInt32, text: String)] = []
+        for item in pool.items[pos] ?? [] where item.text != answer && !avoiding.contains(item.text) {
+            // Nothing that looks like the answer, at the start or the end
+            // (precision for decision): this style asks the meaning only.
+            guard similarity(letters, item.letters) < 4, item.letters.suffix(4) != letters.suffix(4),
+                  !Cloze.isOtherForm(item.text, of: answer), !overlaps(senses, item.senses) else { continue }
+            let distance = level.flatMap { mine in item.level.map { abs($0 - mine) } } ?? 3
+            scored.append((distance, SeededRandom.scramble(item.hash ^ seedHash), item.text))
+        }
+        scored.sort { $0.distance != $1.distance ? $0.distance < $1.distance : $0.order < $1.order }
+        // A seeded pick among the nearest dozen, so a word does not always
+        // come with the same three.
+        let near = scored.prefix(12).map(\.text)
+        let wrong = Array(SeededRandom.shuffle(near, seed: "\(seed):level").prefix(count))
+        return wrong.count == count ? wrong : nil
+    }
+
+    /// Other words of the answer's family in the list: another part of
+    /// speech (the question is which form the sentence needs) with the same
+    /// root once a derivational ending is taken off (consider, consideration;
+    /// disapprove, disapproval; author, authorize). Words that only start
+    /// alike are no family: think and thin, within and without, consider and
+    /// consistent. Plain inflections (decided) are another form, not another word.
+    static func familyForms(of answer: String, pos: String, pool: ExamPool) -> [String] {
+        var forms: [String] = []
+        for (otherPos, items) in pool.items where otherPos != pos {
+            for item in items where item.text != answer {
+                guard !Cloze.isOtherForm(item.text, of: answer), !forms.contains(item.text) else { continue }
+                if sameFamily(answer, item.text) { forms.append(item.text) }
+            }
+        }
+        return forms.sorted()
+    }
+
+    /// Derivational endings, longest first so -ation is tried before -tion.
+    static let derivations = ["ational", "ization", "isation", "ically", "ation", "ition", "ement", "iness", "ously",
+                              "ness", "ment", "tion", "sion", "ance", "ence", "ancy", "ency", "able", "ible", "ical",
+                              "less", "ship", "ist", "ism", "ity", "ive", "ful", "ous", "ize", "ise", "ary", "ory",
+                              "ant", "ent", "al", "ic", "er", "or", "ly"]
+
+    /// A word's root: one derivational ending off (keeping at least four
+    /// letters), then a final silent e (approve, approval), a y turned i
+    /// (happy, happiness) or a doubled final letter left as one.
+    static func root(_ word: String) -> (text: String, derived: Bool) {
+        var text = word
+        var derived = false
+        for ending in derivations where text.hasSuffix(ending) && text.count - ending.count >= 4 {
+            text = String(text.dropLast(ending.count))
+            derived = true
+            break
+        }
+        if text.hasSuffix("e"), text.count > 4 { text.removeLast() }
+        if text.hasSuffix("i"), text.count > 4 { text = String(text.dropLast()) + "y" }
+        return (text, derived)
+    }
+
+    /// One word is the other with a derivational ending (considerable from
+    /// consider, disapproval from disapprove, happiness from happy), or both
+    /// are the same root with an ending each (universal, university). Only
+    /// an exact root counts: near misses brought in think for thin and
+    /// consistent for consider, and a wrong family is worse than a missed one.
+    static func sameFamily(_ a: String, _ b: String) -> Bool {
+        let ra = root(a), rb = root(b)
+        let plainA = withoutSilentE(a), plainB = withoutSilentE(b)
+        if ra.derived, ra.text.count >= 4, ra.text == plainB { return true }
+        if rb.derived, rb.text.count >= 4, rb.text == plainA { return true }
+        return ra.derived && rb.derived && ra.text.count >= 4 && ra.text == rb.text
+    }
+
+    static func withoutSilentE(_ word: String) -> String {
+        word.hasSuffix("e") && word.count > 4 ? String(word.dropLast()) : word
+    }
+
+    /// For learners of Chinese: the Chinese sentence with the word blanked,
+    /// and three Chinese words of the same part of speech that share a
+    /// character or a length with it but mean something else.
+    static func makeChinese(for word: WordEntry, pool: ExamPool, seed: String) -> ExamQuestion? {
+        guard let sentence = Cloze.chineseSentence(for: word) else { return nil }
+        let answer = sentence.answer
+        let pos = QuizBuilder.primaryPartOfSpeech(word.partOfSpeech)
+        let senses = glosses(word)
+        let level = LearningEngine.coreLevel(word.group)
+        let letters = Array(answer)
+        let seedHash = SeededRandom.hash(seed)
+        var scored: [(score: Int, order: UInt32, text: String)] = []
+        for item in pool.items[pos] ?? [] where item.text != answer {
+            // Not a word inside the answer or around it (難 in 困難): both could fit.
+            guard !item.text.contains(answer), !answer.contains(item.text), !overlaps(senses, item.senses) else { continue }
+            var score = 0
+            if item.letters.count == letters.count { score += 3 }
+            if item.letters.contains(where: letters.contains) { score += 4 }
+            if let level, let other = item.level, abs(level - other) <= 2 { score += 2 }
+            scored.append((score, SeededRandom.scramble(item.hash ^ seedHash), item.text))
+        }
+        scored.sort { $0.score != $1.score ? $0.score > $1.score : $0.order < $1.order }
+        let wrong = Array(SeededRandom.shuffle(scored.prefix(6).map(\.text), seed: "\(seed):pick").prefix(optionCount - 1))
+        guard wrong.count == optionCount - 1 else { return nil }
+        let options = SeededRandom.shuffle([answer] + wrong, seed: "\(seed):order")
+        guard let answerIndex = options.firstIndex(of: answer) else { return nil }
         return ExamQuestion(wordId: word.id, sentence: sentence, options: options, answerIndex: answerIndex)
+    }
+
+    /// A Chinese entry's word to learn: the first of its Chinese forms.
+    public static func chineseForm(_ word: WordEntry) -> String {
+        ChineseDisplay.meaningParts(word.meaningZh).first ?? word.meaningZh
+    }
+
+    /// A Chinese entry's English glosses ("difficult; hard"), lowercased.
+    static func glosses(_ word: WordEntry) -> [String] {
+        word.word.split(whereSeparator: { ";,/".contains($0) })
+            .map { $0.trimmingCharacters(in: .whitespaces).lowercased() }
+            .filter { !$0.isEmpty }
     }
 
     static func senses(_ word: WordEntry) -> [String] {

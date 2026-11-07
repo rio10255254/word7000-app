@@ -103,10 +103,16 @@ final class LearnerProfileTests: XCTestCase {
         let weak = PersonalPlan(test: test, profile: LearnerProfile(spelling: 0), target: 20, daysToExam: 50)
         XCTAssertGreaterThan(strong.startChapter, 1)
         XCTAssertEqual(weak.startChapter, strong.startChapter - 1)
-        // Twenty a day with reviews in them: about twelve of them new.
+        // Twenty a day with reviews in them: the new ones are counted the way
+        // sessions are built, never under two in five, and the pace to the exam
+        // follows the same count rather than a flat three in five.
         XCTAssertEqual(strong.wordsPerDay, 20)
-        XCTAssertEqual(strong.newPerDay, 12)
-        XCTAssertEqual(strong.reachChapter, PlacementTest.chaptersReached(from: strong.startChapter, wordsPerDay: 12, days: 50))
+        XCTAssertGreaterThanOrEqual(strong.newPerDay, 8)
+        XCTAssertLessThan(strong.newPerDay, 20)
+        let projected = LearningEngine.projectedNewWords(state: ProgressState(), today: "2026-01-01", dailyTarget: 20,
+                                                         days: 50, freshAvailable: 100_000)
+        XCTAssertEqual(strong.reachChapter, PlacementTest.chaptersReached(from: strong.startChapter, newWords: projected))
+        XCTAssertLessThanOrEqual(strong.reachChapter!, PlacementTest.chaptersReached(from: strong.startChapter, wordsPerDay: 12, days: 50))
         XCTAssertNil(PersonalPlan(test: test, profile: LearnerProfile(), target: 20, daysToExam: nil).reachChapter)
         XCTAssertEqual(PersonalPlan(test: PlacementTest(), profile: LearnerProfile(spelling: 0), target: 20, daysToExam: nil).startChapter, 1)
     }

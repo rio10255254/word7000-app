@@ -125,9 +125,9 @@ public struct PersonalPlan: Equatable, Sendable {
     public let startChapter: Int
     /// The daily goal: new words and reviews together.
     public let wordsPerDay: Int
-    /// New words on an ordinary day once reviews come in: the queue keeps at
-    /// least `newWordShare` of the goal for them and early on gives them all
-    /// of it, so about three in five.
+    /// New words a day over the first month, on average, by the same rules
+    /// a session is built with (`LearningEngine.projectedNewWords`): all of
+    /// the goal at first, then less as reviews come back, never under two in five.
     public let newPerDay: Int
     public let spellChecks: Int
     public let examChecks: Int
@@ -142,11 +142,15 @@ public struct PersonalPlan: Equatable, Sendable {
         if let spelling = profile.spelling, spelling < 0.34, chapter > 1 { chapter -= 1 }
         startChapter = chapter
         wordsPerDay = target
-        let fresh = max(1, (max(0, target) * 3 + 4) / 5)
-        newPerDay = fresh
+        let month = LearningEngine.projectedNewWords(state: ProgressState(), today: "2026-01-01", dailyTarget: target,
+                                                     days: 30, freshAvailable: Int.max / 2)
+        newPerDay = max(1, (month + 15) / 30)
         spellChecks = profile.spellChecks
         examChecks = profile.examChecks
         lead = profile.lead
-        reachChapter = daysToExam.map { PlacementTest.chaptersReached(from: chapter, wordsPerDay: fresh, days: $0) }
+        reachChapter = daysToExam.map { days in
+            PlacementTest.chaptersReached(from: chapter, newWords: LearningEngine.projectedNewWords(
+                state: ProgressState(), today: "2026-01-01", dailyTarget: target, days: days, freshAvailable: Int.max / 2))
+        }
     }
 }

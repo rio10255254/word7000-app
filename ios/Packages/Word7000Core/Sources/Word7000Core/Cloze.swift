@@ -31,6 +31,39 @@ public enum Cloze {
         blanked(word.example, word: word.word)
     }
 
+    /// The question in the language being learned: the English sentence for
+    /// a learner of English, the Chinese one for a learner of Chinese.
+    public static func sentence(for word: WordEntry, chinese: Bool) -> Sentence? {
+        chinese ? chineseSentence(for: word) : sentence(for: word)
+    }
+
+    /// WordCat Next, for learners of Chinese: the Chinese example with the
+    /// Chinese word taken out (an entry's `word` is the English gloss and
+    /// `meaningZh` the Chinese to learn). The longest of the word's Chinese
+    /// forms found in the sentence is the answer. Chinese has no spaces, so
+    /// there is no whole-word check; every place the word stands is blanked,
+    /// or the sentence would give it away ("中文難不＿？").
+    public static func chineseSentence(for word: WordEntry) -> Sentence? {
+        let sentence = word.exampleZh
+        let forms = ChineseDisplay.meaningParts(word.meaningZh)
+            .filter { form in !form.isEmpty && form.unicodeScalars.contains { isHan($0) } }
+            .sorted { $0.count > $1.count }
+        guard let target = forms.first(where: { sentence.contains($0) }) else { return nil }
+        var pieces: [Piece] = []
+        var rest = sentence[...]
+        while let found = rest.range(of: target) {
+            if found.lowerBound > rest.startIndex { pieces.append(.text(String(rest[rest.startIndex..<found.lowerBound]))) }
+            pieces.append(.blank)
+            rest = rest[found.upperBound...]
+        }
+        if !rest.isEmpty { pieces.append(.text(String(rest))) }
+        return Sentence(pieces: pieces, answer: target)
+    }
+
+    static func isHan(_ scalar: Unicode.Scalar) -> Bool {
+        (0x4E00...0x9FFF).contains(scalar.value) || (0x3400...0x4DBF).contains(scalar.value)
+    }
+
     static func blanked(_ sentence: String, word: String) -> Sentence? {
         let target = word.trimmingCharacters(in: .whitespacesAndNewlines)
         guard target.count >= 1, target.contains(where: \.isLetter) else { return nil }

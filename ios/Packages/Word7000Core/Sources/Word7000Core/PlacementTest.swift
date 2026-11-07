@@ -126,6 +126,11 @@ public struct PlacementTest: Equatable, Sendable {
     }
 
     /// How many chapters `wordsPerDay` new words a day covers in `days`.
+    /// The chapter reached after meeting `newWords` new words from `chapter` on.
+    public static func chaptersReached(from chapter: Int, newWords: Int) -> Int {
+        min(topLevel, chapter + max(0, newWords) / wordsPerLevel)
+    }
+
     public static func chaptersReached(from chapter: Int, wordsPerDay: Int, days: Int) -> Int {
         let words = max(0, wordsPerDay) * max(0, days)
         return min(topLevel, chapter + words / wordsPerLevel)

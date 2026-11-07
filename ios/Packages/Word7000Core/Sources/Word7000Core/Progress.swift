@@ -197,6 +197,70 @@ public enum LearningEngine {
         }
     }
 
+    /// WordCat Next: a word said in a sentence of the learner's own while
+    /// speaking. Using a word is recall at its strongest, so it counts as a
+    /// right answer where one would count: a word marked "not yet" (or
+    /// caught) moves on to tomorrow, and a word due for review climbs a box.
+    /// A word that is not due yet keeps its wait: saying it early is no
+    /// reason to put its review off. A word never studied is left alone.
+    public static func creditUse(_ state: ProgressState, wordId: String, today: String,
+                                 changedAt: String = DayMath.timestamp()) -> ProgressState {
+        let progress = state.progress(for: wordId)
+        switch progress.status {
+        case .new:
+            return state
+        case .mastered where !isDue(progress, today: today):
+            return state
+        case .mastered, .review:
+            return markQuizCorrect(state, wordId: wordId, today: today, changedAt: changedAt)
+        }
+    }
+
+    /// How many new words a learner who studies every day would meet in the
+    /// next `days`, by the same rules a session is built with: each day
+    /// holds `dailyTarget` cards, the reviews due come first, new words get
+    /// what is left but never less than `newWordShare`, and reviews that do
+    /// not fit wait for the next day. The reviews already scheduled in
+    /// `state` count from the start. A new word is assumed back the next day
+    /// and then climbs a box at each review (no lapses), so the estimate
+    /// neither assumes every word is known on sight nor that none is.
+    public static func projectedNewWords(state: ProgressState, today: String, dailyTarget: Int, days: Int,
+                                         freshAvailable: Int) -> Int {
+        let size = max(0, dailyTarget)
+        guard size > 0, days > 0, freshAvailable > 0, let start = DayMath.dayNumber(today) else { return 0 }
+        let stages = reviewIntervalDays.count
+        // Reviews by day, counted per stage.
+        var scheduled = Array(repeating: Array(repeating: 0, count: stages), count: days)
+        for progress in state.words.values where progress.status != .new {
+            guard let due = reviewDueDate(progress).flatMap(DayMath.dayNumber) else { continue }
+            let day = max(0, due - start)
+            if day < days { scheduled[day][reviewStage(progress)] += 1 }
+        }
+        var waiting = Array(repeating: 0, count: stages)
+        var fresh = freshAvailable
+        var met = 0
+        for day in 0..<days {
+            for stage in 0..<stages { waiting[stage] += scheduled[day][stage] }
+            let due = waiting.reduce(0, +)
+            let newCount = newWordSlots(size: size, due: due, fresh: fresh)
+            var room = size - newCount
+            // Lowest boxes first, as a session puts struggling words first.
+            for stage in 0..<stages where room > 0 && waiting[stage] > 0 {
+                let done = min(room, waiting[stage])
+                waiting[stage] -= done
+                room -= done
+                let next = min(maxReviewStage, max(1, stage + 1))
+                let back = day + reviewIntervalDays[next]
+                if back < days { scheduled[back][next] += done }
+            }
+            met += newCount
+            fresh -= newCount
+            let back = day + reviewIntervalDays[1]
+            if back < days { scheduled[back][1] += newCount }
+        }
+        return met
+    }
+
     public static func toggleFavorite(_ state: ProgressState, wordId: String, changedAt: String = DayMath.timestamp()) -> ProgressState {
         updateWord(state, wordId: wordId, studiedDate: nil) { progress in
             var next = progress

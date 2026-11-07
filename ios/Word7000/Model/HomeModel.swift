@@ -37,7 +37,7 @@ extension AppModel {
     var examStyleName: String {
         // Learners of Chinese prepare for no exam here: a plain fill-in-the-gap.
         if learnsChinese { return L.t("句子填空", "Fill the gap") }
-        switch settings.learnerProfile?.exam {
+        return switch settings.learnerProfile?.exam {
         case "tvee": L.t("統測題型", "Exam style")
         case "cap": L.t("會考題型", "Exam style")
         case "proficiency": L.t("檢定題型", "Test style")

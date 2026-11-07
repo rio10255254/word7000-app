@@ -259,7 +259,7 @@ struct StudySessionView: View {
         .sensoryFeedback(.impact(weight: .medium), trigger: feedback) { _, _ in model.settings.hapticsEnabled ?? true }
         .sensoryFeedback(.impact(weight: .light), trigger: armed) { _, new in new && (model.settings.hapticsEnabled ?? true) }
         .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.55), trigger: revealed) { _, new in new && (model.settings.hapticsEnabled ?? true) }
-        .catTip(.study, at: .top)
+        .catTip(.study)
     }
 
     /// How far the card has been dragged toward a verdict, 0 to 1.
@@ -760,10 +760,14 @@ private struct SummaryChip: View {
     }
 }
 
-/// A short shower of paper when the daily goal is reached. Purely decorative.
+/// A party popper's worth of paper: a burst flung up from near the top,
+/// then a shower falling from above, each piece fluttering as it turns.
+/// Purely decorative.
 struct ConfettiBurst: View {
+    private enum Shape { case strip, square, dot }
     private struct Piece {
-        var x: Double, delay: Double, speed: Double, spin: Double, drift: Double, size: CGSize, color: Color
+        var x: Double, y: Double, vx: Double, vy: Double, delay: Double
+        var spin: Double, flutter: Double, drift: Double, size: CGSize, color: Color, shape: Shape
     }
 
     static let paper: [Color] = [Palette.accent, Palette.known, Palette.review, Palette.chinese, Palette.miss]
@@ -773,20 +777,33 @@ struct ConfettiBurst: View {
     @State private var start = Date()
     @State private var finished = false
     private let pieces: [Piece]
+    private let duration = 3.2
 
     init(colors: [Color] = ConfettiBurst.paper) {
-        pieces = (0..<48).map { index in
-            var random = SystemRandomNumberGenerator()
-            return Piece(x: .random(in: 0...1, using: &random),
-                         delay: .random(in: 0...0.5, using: &random),
-                         speed: .random(in: 260...420, using: &random),
-                         spin: .random(in: -4...4, using: &random),
-                         drift: .random(in: -40...40, using: &random),
-                         size: CGSize(width: .random(in: 6...10, using: &random), height: .random(in: 10...16, using: &random)),
-                         color: colors[index % colors.count])
+        var random = SystemRandomNumberGenerator()
+        let shapes: [Shape] = [.strip, .strip, .square, .dot]
+        // The burst: flung up and out from just below the top, then falling.
+        let burst = (0..<54).map { index in
+            Piece(x: .random(in: 0.42...0.58, using: &random), y: 150,
+                  vx: .random(in: -330...330, using: &random), vy: .random(in: -620 ... -260, using: &random),
+                  delay: .random(in: 0...0.08, using: &random),
+                  spin: .random(in: -6...6, using: &random), flutter: .random(in: 5...11, using: &random),
+                  drift: .random(in: -20...20, using: &random),
+                  size: CGSize(width: .random(in: 6...9, using: &random), height: .random(in: 10...16, using: &random)),
+                  color: colors[index % colors.count], shape: shapes[index % shapes.count])
         }
+        // The shower: falling from above the top, a beat later.
+        let shower = (0..<46).map { index in
+            Piece(x: .random(in: 0...1, using: &random), y: -20,
+                  vx: 0, vy: .random(in: 140...300, using: &random),
+                  delay: .random(in: 0.25...1.0, using: &random),
+                  spin: .random(in: -4...4, using: &random), flutter: .random(in: 4...9, using: &random),
+                  drift: .random(in: -40...40, using: &random),
+                  size: CGSize(width: .random(in: 6...10, using: &random), height: .random(in: 10...16, using: &random)),
+                  color: colors[(index + 2) % colors.count], shape: shapes[(index + 1) % shapes.count])
+        }
+        pieces = burst + shower
     }
-    private let duration = 2.6
 
     var body: some View {
         TimelineView(.animation(minimumInterval: nil, paused: finished)) { timeline in
@@ -796,27 +813,72 @@ struct ConfettiBurst: View {
                 for piece in pieces {
                     let t = elapsed - piece.delay
                     guard t > 0 else { continue }
-                    let y = -20 + piece.speed * t + 60 * t * t
-                    guard y < size.height + 20 else { continue }
-                    let x = piece.x * size.width + piece.drift * sin(t * 3)
-                    let fade = max(0, min(1, (duration - t) / 0.6))
+                    // Air slows the flung pieces; gravity, kept gentle, brings them down.
+                    let drag = 1 - exp(-2.2 * t)
+                    let x = piece.x * size.width + piece.vx / 2.2 * drag + piece.drift * sin(t * 3)
+                    let y = piece.y + piece.vy / 2.2 * drag + 170 * t * t
+                    guard y < size.height + 20, y > -60 else { continue }
+                    let fade = max(0, min(1, (duration - t) / 0.7))
                     var pieceContext = context
                     pieceContext.opacity = fade
                     pieceContext.translateBy(x: x, y: y)
                     pieceContext.rotate(by: .radians(piece.spin * t))
+                    // Turning over as it falls: narrower, then wide again.
+                    pieceContext.scaleBy(x: max(0.15, abs(cos(piece.flutter * t))), y: 1)
                     let rect = CGRect(x: -piece.size.width / 2, y: -piece.size.height / 2,
                                       width: piece.size.width, height: piece.size.height)
-                    pieceContext.fill(Path(roundedRect: rect, cornerRadius: 2), with: .color(piece.color))
+                    let path: Path
+                    switch piece.shape {
+                    case .strip: path = Path(roundedRect: rect, cornerRadius: 2)
+                    case .square: path = Path(CGRect(x: -4, y: -4, width: 8, height: 8))
+                    case .dot: path = Path(ellipseIn: CGRect(x: -4, y: -4, width: 8, height: 8))
+                    }
+                    pieceContext.fill(path, with: .color(piece.color))
                 }
             }
         }
-        .frame(maxWidth: .infinity, minHeight: 600)
+        .frame(maxWidth: .infinity, minHeight: 700)
         .onAppear { start = Date() }
         .task {
             // Stop redrawing once the last piece has gone.
-            try? await Task.sleep(for: .seconds(duration + 0.6))
+            try? await Task.sleep(for: .seconds(duration + 1.2))
             finished = true
         }
+        .accessibilityHidden(true)
+    }
+}
+
+/// Rays turning slowly behind something won: a stamp, a title. Fades out
+/// toward its edge; still when Reduce Motion is on.
+struct Sunburst: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var color: Color
+    var rays = 14
+    var size: CGFloat = 320
+    @State private var turned = false
+
+    var body: some View {
+        Canvas { context, canvas in
+            let center = CGPoint(x: canvas.width / 2, y: canvas.height / 2)
+            let radius = min(canvas.width, canvas.height) / 2
+            let half = Double.pi / Double(rays) / 2
+            for ray in 0..<rays {
+                let angle = Double(ray) * 2 * .pi / Double(rays)
+                var path = Path()
+                path.move(to: center)
+                path.addArc(center: center, radius: radius, startAngle: .radians(angle - half), endAngle: .radians(angle + half), clockwise: false)
+                path.closeSubpath()
+                context.fill(path, with: .color(color))
+            }
+        }
+        .frame(width: size, height: size)
+        .mask(RadialGradient(colors: [.white, .white.opacity(0.5), .clear], center: .center, startRadius: size * 0.08, endRadius: size / 2))
+        .rotationEffect(.degrees(turned ? 360 : 0))
+        .onAppear {
+            guard !reduceMotion else { return }
+            withAnimation(.linear(duration: 24).repeatForever(autoreverses: false)) { turned = true }
+        }
+        .allowsHitTesting(false)
         .accessibilityHidden(true)
     }
 }

@@ -154,7 +154,7 @@ struct ScanView: View {
         .onChange(of: model.customSets.sets.map(\.id)) { _, ids in
             if case let .existing(id) = target, !ids.contains(id) { target = .new }
         }
-        .catTip(.scan, at: .top)
+        .catTip(.scan)
     }
 
     // MARK: Choose a source

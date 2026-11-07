@@ -13,6 +13,8 @@ struct DayCompleteView: View {
     @State private var stamped = false
     @State private var rolled = false
     @State private var todayStamped = false
+    /// When the cat's dance last started: it dances again every few seconds.
+    @State private var danceStart: Double = 0
 
     static let gold = Color(red: 0.95, green: 0.78, blue: 0.45)
     private static let cream = Color(red: 1.0, green: 0.96, blue: 0.88)
@@ -37,6 +39,14 @@ struct DayCompleteView: View {
             .entrance(0)
             stamp(streak)
                 .padding(.vertical, 8)
+                // The cat dances beside its stamp.
+                .overlay(alignment: .bottomTrailing) {
+                    Mascot(mood: .cheer, size: 78, antic: danceStart > 0 ? .dance : nil, anticStart: danceStart)
+                        .offset(x: 18, y: 18)
+                        .opacity(rolled ? 1 : 0)
+                        .scaleEffect(rolled || reduceMotion ? 1 : 0.4, anchor: .bottom)
+                        .accessibilityHidden(true)
+                }
             week
                 .entrance(2)
             Text(canLine)
@@ -80,6 +90,10 @@ struct DayCompleteView: View {
         .overlay(alignment: .top) {
             if rolled, !reduceMotion { ConfettiBurst(colors: ConfettiBurst.gold).allowsHitTesting(false).ignoresSafeArea() }
         }
+        // A second popper as today's square is stamped.
+        .overlay(alignment: .top) {
+            if todayStamped, !reduceMotion { ConfettiBurst(colors: ConfettiBurst.paper).allowsHitTesting(false).ignoresSafeArea() }
+        }
         .task {
             guard !stamped else { return }
             guard !reduceMotion else {
@@ -93,6 +107,11 @@ struct DayCompleteView: View {
                 withAnimation(.snappy(duration: 0.5)) { rolled = true }
                 try await Task.sleep(for: .milliseconds(520))
                 withAnimation(.spring(response: 0.35, dampingFraction: 0.5)) { todayStamped = true }
+                // The cat keeps dancing while the screen is up.
+                while !Task.isCancelled {
+                    danceStart = Date().timeIntervalSinceReferenceDate
+                    try await Task.sleep(for: .seconds(MascotAntic.dance.duration + 1.4))
+                }
             } catch { return }
         }
         .sensoryFeedback(.success, trigger: stamped) { _, new in new && haptics }
@@ -110,6 +129,9 @@ struct DayCompleteView: View {
     private func stamp(_ streak: Int) -> some View {
         let shown = rolled ? streak : max(0, streak - 1)
         return ZStack {
+            Sunburst(color: Self.gold.opacity(0.28), rays: 16, size: 360)
+                .opacity(stamped ? 1 : 0)
+                .scaleEffect(rolled || reduceMotion ? 1 : 0.6)
             Circle()
                 .fill(RadialGradient(colors: [Self.gold.opacity(0.35), .clear], center: .center, startRadius: 10, endRadius: 150))
                 .frame(width: 300, height: 300)

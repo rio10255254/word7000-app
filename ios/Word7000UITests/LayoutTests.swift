@@ -43,6 +43,29 @@ final class LayoutTests: XCTestCase {
         checkToday(app, name: "layout-dark", tiles: Self.home)
     }
 
+    /// The Practice tab fits one screen: every way to practise above the
+    /// tab bar, with nothing to scroll for.
+    func testPracticeFitsWithoutScrolling() {
+        let app = launch()
+        let tab = app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["練習", "Practice"])).firstMatch
+        XCTAssertTrue(tab.waitForExistence(timeout: 5))
+        tab.tap()
+        let last = app.buttons["practice-word-speaking"]
+        XCTAssertTrue(last.waitForExistence(timeout: 5))
+        sleep(1)
+        snap(app, "layout-practice")
+        let window = app.windows.firstMatch.frame
+        let tabBar = app.tabBars.firstMatch
+        let bottom = tabBar.exists ? tabBar.frame.minY : window.maxY
+        for id in ["practice-missed", "practice-spell", "practice-exam-style", "practice-meaning", "practice-mock",
+                   "practice-scenarios", "practice-word-speaking"] {
+            let row = app.buttons[id]
+            guard row.exists else { continue }
+            onScreen(row, in: window, id)
+            XCTAssertLessThanOrEqual(row.frame.maxY, bottom + 1, "\(id) sits under the tab bar")
+        }
+    }
+
     /// The Me page's capsule buttons keep their labels on one line in the
     /// English interface at the largest standard text size: side by side
     /// when they fit, else one above the other, never "subscriptio / n".

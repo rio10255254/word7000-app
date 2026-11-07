@@ -19,6 +19,9 @@ struct WelcomeView: View {
     /// last scene shows how to get the natural one. Settled before that scene,
     /// so it does not change under the learner while they download it.
     @State private var voicePlanned = false
+    /// Whether the welcome asks about the daily reminder (and notifications).
+    @State private var notifyPlanned = true
+    @State private var remindAt = Calendar.current.date(bySettingHour: 20, minute: 0, second: 0, of: Date()) ?? Date()
     /// How the welcome ends, kept while the voice scene is shown.
     @State private var ending: (known: [String], learning: [String], practice: Bool)?
     /// WordCat Next: the exam being prepared for, and the level test.
@@ -53,7 +56,7 @@ struct WelcomeView: View {
         _step = State(initialValue: retest ? .testIntro : .hello)
     }
 
-    enum Step: Int, CaseIterable { case hello, stage, exam, focus, goal, words, testIntro, test, spell, thinking, result, voice }
+    enum Step: Int, CaseIterable { case hello, stage, exam, focus, goal, words, testIntro, test, spell, thinking, result, voice, notify }
 
     /// The scenes in order. WordCat Next gets to know the learner of English
     /// (school, exam, what to get better at, how much a day), tests the
@@ -68,8 +71,10 @@ struct WelcomeView: View {
             steps = [.hello, .goal, .words]
         } else {
             steps = mode == .english
-                ? [.hello, .stage, .exam, .focus, .goal, .testIntro, .test, .spell, .thinking, .result]
-                : [.hello, .focus, .goal, .testIntro, .test, .thinking, .result]
+                ? [.hello, .stage, .exam, .focus, .goal, .notify, .testIntro, .test, .spell, .thinking, .result]
+                : [.hello, .focus, .goal, .notify, .testIntro, .test, .thinking, .result]
+            // Asked once only: a learner who has answered is not asked again.
+            if !notifyPlanned { steps.removeAll { $0 == .notify } }
         }
         // Last, when the iPhone only has a standard voice: how to get the natural one.
         if voicePlanned { steps.append(.voice) }
@@ -85,6 +90,18 @@ struct WelcomeView: View {
     private func advance() {
         let index = position + 1
         if flow.indices.contains(index) { go(flow[index]) }
+    }
+
+    /// Every one-answer question moves on by itself once a choice is tapped,
+    /// after a beat to see it marked; questions with several answers have a
+    /// Next button. A second tap in that beat does not skip a scene.
+    private func pickThenAdvance() {
+        let from = step
+        Task {
+            try? await Task.sleep(for: .milliseconds(reduceMotion ? 100 : 350))
+            guard step == from else { return }
+            advance()
+        }
     }
 
     /// The interface speaks the learner's own language once they have chosen.
@@ -103,6 +120,7 @@ struct WelcomeView: View {
                         case .exam: examQuestion
                         case .focus: focusQuestion
                         case .goal: goal
+                        case .notify: notifyStep
                         case .words: words
                         case .testIntro: testIntro
                         case .test: placementTest
@@ -144,6 +162,7 @@ struct WelcomeView: View {
                 test = PlacementTest(start: profile.stage?.testStart ?? 2)
             }
             if placement.isEmpty { placement = placementWords(for: mode) }
+            if step == .hello { notifyPlanned = model.settings.pushAsked != true }
         }
         .task(id: mode) {
             await Speaker.shared.refreshVoices()
@@ -210,7 +229,7 @@ struct WelcomeView: View {
 
     private func phase(of step: Step) -> Phase {
         switch step {
-        case .hello, .stage, .exam, .focus, .goal, .words: .about
+        case .hello, .stage, .exam, .focus, .goal, .notify, .words: .about
         case .testIntro, .test, .spell, .thinking: .level
         case .result, .voice: .plan
         }
@@ -329,23 +348,17 @@ struct WelcomeView: View {
     private var goal: some View {
         VStack(spacing: 22) {
             CatLine(mood: .thinking, hop: hop,
-                    text: text("一天想背幾個字？之後隨時能改。", "How many words a day? You can change it any time."))
+                    text: text("一天想背幾個字？點一個就好，之後隨時能改。", "How many words a day? Tap one; you can change it any time."))
             LazyVGrid(columns: [GridItem(.flexible(), spacing: 16), GridItem(.flexible(), spacing: 16)], spacing: 16) {
                 ForEach(Self.goals, id: \.count) { item in
                     StickyNote(count: item.count, label: text(item.zh, item.en), unit: text("個／天", "a day"),
                                paper: item.paper, tilt: item.tilt, selected: target == item.count) {
                         withAnimation(reduceMotion ? nil : Motion.pop) { target = item.count }
+                        pickThenAdvance()
                     }
                     .accessibilityIdentifier("welcome-goal-\(item.count)")
                 }
             }
-            Button { advance() } label: {
-                Label(text("下一步", "Next"), systemImage: "arrow.right")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity)
-            }
-            .prominentAction()
-            .accessibilityIdentifier("welcome-next")
         }
     }
 
@@ -403,15 +416,12 @@ struct WelcomeView: View {
                     ChoiceCard(icon: choice.icon, title: choice.title, detail: choice.detail(Date()), selected: exam == choice) {
                         withAnimation(reduceMotion ? nil : Motion.pop) { exam = choice }
                         CatMemory.shared.examDate = choice.date(after: Date())
-                        Task {
-                            try? await Task.sleep(for: .milliseconds(reduceMotion ? 100 : 350))
-                            advance()
-                        }
+                        pickThenAdvance()
                     }
                     .accessibilityIdentifier("welcome-exam-\(choice.rawValue)")
                 }
             }
-            Text(text("日期不對的話，之後在「我 → 傻貓記得的事」改。", "Wrong date? Change it later in Me → What Silly Cat remembers."))
+            Text(text("日期不對的話，之後在「我 → 我的學習計畫」改。", "Wrong date? Change it later in Me → My learning plan."))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -441,10 +451,7 @@ struct WelcomeView: View {
                         }
                         test = PlacementTest(start: item.stage.testStart)
                         question = nil
-                        Task {
-                            try? await Task.sleep(for: .milliseconds(reduceMotion ? 100 : 350))
-                            advance()
-                        }
+                        pickThenAdvance()
                     }
                     .accessibilityIdentifier("welcome-stage-\(item.stage.rawValue)")
                 }
@@ -492,22 +499,19 @@ struct WelcomeView: View {
     // MARK: WordCat Next: before the test
 
     private var testIntro: some View {
-        VStack(spacing: 22) {
-            Mascot(mood: .smug, size: 104, hop: hop).popIn()
-            Text(text("最後，兩分鐘程度測驗", "Last, a two-minute level check"))
-                .font(.display(.title2, weight: .bold))
-                .multilineTextAlignment(.center)
-            VStack(alignment: .leading, spacing: 14) {
-                introRow("eye.fill", text("看字選意思", "Pick the meaning"),
-                         text("答對我就出難一點，答錯就簡單一點", "Right, and the next is harder; wrong, and it is easier"))
+        VStack(spacing: 24) {
+            CatLine(mood: .smug, hop: hop,
+                    text: text("最後兩分鐘，讓我看看你的程度。答對就出難一點，答錯就簡單一點。",
+                               "Two last minutes to see your level. Right, and it gets harder; wrong, and easier."))
+            VStack(alignment: .leading, spacing: 0) {
+                introRow(1, text("看字選意思", "Pick the meaning"), last: false)
                 if mode == .english {
-                    introRow("pencil.line", text("拼 3 個字", "Spell three words"),
-                             text("認得不代表拼得出來，我要看你寫", "Knowing a word is not spelling it"))
+                    introRow(2, text("拼 3 個字", "Spell three words"), last: false)
                 }
-                introRow("map.fill", text("排出你的路線", "Your plan"),
-                         text("從第幾章開始、每天練什麼", "Where to start and what to practise"))
+                introRow(mode == .english ? 3 : 2, text("排出你的路線", "Your plan"), last: true)
             }
-            .padding(18)
+            .padding(.vertical, 18)
+            .padding(.horizontal, 22)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background { HomeSurface(radius: 22) }
             VStack(spacing: 10) {
@@ -536,17 +540,73 @@ struct WelcomeView: View {
         }
     }
 
-    private func introRow(_ icon: String, _ title: String, _ detail: String) -> some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: icon)
-                .font(.headline)
-                .foregroundStyle(.white)
-                .frame(width: 36, height: 36)
-                .background(Palette.accent.gradient, in: Circle())
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title).font(.headline).foregroundStyle(Palette.ink)
-                Text(detail).font(.subheadline).foregroundStyle(.secondary)
+    /// One part of the check: its number on a line to the next, and its name.
+    private func introRow(_ number: Int, _ title: String, last: Bool) -> some View {
+        HStack(alignment: .top, spacing: 14) {
+            VStack(spacing: 0) {
+                Text("\(number)")
+                    .font(.subheadline.weight(.heavy))
+                    .foregroundStyle(Palette.surface)
+                    .frame(width: 30, height: 30)
+                    .background(Palette.accent.gradient, in: Circle())
+                if !last {
+                    Capsule().fill(Palette.accent.opacity(0.25)).frame(width: 3, height: 18)
+                }
             }
+            Text(title)
+                .font(.headline)
+                .foregroundStyle(Palette.ink)
+                .padding(.top, 4)
+        }
+    }
+
+    // MARK: WordCat Next: the daily reminder
+
+    /// Asked near the start, while the plan is being made: the time of the
+    /// daily reminder, a preview of it, and only then the system's question.
+    private var notifyStep: some View {
+        VStack(spacing: 22) {
+            CatLine(mood: .smug, hop: hop,
+                    text: text("讓我每天提醒你。照經驗，沒人提醒的，第三天就把我忘了。",
+                               "Let me remind you each day. Without it, people forget me by day three."))
+            VStack(spacing: 16) {
+                ReminderPreview(time: remindAt, target: target, chinese: chinese)
+                DatePicker(text("每天提醒時間", "Remind me at"), selection: $remindAt, displayedComponents: .hourAndMinute)
+                    .font(.headline)
+                    .tint(Palette.accent)
+                    .accessibilityIdentifier("welcome-notify-time")
+            }
+            .padding(18)
+            .background { HomeSurface(radius: 22) }
+            VStack(spacing: 10) {
+                Button(action: allowReminders) {
+                    Label(text("好，每天提醒我", "Yes, remind me"), systemImage: "bell.badge.fill")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                }
+                .prominentAction()
+                .accessibilityIdentifier("welcome-notify-allow")
+                Button(text("先不要", "Not now")) {
+                    model.settings.reminderAskDeclinedOn = model.today
+                    advance()
+                }
+                .font(.subheadline.weight(.semibold))
+                .frame(minHeight: 44)
+                .accessibilityIdentifier("welcome-notify-later")
+            }
+        }
+    }
+
+    private func allowReminders() {
+        let parts = Calendar.current.dateComponents([.hour, .minute], from: remindAt)
+        let minute = (parts.hour ?? 20) * 60 + (parts.minute ?? 0)
+        model.settings.reminderMinute = minute
+        model.setReminderEnabled(true)
+        Usage.log("reminder_time", "\(minute)")
+        Task {
+            // The system's own question, then on with the welcome either way.
+            await PushRegistration.shared.askOnce(model)
+            advance()
         }
     }
 
@@ -1099,41 +1159,13 @@ private struct VoiceStep: View {
         .onDisappear { Speaker.shared.stop() }
     }
 
-    /// The three steps, with the voice named as Settings lists it.
+    /// The steps, drawn as the screens of Settings they happen on.
     private var stepsCard: some View {
-        let lines = [
-            text("打開 iPhone「設定」→「輔助使用」→「朗讀內容」→「聲音」",
-                 "Open iPhone Settings → Accessibility → Spoken Content → Voices"),
-            learningChinese
-                ? text("點「中文（台灣）」→「美佳」，下載「增強」版本", "Tap Chinese (Taiwan) → Meijia and download the Enhanced version")
-                : text("點「英文」→「Ava」，下載最大的那個（優質）", "Tap English → Ava and download the biggest one (Premium)"),
-            text("回到這裡就好，下載完會自動換上", "Come back here; it switches by itself once downloaded"),
-        ]
-        return VStack(alignment: .leading, spacing: 12) {
-            ForEach(Array(lines.enumerated()), id: \.offset) { index, line in
-                HStack(alignment: .top, spacing: 10) {
-                    Text("\(index + 1)")
-                        .font(.subheadline.weight(.heavy))
-                        .foregroundStyle(.white)
-                        .frame(width: 26, height: 26)
-                        .background(Palette.accent, in: Circle())
-                    Text(line)
-                        .font(.body.weight(.semibold))
-                        .fixedSize(horizontal: false, vertical: true)
-                        .padding(.top, 2)
-                }
-            }
-            Text(text("檔案有點大，建議連 Wi-Fi。下載在背景進行，可以先開始學。「打開設定」會先到單字貓的頁面，按左上角返回到最上層。",
-                      "It's a big file, so Wi-Fi is best. It downloads in the background, so you can start meanwhile. Open Settings lands on WordCat's page; go back at the top left to the main list."))
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
-        }
-        .padding(16)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Palette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-        .accessibilityElement(children: .combine)
-        .accessibilityIdentifier("welcome-voice-steps")
+        VoiceDownloadGuide(learningChinese: learningChinese, chinese: chinese)
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Palette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .accessibilityIdentifier("welcome-voice-steps")
     }
 
     /// The natural voice is in: which one now reads.
@@ -1157,6 +1189,41 @@ private struct VoiceStep: View {
         .background(Palette.known.opacity(0.12), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("welcome-voice-switched")
+    }
+}
+
+/// The daily reminder as it will look on the lock screen, at the time picked.
+private struct ReminderPreview: View {
+    var time: Date
+    var target: Int
+    var chinese: Bool
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Mascot(mood: .smug, size: 38, hop: 0)
+                .frame(width: 42, height: 42)
+                .background(Palette.accent.opacity(0.14), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            VStack(alignment: .leading, spacing: 3) {
+                HStack {
+                    Text(chinese ? "單字貓" : "WordCat").font(.subheadline.weight(.bold))
+                    Spacer(minLength: 6)
+                    Text(time, format: .dateTime.hour().minute())
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .contentTransition(.numericText())
+                }
+                Text(chinese ? "今天的 \(target) 個字還沒背。我等你，但我會記仇。"
+                             : "Today's \(target) words are waiting. I'll wait too, and I'll remember.")
+                    .font(.subheadline)
+                    .foregroundStyle(Palette.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(12)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .overlay { RoundedRectangle(cornerRadius: 18, style: .continuous).stroke(Palette.fill, lineWidth: 1) }
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("welcome-notify-preview")
     }
 }
 

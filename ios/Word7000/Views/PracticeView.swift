@@ -28,7 +28,7 @@ struct PracticeView: View {
         if model.stats.review > 0 {
             items.append(Item(id: "practice-missed", icon: "arrow.counterclockwise", tint: Palette.miss,
                               title: L.t("錯題本", "Missed words"),
-                              detail: L.t("\(model.stats.review) 個還不熟的字", "\(model.stats.review) still shaky")) {
+                              detail: L.t("\(model.stats.review) 個還不熟", "\(model.stats.review) still shaky")) {
                 model.startStudySession(onlyIds: model.missedRoundIds)
                 start(.study)
             })
@@ -36,14 +36,14 @@ struct PracticeView: View {
         let english = model.studyMode == .english
         items.append(Item(id: "practice-spell", icon: "pencil.line", tint: Palette.accent,
                           title: english ? L.t("拼字", "Spelling") : L.t("寫字", "Writing"),
-                          detail: english ? L.t("看中文，把句子裡的字打出來", "Read the Chinese, type the missing word")
-                                          : L.t("看英文，寫出中文", "Write the Chinese for the English")) {
+                          detail: english ? L.t("看中文拼出句中字", "Type the missing word")
+                                          : L.t("看英文寫中文", "Write the Chinese")) {
             start(english ? .cloze : .spelling)
         })
         if english {
             items.append(Item(id: "practice-exam-style", icon: "checklist", tint: Palette.chinese,
                               title: L.t("考 10 題", "10 exam questions"),
-                              detail: L.t("\(model.examStyleName)，學過的字", "Exam style, words you've learned")) {
+                              detail: L.t("\(model.examStyleName)題型", "Exam style")) {
                 start(.quickExam)
             })
         }
@@ -63,12 +63,12 @@ struct PracticeView: View {
     private var speakingItems: [Item] {
         [
             Item(id: "practice-scenarios", icon: "bubble.left.and.text.bubble.right.fill", tint: TodayView.speakingTint,
-                 title: L.t("生活情境", "Scenarios"), detail: L.t("餐廳、商店、看醫生……", "A restaurant, a shop, the doctor…")) {
+                 title: L.t("生活情境", "Scenarios"), detail: L.t("餐廳、商店、看醫生", "Restaurant, shop, doctor")) {
                 model.settings.speakingWordsTab = false
                 start(.speaking)
             },
             Item(id: "practice-word-speaking", icon: "mic.fill", tint: TodayView.speakingTint,
-                 title: L.t("單字口說", "Word speaking"), detail: L.t("用學過的字回答問題", "Answer with words you've learned")) {
+                 title: L.t("單字口說", "Word speaking"), detail: L.t("用學過的字回答", "Answer with your words")) {
                 model.settings.speakingWordsTab = true
                 start(.speaking)
             },
@@ -81,18 +81,21 @@ struct PracticeView: View {
         // the page is seen at a glance, as Duolingo's practice hub leads with
         // your mistakes.
         let words = wordItems
+        // Short tiles, icon beside the name, so the whole page fits one
+        // screen; it still scrolls at the large text sizes.
         ScrollView {
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 10) {
                 if let featured = words.first { featuredCard(featured) }
-                header(L.t("單字", "Words")).padding(.top, 6)
+                header(L.t("單字", "Words")).padding(.top, 8)
                 grid(Array(words.dropFirst()))
-                header(L.t("口說", "Speaking")).padding(.top, 6)
+                header(L.t("口說", "Speaking")).padding(.top, 8)
                 grid(speakingItems)
             }
             .padding(.horizontal, Metrics.gutter)
-            .padding(.top, 12)
+            .padding(.top, 8)
             .padding(.bottom, 110)
         }
+        .scrollBounceBehavior(.basedOnSize)
         .background { AmbientBackground() }
         .navigationTitle(L.t("練習", "Practice"))
         .sheet(isPresented: $quizSetupOpen, onDismiss: {
@@ -117,13 +120,13 @@ struct PracticeView: View {
     /// The practice to do now, on the same leather or paper as Today's card.
     private func featuredCard(_ item: Item) -> some View {
         Button(action: item.action) {
-            HStack(spacing: 16) {
+            HStack(spacing: 14) {
                 Image(systemName: item.icon)
-                    .font(.system(size: 26, weight: .bold))
+                    .font(.system(size: 22, weight: .bold))
                     .foregroundStyle(TodayView.cream)
-                    .frame(width: 64, height: 64)
+                    .frame(width: 52, height: 52)
                     .background(Circle().fill(TodayView.cream.opacity(0.16)))
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 2) {
                     Text(L.t("現在最值得練", "Worth doing now"))
                         .font(.display(.caption, weight: .bold))
                         .foregroundStyle(TodayView.cream.opacity(0.8))
@@ -133,14 +136,15 @@ struct PracticeView: View {
                     Text(item.detail)
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(TodayView.cream.opacity(0.85))
-                        .lineLimit(2)
+                        .lineLimit(1)
                 }
                 Spacer(minLength: 4)
                 Image(systemName: "arrow.right.circle.fill")
                     .font(.system(size: 30))
                     .foregroundStyle(TodayView.cream)
             }
-            .padding(18)
+            .padding(.horizontal, 18)
+            .padding(.vertical, 14)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background { HeroBackground(tone: .words) }
             .contentShape(Rectangle())
@@ -152,14 +156,14 @@ struct PracticeView: View {
     private func grid(_ items: [Item]) -> some View {
         // One column at the accessibility text sizes, where two cut the titles short.
         let columns = dynamicTypeSize.isAccessibilitySize ? 1 : 2
-        return LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: columns), spacing: 12) {
+        return LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: columns), spacing: 10) {
             ForEach(items, id: \.id) { tile($0) }
         }
     }
 
     private func header(_ text: String) -> some View {
         Text(text)
-            .font(.display(.title3, weight: .heavy))
+            .font(.display(.headline, weight: .heavy))
             .foregroundStyle(Palette.secondaryLabel)
             .padding(.leading, 4)
     }
@@ -177,29 +181,32 @@ struct PracticeView: View {
     private func tile(_ item: Item) -> some View {
         let tilt = Self.tilts[item.id] ?? 0
         return Button(action: item.action) {
-            VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 10) {
                 Image(systemName: item.icon)
-                    .font(.system(size: 20, weight: .bold))
+                    .font(.system(size: 17, weight: .bold))
                     .foregroundStyle(Palette.surface)
-                    .frame(width: 46, height: 46)
-                    .background { RaisedFill(shape: RoundedRectangle(cornerRadius: 14, style: .continuous), tint: item.tint, depth: 3) }
+                    .frame(width: 40, height: 40)
+                    .background { RaisedFill(shape: RoundedRectangle(cornerRadius: 12, style: .continuous), tint: item.tint, depth: 3) }
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(item.title)
+                        .font(.display(.subheadline, weight: .bold))
+                        .foregroundStyle(Palette.ink)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
+                    Text(item.detail)
+                        .font(.caption)
+                        .foregroundStyle(Palette.secondaryLabel)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                }
                 Spacer(minLength: 0)
-                Text(item.title)
-                    .font(.display(.headline, weight: .bold))
-                    .foregroundStyle(Palette.ink)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
-                Text(item.detail)
-                    .font(.caption)
-                    .foregroundStyle(Palette.secondaryLabel)
-                    .lineLimit(2, reservesSpace: true) // titles line up across a row
-                    .fixedSize(horizontal: false, vertical: true)
             }
-            .padding(14)
-            .frame(maxWidth: .infinity, minHeight: 142, alignment: .topLeading)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity, minHeight: 68, alignment: .leading)
             .background { PracticePaper(paper: .ivory) }
             .overlay(alignment: .topTrailing) {
-                if item.locked { PlusBadgeFitting().padding(10) }
+                if item.locked { PlusBadge(compact: true).padding(6) }
             }
             .rotationEffect(.degrees(tilt))
             .contentShape(Rectangle())

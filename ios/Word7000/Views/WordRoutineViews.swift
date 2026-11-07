@@ -689,6 +689,14 @@ struct RoutineSummaryView: View {
             VStack(spacing: 20) {
                 Mascot(mood: summary.caught == 0 ? .cheer : .happy, size: 120, hop: appeared ? 1 : 0)
                     .popIn()
+                    .background {
+                        // A win gets rays turning behind the cat.
+                        if reachedGoal || summary.caught == 0 {
+                            Sunburst(color: (reachedGoal ? Palette.review : Palette.known).opacity(0.22), size: 300)
+                                .opacity(appeared ? 1 : 0)
+                                .animation(reduceMotion ? nil : .easeOut(duration: 0.8), value: appeared)
+                        }
+                    }
                     .padding(.top, 12)
                     // Nothing caught: a stamp thumps down beside the cat.
                     .overlay(alignment: .topTrailing) {

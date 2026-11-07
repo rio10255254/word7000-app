@@ -100,13 +100,13 @@ enum CatTip: String, CaseIterable, Sendable {
 
     var text: String {
         switch self {
-        case .study: L.t("點卡片看答案；認得往右滑，不熟往左滑。",
+        case .study: L.t("點卡片看答案。認得往右滑，不熟往左滑。騙我的話，三天後我會再考你。",
                          "Tap for the answer. Swipe right if you knew it, left if not.")
         case .words: L.t("中文、英文、例句都能搜；長按字庫可以管理。",
                          "Search Chinese, English or examples. Hold a bank to manage it.")
         case .wordDetail: L.t("點喇叭聽發音，點星星收藏。",
                               "Tap the speaker to hear it, the star to save it.")
-        case .speaking: L.t("按麥克風開口說，說完會自動停。",
+        case .speaking: L.t("按麥克風開口說，說完會自動停。小聲講我也聽得到，別害羞。",
                             "Tap the mic and speak; it stops when you're done.")
         case .quiz: L.t("選錯沒關係，我會說你選的那個是什麼意思。", "Wrong is fine: I'll say what the one you picked means.")
         case .spelling: L.t("把單字拼出來；卡住就按提示，一次多給一個字母。",
@@ -249,97 +249,122 @@ private struct HandLoop: Shape {
 }
 
 extension View {
-    /// The cat's one-time tip for a screen, at its top or bottom edge. It
-    /// takes its own room (the screen moves aside, nothing is covered), and
-    /// goes away by itself after a few seconds or at a tap.
-    func catTip(_ tip: CatTip, at edge: VerticalEdge = .bottom) -> some View {
-        modifier(CatTipModifier(tip: tip, edge: edge))
+    /// The cat's one-time tip for a screen: the screen dims and the cat pops
+    /// up from the bottom to say it, until "Got it" or a tap anywhere. Over
+    /// everything on purpose and only once, so nothing is half covered and
+    /// it cannot be missed.
+    func catTip(_ tip: CatTip) -> some View {
+        modifier(CatTipModifier(tip: tip))
     }
 }
 
 private struct CatTipModifier: ViewModifier {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
     let tip: CatTip
-    let edge: VerticalEdge
     @State private var shown = false
 
     func body(content: Content) -> some View {
         content
-            .safeAreaInset(edge: edge == .top ? .top : .bottom, spacing: 0) {
+            .overlay {
                 if shown {
-                    CatTipCard(text: tip.text) { hide() }
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 6)
-                        .contentShape(Rectangle())
-                        .onTapGesture { hide() }
-                        .transition(.move(edge: edge == .top ? .top : .bottom).combined(with: .opacity))
+                    CatCoachMark(text: tip.text) { hide() }
                         .accessibilityIdentifier("cat-tip-\(tip.rawValue)")
+                        .transition(.opacity)
                 }
             }
             .task {
                 guard model.tipDue(tip) else { return }
-                try? await Task.sleep(for: .milliseconds(900))
+                try? await Task.sleep(for: .milliseconds(700))
                 guard !Task.isCancelled else { return }
-                // Seen once shown: it never comes back, even if left open.
+                // Seen once shown: it never comes back.
                 model.noteTipSeen(tip)
-                withAnimation(reduceMotion ? nil : Motion.pop) { shown = true }
-                // Long enough to read twice; VoiceOver users close it themselves.
-                guard !voiceOver else { return }
-                try? await Task.sleep(for: .seconds(8))
-                hide()
+                withAnimation(reduceMotion ? nil : .easeOut(duration: 0.25)) { shown = true }
             }
     }
 
     private func hide() {
         guard shown else { return }
-        withAnimation(reduceMotion ? nil : Motion.reveal) { shown = false }
+        withAnimation(reduceMotion ? nil : .easeIn(duration: 0.2)) { shown = false }
     }
 }
 
-/// The cat with a short note on a scrap of paper, and a close button.
-private struct CatTipCard: View {
-    @Environment(\.appStyle) private var appStyle
+/// The screen dimmed, and the cat at the bottom with its note in a big
+/// bubble and a Got it key.
+private struct CatCoachMark: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var text: String
     var close: () -> Void
+    @State private var up = false
+    @State private var hop = 0
 
     var body: some View {
-        HStack(alignment: .top, spacing: 10) {
-            Mascot(mood: .smug, size: 38)
+        ZStack(alignment: .bottom) {
+            Color.black.opacity(0.4)
+                .ignoresSafeArea()
+                .contentShape(Rectangle())
+                .onTapGesture(perform: close)
                 .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 0) {
+                card
+                Mascot(mood: .smug, size: 92, hop: hop)
+                    .padding(.leading, 18)
+                    .padding(.top, -4)
+                    .accessibilityHidden(true)
+            }
+            .padding(.horizontal, 18)
+            .padding(.bottom, 8)
+            .frame(maxWidth: 520)
+            .offset(y: up || reduceMotion ? 0 : 320)
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityAddTraits(.isModal)
+        .sensoryFeedback(.impact(weight: .light), trigger: up)
+        .onAppear {
+            withAnimation(reduceMotion ? nil : .spring(response: 0.45, dampingFraction: 0.72)) { up = true }
+            if !reduceMotion { hop += 1 }
+        }
+    }
+
+    private var card: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Label(L.t("傻貓小提醒", "A tip from Silly Cat"), systemImage: "lightbulb.max.fill")
+                .font(.caption.weight(.heavy))
+                .foregroundStyle(Palette.accent)
             Text(text)
-                .font(.subheadline)
+                .font(.title3.weight(.semibold))
                 .foregroundStyle(Palette.ink)
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Button(action: close) {
-                Image(systemName: "xmark")
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(.secondary)
-                    .frame(width: 30, height: 30)
-                    .background(Palette.fill, in: Circle())
+                Text(L.t("知道了", "Got it")).font(.headline).frame(maxWidth: .infinity)
             }
-            .buttonStyle(.plain)
-            .accessibilityLabel(L.close)
+            .prominentAction()
             .accessibilityIdentifier("cat-tip-close")
         }
-        .padding(12)
-        .background { surface }
-        .accessibilityElement(children: .contain)
-    }
-
-    @ViewBuilder
-    private var surface: some View {
-        if appStyle == .collage {
-            PaperSurface(kind: .peach)
-                .clipShape(TornEdgeShape(edges: [.bottom], depth: 3, seed: 9))
-                .overlay(alignment: .top) { TapeStrip(width: 48, angle: -4).offset(y: -10) }
-                .shadow(color: .black.opacity(0.12), radius: 6, y: 3)
-        } else {
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
+        .padding(18)
+        .background {
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
                 .fill(Palette.surface)
-                .shadow(color: .black.opacity(0.12), radius: 12, y: 4)
+                .overlay(alignment: .bottomLeading) {
+                    // The bubble's tail, down to the cat.
+                    CoachTail()
+                        .fill(Palette.surface)
+                        .frame(width: 26, height: 16)
+                        .offset(x: 52, y: 14)
+                }
+                .shadow(color: .black.opacity(0.18), radius: 16, y: 6)
         }
+    }
+}
+
+private struct CoachTail: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.minX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.minX + rect.width * 0.3, y: rect.maxY))
+        path.closeSubpath()
+        return path
     }
 }

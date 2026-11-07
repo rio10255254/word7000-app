@@ -83,7 +83,7 @@ struct SpellingSessionView: View {
             return new == .correct ? SoundEffect.correct : SoundEffect.wrong
         }
         .sensoryFeedback(.selection, trigger: hints) { _, new in new > 0 && (model.settings.hapticsEnabled ?? true) }
-        .catTip(.spelling, at: .top)
+        .catTip(.spelling)
     }
 
     // MARK: Question

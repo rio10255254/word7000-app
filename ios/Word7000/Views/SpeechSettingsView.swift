@@ -31,6 +31,19 @@ struct SpeechSettingsView: View {
                         }
                         .accessibilityElement(children: .combine)
                         .accessibilityIdentifier("speech-better-voice")
+                        // The way there, step by step, as Settings draws it.
+                        DisclosureGroup(L.t("一步一步教我", "Show me step by step")) {
+                            VoiceDownloadGuide(learningChinese: model.studyMode == .chinese, chinese: L.zh)
+                                .padding(.vertical, 8)
+                            Button {
+                                if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
+                            } label: {
+                                Label(L.t("打開設定", "Open Settings"), systemImage: "gear")
+                            }
+                            .accessibilityIdentifier("speech-open-settings")
+                        }
+                        .tint(Palette.accent)
+                        .accessibilityIdentifier("speech-voice-steps")
                     }
                 }
                 Section {

@@ -27,6 +27,10 @@ final class DayCompleteTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["me-year-days"].exists)
         sleep(1)
         snap(app, "day-2-me")
+        // A tap on a square names its day above it, as GitHub's calendar does.
+        calendar.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["me-calendar-detail"].firstMatch.waitForExistence(timeout: 3), app.debugDescription)
+        snap(app, "day-3-me-calendar-detail")
     }
 
     private func snap(_ app: XCUIApplication, _ name: String) {

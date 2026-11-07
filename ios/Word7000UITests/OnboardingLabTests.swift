@@ -40,10 +40,20 @@ final class OnboardingLabTests: XCTestCase {
         snap(app, "welcome-04-focus")
         app.buttons["welcome-focus-next"].tap()
 
-        let next = app.buttons["welcome-next"]
-        XCTAssertTrue(next.waitForExistence(timeout: 5))
+        // One answer, so a tap moves on, as on every one-answer question.
+        let goal = app.buttons["welcome-goal-20"]
+        XCTAssertTrue(goal.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["welcome-next"].exists, "no Next button on a one-answer question")
         snap(app, "welcome-05-goal")
-        next.tap()
+        goal.tap()
+
+        // The daily reminder is asked about near the start, with a preview.
+        let allow = app.buttons["welcome-notify-allow"]
+        XCTAssertTrue(allow.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.descendants(matching: .any)["welcome-notify-preview"].exists)
+        sleep(1)
+        snap(app, "welcome-05b-notify")
+        allow.tap()
 
         let begin = app.buttons["welcome-test-start"]
         XCTAssertTrue(begin.waitForExistence(timeout: 5))

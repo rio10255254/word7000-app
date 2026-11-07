@@ -42,7 +42,8 @@ struct MeView: View {
                 // Back to the week of the first practice, eight to twenty weeks.
                 let weekCount = ActivityCalendar.weekCount(today: model.today, analytics: model.progress.analytics)
                 Section {
-                    ActivityCalendarView(weeks: ActivityCalendar.weeks(weekCount, today: model.today, analytics: model.progress.analytics))
+                    ActivityCalendarView(weeks: ActivityCalendar.weeks(weekCount, today: model.today, analytics: model.progress.analytics),
+                                         today: model.today)
                         .padding(.vertical, 4)
                     // The days in detail, and the week's counts, are one tap away.
                     Button { historyOpen = true } label: {
@@ -752,26 +753,168 @@ private struct PlusManageSheet: ViewModifier {
 /// (Monday on top), darker the more was practised that day.
 struct ActivityCalendarView: View {
     var weeks: [[Int?]]
+    var today: String
+    @State private var width: CGFloat = 300
+    @State private var selected: Cell?
+
+    /// A square, by its week (column) and its weekday from Monday (row).
+    struct Cell: Equatable { var week: Int; var day: Int }
+
+    private let gap: CGFloat = 3
+    private let labelWidth: CGFloat = 16
+    private let monthHeight: CGFloat = 14
+
+    /// As GitHub draws it: small squares, a week to a column, Monday on top;
+    /// as big as the width allows, never above 13 points.
+    private var side: CGFloat {
+        let count = CGFloat(max(1, weeks.count))
+        return min(13, max(6, (width - labelWidth - gap * count) / count))
+    }
+    private var gridWidth: CGFloat { labelWidth + gap + CGFloat(weeks.count) * (side + gap) }
 
     var body: some View {
         let active = weeks.joined().compactMap { $0 }.filter { $0 > 0 }.count
-        // Squares as wide as the weeks allow: bigger when there are fewer weeks.
-        HStack(alignment: .top, spacing: 3) {
-            ForEach(Array(weeks.enumerated()), id: \.offset) { _, week in
-                VStack(spacing: 3) {
-                    ForEach(Array(week.enumerated()), id: \.offset) { _, actions in
-                        RoundedRectangle(cornerRadius: 4, style: .continuous)
-                            .fill(color(actions))
-                            .aspectRatio(1, contentMode: .fit)
-                    }
-                }
-                .frame(maxWidth: 26)
+        VStack(alignment: .leading, spacing: 8) {
+            grid
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(L.t("最近 \(weeks.count) 週學了 \(active) 天", "\(active) days in the last \(weeks.count) weeks"))
+                .accessibilityIdentifier("me-calendar")
+                .overlay(alignment: .topLeading) { tooltip }
+                .frame(maxWidth: .infinity)
+            legend
+        }
+        .background {
+            GeometryReader { proxy in
+                Color.clear
+                    .onAppear { width = proxy.size.width }
+                    .onChange(of: proxy.size.width) { _, new in width = new }
             }
         }
-        .frame(maxWidth: .infinity)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(L.t("最近 \(weeks.count) 週學了 \(active) 天", "\(active) days in the last \(weeks.count) weeks"))
-        .accessibilityIdentifier("me-calendar")
+        .sensoryFeedback(.selection, trigger: selected)
+    }
+
+    private var grid: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            HStack(spacing: gap) {
+                Color.clear.frame(width: labelWidth, height: monthHeight)
+                ForEach(weeks.indices, id: \.self) { week in
+                    Text(monthLabel(week) ?? "")
+                        .font(.system(size: 9, weight: .semibold))
+                        .foregroundStyle(Palette.secondaryLabel)
+                        .fixedSize()
+                        .frame(width: side, height: monthHeight, alignment: .leading)
+                }
+            }
+            HStack(alignment: .top, spacing: gap) {
+                VStack(spacing: gap) {
+                    ForEach(0..<7, id: \.self) { day in
+                        Text(day % 2 == 0 && day < 6 ? weekdayName(day) : "")
+                            .font(.system(size: 8, weight: .semibold))
+                            .foregroundStyle(Palette.tertiaryLabel)
+                            .frame(width: labelWidth, height: side, alignment: .leading)
+                    }
+                }
+                ForEach(Array(weeks.enumerated()), id: \.offset) { week, days in
+                    VStack(spacing: gap) {
+                        ForEach(Array(days.enumerated()), id: \.offset) { day, actions in
+                            square(Cell(week: week, day: day), actions: actions)
+                        }
+                    }
+                }
+            }
+        }
+        .frame(width: gridWidth, alignment: .leading)
+    }
+
+    private func square(_ cell: Cell, actions: Int?) -> some View {
+        RoundedRectangle(cornerRadius: 2.5, style: .continuous)
+            .fill(color(actions))
+            .frame(width: side, height: side)
+            .overlay {
+                if selected == cell {
+                    RoundedRectangle(cornerRadius: 2.5, style: .continuous).stroke(Palette.ink, lineWidth: 1.5)
+                }
+            }
+            .contentShape(Rectangle().inset(by: -gap / 2))
+            .onTapGesture {
+                guard actions != nil else { return }
+                withAnimation(.snappy(duration: 0.2)) { selected = selected == cell ? nil : cell }
+            }
+    }
+
+    /// The day tapped, in a bubble above its square (below it for the top rows).
+    @ViewBuilder private var tooltip: some View {
+        if let selected, weeks.indices.contains(selected.week), weeks[selected.week].indices.contains(selected.day),
+           let actions = weeks[selected.week][selected.day] {
+            let x = labelWidth + gap + CGFloat(selected.week) * (side + gap) + side / 2
+            let top = monthHeight + 2 + CGFloat(selected.day) * (side + gap)
+            let y = selected.day >= 3 ? top - 22 : top + side + 22
+            VStack(spacing: 1) {
+                Text(dayTitle(selected)).font(.caption2.weight(.bold))
+                Text(actions > 0 ? L.t("練習 \(actions) 次", "\(actions) practised") : L.t("沒有練習", "No practice"))
+                    .font(.caption2)
+            }
+            .foregroundStyle(Palette.surface)
+            .padding(.horizontal, 9)
+            .padding(.vertical, 5)
+            .background(Palette.ink, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .fixedSize()
+            .position(x: min(max(x, 56), max(56, gridWidth - 56)), y: y)
+            .onTapGesture { withAnimation(.snappy(duration: 0.2)) { self.selected = nil } }
+            .transition(.opacity.combined(with: .scale(scale: 0.9)))
+            .accessibilityElement(children: .combine)
+            .accessibilityIdentifier("me-calendar-detail")
+        }
+    }
+
+    private var legend: some View {
+        HStack(spacing: 3) {
+            Text(L.t("點一格看那天", "Tap a day"))
+                .font(.caption2)
+                .foregroundStyle(Palette.secondaryLabel)
+            Spacer(minLength: 8)
+            Text(L.t("少", "Less")).font(.caption2).foregroundStyle(Palette.secondaryLabel)
+            ForEach([0, 1, 10, 25, 50], id: \.self) { actions in
+                RoundedRectangle(cornerRadius: 2, style: .continuous).fill(color(actions)).frame(width: 9, height: 9)
+            }
+            Text(L.t("多", "More")).font(.caption2).foregroundStyle(Palette.secondaryLabel)
+        }
+        .accessibilityHidden(true)
+    }
+
+    // MARK: Dates
+
+    private var firstMonday: Int? {
+        guard let number = DayMath.dayNumber(today), let weekday = WeekStamps.weekdayIndex(today) else { return nil }
+        return number - weekday - 7 * (weeks.count - 1)
+    }
+
+    private func date(_ week: Int, _ day: Int) -> (month: Int, day: Int)? {
+        guard let firstMonday else { return nil }
+        let parts = DayMath.string(fromDayNumber: firstMonday + 7 * week + day).split(separator: "-").compactMap { Int($0) }
+        return parts.count == 3 ? (parts[1], parts[2]) : nil
+    }
+
+    private static let englishMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+    /// The month over the first week that starts in it; over the first
+    /// column too, unless a new month starts within two weeks.
+    private func monthLabel(_ week: Int) -> String? {
+        guard let month = date(week, 0)?.month else { return nil }
+        let starts = week == 0
+            ? !(1...2).contains { $0 < weeks.count && date($0, 0)?.month != month }
+            : date(week - 1, 0)?.month != month
+        guard starts, (1...12).contains(month) else { return nil }
+        return L.t("\(month)月", Self.englishMonths[month - 1])
+    }
+
+    private func weekdayName(_ day: Int) -> String {
+        L.t(["一", "二", "三", "四", "五", "六", "日"][day], ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][day])
+    }
+
+    private func dayTitle(_ cell: Cell) -> String {
+        guard let date = date(cell.week, cell.day) else { return "" }
+        return L.t("\(date.month)月\(date.day)日（\(weekdayName(cell.day))）", "\(weekdayName(cell.day)), \(Self.englishMonths[date.month - 1]) \(date.day)")
     }
 
     private func color(_ actions: Int?) -> Color {

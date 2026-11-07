@@ -99,7 +99,7 @@ struct QuizSessionView: View {
             guard advancing else { return }
             next()
         }
-        .catTip(.quiz, at: .top)
+        .catTip(.quiz)
     }
 
     private func start() {

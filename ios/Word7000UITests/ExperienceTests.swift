@@ -44,6 +44,23 @@ final class ExperienceTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["study-position"].label.hasPrefix("4 /"))
     }
 
+    /// A screen's first tip dims everything and stays until "Got it":
+    /// nothing is half covered and it does not slip away unread.
+    func testCatTipDimsTheScreenUntilGotIt() {
+        let app = launch(["-uiTestingTips"])
+        app.buttons["today-start"].tap()
+        let tip = app.descendants(matching: .any)["cat-tip-study"].firstMatch
+        XCTAssertTrue(tip.waitForExistence(timeout: 5), app.debugDescription)
+        sleep(1)
+        snapshot(app, "cat-tip-coach-mark")
+        // Still there well after the old banner would have gone.
+        sleep(9)
+        XCTAssertTrue(tip.exists, "the tip waits for the learner")
+        app.buttons["cat-tip-close"].tap()
+        XCTAssertTrue(tip.waitForNonExistence(timeout: 3))
+        XCTAssertTrue(app.buttons["study-show-answer"].waitForExistence(timeout: 5))
+    }
+
     func testAutoRevealShowsAnswersWithoutATap() {
         let app = launch()
         app.buttons["today-start"].tap()
@@ -152,11 +169,10 @@ final class ExperienceTests: XCTestCase {
         XCTAssertTrue(english.waitForExistence(timeout: 10), app.debugDescription)
         if snap { snapshot(app, "welcome-1-language") }
         english.tap()
-        let next = app.buttons["welcome-next"]
-        XCTAssertTrue(next.waitForExistence(timeout: 5))
-        app.buttons["welcome-goal-30"].tap()
+        let goal = app.buttons["welcome-goal-30"]
+        XCTAssertTrue(goal.waitForExistence(timeout: 5))
         if snap { snapshot(app, "welcome-2-goal") }
-        next.tap()
+        goal.tap()
         let start = app.buttons["welcome-start"]
         XCTAssertTrue(start.waitForExistence(timeout: 5))
         let word = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'welcome-word-'")).firstMatch

@@ -86,12 +86,7 @@ struct PracticeView: View {
         let words = wordItems
         // Short tiles, icon beside the name, so the whole page fits one
         // screen; it still scrolls at the large text sizes.
-        let rows = CGFloat((max(0, words.count - 1) + 1) / 2 + (speakingItems.count + 1) / 2)
-        // What is left for the tiles once the card, the headers, the gaps and
-        // the tab bar are counted, shared by the rows: never below the short
-        // tile, never a slab.
-        let spare = pageHeight - 118 - 96 - 2 * 34 - 4 * 10 - (rows - 2) * 10
-        let tileHeight = dynamicTypeSize.isAccessibilitySize ? 68 : min(150, max(68, spare / max(1, rows)))
+        let tileHeight = tileHeight(wordTiles: max(0, words.count - 1))
         ScrollView {
             VStack(alignment: .leading, spacing: 10) {
                 if let featured = words.first { featuredCard(featured) }
@@ -125,6 +120,19 @@ struct PracticeView: View {
             }
             .compactSheet()
         }
+    }
+
+    /// What is left for the tiles once the card, the headers, the gaps and
+    /// the tab bar are counted, shared by the rows: never below the short
+    /// tile, never a slab. Its own function, so the body stays quick to
+    /// type-check on the release Xcode.
+    private func tileHeight(wordTiles: Int) -> CGFloat {
+        if dynamicTypeSize.isAccessibilitySize { return 68 }
+        let rowCount: Int = (wordTiles + 1) / 2 + (speakingItems.count + 1) / 2
+        let rows = CGFloat(max(1, rowCount))
+        let fixed: CGFloat = 118 + 96 + 68 + 40 + (rows - 2) * 10
+        let spare: CGFloat = pageHeight - fixed
+        return min(150, max(68, spare / rows))
     }
 
     /// The practice to do now, on the same leather or paper as Today's card.

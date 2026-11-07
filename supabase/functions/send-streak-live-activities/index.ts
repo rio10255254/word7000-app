@@ -147,7 +147,7 @@ async function sendStartRequest(
         keepStreakLabel: remaining > 0
           ? chinese
             ? `再學 ${remaining} 個單字，完成今天目標`
-            : `Study ${remaining} more words to reach today's goal`
+            : `Study ${remaining} more ${remaining === 1 ? 'word' : 'words'} to reach today's goal`
           : chinese
             ? '今日目標已完成，複習 1 個單字保持手感'
             : 'Goal complete. Review 1 word to stay sharp',
@@ -190,6 +190,8 @@ async function sendStartRequest(
     return new Response('BadDeviceToken', { status: 400 });
   }
 
+  // A network error for one device must not lose the whole round: it comes
+  // back as a failed send, which releases that device's claim like any other.
   return fetch(`${host}/3/device/${device.push_to_start_token}`, {
     body: JSON.stringify(payload),
     headers: {
@@ -201,7 +203,7 @@ async function sendStartRequest(
       'content-type': 'application/json',
     },
     method: 'POST',
-  });
+  }).catch((error) => new Response(`NetworkError: ${String(error).slice(0, 200)}`, { status: 503 }));
 }
 
 async function inBatches<T, R>(items: T[], size: number, work: (item: T) => Promise<R>): Promise<R[]> {

@@ -427,8 +427,8 @@ final class ExperienceTests: XCTestCase {
         settings.tap()
         XCTAssertTrue(app.switches["settings-auto-reveal"].waitForExistence(timeout: 5))
         let reminder = app.switches["settings-reminder"]
-        for _ in 0..<3 where !reminder.isHittable { app.swipeUp() }
-        XCTAssertTrue(reminder.exists)
+        for _ in 0..<3 where !reminder.exists { app.swipeUp() }
+        XCTAssertTrue(reminder.exists, app.debugDescription)
         XCTAssertTrue(app.buttons["settings-intelligence"].exists)
         snapshot(app, "settings-top")
         let speech = app.buttons["settings-speech"]

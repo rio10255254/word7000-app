@@ -94,12 +94,11 @@ final class ScreenshotTests: XCTestCase {
         app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["單字", "Words"])).firstMatch.tap()
         app.buttons["words-add"].tap()
         app.buttons["words-new-bank"].tap()
-        let alert = app.alerts.firstMatch
-        XCTAssertTrue(alert.waitForExistence(timeout: 5))
-        let name = alert.textFields.firstMatch
+        let name = app.textFields["bank-name-input"]
+        XCTAssertTrue(name.waitForExistence(timeout: 5))
         name.tap()
         name.typeText("Lesson")
-        app.alerts.buttons["儲存"].tap()
+        app.buttons["bank-name-save"].tap()
         let menu = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'bank-menu-'")).firstMatch
         XCTAssertTrue(menu.waitForExistence(timeout: 5), app.debugDescription)
         snap(app, "collage-bank-menu-button")

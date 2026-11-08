@@ -695,14 +695,16 @@ struct TodayView: View {
                         .foregroundStyle(Palette.secondaryLabel)
                 }
                 VStack(spacing: 10) {
-                    Menu {
-                        Picker(L.dailyTargetTitle, selection: Binding(get: { model.progress.dailyTarget }, set: { model.setDailyTarget($0) })) {
-                            ForEach([10, 20, 30, 50], id: \.self) { Text(L.t("每天 \($0) 個", "\($0) a day")).tag($0) }
-                        }
-                    } label: {
-                        sheetRow(L.dailyTargetTitle, value: L.t("\(model.progress.dailyTarget) 個", "\(model.progress.dailyTarget)"))
+                    // The daily goal is picked right here, not from a menu over the sheet.
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text(L.dailyTargetTitle).font(.headline).foregroundStyle(Palette.ink)
+                        ChoiceChips(options: [10, 20, 30, 50].map { ChoiceOption(value: $0, title: L.t("\($0) 個", "\($0)")) },
+                                    selection: model.progress.dailyTarget, identifier: "today-goal") { model.setDailyTarget($0) }
                     }
-                    .accessibilityIdentifier("today-goal")
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Palette.surface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                     Button { afterClosing { studySettingsOpen = true } } label: {
                         sheetRow(L.t("字庫", "Word bank"), value: model.bankName)
                     }

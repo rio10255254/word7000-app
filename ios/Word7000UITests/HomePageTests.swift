@@ -29,10 +29,10 @@ final class HomePageTests: XCTestCase {
         let shelf = app.buttons["today-shelf"]
         XCTAssertTrue(shelf.waitForExistence(timeout: 5))
         shelf.tap()
-        XCTAssertTrue(app.buttons["today-goal"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["today-goal-0"].waitForExistence(timeout: 5))
         sleep(1)
         snap(app, "home-3-shelf")
-        app.buttons["today-goal"].pullSheetDown()
+        app.buttons["today-goal-0"].pullSheetDown()
 
         // The quiz stop: exam-style questions on learned words, then the score.
         let quiz = app.buttons["today-quiz"]

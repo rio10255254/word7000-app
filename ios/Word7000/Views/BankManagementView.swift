@@ -13,6 +13,7 @@ struct BankManagementView: View {
     @State private var addingWord = false
     @State private var removing = false
     @State private var deletingBank = false
+    @State private var transferOpen = false
     @State private var notice: String?
 
     private var bank: CustomVocabSet? { model.customSets.sets.first { $0.id == setId } }
@@ -107,10 +108,7 @@ struct BankManagementView: View {
                     .accessibilityLabel(L.addWord)
             }
             ToolbarItemGroup(placement: .bottomBar) {
-                Menu {
-                    transferMenu(move: false)
-                    transferMenu(move: true)
-                } label: { Image(systemName: "folder.badge.plus") }
+                Button { transferOpen = true } label: { Image(systemName: "folder.badge.plus") }
                 .disabled(selected.isEmpty || model.customSets.sets.count < 2)
                 .accessibilityLabel(L.t("複製或移動單字", "Copy or move words"))
                 Spacer()
@@ -130,40 +128,46 @@ struct BankManagementView: View {
         .sensoryFeedback(.success, trigger: notice) { _, new in new != nil && (model.settings.hapticsEnabled ?? true) }
         .sheet(item: $editingWord) { WordEditorSheet(word: $0, setId: setId) }
         .sheet(isPresented: $addingWord) { WordEditorSheet(setId: setId) }
-        .confirmationDialog(L.t("刪除「\(bank?.name ?? "")」？", "Delete \u{201C}\(bank?.name ?? "")\u{201D}?"), isPresented: $deletingBank, titleVisibility: .visible) {
-            Button(L.deleteBank, role: .destructive) {
-                model.deleteSet(setId)
-                dismiss()
-            }
-            .accessibilityIdentifier("bank-manage-delete-confirm")
-            Button(L.cancel, role: .cancel) {}
-        } message: {
-            Text(L.t("學習紀錄會保留，刪除後可在單字頁按「復原」找回。", "Learning records are kept. You can undo this in Words."))
+        .warmActions(isPresented: $transferOpen, title: L.t("已選 \(selected.count) 個單字", "\(selected.count) words selected"),
+                     actions: transferActions)
+        .warmConfirm(isPresented: $deletingBank,
+                     title: L.t("刪除「\(bank?.name ?? "")」？", "Delete \u{201C}\(bank?.name ?? "")\u{201D}?"),
+                     message: L.t("學習紀錄會保留，刪除後可在單字頁按「復原」找回。", "Learning records are kept. You can undo this in Words."),
+                     confirmTitle: L.deleteBank, destructive: true, confirmIdentifier: "bank-manage-delete-confirm", mood: .thinking) {
+            model.deleteSet(setId)
+            dismiss()
         }
-        .confirmationDialog(L.t("移出 \(selected.count) 個單字？", "Remove \(selected.count) words from this bank?"), isPresented: $removing, titleVisibility: .visible) {
-            Button(L.removeFromBank, role: .destructive) {
-                withAnimation(reduceMotion ? nil : Motion.card) {
-                    model.removeWords(selected, fromSet: setId)
-                    selected = []
-                }
+        .warmConfirm(isPresented: $removing,
+                     title: L.t("移出 \(selected.count) 個單字？", "Remove \(selected.count) words from this bank?"),
+                     message: L.t("不會刪除這些單字的學習紀錄。", "Their learning records will be kept."),
+                     confirmTitle: L.removeFromBank, destructive: true, confirmIdentifier: "bank-manage-remove-confirm") {
+            withAnimation(reduceMotion ? nil : Motion.card) {
+                model.removeWords(selected, fromSet: setId)
+                selected = []
             }
-        } message: {
-            Text(L.t("不會刪除這些單字的學習紀錄。", "Their learning records will be kept."))
         }
     }
 
-    private func transferMenu(move: Bool) -> some View {
-        Menu(move ? L.t("移到其他字庫", "Move to bank") : L.t("複製到其他字庫", "Copy to bank")) {
-            ForEach(model.customSets.sets.filter { $0.id != setId }) { target in
-                Button(target.name) {
-                    let count = selected.count
-                    withAnimation(reduceMotion ? nil : Motion.card) {
-                        model.transferWords(selected, from: setId, to: target.id, move: move)
-                        selected = []
-                        notice = L.t("已將 \(count) 個單字加入「\(target.name)」", "Added \(count) words to \(target.name)")
-                    }
-                }
-            }
+    /// Copy or move the chosen words into each of the other banks.
+    private var transferActions: [WarmAction] {
+        let others = model.customSets.sets.filter { $0.id != setId }
+        let copies = others.map { (target: CustomVocabSet) -> WarmAction in
+            WarmAction(title: L.t("複製到「\(target.name)」", "Copy to \u{201C}\(target.name)\u{201D}"), icon: "doc.on.doc",
+                       identifier: "bank-copy-\(target.id)") { transfer(to: target, move: false) }
+        }
+        let moves = others.map { (target: CustomVocabSet) -> WarmAction in
+            WarmAction(title: L.t("移到「\(target.name)」", "Move to \u{201C}\(target.name)\u{201D}"), icon: "arrow.right.doc.on.clipboard",
+                       identifier: "bank-move-\(target.id)") { transfer(to: target, move: true) }
+        }
+        return copies + moves
+    }
+
+    private func transfer(to target: CustomVocabSet, move: Bool) {
+        let count = selected.count
+        withAnimation(reduceMotion ? nil : Motion.card) {
+            model.transferWords(selected, from: setId, to: target.id, move: move)
+            selected = []
+            notice = L.t("已將 \(count) 個單字加入「\(target.name)」", "Added \(count) words to \(target.name)")
         }
     }
 }

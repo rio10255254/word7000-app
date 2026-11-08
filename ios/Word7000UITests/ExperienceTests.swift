@@ -159,7 +159,7 @@ final class ExperienceTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["exam-position"].label.hasPrefix("2 /"))
         app.buttons["exam-submit"].tap()
         // Questions are left: Submit asks once.
-        let confirm = app.alerts.buttons.matching(NSPredicate(format: "label IN %@", ["交卷", "Submit"])).firstMatch
+        let confirm = app.buttons["exam-submit-confirm"]
         XCTAssertTrue(confirm.waitForExistence(timeout: 5))
         confirm.tap()
         XCTAssertTrue(app.staticTexts["exam-summary"].waitForExistence(timeout: 5))

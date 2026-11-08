@@ -27,6 +27,7 @@ struct WelcomeView: View {
     @State private var notifyAnswered = false
     @State private var lastAnswerAt = Date.distantPast
     @State private var remindAt = Calendar.current.date(bySettingHour: 20, minute: 0, second: 0, of: Date()) ?? Date()
+    @State private var notifyTimeOpen = false
     /// How the welcome ends, kept while the voice scene is shown.
     @State private var ending: (known: [String], learning: [String], practice: Bool)?
     /// WordCat Next: the exam being prepared for, and the level test.
@@ -590,13 +591,24 @@ struct WelcomeView: View {
                                "Let me remind you each day. Without it, people forget me by day three."))
             VStack(spacing: 16) {
                 ReminderPreview(time: remindAt, target: target, chinese: chinese)
-                DatePicker(text("每天提醒時間", "Remind me at"), selection: $remindAt, displayedComponents: .hourAndMinute)
-                    .font(.headline)
-                    .tint(Palette.accent)
-                    .accessibilityIdentifier("welcome-notify-time")
+                // The time as a clay chip, opening WordCat's own time sheet.
+                Button { notifyTimeOpen = true } label: {
+                    HStack {
+                        Text(text("每天提醒時間", "Remind me at"))
+                            .font(.headline)
+                            .foregroundStyle(Palette.ink)
+                        Spacer(minLength: 8)
+                        ValueChip(text: ReminderTimeSheet.label(remindMinute.wrappedValue), icon: "clock.fill")
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(SoftPressStyle())
+                .accessibilityValue(ReminderTimeSheet.label(remindMinute.wrappedValue))
+                .accessibilityIdentifier("welcome-notify-time")
             }
             .padding(18)
             .background { HomeSurface(radius: 22) }
+            .sheet(isPresented: $notifyTimeOpen) { ReminderTimeSheet(minute: remindMinute) }
             VStack(spacing: 10) {
                 Button(action: allowReminders) {
                     Label(text("好，每天提醒我", "Yes, remind me"), systemImage: "bell.badge.fill")
@@ -616,6 +628,19 @@ struct WelcomeView: View {
                 .accessibilityIdentifier("welcome-notify-later")
             }
         }
+    }
+
+    /// The reminder's time as minutes after midnight, for ReminderTimeSheet.
+    private var remindMinute: Binding<Int> {
+        Binding(
+            get: {
+                let parts = Calendar.current.dateComponents([.hour, .minute], from: remindAt)
+                return (parts.hour ?? 20) * 60 + (parts.minute ?? 0)
+            },
+            set: { minute in
+                remindAt = Calendar.current.date(bySettingHour: minute / 60, minute: minute % 60, second: 0, of: Date()) ?? remindAt
+            }
+        )
     }
 
     private func allowReminders() {

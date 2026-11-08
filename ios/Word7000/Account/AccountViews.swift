@@ -237,20 +237,16 @@ struct AccountSection: View {
         }
         .animation(reduceMotion ? nil : Motion.reveal, value: account.isPermanent)
         .sheet(isPresented: $signInOpen) { SignInSheet() }
-        .confirmationDialog(L.t("要登出嗎？", "Sign out?"), isPresented: $confirmSignOut, titleVisibility: .visible) {
-            Button(L.t("登出", "Sign out"), role: .destructive) { Task { await account.signOut() } }
-        } message: {
-            Text(L.t("會先保留這個帳號在本機的紀錄，再切換到訪客。跨裝置備份請確認同步狀態。", "Your account's records will be kept on this iPhone before switching to a guest. Check sync status for backup on other devices."))
+        .warmConfirm(isPresented: $confirmSignOut, title: L.t("要登出嗎？", "Sign out?"),
+                     message: L.t("會先保留這個帳號在本機的紀錄，再切換到訪客。跨裝置備份請確認同步狀態。", "Your account's records will be kept on this iPhone before switching to a guest. Check sync status for backup on other devices."),
+                     confirmTitle: L.t("登出", "Sign out"), destructive: true, confirmIdentifier: "account-sign-out-confirm") {
+            Task { await account.signOut() }
         }
-        .alert(L.t("刪除帳號與所有資料？", "Delete your account and all data?"), isPresented: $confirmDelete) {
-            Button(L.cancel, role: .cancel) {}
-            Button(L.t("刪除", "Delete"), role: .destructive) { Task { await account.deleteAccount() } }
-        } message: {
-            Text((plus.storeSubscribed
-                 ? L.t("學習進度、字庫和每日紀錄都會永久刪除，無法復原。刪除帳號不會取消 App Store 的 Premium 訂閱，請到「管理訂閱」取消。",
-                       "Progress, banks and daily records are deleted for good. This cannot be undone. Deleting the account doesn't cancel your App Store Premium subscription; cancel it in Manage subscription.")
-                 : L.t("學習進度、字庫和每日紀錄都會永久刪除，無法復原。", "Progress, banks and daily records are deleted for good. This cannot be undone."))
-                 + (account.isPermanent ? L.t("\n接著會請你用 Apple 確認一次，單字貓也會從 Apple 帳號的登入清單移除。", "\nYou'll confirm with Apple once, and WordCat is removed from your Apple Account's sign-in list too.") : ""))
+        .warmConfirm(isPresented: $confirmDelete, title: L.t("刪除帳號與所有資料？", "Delete your account and all data?"),
+                     message: deleteMessage,
+                     confirmTitle: L.t("刪除", "Delete"), destructive: true, confirmIdentifier: "account-delete-confirm",
+                     mood: .thinking) {
+            Task { await account.deleteAccount() }
         }
 
         if includeDeletion, account.configured, account.session != nil {
@@ -261,6 +257,14 @@ struct AccountSection: View {
                 Text(L.t("會永久刪除這個帳號的學習進度和字庫，無法復原。", "Permanently deletes this account's progress and banks. This cannot be undone."))
             }
         }
+    }
+
+    private var deleteMessage: String {
+        (plus.storeSubscribed
+         ? L.t("學習進度、字庫和每日紀錄都會永久刪除，無法復原。刪除帳號不會取消 App Store 的 Premium 訂閱，請到「管理訂閱」取消。",
+               "Progress, banks and daily records are deleted for good. This cannot be undone. Deleting the account doesn't cancel your App Store Premium subscription; cancel it in Manage subscription.")
+         : L.t("學習進度、字庫和每日紀錄都會永久刪除，無法復原。", "Progress, banks and daily records are deleted for good. This cannot be undone."))
+            + (account.isPermanent ? L.t("\n接著會請你用 Apple 確認一次，單字貓也會從 Apple 帳號的登入清單移除。", "\nYou'll confirm with Apple once, and WordCat is removed from your Apple Account's sign-in list too.") : "")
     }
 
     private var statusLine: some View {

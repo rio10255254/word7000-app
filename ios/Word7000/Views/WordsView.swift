@@ -19,6 +19,7 @@ struct WordsView: View {
     @State private var searching = true
     @State private var newName = ""
     @State private var addingWord = false
+    @State private var addMenuOpen = false
     /// Bumped by the swipe action so starring a word gives a light tap.
     @State private var favoriteToggles = 0
 
@@ -157,41 +158,44 @@ struct WordsView: View {
                 filterMenu
             }
             ToolbarItem(placement: .topBarTrailing) {
-                Menu {
-                    Button(action: scan) { Label(L.scanSheet, systemImage: "doc.text.viewfinder") }
-                    Button {
-                        newName = ""
-                        bankNameAction = .create
-                        bankNamePrompt = true
-                    } label: { Label(L.newBank, systemImage: "folder.badge.plus") }
-                    .accessibilityIdentifier("words-new-bank")
-                    if model.activeSet != nil {
-                        Button { addingWord = true } label: { Label(L.addWord, systemImage: "plus") }
-                    }
-                } label: {
+                Button { addMenuOpen = true } label: {
                     Image(systemName: "plus")
                 }
+                .accessibilityLabel(L.t("新增", "Add"))
                 .accessibilityIdentifier("words-add")
             }
         }
+        .warmActions(isPresented: $addMenuOpen, actions: addActions)
         .sheet(isPresented: $addingWord) {
             AddWordSheet()
         }
-        .alert(bankNameTitle, isPresented: $bankNamePrompt) {
-            TextField(L.bankName, text: $newName).accessibilityIdentifier("bank-name-input")
-            Button(L.cancel, role: .cancel) { bankNamePrompt = false }
-            Button(L.save) {
-                switch bankNameAction {
-                case .create:
-                    let id = model.createSet(named: newName)
-                    model.selectBank(id)
-                case let .rename(id):
-                    model.renameSet(id, to: newName)
-                }
-                bankNamePrompt = false
+        .warmTextPrompt(isPresented: $bankNamePrompt, title: bankNameTitle, text: $newName, placeholder: L.bankName,
+                        fieldIdentifier: "bank-name-input", saveIdentifier: "bank-name-save") {
+            guard !newName.trimmed.isEmpty else { return }
+            switch bankNameAction {
+            case .create:
+                let id = model.createSet(named: newName)
+                model.selectBank(id)
+            case let .rename(id):
+                model.renameSet(id, to: newName)
             }
-            .disabled(newName.trimmed.isEmpty)
         }
+    }
+
+    /// What the "+" offers: scan a sheet, a new bank, a word typed in.
+    private var addActions: [WarmAction] {
+        var actions: [WarmAction] = [
+            WarmAction(title: L.scanSheet, icon: "doc.text.viewfinder", identifier: "words-add-scan") { scan() },
+            WarmAction(title: L.newBank, icon: "folder.badge.plus", identifier: "words-new-bank") {
+                newName = ""
+                bankNameAction = .create
+                bankNamePrompt = true
+            },
+        ]
+        if model.activeSet != nil {
+            actions.append(WarmAction(title: L.addWord, icon: "plus", identifier: "words-add-word") { addingWord = true })
+        }
+        return actions
     }
 
     private var bankNameTitle: String {
@@ -266,6 +270,10 @@ struct BankShelf: View {
     var manage: (CustomVocabSet) -> Void
     var rename: (CustomVocabSet) -> Void
     @State private var deleting: CustomVocabSet?
+    @State private var confirmingDelete = false
+    /// The bank whose actions are showing (kept while the sheet closes).
+    @State private var actionsSet: CustomVocabSet?
+    @State private var bankActionsOpen = false
     @State private var paywall: PaywallReason?
     @ScaledMetric(relativeTo: .body) private var shelfWidth = 140.0
     @ScaledMetric(relativeTo: .body) private var shelfHeight = 124.0
@@ -291,13 +299,8 @@ struct BankShelf: View {
                          icon: scanned ? "doc.text.viewfinder" : "folder.fill", color: Color(hex: set.color) ?? Palette.accent)
                         .overlay(alignment: .topTrailing) {
                             // Everything to do with a bank, in one place: manage its words,
-                            // rename it or delete it (long press offers the same).
-                            Menu {
-                                Button { manage(set) } label: { Label(L.t("管理單字", "Manage words"), systemImage: "slider.horizontal.3") }
-                                Button { rename(set) } label: { Label(L.renameBank, systemImage: "pencil") }
-                                Divider()
-                                Button(role: .destructive) { deleting = set } label: { Label(L.deleteBank, systemImage: "trash") }
-                            } label: {
+                            // rename it or delete it (a long press on the card offers the same).
+                            Button { openActions(for: set) } label: {
                                 Image(systemName: "ellipsis.circle")
                                     .font(.body.weight(.semibold))
                                     .foregroundStyle(model.settings.activeBankId == set.id && appStyle != .collage ? .white : Palette.accent)
@@ -309,23 +312,9 @@ struct BankShelf: View {
                             .accessibilityLabel(L.t("管理 \(set.name)", "Manage \(set.name)"))
                             .accessibilityIdentifier("bank-menu-\(set.id)")
                         }
-                        .contextMenu {
-                            Button { manage(set) } label: { Label(L.t("管理", "Manage"), systemImage: "slider.horizontal.3") }
-                            Button { rename(set) } label: { Label(L.renameBank, systemImage: "pencil") }
-                            Button(role: .destructive) { deleting = set } label: { Label(L.deleteBank, systemImage: "trash") }
-                                .accessibilityIdentifier("bank-delete")
-                        } preview: {
-                            VStack(alignment: .leading, spacing: 12) {
-                                Image(systemName: scanned ? "doc.text.viewfinder" : "folder.fill").font(.title2)
-                                Spacer(minLength: 0)
-                                Text(set.name).font(.headline).lineLimit(3)
-                                Text(L.bankWordCount(set.wordIds.count)).font(.subheadline)
-                            }
-                            .foregroundStyle(.white)
-                            .padding(20)
-                            .frame(width: 220, height: 160, alignment: .leading)
-                            .background(Color(hex: set.color) ?? Palette.accent, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-                        }
+                        .simultaneousGesture(LongPressGesture(minimumDuration: 0.5).onEnded { _ in
+                            openActions(for: set)
+                        })
                 }
                 Button(action: scan) {
                     VStack(alignment: .leading, spacing: 0) {
@@ -366,17 +355,32 @@ struct BankShelf: View {
         .scrollClipDisabled()
         .sheet(item: $paywall) { reason in PaywallView(reason: reason) }
         .sensoryFeedback(.selection, trigger: model.settings.activeBankId) { _, _ in model.settings.hapticsEnabled ?? true }
-        .confirmationDialog(L.t("刪除「\(deleting?.name ?? "")」？", "Delete \u{201C}\(deleting?.name ?? "")\u{201D}?"),
-                            isPresented: Binding(get: { deleting != nil }, set: { if !$0 { deleting = nil } }), titleVisibility: .visible) {
-            Button(L.deleteBank, role: .destructive) {
-                if let set = deleting { model.deleteSet(set.id) }
-                deleting = nil
-            }
-            .accessibilityIdentifier("bank-delete-confirm")
-            Button(L.cancel, role: .cancel) { deleting = nil }
-        } message: {
-            Text(L.t("學習紀錄會保留，刪除後可按「復原」找回字庫。", "Learning records are kept. You can undo this deletion in the word library."))
+        .warmActions(isPresented: $bankActionsOpen, title: actionsSet?.name, actions: bankActions)
+        .warmConfirm(isPresented: $confirmingDelete,
+                     title: L.t("刪除「\(deleting?.name ?? "")」？", "Delete \u{201C}\(deleting?.name ?? "")\u{201D}?"),
+                     message: L.t("學習紀錄會保留，刪除後可按「復原」找回字庫。", "Learning records are kept. You can undo this deletion in the word library."),
+                     confirmTitle: L.deleteBank, destructive: true, confirmIdentifier: "bank-delete-confirm", mood: .thinking) {
+            if let set = deleting { model.deleteSet(set.id) }
         }
+    }
+
+    private func openActions(for set: CustomVocabSet) {
+        guard !bankActionsOpen, !confirmingDelete else { return }
+        actionsSet = set
+        bankActionsOpen = true
+    }
+
+    /// Manage, rename or delete the bank whose "…" was tapped (or card held).
+    private var bankActions: [WarmAction] {
+        guard let set = actionsSet else { return [] }
+        return [
+            WarmAction(title: L.t("管理單字", "Manage words"), icon: "slider.horizontal.3", identifier: "bank-manage") { manage(set) },
+            WarmAction(title: L.renameBank, icon: "pencil", identifier: "bank-rename") { rename(set) },
+            WarmAction(title: L.deleteBank, icon: "trash", destructive: true, identifier: "bank-delete") {
+                deleting = set
+                confirmingDelete = true
+            },
+        ]
     }
 
     /// Trial scans left, or the Plus badge once scanning is locked.
@@ -405,6 +409,8 @@ struct BankShelf: View {
         // Leather fills the chosen card with its colour; the collage tapes it down and stamps it.
         let filled = active && !collage
         return Button {
+            // A long press opened the bank's actions: letting go does not choose it.
+            if bankActionsOpen { return }
             if let locked { locked(); return }
             withAnimation(reduceMotion ? nil : Motion.reveal) { model.selectBank(id) }
         } label: {
@@ -542,6 +548,7 @@ struct WordDetailView: View {
     @Environment(\.appStyle) private var appStyle
     var word: WordEntry
     @State private var editing = false
+    @State private var bankMenuOpen = false
     /// Bumped when the word joins a bank, for a short success tap.
     @State private var addedToBank = 0
     @ScaledMetric(relativeTo: .largeTitle) private var titleSize = 38.0
@@ -654,34 +661,10 @@ struct WordDetailView: View {
                 }
             }
             ToolbarItem(placement: .topBarTrailing) {
-                Menu {
-                    ForEach(model.customSets.sets) { set in
-                        Button {
-                            model.addWord(word.id, toSet: set.id)
-                            addedToBank += 1
-                        } label: {
-                            Label(set.name, systemImage: set.wordIds.contains(word.id) ? "checkmark" : "folder")
-                        }
-                        .disabled(set.wordIds.contains(word.id))
-                    }
-                    Button {
-                        let id = model.createSet(named: L.newBankDefault)
-                        model.addWord(word.id, toSet: id)
-                        addedToBank += 1
-                    } label: {
-                        Label(L.newBank, systemImage: "folder.badge.plus")
-                    }
-                    if let active = model.activeSet, active.wordIds.contains(word.id) {
-                        Divider()
-                        Button(role: .destructive) {
-                            model.removeWord(word.id, fromSet: active.id)
-                        } label: {
-                            Label(L.removeFromBank, systemImage: "minus.circle")
-                        }
-                    }
-                } label: {
+                Button { bankMenuOpen = true } label: {
                     Image(systemName: "folder.badge.plus")
                 }
+                .accessibilityIdentifier("word-add-to-bank")
                 .accessibilityLabel(L.addToBank)
             }
             ToolbarItem(placement: .topBarTrailing) {
@@ -694,7 +677,33 @@ struct WordDetailView: View {
                 .accessibilityLabel(progress.favorite ? L.unfavoriteWord : L.favoriteWord)
             }
         }
+        .warmActions(isPresented: $bankMenuOpen, title: L.addToBank, actions: bankActions(word))
         .catTip(.wordDetail)
+    }
+
+    /// Each bank to put the word in, a new one, or out of the bank it is in.
+    private func bankActions(_ word: WordEntry) -> [WarmAction] {
+        var actions: [WarmAction] = model.customSets.sets.map { (set: CustomVocabSet) -> WarmAction in
+            let inside = set.wordIds.contains(word.id)
+            return WarmAction(title: set.name, icon: inside ? "checkmark" : "folder",
+                              detail: inside ? L.t("已在這個字庫", "Already in this bank") : nil,
+                              identifier: "word-bank-\(set.id)", disabled: inside) {
+                model.addWord(word.id, toSet: set.id)
+                addedToBank += 1
+            }
+        }
+        actions.append(WarmAction(title: L.newBank, icon: "folder.badge.plus", identifier: "word-bank-new") {
+            let id = model.createSet(named: L.newBankDefault)
+            model.addWord(word.id, toSet: id)
+            addedToBank += 1
+        })
+        if let active = model.activeSet, active.wordIds.contains(word.id) {
+            let activeId = active.id
+            actions.append(WarmAction(title: L.removeFromBank, icon: "minus.circle", destructive: true, identifier: "word-bank-remove") {
+                model.removeWord(word.id, fromSet: activeId)
+            })
+        }
+        return actions
     }
 }
 

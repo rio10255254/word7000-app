@@ -309,31 +309,24 @@ struct SpeakingSessionView: View {
         model.usesOtherBank || (model.settings.speakingFilter ?? FilterSelection()).isActive
     }
 
+    /// Which word list: the core bank, the official ones open to this
+    /// learner, and their own; laid out as chips rather than a menu.
     private var scopePicker: some View {
-        Menu {
-            Button { model.selectBank(WordBanks.coreBankId) } label: {
-                Label(L.coreBankName, systemImage: model.usesOtherBank ? "character.book.closed" : "checkmark")
-            }
-            ForEach(model.officialBanks.filter { !$0.premium || plus.subscribed }) { bank in
-                Button { model.selectBank(bank.selectionId) } label: {
-                    Label(bank.localizedName, systemImage: model.settings.activeBankId == bank.selectionId ? "checkmark" : "books.vertical")
-                }
-            }
-            ForEach(model.customSets.sets) { set in
-                Button { model.selectBank(set.id) } label: {
-                    Label(set.name, systemImage: model.settings.activeBankId == set.id ? "checkmark" : "folder")
-                }
-            }
-        } label: {
-            HStack(spacing: 8) {
-                Label(L.t("字庫", "Word bank"), systemImage: "books.vertical").foregroundStyle(.primary)
-                Spacer(minLength: 8)
-                Text(model.bankName).lineLimit(1).foregroundStyle(.secondary)
-                Image(systemName: "chevron.up.chevron.down").font(.caption2.weight(.semibold)).foregroundStyle(.secondary)
-            }
-            .frame(minHeight: 44)
+        var options: [ChoiceOption<String>] = [
+            ChoiceOption(value: WordBanks.coreBankId, title: L.coreBankName, icon: "character.book.closed"),
+        ]
+        for bank in model.officialBanks where !bank.premium || plus.subscribed {
+            options.append(ChoiceOption(value: bank.selectionId, title: bank.localizedName, icon: "books.vertical"))
         }
-        .accessibilityIdentifier("speaking-bank")
+        for set in model.customSets.sets {
+            options.append(ChoiceOption(value: set.id, title: set.name, icon: "folder"))
+        }
+        let selection: String = model.usesOtherBank ? model.settings.activeBankId : WordBanks.coreBankId
+        return ChoiceRow(title: L.t("字庫", "Word bank"), icon: "books.vertical", tint: Palette.accent,
+                         options: options, selection: selection, equalWidths: false,
+                         identifier: "speaking-bank") { id in
+            model.selectBank(id)
+        }
     }
 
     private var emptyScope: some View {
@@ -358,19 +351,14 @@ struct SpeakingSessionView: View {
 
     /// Everyday scenarios or word practice, side by side at the top.
     private var trackPicker: some View {
-        Picker(L.t("練習方式", "Practice"), selection: Binding(
-            get: { scenarioRef == nil },
-            set: { words in
-                guard words != (scenarioRef == nil) else { return }
-                model.settings.speakingWordsTab = words
-                start(words ? .words : nil)
-            }
-        )) {
-            Text(L.t("生活情境", "Scenarios")).tag(false)
-            Text(L.t("單字口說", "Words")).tag(true)
+        ChoiceChips(options: [
+            ChoiceOption(value: false, title: L.t("生活情境", "Scenarios"), icon: "bubble.left.and.bubble.right.fill"),
+            ChoiceOption(value: true, title: L.t("單字口說", "Words"), icon: "textformat.abc"),
+        ], selection: scenarioRef == nil, identifier: "speaking-track") { words in
+            guard words != (scenarioRef == nil) else { return }
+            model.settings.speakingWordsTab = words
+            start(words ? .words : nil)
         }
-        .pickerStyle(.segmented)
-        .accessibilityIdentifier("speaking-track")
     }
 
     /// Starts a stage: the one given, or the next on the tab last used (the

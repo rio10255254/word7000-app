@@ -163,9 +163,9 @@ final class ScanPickerTests: XCTestCase {
         app.tabBars.buttons.element(boundBy: 0).tap()
         app.buttons["today-speaking"].tap()
         // Speaking opens on the scenario path; the word list is a tab beside it.
-        let track = app.segmentedControls["speaking-track"]
+        let track = app.buttons["speaking-track-0"]
         XCTAssertTrue(track.waitForExistence(timeout: 10))
-        track.buttons["單字口說"].tap()
+        app.buttons["speaking-track-1"].tap()
         // A word with an example opens on saying it; one without goes straight to the question.
         if app.buttons["shadow-skip"].waitForExistence(timeout: 5) { app.buttons["shadow-skip"].tap() }
         XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 10), app.debugDescription)
@@ -216,14 +216,12 @@ final class ScanPickerTests: XCTestCase {
         app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["單字", "Words"])).firstMatch.tap()
         app.buttons["words-add"].tap()
         app.buttons["words-new-bank"].tap()
-        let alert = app.alerts.firstMatch
-        XCTAssertTrue(alert.waitForExistence(timeout: 5), app.debugDescription)
-        let name = alert.textFields.firstMatch
+        let name = app.textFields["bank-name-input"]
         XCTAssertTrue(name.waitForExistence(timeout: 5), app.debugDescription)
         name.tap()
         name.typeText("Lesson")
         XCTAssertEqual(name.value as? String, "Lesson")
-        app.alerts.buttons["儲存"].tap()
+        app.buttons["bank-name-save"].tap()
         let created = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'bank-set-' AND label CONTAINS 'Lesson'")).firstMatch
         XCTAssertTrue(created.waitForExistence(timeout: 5), app.debugDescription)
         snapshot(app, name: "empty-manual-bank-created")

@@ -98,7 +98,7 @@ final class SpeakingCoachTests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["speaking-role"].firstMatch.exists)
         snapshot(app, "speaking-scenario-question-en")
         // Word speaking is the other tab.
-        app.segmentedControls["speaking-track"].buttons["Words"].tap()
+        app.buttons["speaking-track-1"].tap()
         wait(app.staticTexts["speaking-stage"], matching: "label == 'Word speaking'")
         XCTAssertFalse(app.buttons["speaking-scenarios"].exists, "The scenario list belongs to the scenario tab")
         XCTAssertTrue(app.buttons["speaking-filters"].exists)
@@ -107,7 +107,7 @@ final class SpeakingCoachTests: XCTestCase {
         // whichever tab was used last; word speaking is in the Practice tab.
         tap(app.buttons["today-speaking"], in: app)
         wait(app.staticTexts["speaking-stage"], matching: "label CONTAINS 'Restaurant'")
-        app.segmentedControls["speaking-track"].buttons["Words"].tap()
+        app.buttons["speaking-track-1"].tap()
         wait(app.staticTexts["speaking-stage"], matching: "label == 'Word speaking'")
     }
 

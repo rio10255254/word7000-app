@@ -117,9 +117,9 @@ final class AppStoreScreenshotTests: XCTestCase {
             }
         }
         // The coach's sample answer fits a word question, so check it under Words.
-        let track = app.segmentedControls["speaking-track"]
+        let track = app.buttons["speaking-track-0"]
         if track.waitForExistence(timeout: 3) {
-            track.buttons.element(boundBy: 1).tap()
+            app.buttons["speaking-track-1"].tap()
             if skip.waitForExistence(timeout: 5) { skip.tap() }
             XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 5), app.debugDescription)
             sleep(1)

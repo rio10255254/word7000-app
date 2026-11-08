@@ -83,17 +83,18 @@ struct ExamView: View {
                 }
             }
         }
-        .alert(L.t("要離開模擬考嗎？", "Leave the mock exam?"), isPresented: $confirmingLeave) {
-            Button(L.t("離開", "Leave"), role: .destructive) { dismiss() }
-            Button(L.t("繼續作答", "Keep going"), role: .cancel) {}
-        } message: {
-            Text(L.t("已經答的 \(answers.count) 題不會記錄。", answers.count == 1 ? "The answer given won't be kept." : "The \(answers.count) answers given won't be kept."))
+        .warmConfirm(isPresented: $confirmingLeave, title: L.t("要離開模擬考嗎？", "Leave the mock exam?"),
+                     message: L.t("已經答的 \(answers.count) 題不會記錄。", answers.count == 1 ? "The answer given won't be kept." : "The \(answers.count) answers given won't be kept."),
+                     confirmTitle: L.t("離開", "Leave"), destructive: true, confirmIdentifier: "exam-leave-confirm",
+                     cancelTitle: L.t("繼續作答", "Keep going"), mood: .thinking) {
+            dismiss()
         }
-        .alert(L.t("還有 \(questions.count - answers.count) 題沒答", "\(questions.count - answers.count) left unanswered"), isPresented: $confirmingSubmit) {
-            Button(L.t("交卷", "Submit")) { submit() }
-            Button(L.t("繼續作答", "Keep going"), role: .cancel) {}
-        } message: {
-            Text(L.t("沒答的會算錯。", "Unanswered questions count as wrong."))
+        .warmConfirm(isPresented: $confirmingSubmit,
+                     title: L.t("還有 \(questions.count - answers.count) 題沒答", "\(questions.count - answers.count) left unanswered"),
+                     message: L.t("沒答的會算錯。", "Unanswered questions count as wrong."),
+                     confirmTitle: L.t("交卷", "Submit"), confirmIdentifier: "exam-submit-confirm",
+                     cancelTitle: L.t("繼續作答", "Keep going")) {
+            submit()
         }
         .onAppear { if questions.isEmpty { start() } }
         .task(id: startedAt) {

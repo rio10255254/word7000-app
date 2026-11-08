@@ -866,7 +866,9 @@ extension AppModel {
 /// ask about notifications (master asks as the app opens).
 struct ReminderAskCard: View {
     @Environment(AppModel.self) private var model
-    @State private var time = Calendar.current.date(bySettingHour: 20, minute: 0, second: 0, of: Date()) ?? Date()
+    /// Minutes after midnight.
+    @State private var minute = 20 * 60
+    @State private var timeOpen = false
     @State private var answered = false
 
     var body: some View {
@@ -875,9 +877,20 @@ struct ReminderAskCard: View {
                 Label(L.t("明天幾點提醒你？", "When should I remind you?"), systemImage: "bell.badge.fill")
                     .font(.title3.weight(.bold))
                     .foregroundStyle(Palette.ink)
-                DatePicker(L.t("每天", "Every day at"), selection: $time, displayedComponents: .hourAndMinute)
-                    .font(.headline)
-                    .accessibilityIdentifier("reminder-time")
+                // The time as a clay chip, opening WordCat's own time sheet.
+                Button { timeOpen = true } label: {
+                    HStack {
+                        Text(L.t("每天", "Every day at"))
+                            .font(.headline)
+                            .foregroundStyle(Palette.ink)
+                        Spacer(minLength: 8)
+                        ValueChip(text: ReminderTimeSheet.label(minute), icon: "clock.fill")
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(SoftPressStyle())
+                .accessibilityValue(ReminderTimeSheet.label(minute))
+                .accessibilityIdentifier("reminder-time")
                 Button(action: set) {
                     Text(L.t("每天這個時間提醒我", "Remind me at this time")).font(.headline).frame(maxWidth: .infinity)
                 }
@@ -894,12 +907,11 @@ struct ReminderAskCard: View {
             .padding(16)
             .background(Palette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
             .transition(.opacity)
+            .sheet(isPresented: $timeOpen) { ReminderTimeSheet(minute: $minute) }
         }
     }
 
     private func set() {
-        let parts = Calendar.current.dateComponents([.hour, .minute], from: time)
-        let minute = (parts.hour ?? 20) * 60 + (parts.minute ?? 0)
         model.settings.reminderMinute = minute
         model.setReminderEnabled(true)
         Usage.log("reminder_time", "\(minute)")

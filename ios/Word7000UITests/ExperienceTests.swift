@@ -133,7 +133,7 @@ final class ExperienceTests: XCTestCase {
         let app = launch()
         app.openPractice("practice-meaning")
         XCTAssertTrue(app.buttons["quiz-start"].waitForExistence(timeout: 5))
-        app.segmentedControls["quiz-question-count"].buttons["20"].tap()
+        app.buttons["quiz-question-count-1"].tap()
         app.buttons["quiz-start"].tap()
         XCTAssertTrue(app.buttons["quiz-option-0"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["1 / 20"].exists)
@@ -143,8 +143,8 @@ final class ExperienceTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["2 / 20"].waitForExistence(timeout: 5))
         app.buttons["quiz-close"].tap()
         app.openPractice("practice-meaning")
-        XCTAssertTrue(app.segmentedControls["quiz-question-count"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.segmentedControls["quiz-question-count"].buttons["20"].isSelected)
+        XCTAssertTrue(app.buttons["quiz-question-count-1"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["quiz-question-count-1"].isSelected, "20 questions is remembered")
     }
 
     func testExamUsesConciseOptionsAndCanBeSubmittedOnSmallScreens() {

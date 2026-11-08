@@ -57,6 +57,12 @@ struct SpeakingSessionView: View {
     /// when there are none or the step is done.
     @State private var wordChoices: [String] = []
     @State private var bannerShown = false
+    /// WordCat Next: a stage's curtain is up (StageCurtain); nothing is read until it goes.
+    @State private var curtain = false
+    /// A new start of a stage, so the listening chat starts afresh even on the same stage.
+    @State private var runID = UUID()
+    /// A stage picked on the map, started once the map has slid away.
+    @State private var pickedStage: SpeakingScenarios.StageRef?
     @State private var coachAnswer = ""
     @State private var coachTranscriptNeedsReview = false
     @State private var coachContextID = UUID()
@@ -122,10 +128,12 @@ struct SpeakingSessionView: View {
                     } else if count == 0 {
                         emptyScope
                     } else if !listened, scenarioRef != nil {
-                        SpeakingListenView(title: stageTitle, lines: listenLines, language: speakLanguage) {
+                        SpeakingListenView(title: stageTitle, lines: listenLines, language: speakLanguage,
+                                           paused: curtain || scenariosOpen) {
                             bannerShown = true
                             withAnimation(reduceMotion ? nil : Motion.reveal) { listened = true }
                         }
+                        .id(runID)
                     } else if index >= count, !wordChoices.isEmpty {
                         UseTodaysWordView(place: scenarioPlace, wordIds: wordChoices) { wordId, used in
                             model.recordTodaysWordUse(wordId: wordId, used: used)
@@ -141,6 +149,16 @@ struct SpeakingSessionView: View {
             .padding(.horizontal, Metrics.gutter)
             .padding(.bottom, 8)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .overlay {
+                if curtain, let ref = scenarioRef {
+                    StageCurtain(ref: ref) {
+                        bannerShown = true
+                        curtain = false
+                    }
+                    .id(runID)
+                    .transition(.opacity)
+                }
+            }
             .background { AmbientBackground(tint: Palette.known) }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -208,8 +226,8 @@ struct SpeakingSessionView: View {
         .sensoryFeedback(.success, trigger: attempted) { _, new in new && (model.settings.hapticsEnabled ?? true) }
         // Each new item is read aloud once (Settings → Reading voice): in a
         // role-play, what the other person says, then the reply to say after it.
-        .task(id: "\(started)-\(listened)-\(index)-\(count)-\(shadowing)-\(String(describing: source))") {
-            guard started, listened, index < count, !AppRuntime.uiTesting,
+        .task(id: "\(started)-\(listened)-\(index)-\(count)-\(shadowing)-\(String(describing: source))-\(curtain)-\(scenariosOpen)") {
+            guard started, listened, index < count, !curtain, !scenariosOpen, !AppRuntime.uiTesting,
                   model.settings.speech?.autoReadQuestions ?? true else { return }
             let card = card(at: index)
             let sentence = shadowSentence(card)
@@ -263,10 +281,19 @@ struct SpeakingSessionView: View {
                 .compactSheet()
             }
         }
-        .sheet(isPresented: $scenariosOpen) {
-            ScenarioPickerView(progress: model.speakingPath, current: scenarioRef) { picked in
-                scenariosOpen = false
+        // WordCat Next: the map pauses the stage; whatever was being read stops at once.
+        .onChange(of: scenariosOpen) { _, open in if open { Speaker.shared.stop() } }
+        .sheet(isPresented: $scenariosOpen, onDismiss: {
+            // The new stage starts once the map is out of the way, so its curtain is seen.
+            if let picked = pickedStage {
+                pickedStage = nil
                 start(.scenario(picked))
+            }
+        }) {
+            ScenarioPickerView(progress: model.speakingPath, current: scenarioRef) { picked in
+                Speaker.shared.stop()
+                pickedStage = picked
+                scenariosOpen = false
             }
         }
         .catTip(.speaking)
@@ -391,6 +418,8 @@ struct SpeakingSessionView: View {
         starsLanded = false
         bannerShown = false
         listened = !(AppRuntime.speakingRoutine && scenarioRef != nil)
+        runID = UUID()
+        curtain = scenarioRef != nil && AppRuntime.speakingRoutine && !AppRuntime.uiTesting
         wordChoices = []
         replies = [:]
         started = true
@@ -474,10 +503,15 @@ struct SpeakingSessionView: View {
     }
 
     /// Two steps an item: the bar moves half an item for each.
+    /// WordCat Next: a scenario stage already shows its turns in the step
+    /// strip at the top, so a second bar under it would only be one too many.
+    @ViewBuilder
     private var progressBar: some View {
-        let steps = Double(index * 2 + (shadowing ? 0 : 1) + (attempted ? 1 : 0))
-        return BuddyProgressBar(fraction: steps / Double(max(1, count * 2)),
-                                tint: Palette.known, mood: attempted || shadowedThisWord ? .happy : .thinking, hop: index)
+        if routineStep == nil {
+            let steps = Double(index * 2 + (shadowing ? 0 : 1) + (attempted ? 1 : 0))
+            BuddyProgressBar(fraction: steps / Double(max(1, count * 2)),
+                             tint: Palette.known, mood: attempted || shadowedThisWord ? .happy : .thinking, hop: index)
+        }
     }
 
     /// What the item is about, above the question: the word with its meaning,
@@ -933,8 +967,16 @@ struct SpeakingSessionView: View {
             }
         }
         .overlay(alignment: .top) {
-            // Three stars earn a shower of paper, once the third is down.
-            if !reduceMotion, result.stars == 3, starsLanded { ConfettiBurst().allowsHitTesting(false) }
+            // WordCat Next: every cleared stage earns a shower of paper once the
+            // stars are down; three stars, a shower of gold.
+            if !reduceMotion, result.cleared, starsLanded {
+                ConfettiBurst(colors: result.stars == 3 ? ConfettiBurst.gold : ConfettiBurst.paper)
+                    .allowsHitTesting(false)
+            }
+        }
+        .soundEffect(trigger: starsLanded) { (_: Bool, landed: Bool) -> SoundEffect? in landed && result.cleared ? .complete : nil }
+        .sensoryFeedback(trigger: starsLanded) { _, landed in
+            landed && result.cleared && (model.settings.hapticsEnabled ?? true) ? .success : nil
         }
         .task {
             try? await Task.sleep(for: .milliseconds(450))

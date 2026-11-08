@@ -38,6 +38,156 @@ struct StageBanner: View {
     }
 }
 
+/// WordCat Next: the curtain going up on a stage, each time one starts (the
+/// next on the path, one picked on the map, the same one again). The
+/// scenario's sign pops in over turning rays, "第 12 關" lands with a thump,
+/// and the stars still to win show under it. Nothing is read aloud until it
+/// has gone, so a new stage is unmistakably a new one. A tap skips it.
+struct StageCurtain: View {
+    @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    let ref: SpeakingScenarios.StageRef
+    let onFinished: () -> Void
+    /// 0 coming in, 1 the sign, 2 the stage's number, 3 going.
+    @State private var phase = 0
+    @State private var spin = false
+    @State private var done = false
+
+    private var number: Int { SpeakingScenarios.number(ref) }
+    private var best: Int { model.speakingPath.stars(SpeakingScenarios.key(ref)) }
+
+    private var scenarioTitle: String {
+        guard let scenario = SpeakingScenarios.scenario(ref) else { return "" }
+        return L.t(scenario.title.zh, scenario.title.en)
+    }
+
+    private var stageTitle: String {
+        guard let stage = SpeakingScenarios.stage(ref) else { return "" }
+        return L.t(stage.title.zh, stage.title.en)
+    }
+
+    private var dare: String {
+        switch best {
+        case 0: L.t("挑戰三顆星！", "Go for three stars!")
+        case 3: L.t("已經三顆星了，再來一次", "Three stars already. Once more")
+        default: L.t("上次 \(best) 顆星，這次拿更多", "\(best) last time. Get more this time")
+        }
+    }
+
+    var body: some View {
+        ZStack {
+            Rectangle()
+                .fill(.ultraThinMaterial)
+                .overlay(Palette.background.opacity(0.6))
+                .ignoresSafeArea()
+            VStack(spacing: 16) {
+                sign
+                VStack(spacing: 6) {
+                    Text(L.t("第 \(number) 關", "Stage \(number)"))
+                        .font(.display(.largeTitle, weight: .heavy))
+                        .foregroundStyle(Palette.ink)
+                        .monospacedDigit()
+                        .scaleEffect(phase >= 2 || reduceMotion ? 1 : 1.9)
+                    Text(scenarioTitle)
+                        .font(.display(.title3, weight: .bold))
+                        .foregroundStyle(TodayView.speakingTint)
+                    Text(stageTitle)
+                        .font(.headline)
+                        .foregroundStyle(Palette.secondaryLabel)
+                        .multilineTextAlignment(.center)
+                }
+                .opacity(phase >= 2 ? 1 : 0)
+                VStack(spacing: 6) {
+                    HStack(spacing: 8) {
+                        ForEach(0..<3, id: \.self) { star in
+                            Image(systemName: star < best ? "star.fill" : "star")
+                                .font(.system(size: star == 1 ? 30 : 24, weight: .semibold))
+                                .foregroundStyle(star < best ? Palette.review : Palette.khaki)
+                                .offset(y: star == 1 ? -4 : 0)
+                        }
+                    }
+                    Text(dare)
+                        .font(.subheadline.weight(.bold))
+                        .foregroundStyle(Palette.accent)
+                }
+                .opacity(phase >= 2 ? 1 : 0)
+                .offset(y: phase >= 2 || reduceMotion ? 0 : 14)
+            }
+            .padding(.horizontal, 32)
+            .scaleEffect(phase == 3 && !reduceMotion ? 0.92 : 1)
+            .offset(y: phase == 3 && !reduceMotion ? -30 : 0)
+        }
+        .opacity(phase == 3 ? 0 : 1)
+        .contentShape(Rectangle())
+        .onTapGesture { finish() }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(L.t("第 \(number) 關，\(scenarioTitle)，\(stageTitle)。\(dare)", "Stage \(number), \(scenarioTitle), \(stageTitle). \(dare)"))
+        .accessibilityAddTraits(.isButton)
+        .accessibilityHint(L.t("點一下開始", "Tap to begin"))
+        .accessibilityIdentifier("speaking-stage-curtain")
+        .sensoryFeedback(trigger: phase) { _, new in
+            guard model.settings.hapticsEnabled ?? true else { return nil }
+            return new == 1 ? .impact(weight: .light) : new == 2 ? .impact(weight: .heavy, intensity: 1) : nil
+        }
+        .soundEffect(trigger: phase) { (_: Int, new: Int) -> SoundEffect? in new == 2 ? .stamp : nil }
+        .task {
+            if reduceMotion {
+                withAnimation(.easeOut(duration: 0.2)) { phase = 2 }
+            } else {
+                withAnimation(.spring(duration: 0.5, bounce: 0.45)) { phase = 1 }
+                withAnimation(.linear(duration: 14).repeatForever(autoreverses: false)) { spin = true }
+                try? await Task.sleep(for: .milliseconds(420))
+                withAnimation(.spring(duration: 0.38, bounce: 0.4)) { phase = 2 }
+            }
+            try? await Task.sleep(for: .milliseconds(1500))
+            finish()
+        }
+    }
+
+    /// The scenario's sign on its tile, rays turning behind it.
+    private var sign: some View {
+        ZStack {
+            if !reduceMotion {
+                ZStack {
+                    ForEach(0..<12, id: \.self) { ray in
+                        Capsule()
+                            .fill(LinearGradient(colors: [Palette.review.opacity(0.35), Palette.review.opacity(0)],
+                                                 startPoint: .bottom, endPoint: .top))
+                            .frame(width: 16, height: 120)
+                            .offset(y: -66)
+                            .rotationEffect(.degrees(Double(ray) * 30))
+                    }
+                }
+                .rotationEffect(.degrees(spin ? 360 : 0))
+                .opacity(phase >= 1 ? 1 : 0)
+                .scaleEffect(phase >= 1 ? 1 : 0.4)
+            }
+            Image(systemName: SpeakingScenarios.scenario(ref)?.icon ?? "bubble.left.and.bubble.right.fill")
+                .font(.system(size: 46, weight: .bold))
+                .foregroundStyle(Palette.surface)
+                .frame(width: 104, height: 104)
+                .background { RaisedFill(shape: RoundedRectangle(cornerRadius: 30, style: .continuous), tint: TodayView.speakingTint, depth: 6) }
+                .scaleEffect(phase >= 1 || reduceMotion ? 1 : 0.3)
+                .rotationEffect(.degrees(phase >= 1 || reduceMotion ? 0 : -16))
+            if phase >= 2, !reduceMotion {
+                SparkleBurst(color: Palette.review, radius: 86)
+                SparkleBurst(color: TodayView.speakingTint, radius: 64).rotationEffect(.degrees(22))
+            }
+        }
+        .frame(height: 210)
+    }
+
+    private func finish() {
+        guard !done else { return }
+        done = true
+        withAnimation(.easeIn(duration: 0.28)) { phase = 3 }
+        Task {
+            try? await Task.sleep(for: .milliseconds(300))
+            onFinished()
+        }
+    }
+}
+
 /// Up to three stars, landing one after another: each pops with a few
 /// sparks and a tap that gets firmer, and `onLanded` once the last is down.
 struct StageStars: View {

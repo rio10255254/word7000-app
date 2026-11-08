@@ -15,16 +15,22 @@ enum SpeakingStep: Int, Comparable {
     static func < (a: SpeakingStep, b: SpeakingStep) -> Bool { a.rawValue < b.rawValue }
 }
 
-/// WordCat Next: where a scenario stage is, the way today's words show
-/// theirs: "第 2 步，共 3 步 · 跟讀" over three equal parts (listen, the
-/// conversation turn by turn, one of today's words). The turn count stays
-/// at the top of the screen.
+/// WordCat Next: where a scenario stage is, in three named parts: listen to
+/// the whole conversation, then the conversation turn by turn (repeat, then
+/// answer), then one of today's words. Each part says what it is under its
+/// bar, so the third bar is never a mystery; finished parts get a check.
 struct SpeakingStepStrip: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var step: SpeakingStep
     /// The turn under way (0-based) and how many there are.
-    var turn: Int
     var turns: Int
+    var turn: Int
+
+    init(step: SpeakingStep, turn: Int, turns: Int) {
+        self.step = step
+        self.turn = turn
+        self.turns = turns
+    }
 
     private var current: Int {
         switch step {
@@ -44,29 +50,27 @@ struct SpeakingStepStrip: View {
         }
     }
 
-    private var label: String {
-        switch step {
-        case .listen: L.t("先聽一遍", "Listen first")
-        case .shadow: L.t("跟讀", "Repeat")
-        case .answer: L.t("回答", "Answer")
-        case .useWord, .done: L.t("用今天的字", "Use today's word")
+    /// "先聽一遍", "對話 2/5 · 跟讀", "用今天的字".
+    private func caption(_ part: Int) -> String {
+        switch part {
+        case 0:
+            return L.t("先聽一遍", "Listen")
+        case 1:
+            let talk = L.t("對話", "Talk")
+            guard current == 1 else { return talk }
+            let doing = step == .shadow ? L.t("跟讀", "Repeat") : L.t("回答", "Answer")
+            return "\(talk) \(min(turn + 1, turns))/\(turns) · \(doing)"
+        default:
+            return L.t("用今天的字", "Today's word")
         }
     }
 
     var body: some View {
         let parts = fills
-        VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 6) {
-                Text(L.t("第 \(current + 1) 步，共 3 步", "Step \(current + 1) of 3"))
-                    .foregroundStyle(Palette.secondaryLabel)
-                Text("·").foregroundStyle(Palette.tertiaryLabel)
-                Text(label).foregroundStyle(Palette.known)
-            }
-            .font(.subheadline.weight(.bold))
-            .lineLimit(1)
-            .minimumScaleFactor(0.8)
-            HStack(spacing: 6) {
-                ForEach(Array(parts.enumerated()), id: \.offset) { index, fill in
+        HStack(alignment: .top, spacing: 8) {
+            ForEach(0..<3, id: \.self) { index in
+                let fill = parts[index]
+                VStack(alignment: .leading, spacing: 5) {
                     GeometryReader { proxy in
                         Capsule().fill(Palette.fill)
                             .overlay(alignment: .leading) {
@@ -76,13 +80,26 @@ struct SpeakingStepStrip: View {
                             }
                     }
                     .frame(height: 8)
-                    .frame(maxWidth: .infinity)
+                    HStack(spacing: 3) {
+                        if index < current {
+                            Image(systemName: "checkmark").font(.caption2.weight(.heavy))
+                                .transition(.scale.combined(with: .opacity))
+                        }
+                        Text(caption(index))
+                            .contentTransition(.opacity)
+                    }
+                    .font(.caption.weight(index == current ? .heavy : .semibold))
+                    .foregroundStyle(index < current ? Palette.known : index == current ? Palette.accent : Palette.tertiaryLabel)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
+        .animation(reduceMotion ? nil : Motion.reveal, value: current)
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(L.t("第 \(current + 1) 步，共 3 步，", "Step \(current + 1) of 3, ") + label)
+        .accessibilityLabel(L.t("第 \(current + 1) 步，共 3 步，", "Step \(current + 1) of 3, ") + caption(current))
         .accessibilityIdentifier("speaking-steps")
     }
 }
@@ -108,9 +125,13 @@ struct SpeakingListenView: View {
     var title: String
     var lines: [Line]
     var language: String
+    /// The map is open or a stage's curtain is up: nothing is read aloud.
+    var paused = false
     var onDone: () -> Void
 
     @State private var shown = 0
+    /// It has started reading by itself once; after a pause it waits for the play key.
+    @State private var autoStarted = false
     @State private var typing = false
     @State private var playing: Int?
     @State private var playTask: Task<Void, Never>?
@@ -150,15 +171,20 @@ struct SpeakingListenView: View {
             }
             inputBar
         }
-        .task {
-            // Read aloud by itself, as the stage's lines always were (Settings → Reading voice).
+        .task(id: paused) {
+            // Read aloud by itself, as the stage's lines always were (Settings → Reading voice),
+            // once the stage's curtain is down.
             guard !AppRuntime.uiTesting, model.settings.speech?.autoReadQuestions ?? true else {
                 shown = lines.count
                 return
             }
+            guard !paused, !autoStarted else { return }
             try? await Task.sleep(for: .milliseconds(500))
-            if playTask == nil, !played { togglePlayback() }
+            guard !Task.isCancelled, !paused, playTask == nil, !played else { return }
+            autoStarted = true
+            togglePlayback()
         }
+        .onChange(of: paused) { _, now in if now { stopPlayback() } }
         .onDisappear { stopPlayback() }
     }
 

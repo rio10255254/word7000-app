@@ -334,7 +334,7 @@ final class ExperienceTests: XCTestCase {
     func testSpeechVoiceAndSpeedPersist() {
         let app = launch()
         openSpeechSettings(app)
-        app.segmentedControls["speech-speed"].buttons.element(boundBy: 0).tap()
+        app.buttons["speech-speed-0"].tap()
         app.buttons["speech-voice-en-US"].tap()
         let voice = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'speech-pick-' ")).firstMatch
         XCTAssertTrue(voice.waitForExistence(timeout: 10), app.debugDescription)
@@ -367,7 +367,7 @@ final class ExperienceTests: XCTestCase {
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
         openSpeechSettings(app)
-        XCTAssertTrue(app.segmentedControls["speech-speed"].buttons.element(boundBy: 0).isSelected)
+        XCTAssertTrue(app.buttons["speech-speed-0"].isSelected)
         XCTAssertEqual(app.buttons["speech-voice-en-US"].value as? String, selectedName)
         let savedAutoSpeak = app.switches["speech-auto-speak"]
         savedAutoSpeak.scrollIntoView(in: app, swipes: 3)
@@ -452,7 +452,7 @@ final class ExperienceTests: XCTestCase {
         speech.scrollIntoView(in: app, swipes: 5)
         XCTAssertTrue(speech.waitForExistence(timeout: 5))
         speech.tap()
-        XCTAssertTrue(app.segmentedControls["speech-speed"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["speech-speed-0"].waitForExistence(timeout: 10))
         let loaded = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value != nil AND value != '' AND value != 'Loading' AND value != '載入中'"), object: app.buttons["speech-voice-en-US"])
         XCTAssertEqual(XCTWaiter.wait(for: [loaded], timeout: 10), .completed)
     }

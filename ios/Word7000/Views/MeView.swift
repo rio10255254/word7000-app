@@ -193,6 +193,7 @@ struct SettingsView: View {
     @Environment(PlusModel.self) private var plus
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var manageOpen = false
+    @State private var timeOpen = false
     private let dailyTargetOptions = [10, 20, 30, 50]
 
     /// "第 3 章 · 每天 20 個", or the goal alone outside the built-in words.
@@ -214,27 +215,13 @@ struct SettingsView: View {
                                       value: planSummary)
                     }
                     .accessibilityIdentifier("settings-plan")
-                    Picker(selection: Binding(
-                        get: { model.studyMode },
-                        set: { model.setStudyMode($0) }
-                    )) {
-                        ForEach(StudyMode.allCases) { mode in
-                            Text(L.studyModeLabel(mode)).tag(mode)
-                        }
-                    } label: {
-                        SettingsLabel(L.studyModeTitle, icon: "character.book.closed.fill", tint: Palette.accent,
-                                      trigger: model.studyMode)
-                    }
-                    Picker(selection: Binding(
-                        get: { model.progress.dailyTarget },
-                        set: { model.setDailyTarget($0) }
-                    )) {
-                        ForEach(dailyTargetOptions, id: \.self) { value in
-                            Text(L.wordsPerDay(value)).tag(value)
-                        }
-                    } label: {
-                        SettingsLabel(L.dailyTargetTitle, icon: "target", tint: Palette.accent, trigger: model.progress.dailyTarget)
-                    }
+                    ChoiceRow(title: L.studyModeTitle, icon: "character.book.closed.fill", tint: Palette.accent,
+                              options: [ChoiceOption(value: StudyMode.english, title: "學英文", detail: "中文介面", icon: "a.book.closed"),
+                                        ChoiceOption(value: StudyMode.chinese, title: "Learn Chinese", detail: "English", icon: "character")],
+                              selection: model.studyMode, identifier: "settings-study-mode") { model.setStudyMode($0) }
+                    ChoiceRow(title: L.dailyTargetTitle, icon: "target", tint: Palette.accent,
+                              options: dailyTargetOptions.map { ChoiceOption(value: $0, title: L.t("\($0) 個", "\($0)")) },
+                              selection: model.progress.dailyTarget, identifier: "settings-daily-target") { model.setDailyTarget($0) }
                     Toggle(isOn: Binding(
                         get: { model.settings.studyAutoReveal ?? false },
                         set: { model.settings.studyAutoReveal = $0 }
@@ -266,18 +253,15 @@ struct SettingsView: View {
                     .accessibilityIdentifier("settings-reminder")
                     PushStatusRow()
                     if model.reminderEnabled && account.supportsCustomReminderTime {
-                        DatePicker(selection: Binding(
-                            get: {
-                                let minute = model.settings.reminderMinute ?? 720
-                                return Calendar.current.date(bySettingHour: minute / 60, minute: minute % 60, second: 0, of: Date()) ?? Date()
-                            },
-                            set: { date in
-                                let parts = Calendar.current.dateComponents([.hour, .minute], from: date)
-                                model.settings.reminderMinute = (parts.hour ?? 12) * 60 + (parts.minute ?? 0)
+                        Button { timeOpen = true } label: {
+                            HStack {
+                                SettingsLabel(L.t("提醒時間", "Reminder time"), icon: "clock.fill", tint: Palette.miss)
+                                Spacer(minLength: 8)
+                                ValueChip(text: ReminderTimeSheet.label(model.settings.reminderMinute ?? 720))
                             }
-                        ), displayedComponents: .hourAndMinute) {
-                            SettingsLabel(L.t("提醒時間", "Reminder time"), icon: "clock.fill", tint: Palette.miss)
                         }
+                        .accessibilityValue(ReminderTimeSheet.label(model.settings.reminderMinute ?? 720))
+                        .accessibilityIdentifier("settings-reminder-time")
                     }
                 } header: {
                     Text(L.t("提醒", "Reminders"))
@@ -301,16 +285,11 @@ struct SettingsView: View {
                 }
     
                 Section {
-                    Picker(selection: Binding(
-                        get: { model.settings.theme },
-                        set: { model.settings.theme = $0 }
-                    )) {
-                        ForEach(AppearancePreference.allCases) { option in
-                            Text(option.label).tag(option)
-                        }
-                    } label: {
-                        SettingsLabel(L.appearance, icon: appearanceIcon, tint: Palette.chinese)
-                    }
+                    ChoiceRow(title: L.appearance, icon: appearanceIcon, tint: Palette.chinese,
+                              options: [ChoiceOption(value: AppearancePreference.system, title: L.themeSystem, icon: "circle.lefthalf.filled"),
+                                        ChoiceOption(value: AppearancePreference.light, title: L.themeLight, icon: "sun.max.fill"),
+                                        ChoiceOption(value: AppearancePreference.dark, title: L.themeDark, icon: "moon.fill")],
+                              selection: model.settings.theme, identifier: "settings-theme") { model.settings.theme = $0 }
                     NavigationLink { StyleSettingsView() } label: {
                         SettingsLabel(L.t("App 風格", "App style"), icon: "paintpalette.fill", tint: Palette.review,
                                       value: (model.settings.appStyle ?? .standard).label)
@@ -375,18 +354,19 @@ struct SettingsView: View {
         }
         .warmList()
         .navigationTitle(L.settings)
+        .sheet(isPresented: $timeOpen) {
+            ReminderTimeSheet(minute: Binding(
+                get: { model.settings.reminderMinute ?? 720 },
+                set: { model.settings.reminderMinute = $0 }
+            ))
+        }
         .modifier(PlusManageSheet(isPresented: $manageOpen, groupID: plus.subscriptionGroupID))
         .navigationBarTitleDisplayMode(.inline)
         .task { await account.checkReminderSupport() }
         .animation(reduceMotion ? nil : Motion.reveal, value: model.reminderEnabled)
-        .sensoryFeedback(.selection, trigger: model.studyMode) { _, _ in haptics }
-        .sensoryFeedback(.selection, trigger: model.progress.dailyTarget) { _, _ in haptics }
-        .sensoryFeedback(.selection, trigger: model.settings.theme) { _, _ in haptics }
         // Turning haptics on answers with a tap, so the choice can be felt.
         .sensoryFeedback(.impact(weight: .medium), trigger: model.settings.hapticsEnabled ?? true) { _, new in new }
     }
-
-    private var haptics: Bool { model.settings.hapticsEnabled ?? true }
 
     private var appearanceIcon: String {
         switch model.settings.theme {

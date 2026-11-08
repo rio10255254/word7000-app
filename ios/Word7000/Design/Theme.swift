@@ -387,6 +387,8 @@ extension View {
     func warmList(tint: Color = Palette.accent) -> some View {
         scrollContentBackground(.hidden)
             .background { AmbientBackground(tint: tint) }
+            // WordCat Next: switches in clay with a paw, not the iPhone's green.
+            .toggleStyle(WarmToggleStyle())
     }
 }
 

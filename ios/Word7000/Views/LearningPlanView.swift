@@ -10,6 +10,7 @@ struct LearningPlanView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var memory = CatMemory.shared
     @State private var retestOpen = false
+    @State private var examDateOpen = false
     /// New words met over the next month, and by the exam, counted the way
     /// sessions are built (LearningEngine.projectedNewWords).
     @State private var monthNew: Int?
@@ -68,6 +69,12 @@ struct LearningPlanView: View {
         .onChange(of: memory.examDate) { _, _ in project() }
         .navigationTitle(L.t("我的學習計畫", "My learning plan"))
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $examDateOpen) {
+            WarmDateSheet(title: L.t("考試日期", "Exam date"), date: Binding(
+                get: { memory.examDate.flatMap(Self.date(from:)) ?? Date() },
+                set: { memory.examDate = DayMath.today($0) }
+            ))
+        }
         .fullScreenCover(isPresented: $retestOpen) {
             WelcomeView(retest: true) { _, _, knownIds, learningIds, _ in
                 model.applyPlacement(knownIds: knownIds, learningIds: learningIds)
@@ -139,30 +146,23 @@ struct LearningPlanView: View {
 
     private var examSection: some View {
         Section {
-            Picker(selection: Binding(
-                get: { exam ?? .none },
-                set: { choice in
-                    update { $0.exam = choice.rawValue }
-                    // The usual day of a school exam; an English test's day is the learner's own.
-                    // The usual day of a school exam; an English test's day is
-                    // the learner's own to set below, so the old date goes.
-                    memory.examDate = choice.date(after: Date())
-                }
-            )) {
-                ForEach(WelcomeExam.allCases, id: \.self) { choice in
-                    Text(choice.title).tag(choice)
-                }
-            } label: {
-                SettingsLabel(L.t("準備的考試", "Exam"), icon: "graduationcap.fill", tint: Palette.accent)
+            ChoiceRow(title: L.t("準備的考試", "Exam"), icon: "graduationcap.fill", tint: Palette.accent,
+                      options: WelcomeExam.allCases.map { ChoiceOption(value: $0, title: $0.title, icon: $0.icon) },
+                      selection: exam ?? .none, equalWidths: false, identifier: "plan-exam") { choice in
+                update { $0.exam = choice.rawValue }
+                // The usual day of a school exam; an English test's day is
+                // the learner's own to set below, so the old date goes.
+                memory.examDate = choice.date(after: Date())
             }
-            .accessibilityIdentifier("plan-exam")
             if (exam ?? .none) != .none {
-                DatePicker(selection: Binding(
-                    get: { memory.examDate.flatMap(Self.date(from:)) ?? Date() },
-                    set: { memory.examDate = DayMath.today($0) }
-                ), in: Date()..., displayedComponents: .date) {
-                    SettingsLabel(L.t("考試日期", "Exam date"), icon: "calendar", tint: Palette.review)
+                Button { examDateOpen = true } label: {
+                    HStack {
+                        SettingsLabel(L.t("考試日期", "Exam date"), icon: "calendar", tint: Palette.review)
+                        Spacer(minLength: 8)
+                        ValueChip(text: examDateLabel ?? L.t("選日期", "Pick a day"), icon: "calendar")
+                    }
                 }
+                .accessibilityValue(examDateLabel ?? "")
                 .accessibilityIdentifier("plan-exam-date")
             }
         } header: {
@@ -170,6 +170,11 @@ struct LearningPlanView: View {
         } footer: {
             Text(L.t("題型名稱和考前讀到第幾章，都照這裡算。", "The exam names the exam-style questions and sets the pace above."))
         }
+    }
+
+    /// "2027年1月16日", or nil before a day is set.
+    private var examDateLabel: String? {
+        memory.examDate.flatMap(Self.date(from:))?.formatted(date: .long, time: .omitted)
     }
 
     private static func date(from day: String) -> Date? {
@@ -182,24 +187,13 @@ struct LearningPlanView: View {
 
     private var dailySection: some View {
         Section {
-            Picker(selection: Binding(get: { model.progress.dailyTarget }, set: { model.setDailyTarget($0) })) {
-                ForEach(dailyTargetOptions, id: \.self) { value in
-                    Text(L.wordsPerDay(value)).tag(value)
-                }
-            } label: {
-                SettingsLabel(L.dailyTargetTitle, icon: "target", tint: Palette.accent, trigger: model.progress.dailyTarget)
-            }
-            .accessibilityIdentifier("plan-daily-target")
-            Picker(selection: Binding(
-                get: { model.settings.homeLead ?? .words },
-                set: { model.settings.homeLead = $0 }
-            )) {
-                Text(L.t("先背單字", "Words first")).tag(Pillar.words)
-                Text(L.t("先練口說", "Speaking first")).tag(Pillar.speaking)
-            } label: {
-                SettingsLabel(L.t("每天先做", "Each day starts with"), icon: "arrow.right.circle.fill", tint: Palette.known)
-            }
-            .accessibilityIdentifier("plan-lead")
+            ChoiceRow(title: L.dailyTargetTitle, icon: "target", tint: Palette.accent,
+                      options: dailyTargetOptions.map { ChoiceOption(value: $0, title: L.t("\($0) 個", "\($0)")) },
+                      selection: model.progress.dailyTarget, identifier: "plan-daily-target") { model.setDailyTarget($0) }
+            ChoiceRow(title: L.t("每天先做", "Each day starts with"), icon: "arrow.right.circle.fill", tint: Palette.known,
+                      options: [ChoiceOption(value: Pillar.words, title: L.t("先背單字", "Words first"), icon: "rectangle.on.rectangle.angled"),
+                                ChoiceOption(value: Pillar.speaking, title: L.t("先練口說", "Speaking first"), icon: "mic.fill")],
+                      selection: model.settings.homeLead ?? .words, identifier: "plan-lead") { model.settings.homeLead = $0 }
         } header: {
             Text(L.t("每一天", "Each day"))
         }
@@ -304,16 +298,25 @@ struct LearningPlanView: View {
     private var startSection: some View {
         Section {
             if usesBuiltInWords {
-                Stepper(value: Binding(
-                    get: { startChapter },
-                    set: { chapter in
+                HStack {
+                    SettingsLabel(L.t("新字從第 \(startChapter) 章開始", "New words from chapter \(startChapter)"), icon: "book.fill", tint: Palette.chinese)
+                    Spacer(minLength: 8)
+                    WarmStepper(value: startChapter, range: 1...PlacementTest.topLevel) { chapter in
                         update {
                             $0.startChapter = min(PlacementTest.topLevel, max(1, chapter))
                             $0.startMode = model.studyMode.rawValue
                         }
                     }
-                ), in: 1...PlacementTest.topLevel) {
-                    SettingsLabel(L.t("新字從第 \(startChapter) 章開始", "New words from chapter \(startChapter)"), icon: "book.fill", tint: Palette.chinese)
+                }
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(L.t("新字從第 \(startChapter) 章開始", "New words from chapter \(startChapter)"))
+                .accessibilityValue("\(startChapter)")
+                .accessibilityAdjustableAction { direction in
+                    let next = direction == .increment ? startChapter + 1 : startChapter - 1
+                    update {
+                        $0.startChapter = min(PlacementTest.topLevel, max(1, next))
+                        $0.startMode = model.studyMode.rawValue
+                    }
                 }
                 .accessibilityIdentifier("plan-start-chapter")
             }

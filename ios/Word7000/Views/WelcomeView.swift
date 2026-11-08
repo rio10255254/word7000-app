@@ -14,6 +14,9 @@ struct WelcomeView: View {
     @State private var target = 20
     @State private var known: Set<String> = []
     @State private var placement: [WordEntry] = []
+    /// Words in each chapter of the bank being learned: 500 each in the
+    /// 7000-word list, fewer in the Taiwan Mandarin bank.
+    @State private var levelSizes = PlacementTest.englishLevelSizes
     @State private var hop = 0
     /// The iPhone has only a standard voice for the language learned, so the
     /// last scene shows how to get the natural one. Settled before that scene,
@@ -169,6 +172,7 @@ struct WelcomeView: View {
                 test = PlacementTest(start: profile.stage?.testStart ?? 2)
             }
             if placement.isEmpty { placement = placementWords(for: mode) }
+            levelSizes = levelSizes(for: mode)
             if step == .hello { notifyPlanned = model.settings.pushAsked != true }
         }
         .task(id: mode) {
@@ -336,9 +340,15 @@ struct WelcomeView: View {
                                seed: model.settings.deviceSourceId, chinese: chinese)
     }
 
+    private func levelSizes(for language: StudyMode) -> [Int] {
+        let chinese = language == .chinese && !model.chineseCoreWords.isEmpty
+        return PlacementTest.levelSizes(of: chinese ? model.chineseCoreWords : model.englishCoreWords)
+    }
+
     private func choose(_ language: StudyMode) {
         mode = language
         placement = placementWords(for: language)
+        levelSizes = levelSizes(for: language)
         known = []
         test = PlacementTest()
         question = nil
@@ -628,8 +638,7 @@ struct WelcomeView: View {
 
     private var placementTest: some View {
         VStack(spacing: 18) {
-            CatLine(mood: picked == nil ? .thinking : question.map { picked == $0.answerIndex } == true ? .cheer : .encourage, hop: hop,
-                    text: testLine)
+            CatLine(mood: testMood, hop: hop, text: testLine)
             if let question {
                 VStack(spacing: 6) {
                     Text(question.prompt)
@@ -691,6 +700,16 @@ struct WelcomeView: View {
             guard let new, let question else { return nil }
             return new == question.answerIndex ? .success : .error
         }
+    }
+
+    /// The cat's face matches what it says: pleased after a right answer
+    /// ("Nice. The next one is harder."), kind after a miss, thinking only
+    /// before the first.
+    private var testMood: Mascot.Mood {
+        if let picked, let question { return picked == question.answerIndex ? .cheer : .encourage }
+        guard let last = test.answers.last else { return .thinking }
+        if test.turns >= 2 { return .smug }
+        return last.knew ? .happy : .encourage
     }
 
     /// The cat follows the test as it moves: harder after a right answer,
@@ -962,11 +981,11 @@ struct WelcomeView: View {
     // MARK: WordCat Next: the result
 
     private var plan: PersonalPlan {
-        PersonalPlan(test: test, profile: profile, target: target, daysToExam: CatMemory.shared.daysToExam)
+        PersonalPlan(test: test, profile: profile, target: target, daysToExam: CatMemory.shared.daysToExam, levelSizes: levelSizes)
     }
 
     private var result: some View {
-        let estimate = test.estimatedKnownWords
+        let estimate = test.estimatedKnownWords(levelSizes: levelSizes)
         let plan = plan
         let shares = test.answers.isEmpty ? Array(repeating: 0.0, count: PlacementTest.topLevel) : test.levelShares
         return VStack(spacing: 18) {

@@ -893,7 +893,8 @@ struct SpeakingAnswerPanel: View {
             .disabled(recording.busy || session.isBusy)
             .accessibilityIdentifier("coach-original-question")
         }
-        .modifier(AnswerPaper(kind: .peach, seed: 3))
+        // Taped on like the cat's other notes, so it reads as one of them.
+        .modifier(AnswerPaper(kind: .peach, tilt: -0.4, torn: [.bottom], tape: true, seed: 3))
         .id(Self.topAnchor)
     }
 
@@ -944,11 +945,11 @@ struct SpeakingAnswerPanel: View {
 
     private var privacyNote: String {
         if provider.usesOnline, IntelligenceSettings.shared.cloudConsent == true {
-            return L.t("錄音只留在這部手機，離開即刪除。批改時，回答文字會傳送到 Anthropic 的 Claude 線上 AI 處理。AI 建議可能有誤，也不評分發音。",
-                       "Recordings stay on this iPhone and are deleted when you leave. To check an answer, its text is sent to Anthropic's Claude online AI. AI suggestions may be wrong and do not score pronunciation.")
+            return L.t("錄音只留在手機。批改時只傳文字給 Claude 線上 AI，建議可能有誤。",
+                       "Recordings stay on your iPhone. Checking sends only the text to Claude, an online AI; it can be wrong.")
         }
-        return L.t("錄音與回答只留在這部手機，離開即刪除錄音。",
-                   "Recordings and answers stay on this iPhone; leaving deletes the recording.")
+        return L.t("錄音和回答只留在手機，離開就刪除錄音。",
+                   "Recordings and answers stay on your iPhone; leaving deletes the recording.")
     }
 
     private var unavailableIsSettled: Bool {

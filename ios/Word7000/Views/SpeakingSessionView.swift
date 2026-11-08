@@ -125,6 +125,8 @@ struct SpeakingSessionView: View {
                     SpeakingStepStrip(step: step, turn: min(index, count), turns: count)
                         .padding(.top, 4)
                 }
+                // While the iPhone still reads with its flat standard voice.
+                if started, index < count { VoiceTipStrip(language: speakLanguage) }
                 Group {
                     if !started {
                         ProgressView()
@@ -617,7 +619,9 @@ struct SpeakingSessionView: View {
                 }
                 .defaultScrollAnchor(.bottom)
                 .scrollDismissesKeyboard(.interactively)
-                .softTopScrollEdge()
+                // A deep fade: earlier lines melt away under the steps
+                // rather than being cut through mid-line.
+                .softTopScrollEdge(48)
                 .onChange(of: revealed) { _, shown in
                     guard shown else { return }
                     withAnimation(reduceMotion ? nil : Motion.reveal) { proxy.scrollTo("sample", anchor: .center) }

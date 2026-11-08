@@ -107,7 +107,8 @@ struct LearningPlanView: View {
                 model.settings.homeLead == .speaking ? L.t("每天先練口說", "Speaking first each day") : L.t("單字先，口說後", "Words first, then speaking"),
                 L.t("兩個每天都有", "Both, every day"))
             if let days = memory.daysToExam, usesBuiltInWords, let examNew {
-                let reach = PlacementTest.chaptersReached(from: startChapter, newWords: examNew)
+                let reach = PlacementTest.chaptersReached(from: startChapter, newWords: examNew,
+                                                          levelSizes: PlacementTest.levelSizes(of: model.coreWords))
                 row("graduationcap.fill", L.t("\(exam?.title ?? "考試")前讀到第 \(reach) 章", "Chapter \(reach) by the exam"),
                     L.t("還有 \(days) 天，每天都學、複習也做完的話", "\(days) days left, studying every day with the reviews done"))
                     .accessibilityIdentifier("plan-reach")

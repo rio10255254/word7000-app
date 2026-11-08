@@ -792,13 +792,14 @@ final class AppModel {
         let filter = settings.quizFilter
         let candidates = bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)
             .filter { !ChineseSpelling.targets($0.meaningZh).isEmpty }
-        return QuizBuilder.seenFirstSession(words: candidates, state: progress, count: Spelling.sessionLength, seed: seed)
+        return QuizBuilder.seenFirstSession(words: candidates, state: progress, count: Spelling.sessionLength, seed: seed,
+                                            startLevel: placementStart)
     }
 
     private func seenWordsFirst(count: Int, seed: String) -> [WordEntry] {
         let filter = settings.quizFilter
         let candidates = bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)
-        return QuizBuilder.seenFirstSession(words: candidates, state: progress, count: count, seed: seed)
+        return QuizBuilder.seenFirstSession(words: candidates, state: progress, count: count, seed: seed, startLevel: placementStart)
     }
 
     /// The numbers the AI learning analysis reads: totals, the last 14 days

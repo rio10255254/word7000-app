@@ -137,7 +137,10 @@ public struct PersonalPlan: Equatable, Sendable {
 
     /// The level test sets the chapter; words recognised but not spelled
     /// start one chapter lower, so new words are not all too hard to write.
-    public init(test: PlacementTest, profile: LearnerProfile, target: Int, daysToExam: Int?) {
+    /// `levelSizes`: words in each chapter of the list studied (see
+    /// `PlacementTest.levelSizes(of:)`).
+    public init(test: PlacementTest, profile: LearnerProfile, target: Int, daysToExam: Int?,
+                levelSizes: [Int] = PlacementTest.englishLevelSizes) {
         var chapter = test.answers.isEmpty ? 1 : test.startChapter
         if let spelling = profile.spelling, spelling < 0.34, chapter > 1 { chapter -= 1 }
         startChapter = chapter
@@ -150,7 +153,8 @@ public struct PersonalPlan: Equatable, Sendable {
         lead = profile.lead
         reachChapter = daysToExam.map { days in
             PlacementTest.chaptersReached(from: chapter, newWords: LearningEngine.projectedNewWords(
-                state: ProgressState(), today: "2026-01-01", dailyTarget: target, days: days, freshAvailable: Int.max / 2))
+                state: ProgressState(), today: "2026-01-01", dailyTarget: target, days: days, freshAvailable: Int.max / 2),
+                levelSizes: levelSizes)
         }
     }
 }

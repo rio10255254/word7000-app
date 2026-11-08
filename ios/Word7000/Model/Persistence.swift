@@ -34,6 +34,9 @@ struct AppSettings: Codable, Equatable, Sendable {
     var studyShowPinyin: Bool?
     /// The note on where speaking answers go has been shown once.
     var coachPrivacySeen: Bool?
+    /// WordCat Next: the tip to download the iPhone's natural voice was put
+    /// away until this day (yyyy-MM-dd); nil means it shows while it helps.
+    var voiceTipHiddenUntil: String?
     var speakingFilter: FilterSelection?
     var speakingActivity: SpeakingPractice.Activity?
     var savedBankFilters: [String: BankFilterSettings]?

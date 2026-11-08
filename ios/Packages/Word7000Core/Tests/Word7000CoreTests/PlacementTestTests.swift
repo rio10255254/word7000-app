@@ -80,4 +80,39 @@ final class PlacementTestTests: XCTestCase {
         XCTAssertEqual(PlacementTest.chaptersReached(from: 5, wordsPerDay: 20, days: 75), 8)
         XCTAssertEqual(PlacementTest.chaptersReached(from: 12, wordsPerDay: 50, days: 300), 14)
     }
+
+    /// The Taiwan Mandarin bank's chapters: about 2900 words, small easy chapters.
+    private let taiwanSizes = [107, 107, 106, 107, 106, 261, 260, 260, 259, 259, 270, 270, 270, 270]
+
+    func testTheEstimateCountsTheWordsInTheBankBeingLearned() {
+        // Someone who knows every word asked (a native speaker trying it out)
+        // cannot know more words than the bank has.
+        let all = run(knowsUpTo: PlacementTest.topLevel)
+        let total = taiwanSizes.reduce(0, +)
+        let chinese = all.estimatedKnownWords(levelSizes: taiwanSizes)
+        XCTAssertLessThanOrEqual(chinese, total)
+        XCTAssertGreaterThan(chinese, total / 2)
+        XCTAssertEqual(chinese % 10, 0, "a small list is rounded to ten")
+        XCTAssertLessThanOrEqual(all.estimatedKnownWords, 7000)
+        XCTAssertEqual(all.estimatedKnownWords, all.estimatedKnownWords(levelSizes: PlacementTest.englishLevelSizes))
+        // Knowing the five small chapters is far fewer words than five of 500.
+        let five = run(knowsUpTo: 5)
+        XCTAssertLessThan(five.estimatedKnownWords(levelSizes: taiwanSizes), five.estimatedKnownWords / 2)
+    }
+
+    func testLevelSizesComeFromTheWords() {
+        let words = [("a", 1), ("b", 1), ("c", 3)].map {
+            WordEntry(id: $0.0, word: $0.0, partOfSpeech: "n", pronunciation: "", meaningZh: "字", example: "", exampleZh: "", group: "Core \($0.1)")
+        } + [WordEntry(id: "s", word: "s", partOfSpeech: "n", pronunciation: "", meaningZh: "字", example: "", exampleZh: "", group: "Scan 11/8")]
+        XCTAssertEqual(PlacementTest.levelSizes(of: words), [2, 0, 1] + Array(repeating: 0, count: 11))
+    }
+
+    func testChaptersReachedFollowTheChapterSizes() {
+        // 1000 new words from chapter 1 of the Taiwan bank: chapters 1-5 (533
+        // words) and 261 of chapter 6, then 206 into chapter 7.
+        XCTAssertEqual(PlacementTest.chaptersReached(from: 1, newWords: 1000, levelSizes: taiwanSizes), 7)
+        XCTAssertEqual(PlacementTest.chaptersReached(from: 1, newWords: 1000), 3, "500 a chapter in the 7000 list")
+        XCTAssertEqual(PlacementTest.chaptersReached(from: 10, newWords: 99_999, levelSizes: taiwanSizes), PlacementTest.topLevel)
+        XCTAssertEqual(PlacementTest.chaptersReached(from: 4, newWords: 0, levelSizes: taiwanSizes), 4)
+    }
 }

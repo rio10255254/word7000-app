@@ -241,8 +241,6 @@ struct RoutineSpellView: View {
     private func question(_ word: WordEntry, _ sentence: Cloze.Sentence, _ attempt: ClozeAttempt) -> some View {
         ScrollView {
             VStack(spacing: 16) {
-                RoutineStepStrip(routine: model.activeRoutine ?? routine)
-                    .padding(.top, 4)
                 RoutineCatLine(text: catLine(word, attempt), mood: attempt.solved ? (attempt.outcome == .missed ? .encourage : .cheer) : .thinking)
                 ClozeCard(word: word, sentence: sentence, attempt: attempt, input: input, comeBack: comeBack, chinese: model.learnsChinese)
                     .shake(trigger: misses, enabled: !reduceMotion)
@@ -255,6 +253,12 @@ struct RoutineSpellView: View {
             .padding(.bottom, 16)
         }
         .scrollDismissesKeyboard(.never)
+        // The steps stay put above the question: in the scroll they slid
+        // under the close key when the keyboard came up.
+        .safeAreaInset(edge: .top, spacing: 12) {
+            RoutineStepStrip(routine: model.activeRoutine ?? routine)
+                .padding(.top, 4)
+        }
         // The answer box sits on the buttons, right above the keyboard, so
         // it is never pushed under them.
         .safeAreaInset(edge: .bottom) {
@@ -317,7 +321,9 @@ struct RoutineSpellView: View {
             }
         }
         if model.learnsChinese {
-            return L.t("「\(word.word)」你說你認識？寫中文給我看。", "You said you know \u{201C}\(word.word)\u{201D}? Write it in Chinese.")
+            // One gloss, the one marked in the sentence: not the whole entry.
+            let gloss = ClozeCard.askedGloss(word)
+            return L.t("「\(gloss)」你說你認識？寫中文給我看。", "You said you know \u{201C}\(gloss)\u{201D}? Write it in Chinese.")
         }
         let wanted = Cloze.cue(for: word)?.cue ?? ChineseDisplay.conciseMeaning(word.meaningZh)
         return L.t("「\(wanted)」你說你認識？寫給我看。", "You said you know \u{201C}\(wanted)\u{201D}? Spell it.")
@@ -465,8 +471,6 @@ struct RoutineExamView: View {
     private func content(_ word: WordEntry, _ question: ExamQuestion) -> some View {
         ScrollView {
             VStack(spacing: 16) {
-                RoutineStepStrip(routine: model.activeRoutine ?? routine)
-                    .padding(.top, 4)
                 RoutineCatLine(text: ExamQuestionBody.catLine(question, chosen: chosen, style: model.examStyleName),
                                mood: chosen == nil ? .thinking : chosen == question.answerIndex ? .cheer : .encourage)
                 ExamQuestionBody(word: word, question: question, chosen: chosen, meanings: meanings,
@@ -481,6 +485,10 @@ struct RoutineExamView: View {
             .padding(.bottom, 16)
         }
         .revealsExplanation(after: chosen)
+        .safeAreaInset(edge: .top, spacing: 12) {
+            RoutineStepStrip(routine: model.activeRoutine ?? routine)
+                .padding(.top, 4)
+        }
         .safeAreaInset(edge: .bottom) {
             if chosen != nil {
                 Button(action: next) {

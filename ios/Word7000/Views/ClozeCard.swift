@@ -148,13 +148,25 @@ struct ClozeCard: View {
     }
 
     /// Where one of the entry's English glosses stands in its example.
-    static func glossRange(in word: WordEntry) -> Range<String.Index>? {
+    static func glossRange(in word: WordEntry) -> Range<String.Index>? { glossMatch(in: word)?.range }
+
+    /// The gloss found in the example, and where: longer glosses first.
+    private static func glossMatch(in word: WordEntry) -> (gloss: String, range: Range<String.Index>)? {
         for gloss in word.word.split(separator: ";").map({ $0.trimmingCharacters(in: .whitespaces) })
             .filter({ !$0.isEmpty }).sorted(by: { $0.count > $1.count }) {
             let bare = gloss.hasPrefix("to ") ? String(gloss.dropFirst(3)) : gloss
-            if let range = word.example.range(of: bare, options: .caseInsensitive) { return range }
+            // A whole word (with an ending such as -s or -ed), never part of
+            // a longer one: "influence" is not the start of "Influencers".
+            let pattern = "\\b" + NSRegularExpression.escapedPattern(for: bare) + "(s|es|d|ed|ing)?\\b"
+            if let range = word.example.range(of: pattern, options: [.regularExpression, .caseInsensitive]) { return (gloss, range) }
         }
         return nil
+    }
+
+    /// The gloss to ask for: the one the example marks, else the first.
+    static func askedGloss(_ word: WordEntry) -> String {
+        glossMatch(in: word)?.gloss
+            ?? word.word.split(separator: ";").first.map { $0.trimmingCharacters(in: .whitespaces) } ?? word.word
     }
 
     static func glossShows(in word: WordEntry) -> Bool { glossRange(in: word) != nil }

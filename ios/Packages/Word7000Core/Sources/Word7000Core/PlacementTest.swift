@@ -79,11 +79,30 @@ public struct PlacementTest: Equatable, Sendable {
         return (1...Self.topLevel).map { Self.knownChance(level: $0, ability: ability) }
     }
 
-    /// About how many of the list's words the learner knows, to the nearest fifty.
-    public var estimatedKnownWords: Int {
-        let total = levelShares.reduce(0) { $0 + $1 * Double(Self.wordsPerLevel) }
-        return Int((total / 50).rounded()) * 50
+    /// Words in each Core level of the 7000-word list, easy to hard.
+    public static let englishLevelSizes = Array(repeating: wordsPerLevel, count: topLevel)
+
+    /// Words in each Core level of `words`, easy to hard: the 7000-word list
+    /// has 500 in each; the Taiwan Mandarin bank about 2900 in all, fewer in
+    /// its easy levels.
+    public static func levelSizes(of words: [WordEntry]) -> [Int] {
+        var sizes = Array(repeating: 0, count: topLevel)
+        for word in words {
+            if let level = LearningEngine.coreLevel(word.group), (1...topLevel).contains(level) { sizes[level - 1] += 1 }
+        }
+        return sizes
     }
+
+    /// About how many of the list's words the learner knows, to the nearest
+    /// fifty (ten for a list under 5000 words).
+    public func estimatedKnownWords(levelSizes: [Int] = englishLevelSizes) -> Int {
+        let total = zip(levelShares, levelSizes).reduce(0) { $0 + $1.0 * Double($1.1) }
+        let step = levelSizes.reduce(0, +) < 5000 ? 10.0 : 50.0
+        return Int((total / step).rounded() * step)
+    }
+
+    /// The 7000-word list's estimate.
+    public var estimatedKnownWords: Int { estimatedKnownWords() }
 
     /// The chapter to start in: the first one less than about two thirds known.
     public var startChapter: Int {
@@ -125,14 +144,23 @@ public struct PlacementTest: Equatable, Sendable {
         return []
     }
 
-    /// How many chapters `wordsPerDay` new words a day covers in `days`.
-    /// The chapter reached after meeting `newWords` new words from `chapter` on.
-    public static func chaptersReached(from chapter: Int, newWords: Int) -> Int {
-        min(topLevel, chapter + max(0, newWords) / wordsPerLevel)
+    /// The chapter reached after meeting `newWords` new words from the start
+    /// of `chapter` on, through levels of `levelSizes` words: a chapter
+    /// counts once all of it has been met.
+    public static func chaptersReached(from chapter: Int, newWords: Int, levelSizes: [Int] = englishLevelSizes) -> Int {
+        var reached = min(topLevel, max(1, chapter))
+        var left = max(0, newWords)
+        while reached < topLevel {
+            let size = reached - 1 < levelSizes.count ? levelSizes[reached - 1] : wordsPerLevel
+            guard left >= size else { break }
+            left -= size
+            reached += 1
+        }
+        return reached
     }
 
-    public static func chaptersReached(from chapter: Int, wordsPerDay: Int, days: Int) -> Int {
-        let words = max(0, wordsPerDay) * max(0, days)
-        return min(topLevel, chapter + words / wordsPerLevel)
+    /// How many chapters `wordsPerDay` new words a day covers in `days`.
+    public static func chaptersReached(from chapter: Int, wordsPerDay: Int, days: Int, levelSizes: [Int] = englishLevelSizes) -> Int {
+        chaptersReached(from: chapter, newWords: max(0, wordsPerDay) * max(0, days), levelSizes: levelSizes)
     }
 }

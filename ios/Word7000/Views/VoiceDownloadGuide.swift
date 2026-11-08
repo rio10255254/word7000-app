@@ -1,4 +1,6 @@
 import SwiftUI
+import AVFoundation
+import Word7000Core
 
 /// How to download the iPhone's natural voice, drawn as the screens of the
 /// iPhone's Settings app: each step shows the row to tap there, ringed.
@@ -125,5 +127,120 @@ struct VoiceDownloadGuide: View {
         RoundedRectangle(cornerRadius: 10, style: .continuous)
             .stroke(Palette.accent, lineWidth: 2)
             .padding(-2)
+    }
+}
+
+/// WordCat Next: a small strip on the speaking pages while the iPhone still
+/// reads with its flat standard voice: what is read aloud there that is not
+/// one of the stages' recordings (follow-ups, hints, words) sounds far better
+/// with the free natural voice. A tap opens the steps; the cross puts it away
+/// for a week. It goes for good once the voice is in.
+struct VoiceTipStrip: View {
+    @Environment(AppModel.self) private var model
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// "en-US" or "zh-TW": the voice that reads this page.
+    var language: String
+    @State private var open = false
+    @State private var hidden = false
+    /// The voices are listed: before that, every voice looks missing.
+    @State private var loaded = false
+
+    private var shows: Bool {
+        guard loaded, !AppRuntime.uiTesting, !hidden else { return false }
+        if let until = model.settings.voiceTipHiddenUntil, until > model.today { return false }
+        return SpeechVoiceSelection.canSoundBetter(Speaker.shared.voices, language: language,
+                                                   enhancedQuality: AVSpeechSynthesisVoiceQuality.enhanced.rawValue)
+    }
+
+    var body: some View {
+        Group {
+            if shows {
+                HStack(spacing: 10) {
+                    Button { open = true } label: {
+                        HStack(spacing: 10) {
+                            Image(systemName: "waveform.badge.plus")
+                                .font(.headline)
+                                .foregroundStyle(Palette.surface)
+                                .frame(width: 32, height: 32)
+                                .background(Palette.accent.gradient, in: Circle())
+                            VStack(alignment: .leading, spacing: 1) {
+                                Text(L.t("聲音太像機器人？", "Sounds robotic?"))
+                                    .font(.subheadline.weight(.bold))
+                                    .foregroundStyle(Palette.ink)
+                                Text(L.t("免費換成 iPhone 的自然聲音", "Get the iPhone's natural voice, free"))
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(Palette.accent)
+                            }
+                            Spacer(minLength: 4)
+                            Image(systemName: "chevron.right")
+                                .font(.caption.weight(.heavy))
+                                .foregroundStyle(Palette.accent)
+                        }
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(SoftPressStyle())
+                    .accessibilityIdentifier("voice-tip")
+                    Button {
+                        withAnimation(reduceMotion ? nil : Motion.reveal) { hidden = true }
+                        model.settings.voiceTipHiddenUntil = DayMath.addDays(model.today, 7)
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.caption.weight(.heavy))
+                            .foregroundStyle(Palette.secondaryLabel)
+                            .frame(width: 32, height: 32)
+                    }
+                    .accessibilityLabel(L.t("一週後再提醒", "Remind me in a week"))
+                    .accessibilityIdentifier("voice-tip-later")
+                }
+                .padding(.leading, 10)
+                .padding(.trailing, 4)
+                .padding(.vertical, 8)
+                .background(Palette.accent.opacity(0.12), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(Palette.accent.opacity(0.35), lineWidth: 1))
+                .transition(.move(edge: .top).combined(with: .opacity))
+            }
+        }
+        .sheet(isPresented: $open) {
+            NavigationStack {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 18) {
+                        Text(L.t("情境對話是真人錄音；追問、提示和單字由 iPhone 朗讀。下載一次自然聲音（免費），這些也會好聽很多。",
+                                 "The scenes are recorded by real people; follow-ups, hints and words are read by the iPhone. Download its natural voice once (free) and those sound far better too."))
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                        VoiceDownloadGuide(learningChinese: language.hasPrefix("zh"), chinese: L.zh)
+                        Button {
+                            if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
+                        } label: {
+                            Label(L.t("打開設定", "Open Settings"), systemImage: "gear")
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                        }
+                        .prominentAction()
+                        .accessibilityIdentifier("voice-tip-open-settings")
+                    }
+                    .padding(Metrics.gutter)
+                }
+                .navigationTitle(L.t("換成自然的聲音", "A natural voice"))
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button(L.done) { open = false }
+                    }
+                }
+                .background { AmbientBackground() }
+            }
+        }
+        .task {
+            await Speaker.shared.refreshVoices()
+            loaded = true
+        }
+        // Back from Settings: once the voice is in, the strip goes by itself.
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active { Task { await Speaker.shared.refreshVoices(fresh: true) } }
+        }
+        .animation(reduceMotion ? nil : Motion.reveal, value: shows)
     }
 }

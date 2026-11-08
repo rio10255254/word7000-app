@@ -138,11 +138,11 @@ final class ScanPickerTests: XCTestCase {
 
         app = openScanner(pastedText: "BANK n. 銀行\nbank n. 河岸\nobjectively adv. 客觀地\nobjective n. 目標", reset: false)
         readPasted(app)
-        let destination = app.buttons["scan-destination"]
+        // The banks are chips under "Save to".
+        let destination = app.buttons[bankName]
         destination.scrollIntoView(in: app, swipes: 6)
         XCTAssertTrue(destination.isHittable)
         destination.tap()
-        app.buttons[bankName].tap()
         let save = app.buttons["scan-save"]
         save.scrollIntoView(in: app, swipes: 5)
         XCTAssertEqual(save.label, "存入字庫（3 個）")
@@ -232,13 +232,11 @@ final class ScanPickerTests: XCTestCase {
         app.terminate()
         app = openScanner(pastedText: "objectively adv. 客觀地", reset: false)
         readPasted(app)
-        let destination = app.buttons["scan-destination"]
-        destination.scrollIntoView(in: app, swipes: 5)
-        destination.tap()
-        // A menu can miss the first tap while the screen is still settling.
-        if !app.buttons["Lesson"].waitForExistence(timeout: 3) { destination.tap() }
-        XCTAssertTrue(app.buttons["Lesson"].waitForExistence(timeout: 5), app.debugDescription)
-        app.buttons["Lesson"].tap()
+        // The banks are chips under "Save to".
+        let lesson = app.buttons["Lesson"]
+        lesson.scrollIntoView(in: app, swipes: 5)
+        XCTAssertTrue(lesson.waitForExistence(timeout: 5), app.debugDescription)
+        lesson.tap()
         let save = app.buttons["scan-save"]
         save.scrollIntoView(in: app, swipes: 5)
         saveScan(save, in: app)

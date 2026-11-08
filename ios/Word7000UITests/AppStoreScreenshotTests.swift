@@ -85,7 +85,12 @@ final class AppStoreScreenshotTests: XCTestCase {
                 // right; Next moves on (it waits while a take is under way).
                 let next = app.buttons["shadow-next"]
                 for _ in 0..<8 where !app.staticTexts["speaking-question"].exists {
-                    if next.exists, next.isEnabled, next.isHittable { next.tap() }
+                    // Next can go between asking and tapping, as the question
+                    // comes up by itself: read it once and tap where it was.
+                    if let shown = try? next.snapshot(), shown.isEnabled, !shown.frame.isEmpty {
+                        let origin = app.coordinate(withNormalizedOffset: .zero)
+                        origin.withOffset(CGVector(dx: shown.frame.midX, dy: shown.frame.midY)).tap()
+                    }
                     sleep(1)
                 }
             } else {
@@ -94,8 +99,10 @@ final class AppStoreScreenshotTests: XCTestCase {
         }
         // The question follows by itself after a short countdown once all of
         // the sentence was right; a take with a tone off waits for Next.
-        if !app.staticTexts["speaking-question"].waitForExistence(timeout: 8), app.buttons["shadow-next"].exists {
-            app.buttons["shadow-next"].tap()
+        if !app.staticTexts["speaking-question"].waitForExistence(timeout: 8),
+           let shown = try? app.buttons["shadow-next"].snapshot(), !shown.frame.isEmpty {
+            app.coordinate(withNormalizedOffset: .zero)
+                .withOffset(CGVector(dx: shown.frame.midX, dy: shown.frame.midY)).tap()
         }
         XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 12), app.debugDescription)
         sleep(1)

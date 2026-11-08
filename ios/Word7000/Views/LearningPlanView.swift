@@ -174,7 +174,8 @@ struct LearningPlanView: View {
 
     /// "2027年1月16日", or nil before a day is set.
     private var examDateLabel: String? {
-        memory.examDate.flatMap(Self.date(from:))?.formatted(date: .long, time: .omitted)
+        memory.examDate.flatMap(Self.date(from:))?
+            .formatted(Date.FormatStyle(date: .long, time: .omitted).locale(Locale(identifier: L.zh ? "zh_TW" : "en_US")))
     }
 
     private static func date(from day: String) -> Date? {

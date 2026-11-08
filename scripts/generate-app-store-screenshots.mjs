@@ -43,12 +43,12 @@ const COPY = {
         text: '先測兩分鐘程度，<br>再照你的考試和日期排好每天的量。' },
       { file: '03-listen', screen: 'store-zh-n7-listen', kicker: '口說練習', title: '先聽<mark>真人</mark><br>怎麼說',
         text: '點餐、問路、看醫生……<br>每個角色都有自己的聲音，先聽完整段對話。',
-        sticker: { text: '真人錄音', x: 0.70, y: 0.43 } },
-      { file: '04-shadowing', screen: 'store-zh-n8-shadow', kicker: '口說練習', title: '念到哪<br><mark>亮到哪</mark>',
+        sticker: { text: '真人錄音', x: 0.72, y: 0.47 } },
+      { file: '04-shadowing', screen: 'store-zh-n8-shadow', zoom: 'said', kicker: '口說練習', title: '念到哪<br><mark>亮到哪</mark>',
         text: '跟著示範念，念對的字變綠，<br>念錯的標出來，念對才往下。' },
       { file: '05-feedback', screen: 'store-zh-5-coach', kicker: '口說練習', title: '講錯沒差<br>傻貓幫你<mark>改順</mark>',
         text: '用說的或打的回答，看看怎麼講比較自然。', note: '線上 AI 批改要 Premium' },
-      { file: '06-checks', pair: ['store-zh-n3-write', 'store-zh-n4-exam'], kicker: '每天一條路', title: '背完<br>馬上<mark>考一下</mark>',
+      { file: '06-checks', pair: ['store-zh-n3-write-solved', 'store-zh-n4-exam-answered'], kicker: '每天一條路', title: '背完<br>馬上<mark>考一下</mark>',
         text: '翻完卡接著拼字、做題，題型照你的考試出。<br>錯的會再回來，背到記住為止。' },
       { file: '07-map', screen: 'store-zh-n10-map', kicker: '口說練習', title: '20 關<br>生活<mark>情境</mark>',
         text: '餐廳、便利商店、飯店、看醫生……<br>一關一關闖，把星星拿滿。' },
@@ -72,14 +72,14 @@ const COPY = {
         text: 'A two-minute check finds your level. Set a goal, and the cat works out each day for you.' },
       { file: '03-listen', screen: 'store-en-n7-listen', kicker: 'Speaking', title: 'Hear it from<br><mark>real voices</mark>',
         text: 'Every role in every scene has its own Taiwanese Mandarin voice. Listen first, then join in.',
-        sticker: { text: 'Real voices', x: 0.70, y: 0.43 } },
-      { file: '04-tones', screen: 'store-en-n8-shadow', kicker: 'Speaking', title: 'See your<br><mark>tones</mark>',
+        sticker: { text: 'Real voices', x: 0.72, y: 0.47 } },
+      { file: '04-tones', screen: 'store-en-n8-shadow', zoom: 'said', kicker: 'Speaking', title: 'See your<br><mark>tones</mark>',
         text: 'Say it along. Each character lights up as you say it, and a slipped tone is marked to say again.' },
       { file: '05-feedback', screen: 'store-en-5-coach', kicker: 'Speaking', title: 'Say it<br><mark>out loud</mark>',
         text: 'Mess it up, that’s fine. The cat shows you a smoother way to say it.',
         note: 'Online feedback comes with Premium.' },
-      { file: '06-checks', pair: ['store-en-n3-write', 'store-en-n4-exam'], kicker: 'Every day', title: 'Learn it,<br>then <mark>use it</mark>',
-        text: 'After the cards, write the words and answer a few questions. The ones you miss come back.' },
+      { file: '06-checks', pair: ['store-en-n2-card', 'store-en-n3-write-solved'], kicker: 'Every day', title: 'Flip it,<br>then <mark>write it</mark>',
+        text: 'Flip the cards, then write each word in Chinese. The ones you miss come back until they stick.' },
       { file: '07-map', screen: 'store-en-n10-map', kicker: 'Speaking', title: '20 stages of<br><mark>everyday Taiwan</mark>',
         text: 'Restaurant, convenience store, hotel, the doctor… one stage at a time, for three stars.' },
       { file: '08-stamp', screen: 'store-en-n11-stamp', title: 'Finish the day,<br><mark>stamp it</mark>',
@@ -102,10 +102,11 @@ const COPY = {
  * the record button).
  */
 const ZOOMS = JSON.parse(process.env.ZOOMS ?? 'null') ?? {
-  // The line just said, lit up word by word (for Chinese, with its tones), and the score under it.
-  sentence: {
-    zh: { x: 70, y: 950, w: 1066, h: 355, below: 1340 },
-    en: { x: 70, y: 1004, w: 1066, h: 466, below: 1548 },
+  // The line just said back, lit up character by character (for Chinese, with
+  // its tones), and how much of it was right.
+  said: {
+    zh: { x: 400, y: 1570, w: 770, h: 280 },
+    en: { x: 280, y: 1400, w: 890, h: 450 },
   },
 };
 
@@ -235,9 +236,9 @@ function feature(p, lang) {
 function pairOf([first, second]) {
   const w = 640;
   const one = phone(shot(first), PHONE_TOP + 20, w).replace('class="phone" style="left:' + (W - w) / 2 + 'px;',
-    'class="phone" style="transform:rotate(-3deg);left:' + 40 + 'px;');
+    'class="phone" style="transform:rotate(-3deg);left:' + 70 + 'px;');
   const two = phone(shot(second), PHONE_TOP + 180, w).replace('class="phone" style="left:' + (W - w) / 2 + 'px;',
-    'class="phone" style="transform:rotate(3deg);left:' + (W - w - 40) + 'px;');
+    'class="phone" style="transform:rotate(3deg);left:' + (W - w - 70) + 'px;');
   return one + two;
 }
 

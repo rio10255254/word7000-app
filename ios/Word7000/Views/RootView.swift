@@ -46,6 +46,9 @@ struct RootView: View {
     @State private var studyAfterWelcome = false
     /// WordCat Next: today's stamp, once words and speaking are done.
     @State private var dayCompleteOpen = false
+    /// The Me tab's pages, kept here so Settings stays open when changing the
+    /// study mode rebuilds the tabs in the other language.
+    @State private var mePath: [MeRoute] = []
 
     var body: some View {
         TabView(selection: $tab) {
@@ -82,7 +85,7 @@ struct RootView: View {
             .tabItem { Label(L.tabWords, systemImage: "books.vertical.fill") }
             .tag(AppTab.words)
 
-            NavigationStack {
+            NavigationStack(path: $mePath) {
                 MeView()
             }
             .tabItem { Label(L.tabMe, systemImage: "person.crop.circle.fill") }

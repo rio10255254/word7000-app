@@ -63,6 +63,9 @@ struct SpeakingSessionView: View {
     @State private var runID = UUID()
     /// A stage picked on the map, started once the map has slid away.
     @State private var pickedStage: SpeakingScenarios.StageRef?
+    /// WordCat Next: what this practice is, docked at the top as it starts
+    /// (a stage without its curtain, or word practice).
+    @State private var notice: NoticeContent?
     @State private var coachAnswer = ""
     @State private var coachTranscriptNeedsReview = false
     @State private var coachContextID = UUID()
@@ -149,6 +152,7 @@ struct SpeakingSessionView: View {
             .padding(.horizontal, Metrics.gutter)
             .padding(.bottom, 8)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .notice($notice)
             .overlay {
                 if curtain, let ref = scenarioRef {
                     StageCurtain(ref: ref) {
@@ -420,6 +424,16 @@ struct SpeakingSessionView: View {
         listened = !(AppRuntime.speakingRoutine && scenarioRef != nil)
         runID = UUID()
         curtain = scenarioRef != nil && AppRuntime.speakingRoutine && !AppRuntime.uiTesting
+        // Without a curtain, the notice says what this practice is; nothing waits on it.
+        if !curtain {
+            notice = NoticeContent(
+                title: scenarioRef.map { L.t("第 \(SpeakingScenarios.number($0)) 關", "Stage \(SpeakingScenarios.number($0))") } ?? stageTitle,
+                detail: stageCaption,
+                icon: scenarioRef.flatMap { SpeakingScenarios.scenario($0)?.icon } ?? "mic.fill",
+                tint: TodayView.speakingTint,
+                identifier: "speaking-stage-banner")
+            bannerShown = true
+        }
         wordChoices = []
         replies = [:]
         started = true
@@ -490,12 +504,6 @@ struct SpeakingSessionView: View {
                 // A role-play rolls on like a chat; a word slides in from the side.
                 .modifier(PromptArrival(slides: turn == nil))
                 .id("shadow-\(index)")
-            }
-            .overlay(alignment: .top) {
-                if index == 0, !bannerShown {
-                    StageBanner(title: scenarioRef.map { L.t("第 \(SpeakingScenarios.number($0)) 關", "Stage \(SpeakingScenarios.number($0))") } ?? stageTitle,
-                                subtitle: stageCaption) { bannerShown = true }
-                }
             }
         } else {
             answerPage(at: index, card: card, builtOnSentence: !sentence.isEmpty)

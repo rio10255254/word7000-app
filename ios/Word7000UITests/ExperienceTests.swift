@@ -426,6 +426,13 @@ final class ExperienceTests: XCTestCase {
         for _ in 0..<5 where !settings.isHittable { app.swipeUp() }
         settings.tap()
         XCTAssertTrue(app.switches["settings-auto-reveal"].waitForExistence(timeout: 5))
+        // Changing what is learnt rebuilds the app in the other language, and
+        // Settings stays open (it used to drop back to Me).
+        app.buttons["settings-study-mode-1"].tap()
+        XCTAssertTrue(app.buttons["settings-study-mode-1"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["settings-study-mode-1"].isSelected, "still on Settings, now learning Chinese")
+        app.buttons["settings-study-mode-0"].tap()
+        XCTAssertTrue(app.switches["settings-auto-reveal"].waitForExistence(timeout: 5))
         // A swipe can carry a row right past a small screen now the choices
         // sit in the rows; drag a short way at a time until it is there.
         func reach(_ element: XCUIElement) {

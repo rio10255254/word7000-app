@@ -1,6 +1,11 @@
 import SwiftUI
 import Word7000Core
 
+/// Where the Me tab can go by value: kept by the tab across a rebuild.
+enum MeRoute: Hashable {
+    case settings
+}
+
 /// How it is going, and the few settings there are.
 struct MeView: View {
     @Environment(AppModel.self) private var model
@@ -73,7 +78,9 @@ struct MeView: View {
                         Label(L.t("傻貓記得的事", "What Silly Cat remembers"), systemImage: "pawprint")
                     }
                     .accessibilityIdentifier("me-cat-memory")
-                    NavigationLink { SettingsView() } label: {
+                    // By value, so Settings stays open when changing what is
+                    // learnt rebuilds the app in the other language.
+                    NavigationLink(value: MeRoute.settings) {
                         Label(L.settings, systemImage: "gearshape")
                     }
                     .accessibilityIdentifier("me-settings")
@@ -84,6 +91,11 @@ struct MeView: View {
         .warmList()
         .navigationTitle(L.tabMe)
         .navigationDestination(isPresented: $historyOpen) { HistoryView() }
+        .navigationDestination(for: MeRoute.self) { route in
+            switch route {
+            case .settings: SettingsView()
+            }
+        }
         .sheet(isPresented: $signInOpen) { SignInSheet(reason: .general) }
     }
 
@@ -218,7 +230,10 @@ struct SettingsView: View {
                     ChoiceRow(title: L.studyModeTitle, icon: "character.book.closed.fill", tint: Palette.accent,
                               options: [ChoiceOption(value: StudyMode.english, title: "學英文", detail: "中文介面", icon: "a.book.closed"),
                                         ChoiceOption(value: StudyMode.chinese, title: "Learn Chinese", detail: "English", icon: "character")],
-                              selection: model.studyMode, identifier: "settings-study-mode") { model.setStudyMode($0) }
+                              selection: model.studyMode, identifier: "settings-study-mode") { mode in
+                        // The app is rebuilt in the other language: a soft cross-fade, Settings stays open.
+                        withAnimation(.easeInOut(duration: 0.3)) { model.setStudyMode(mode) }
+                    }
                     ChoiceRow(title: L.dailyTargetTitle, icon: "target", tint: Palette.accent,
                               options: dailyTargetOptions.map { ChoiceOption(value: $0, title: L.t("\($0) 個", "\($0)")) },
                               selection: model.progress.dailyTarget, identifier: "settings-daily-target") { model.setDailyTarget($0) }
@@ -234,7 +249,7 @@ struct SettingsView: View {
                         get: { model.homeShowsSpeaking },
                         set: { model.settings.homeShowsSpeaking = $0 }
                     )) {
-                        SettingsLabel(L.t("首頁顯示口說", "Speaking on the home page"), icon: "mic.fill", tint: TodayView.speakingTint)
+                        SettingsLabel(L.t("首頁顯示口說", "Speaking on Today"), icon: "mic.fill", tint: TodayView.speakingTint)
                     }
                     .accessibilityIdentifier("settings-home-speaking")
                 } header: {
@@ -421,10 +436,16 @@ struct SettingsLabel: View {
             // Color.primary, not .primary: inside a Button the hierarchical
             // style takes the button's tint, which turned rows like
             // "Announcement pushes" red.
+            // One line: a long title shrinks a little rather than wrapping,
+            // and the value gives way first.
             Text(title).foregroundStyle(Color.primary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+                .layoutPriority(1)
             if value != nil || external { Spacer(minLength: 8) }
             if let value {
                 Text(value).foregroundStyle(Color.secondary).lineLimit(1)
+                    .minimumScaleFactor(0.85)
                     .contentTransition(.opacity)
             }
             if external {

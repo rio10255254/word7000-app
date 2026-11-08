@@ -28,7 +28,7 @@ struct StudySessionView: View {
     @State private var visible = true
     /// The daily goal was reached during this visit, not before it.
     @State private var reachedGoalHere = false
-    @State private var goalBanner = false
+    @State private var goalNotice: NoticeContent?
     /// How the companion on the progress bar feels about the last card.
     @State private var buddyMood: Mascot.Mood = .thinking
     @State private var buddyHop = 0
@@ -150,25 +150,7 @@ struct StudySessionView: View {
                 try? await Task.sleep(for: .milliseconds(400))
                 if model.studySession == nil { dismiss() }
             }
-            .overlay(alignment: .top) {
-                if goalBanner {
-                    Label {
-                        Text(L.goalReachedBanner)
-                    } icon: {
-                        Image(systemName: "checkmark.seal.fill")
-                            .symbolEffect(.bounce, value: goalBanner)
-                    }
-                        .font(.headline)
-                        .foregroundStyle(Palette.surface)
-                        .padding(.horizontal, 18)
-                        .padding(.vertical, 10)
-                        .background(Palette.known, in: Capsule())
-                        .padding(.top, 8)
-                        .shadow(color: Palette.known.opacity(0.35), radius: 10, y: 4)
-                        .transition(reduceMotion ? .opacity : .move(edge: .top).combined(with: .scale(scale: 0.8)).combined(with: .opacity))
-                        .accessibilityIdentifier("study-goal-banner")
-                }
-            }
+            .notice($goalNotice)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -249,11 +231,8 @@ struct StudySessionView: View {
             reachedGoalHere = true
             // The summary celebrates on its own when the set ends here.
             guard model.studySession?.isComplete == false else { return }
-            withAnimation(reduceMotion ? nil : Motion.pop) { goalBanner = true }
-            Task {
-                try? await Task.sleep(for: .seconds(2.4))
-                withAnimation(reduceMotion ? nil : Motion.reveal) { goalBanner = false }
-            }
+            goalNotice = NoticeContent(title: L.goalReachedBanner, icon: "checkmark.seal.fill",
+                                       tint: Palette.known, identifier: "study-goal-banner")
         }
         .sensoryFeedback(.success, trigger: reachedGoalHere) { _, new in new && (model.settings.hapticsEnabled ?? true) }
         .sensoryFeedback(.impact(weight: .medium), trigger: feedback) { _, _ in model.settings.hapticsEnabled ?? true }

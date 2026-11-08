@@ -445,8 +445,11 @@ final class ExperienceTests: XCTestCase {
         snapshot(app, "settings-bottom")
         app.swipeDown()
         app.swipeDown()
+        // Back to the top, then down to the AI row, which sits just below
+        // the first screen on a small phone now the choices are in the rows.
         let intelligence = app.buttons["settings-intelligence"]
-        for _ in 0..<10 where !intelligence.isHittable { app.swipeDown() }
+        for _ in 0..<6 where !intelligence.isHittable { app.swipeDown() }
+        for _ in 0..<4 where !intelligence.isHittable { app.swipeUp() }
         intelligence.tap()
         XCTAssertTrue(app.switches["settings-ai-toggle"].waitForExistence(timeout: 5))
     }

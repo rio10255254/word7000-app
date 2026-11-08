@@ -25,58 +25,70 @@ const SHOTS = process.env.SHOTS ?? (() => {
 })();
 const ICON = 'ios/Word7000/Assets.xcassets/AppIcon.appiconset/icon-1024.png';
 
-/** Every word on the pages, per App Store locale. `screen` names a file from the tests. */
+/**
+ * Every word on the pages, per App Store locale. `screen` names a file from the
+ * tests; `pair` puts two screens side by side; `sticker` is a taped label over
+ * the phone (x and y as fractions of the page); `chips` are small tags under
+ * the line. The order tells WordCat Next's story: what it is, a plan made for
+ * you, speaking with real voices, checks right after the cards, the path of
+ * stages, the day's stamp, the cat, and that it is free to start.
+ */
 const COPY = {
   'zh-Hant': {
     name: 'WordCat',
     pages: [
-      { file: '01-7000', screen: 'store-zh-1-today', brand: true, title: '7000 單字<br>一天<mark>一點點</mark>',
-        text: '打開就背，今天的進度傻貓排好了。' },
-      { file: '02-scenes', screen: 'store-zh-4-speaking-turn2', kicker: '口說練習', title: '點餐、問路<br>先在這<mark>練一遍</mark>',
-        text: '餐廳、問路、看醫生……10 個生活情境，<br>輪到你就開口說。' },
-      { file: '03-shadowing', screen: 'store-zh-4-speaking-shadow-result', kicker: '口說練習', title: '念到哪<br><mark>亮到哪</mark>',
-        text: '跟著示範念一遍，念對的字會變綠，<br>念錯的標出來，念對才往下。' },
-      { file: '04-feedback', screen: 'store-zh-5-coach', kicker: '口說練習', title: '講錯沒差<br>傻貓幫你<mark>改順</mark>',
+      { file: '01-7000', screen: 'store-zh-n1-today', brand: true, title: '7000 單字<br><mark>傻貓陪你</mark>背完',
+        text: '學測、統測、會考、英檢都適用。<br>打開就知道今天要做什麼。', chips: ['單字卡免費', '不用登入'] },
+      { file: '02-plan', screen: 'store-zh-n6-plan', kicker: '個人計畫', title: '考前讀得完？<br>傻貓<mark>算給你看</mark>',
+        text: '先測兩分鐘程度，<br>再照你的考試和日期排好每天的量。' },
+      { file: '03-listen', screen: 'store-zh-n7-listen', kicker: '口說練習', title: '先聽<mark>真人</mark><br>怎麼說',
+        text: '點餐、問路、看醫生……<br>每個角色都有自己的聲音，先聽完整段對話。',
+        sticker: { text: '真人錄音', x: 0.70, y: 0.43 } },
+      { file: '04-shadowing', screen: 'store-zh-n8-shadow', kicker: '口說練習', title: '念到哪<br><mark>亮到哪</mark>',
+        text: '跟著示範念，念對的字變綠，<br>念錯的標出來，念對才往下。' },
+      { file: '05-feedback', screen: 'store-zh-5-coach', kicker: '口說練習', title: '講錯沒差<br>傻貓幫你<mark>改順</mark>',
         text: '用說的或打的回答，看看怎麼講比較自然。', note: '線上 AI 批改要 Premium' },
-      { file: '05-map', screen: 'store-zh-4-speaking-map', kicker: '口說練習', title: '十個場景<br><mark>挑一個</mark>開始',
-        text: '餐廳、便利商店、飯店、看醫生……<br>每個場景兩關，想練哪個點哪個。' },
-      { file: '06-cards', screen: 'store-zh-2-card', title: '背了又忘？<br><mark>正常啦</mark>',
-        text: '不熟的字過幾天會再跑出來，背到記住為止。' },
-      { file: '07-quiz', screen: 'store-zh-3-quiz', title: '又選錯？<br>看哪裡<mark>搞混</mark>',
-        text: '小測驗、拼字、模擬考都有，錯了馬上知道差在哪。' },
-      { file: '08-cat', screen: 'store-zh-7-cat', title: '這隻貓<br>嘴<mark>有點賤</mark>',
-        text: '它記得你哪天考試，偷懶就會被念。' },
-      { file: '09-scan', screen: 'store-zh-6-scan', title: '講義拍一下<br>就是<mark>單字卡</mark>',
-        text: '印的、手寫的都行，不用自己打。', note: '掃描要 Premium' },
+      { file: '06-checks', pair: ['store-zh-n3-write', 'store-zh-n4-exam'], kicker: '每天一條路', title: '背完<br>馬上<mark>考一下</mark>',
+        text: '翻完卡接著拼字、做題，題型照你的考試出。<br>錯的會再回來，背到記住為止。' },
+      { file: '07-map', screen: 'store-zh-n10-map', kicker: '口說練習', title: '20 關<br>生活<mark>情境</mark>',
+        text: '餐廳、便利商店、飯店、看醫生……<br>一關一關闖，把星星拿滿。' },
+      { file: '08-stamp', screen: 'store-zh-n11-stamp', title: '走完一天<br><mark>蓋個章</mark>',
+        text: '連續天數一天天累積，日曆越塗越滿。' },
+      { file: '09-cat', screen: 'store-zh-7-cat', title: '這隻貓<br>嘴<mark>有點賤</mark>',
+        text: '記得你哪天考試，偷懶會被念，<br>答錯還會對你吐舌頭。' },
       { file: '10-free', finale: true, kicker: '背單字不用錢', title: '先背<br>再說',
-        collage: ['store-zh-1-today', 'store-zh-4-speaking-shadow-result', 'store-zh-5-coach'],
-        text: '這些都免費。想要 AI 批改和掃描，再升級 Premium。' },
+        collage: ['store-zh-n1-today', 'store-zh-n7-listen', 'store-zh-n11-stamp'],
+        chips: ['單字卡', '拼字與考題', '口說 20 關'],
+        text: '這些都免費。想要 AI 批改和掃描講義，再升級 Premium。' },
     ],
   },
   'en-US': {
     name: 'WordCat',
     pages: [
-      { file: '01-chinese', screen: 'store-en-1-today', brand: true, title: 'Chinese,<br><mark>a few words</mark> a day',
-        text: 'Taiwan Mandarin with pinyin and audio. Today’s words are already picked.' },
-      { file: '02-scenes', screen: 'store-en-4-speaking-turn2', kicker: 'Speaking', title: 'Order, ask the way,<br><mark>see a doctor</mark>',
-        text: 'Ten everyday scenes in Taiwan Mandarin. When it’s your turn, say your line.' },
-      { file: '03-tones', screen: 'store-en-4-speaking-shadow-result', kicker: 'Speaking', title: 'See your<br><mark>tones</mark>',
+      { file: '01-chinese', screen: 'store-en-n1-today', brand: true, title: 'Chinese,<br><mark>a few words</mark> a day',
+        text: 'Taiwan Mandarin with pinyin and audio, and a cat that keeps you going. Today’s path is ready.',
+        chips: ['Free flashcards', 'No sign-in'] },
+      { file: '02-plan', screen: 'store-en-n6-plan', kicker: 'Your plan', title: 'A plan that<br><mark>fits you</mark>',
+        text: 'A two-minute check finds your level. Set a goal, and the cat works out each day for you.' },
+      { file: '03-listen', screen: 'store-en-n7-listen', kicker: 'Speaking', title: 'Hear it from<br><mark>real voices</mark>',
+        text: 'Every role in every scene has its own Taiwanese Mandarin voice. Listen first, then join in.',
+        sticker: { text: 'Real voices', x: 0.70, y: 0.43 } },
+      { file: '04-tones', screen: 'store-en-n8-shadow', kicker: 'Speaking', title: 'See your<br><mark>tones</mark>',
         text: 'Say it along. Each character lights up as you say it, and a slipped tone is marked to say again.' },
-      { file: '04-feedback', screen: 'store-en-5-coach', kicker: 'Speaking', title: 'Say it<br><mark>out loud</mark>',
+      { file: '05-feedback', screen: 'store-en-5-coach', kicker: 'Speaking', title: 'Say it<br><mark>out loud</mark>',
         text: 'Mess it up, that’s fine. The cat shows you a smoother way to say it.',
         note: 'Online feedback comes with Premium.' },
-      { file: '05-map', screen: 'store-en-4-speaking-map', kicker: 'Speaking', title: 'Ten scenes,<br><mark>pick one</mark>',
-        text: 'Restaurant, convenience store, hotel, the doctor… two stages each. Start anywhere.' },
-      { file: '06-cards', screen: 'store-en-2-card', title: 'Forgot it?<br><mark>Happens.</mark>',
-        text: 'Words you miss come back in a few days, until they stick.' },
-      { file: '07-quiz', screen: 'store-en-3-quiz', title: 'Wrong again?<br><mark>Here’s why</mark>',
-        text: 'Quick quizzes and writing drills. Miss one and you’ll see what you mixed up.' },
-      { file: '08-cat', screen: 'store-en-7-cat', title: 'The cat<br>has <mark>opinions</mark>',
-        text: 'It knows when your test is, and it’ll let you know when you slack off.' },
-      { file: '09-scan', screen: 'store-en-6-scan', title: 'Snap a list,<br>get <mark>flashcards</mark>',
-        text: 'Printed or handwritten. No typing.', note: 'Scanning comes with Premium.' },
+      { file: '06-checks', pair: ['store-en-n3-write', 'store-en-n4-exam'], kicker: 'Every day', title: 'Learn it,<br>then <mark>use it</mark>',
+        text: 'After the cards, write the words and answer a few questions. The ones you miss come back.' },
+      { file: '07-map', screen: 'store-en-n10-map', kicker: 'Speaking', title: '20 stages of<br><mark>everyday Taiwan</mark>',
+        text: 'Restaurant, convenience store, hotel, the doctor… one stage at a time, for three stars.' },
+      { file: '08-stamp', screen: 'store-en-n11-stamp', title: 'Finish the day,<br><mark>stamp it</mark>',
+        text: 'Your streak grows, and the calendar fills up.' },
+      { file: '09-cat', screen: 'store-en-7-cat', title: 'The cat<br>has <mark>opinions</mark>',
+        text: 'It knows your goal, nags when you slack off, and sticks its tongue out at your mistakes.' },
       { file: '10-free', finale: true, kicker: 'Studying words is free', title: 'Just<br>start',
-        collage: ['store-en-1-today', 'store-en-4-speaking-shadow-result', 'store-en-5-coach'],
+        collage: ['store-en-n1-today', 'store-en-n7-listen', 'store-en-n11-stamp'],
+        chips: ['Flashcards', 'Writing and quizzes', '20 speaking stages'],
         text: 'All free. Upgrade when you want AI feedback and scanning.' },
     ],
   },
@@ -153,6 +165,19 @@ const css = `
   .phone .island { position: absolute; left: 50%; transform: translateX(-50%); background: #000; border-radius: 999px; }
   .phone .key { position: absolute; width: 7px; border-radius: 4px; background: linear-gradient(90deg, #2b2724, #5d5752); }
 
+  /* Small tags under the line. */
+  .chips { margin-top: 40px; display: flex; gap: 18px; flex-wrap: wrap; }
+  .chips span { padding: 12px 28px; border-radius: 999px; background: rgba(201,98,63,.12); border: 2px solid rgba(201,98,63,.45);
+    color: ${C.accent}; font-weight: 800; font-size: 36px; }
+  .chips span::before { content: '✓ '; }
+
+  /* A taped paper label over the phone, pointing something out. */
+  .sticker { position: absolute; transform: translate(-50%, -50%) rotate(-4deg); padding: 22px 40px; border-radius: 14px;
+    background: ${C.accent}; color: ${C.cream}; font-weight: 900; font-size: 52px; letter-spacing: 1px; white-space: nowrap;
+    background-image: ${grain(0.10)}; box-shadow: 0 24px 50px rgba(80,45,20,.32), 0 6px 14px rgba(80,45,20,.2); }
+  .sticker::after { content: ''; position: absolute; top: -26px; left: 50%; width: 140px; height: 46px; margin-left: -70px;
+    transform: rotate(5deg); background: rgba(236,214,162,.85); box-shadow: 0 3px 8px rgba(80,45,20,.14); }
+
   /* A close-up on a taped scrap of paper over the phone. */
   .zoom { position: absolute; border-radius: 26px; transform: rotate(-1.6deg); padding: 14px; background: ${C.cream};
     background-image: ${grain(0.05)};
@@ -192,16 +217,28 @@ const phone = (screen, y, w = 920) => {
 const PHONE_TOP = 1000;
 
 function feature(p, lang) {
-  const screen = shot(p.screen);
+  const screen = p.screen ? shot(p.screen) : null;
   return page(`
     <div class="copy">
       ${p.brand ? `<div class="brand"><img src="${icon}">WordCat</div>` : ''}
       ${p.kicker ? `<p class="kicker">${mic}${p.kicker}</p>` : ''}
       <h1>${p.title}</h1><p class="text">${p.text}</p>${p.note ? `<p class="note">${p.note}</p>` : ''}
+      ${p.chips ? `<div class="chips">${p.chips.map((c) => `<span>${c}</span>`).join('')}</div>` : ''}
     </div>
-    ${phone(screen, PHONE_TOP)}
+    ${p.pair ? pairOf(p.pair) : phone(screen, PHONE_TOP)}
     ${p.zoom ? zoom(screen, ZOOMS[p.zoom][lang], PHONE_TOP) : ''}
+    ${p.sticker ? `<div class="sticker" style="left:${Math.round(p.sticker.x * W)}px;top:${Math.round(p.sticker.y * H)}px">${p.sticker.text}</div>` : ''}
   `, { lang });
+}
+
+/** Two screens side by side, the second a little lower, each a phone leaning in. */
+function pairOf([first, second]) {
+  const w = 640;
+  const one = phone(shot(first), PHONE_TOP + 20, w).replace('class="phone" style="left:' + (W - w) / 2 + 'px;',
+    'class="phone" style="transform:rotate(-3deg);left:' + 40 + 'px;');
+  const two = phone(shot(second), PHONE_TOP + 180, w).replace('class="phone" style="left:' + (W - w) / 2 + 'px;',
+    'class="phone" style="transform:rotate(3deg);left:' + (W - w - 40) + 'px;');
+  return one + two;
 }
 
 /** A region of the screen, enlarged on a taped paper card over the phone. */
@@ -222,7 +259,7 @@ function zoom(screen, r, phoneTop, phoneWidth = 920) {
 }
 
 function finale(p, lang, name) {
-  const chips = lang === 'zh' ? ['單字卡', '測驗', '口說練習'] : ['Flashcards', 'Quizzes', 'Speaking'];
+  const chips = p.chips ?? (lang === 'zh' ? ['單字卡', '測驗', '口說練習'] : ['Flashcards', 'Quizzes', 'Speaking']);
   // Three screens of the app, fanned out like taped scraps under the words.
   const fan = (p.collage ?? []).map((name, i) => {
     const w = 400, x = [70, 460, 850][i], y = [1790, 1700, 1810][i], turn = [-7, 1.5, 8][i];

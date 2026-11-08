@@ -148,7 +148,7 @@ struct LearningPlanView: View {
         Section {
             ChoiceRow(title: L.t("準備的考試", "Exam"), icon: "graduationcap.fill", tint: Palette.accent,
                       options: WelcomeExam.allCases.map { ChoiceOption(value: $0, title: $0.title, icon: $0.icon) },
-                      selection: exam ?? .none, equalWidths: false, identifier: "plan-exam") { choice in
+                      selection: exam ?? WelcomeExam.none, equalWidths: false, identifier: "plan-exam") { choice in
                 update { $0.exam = choice.rawValue }
                 // The usual day of a school exam; an English test's day is
                 // the learner's own to set below, so the old date goes.

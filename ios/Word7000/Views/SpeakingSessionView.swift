@@ -975,8 +975,8 @@ struct SpeakingSessionView: View {
             }
         }
         .soundEffect(trigger: starsLanded) { (_: Bool, landed: Bool) -> SoundEffect? in landed && result.cleared ? .complete : nil }
-        .sensoryFeedback(trigger: starsLanded) { _, landed in
-            landed && result.cleared && (model.settings.hapticsEnabled ?? true) ? .success : nil
+        .sensoryFeedback(trigger: starsLanded) { (_: Bool, landed: Bool) -> SensoryFeedback? in
+            landed && result.cleared && (model.settings.hapticsEnabled ?? true) ? SensoryFeedback.success : nil
         }
         .task {
             try? await Task.sleep(for: .milliseconds(450))

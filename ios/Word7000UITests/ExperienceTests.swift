@@ -426,34 +426,33 @@ final class ExperienceTests: XCTestCase {
         for _ in 0..<5 where !settings.isHittable { app.swipeUp() }
         settings.tap()
         XCTAssertTrue(app.switches["settings-auto-reveal"].waitForExistence(timeout: 5))
+        // A swipe can carry a row right past a small screen now the choices
+        // sit in the rows; drag a short way at a time until it is there.
+        func reach(_ element: XCUIElement) {
+            for _ in 0..<14 where !(element.exists && element.isHittable) {
+                let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.7))
+                start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -160)))
+            }
+        }
         let reminder = app.switches["settings-reminder"]
-        for _ in 0..<3 where !reminder.exists { app.swipeUp() }
+        reach(reminder)
         XCTAssertTrue(reminder.exists, app.debugDescription)
-        let intelligenceRow = app.buttons["settings-intelligence"]
-        for _ in 0..<3 where !intelligenceRow.exists { app.swipeUp() }
-        XCTAssertTrue(intelligenceRow.exists)
+        let intelligence = app.buttons["settings-intelligence"]
+        reach(intelligence)
+        XCTAssertTrue(intelligence.exists)
         snapshot(app, "settings-top")
         let speech = app.buttons["settings-speech"]
-        for _ in 0..<3 where !speech.isHittable { app.swipeUp() }
+        reach(speech)
         XCTAssertTrue(speech.isHittable)
         // WordCat Next: sound effects, on until turned off.
         let sounds = app.switches["settings-sounds"]
-        for _ in 0..<3 where !sounds.isHittable { app.swipeUp() }
+        reach(sounds)
         XCTAssertEqual(sounds.value as? String, "1", app.debugDescription)
         app.swipeUp()
         app.swipeUp()
         snapshot(app, "settings-bottom")
-        app.swipeDown()
-        app.swipeDown()
-        // Back to the top, then down to the AI row, which sits just below
-        // the first screen on a small phone now the choices are in the rows.
-        let intelligence = app.buttons["settings-intelligence"]
-        for _ in 0..<6 where !intelligence.isHittable { app.swipeDown() }
-        // A swipe can carry the row past the screen; drag a short way at a time.
-        for _ in 0..<8 where !(intelligence.exists && intelligence.isHittable) {
-            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.7))
-            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -160)))
-        }
+        for _ in 0..<6 { app.swipeDown() }
+        reach(intelligence)
         intelligence.tap()
         XCTAssertTrue(app.switches["settings-ai-toggle"].waitForExistence(timeout: 5))
     }

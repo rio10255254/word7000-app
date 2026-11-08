@@ -17,7 +17,16 @@ enum ScenarioVoice {
                     for language in ["zh", "en"] {
                         for (kind, line) in [("partner", turn.partner), ("reply", turn.reply)] {
                             let text = language == "zh" ? line.zh : line.en
-                            index[key(text, language: language)] = "\(scenario.id)-\(stageIndex)-\(turnIndex)-\(kind)-\(language)"
+                            let name = "\(scenario.id)-\(stageIndex)-\(turnIndex)-\(kind)-\(language)"
+                            index[key(text, language: language)] = name
+                            // The repeat step says only the reply's first sentence (or
+                            // two) when it is long; that part has a recording of its own.
+                            if kind == "reply" {
+                                let said = ShadowingCheck.sentence(from: text, chinese: language == "zh")
+                                if said != text.trimmingCharacters(in: .whitespacesAndNewlines) {
+                                    index[key(said, language: language)] = name + "-shadow"
+                                }
+                            }
                         }
                     }
                 }

@@ -45,24 +45,24 @@ struct WarmSwitch: View {
     }
 }
 
-/// Every switch in a WordCat list: the row's label, then a WarmSwitch. The
-/// iPhone's own switch sits on top of it, all but invisible, so taps,
-/// VoiceOver and the UI tests still meet a real switch.
+/// Every switch in a WordCat list: the row's label, then a WarmSwitch; a
+/// tap anywhere on the row flips it. VoiceOver and the UI tests meet the
+/// iPhone's own switch, with the same label and value.
 struct WarmToggleStyle: ToggleStyle {
     func makeBody(configuration: Configuration) -> some View {
-        HStack(spacing: 12) {
-            configuration.label
-                .accessibilityHidden(true)
-            Spacer(minLength: 8)
-            WarmSwitch(isOn: configuration.isOn)
-                .overlay {
-                    Toggle(isOn: configuration.$isOn) { configuration.label }
-                        .toggleStyle(.switch)
-                        .labelsHidden()
-                        .opacity(0.02)
-                }
+        Button { configuration.isOn.toggle() } label: {
+            HStack(spacing: 12) {
+                configuration.label
+                Spacer(minLength: 8)
+                WarmSwitch(isOn: configuration.isOn)
+            }
+            .contentShape(Rectangle())
         }
-        .contentShape(Rectangle())
+        .buttonStyle(.plain)
+        .accessibilityRepresentation {
+            Toggle(isOn: configuration.$isOn) { configuration.label }
+                .toggleStyle(.switch)
+        }
     }
 }
 

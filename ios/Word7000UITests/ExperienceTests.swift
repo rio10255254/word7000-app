@@ -342,8 +342,12 @@ final class ExperienceTests: XCTestCase {
         let selectedName = app.buttons["speech-voice-en-US"].value as? String ?? ""
         XCTAssertFalse(selectedName.isEmpty)
         snapshot(app, "speech-preferences")
-        app.buttons["speech-preview-en-US"].tap()
-        app.buttons["speech-preview-zh-TW"].tap()
+        let previewEnglish = app.buttons["speech-preview-en-US"]
+        previewEnglish.scrollIntoView(in: app, swipes: 3)
+        previewEnglish.tap()
+        let previewChinese = app.buttons["speech-preview-zh-TW"]
+        previewChinese.scrollIntoView(in: app, swipes: 3)
+        previewChinese.tap()
         let autoSpeak = app.switches["speech-auto-speak"]
         autoSpeak.scrollIntoView(in: app, swipes: 3)
         XCTAssertEqual(autoSpeak.value as? String, "0")
@@ -421,7 +425,9 @@ final class ExperienceTests: XCTestCase {
         for _ in 0..<5 where !settings.isHittable { app.swipeUp() }
         settings.tap()
         XCTAssertTrue(app.switches["settings-auto-reveal"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.switches["settings-reminder"].exists)
+        let reminder = app.switches["settings-reminder"]
+        for _ in 0..<3 where !reminder.isHittable { app.swipeUp() }
+        XCTAssertTrue(reminder.exists)
         XCTAssertTrue(app.buttons["settings-intelligence"].exists)
         snapshot(app, "settings-top")
         let speech = app.buttons["settings-speech"]

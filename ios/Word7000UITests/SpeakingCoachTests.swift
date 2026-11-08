@@ -339,7 +339,7 @@ final class SpeakingCoachTests: XCTestCase {
         let toggle = app.switches["settings-ai-toggle"]
         XCTAssertTrue(toggle.waitForExistence(timeout: 5))
         let control = toggle.switches.firstMatch
-        if control.exists { control.tap() } else { toggle.tap() }
+        if control.exists && control.isHittable { control.tap() } else { toggle.tap() }
         wait(toggle, matching: "value == '0'")
         snapshot(app, "studio-ai-disabled-settings")
         app.navigationBars.buttons.element(boundBy: 0).tap()

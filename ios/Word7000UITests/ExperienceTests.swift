@@ -356,7 +356,8 @@ final class ExperienceTests: XCTestCase {
         // the retry only happens while it still reads off, so it can never
         // switch the setting back.
         let inner = autoSpeak.switches.firstMatch
-        let control = inner.exists ? inner : autoSpeak
+        // WordCat's own switch is the whole row; the system switch inside it has no size.
+        let control = inner.exists && inner.isHittable ? inner : autoSpeak
         func switchedOn(within seconds: TimeInterval) -> Bool {
             let on = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value == '1'"), object: autoSpeak)
             return XCTWaiter.wait(for: [on], timeout: seconds) == .completed

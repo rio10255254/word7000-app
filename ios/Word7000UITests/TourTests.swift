@@ -40,7 +40,8 @@ final class TourTests: XCTestCase {
         tapIfThere(app.buttons["today-streak"]); sleep(1); snap(app, "today-streak-sheet")
         app.descendants(matching: .any)["today-week"].firstMatch.pullSheetDown(); sleep(1)
         tapIfThere(app.buttons["today-shelf"]); sleep(1); snap(app, "today-shelf-sheet")
-        app.buttons["today-goal-0"].pullSheetDown(); sleep(1)
+        // Pulled down by a plain row: a drag that starts on a chip is taken by the chip.
+        app.buttons["today-words"].pullSheetDown(); sleep(1)
 
         // Practice: each round's first screen.
         let rows = ["practice-missed", "practice-spell", "practice-exam-style", "practice-meaning", "practice-mock",

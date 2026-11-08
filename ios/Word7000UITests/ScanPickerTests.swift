@@ -46,13 +46,16 @@ final class ScanPickerTests: XCTestCase {
             // photo; after ScanPhotoLoader.transferTimeout the app says so and
             // offers the photo picker again. Pick it once more, as a learner would.
             let loadFailed = app.descendants(matching: .any)["scan-message"]
+            // The review is open once its first word row is there (the save
+            // key, far down the list, may not be built yet on a small phone).
+            let reviewed = app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-word-'")).firstMatch
             let deadline = Date().addingTimeInterval(80)
-            while !save.exists, !loadFailed.exists, Date() < deadline { _ = save.waitForExistence(timeout: 2) }
-            if !save.exists, loadFailed.exists {
+            while !reviewed.exists, !loadFailed.exists, Date() < deadline { _ = reviewed.waitForExistence(timeout: 2) }
+            if !reviewed.exists, loadFailed.exists {
                 snapshot(app, name: "scan-photo-\(index)-load-failed")
                 pickPhoto()
             }
-            XCTAssertTrue(save.waitForExistence(timeout: 80), app.debugDescription)
+            XCTAssertTrue(reviewed.waitForExistence(timeout: 80), app.debugDescription)
             let words = app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-word-'"))
                 .allElementsBoundByIndex.compactMap { ($0.value as? String)?.lowercased() }
             let meanings = app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-meaning-'"))
@@ -244,7 +247,10 @@ final class ScanPickerTests: XCTestCase {
         let read = app.buttons["scan-read-pasted"]
         read.scrollIntoView(in: app, swipes: 5)
         read.tap()
-        XCTAssertTrue(app.buttons["scan-save"].waitForExistence(timeout: 5))
+        // The review is a list: on a small phone the save key, far down, is
+        // only built once it is near; the first word row shows it is open.
+        let firstWord = app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-word-'")).firstMatch
+        XCTAssertTrue(firstWord.waitForExistence(timeout: 5), app.debugDescription)
     }
 
     private func savePastedBank(_ app: XCUIApplication) -> String {

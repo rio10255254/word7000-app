@@ -136,7 +136,9 @@ final class RoutineTests: XCTestCase {
         XCTAssertTrue(prompt.contains(where: { $0.isASCII && $0.isLetter }), "the English sentence is the prompt: \(prompt)")
         let help = app.buttons["routine-help"]
         XCTAssertTrue(help.exists)
-        XCTAssertTrue(help.label.contains("character") || help.label.contains("字"), help.label)
+        // Help starts with the first character, except for a one-character
+        // word, where that would be the whole answer.
+        XCTAssertTrue(help.label.contains("character") || help.label.contains("Show answer"), help.label)
         sleep(1)
         snap(app, "routine-zh-2-write")
     }

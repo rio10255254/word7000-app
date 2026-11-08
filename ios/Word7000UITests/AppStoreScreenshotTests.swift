@@ -125,8 +125,11 @@ final class AppStoreScreenshotTests: XCTestCase {
         if !app.keyboards.firstMatch.waitForExistence(timeout: 2) { answer.tap() }
         sleep(1)
         answer.typeText("x")
+        // Check sits under the answer while typing; on a shorter screen the
+        // chat may need a nudge to bring it up.
         let check = app.buttons["coach-submit"]
-        XCTAssertTrue(check.waitForExistence(timeout: 5))
+        if !check.waitForExistence(timeout: 5) { check.scrollIntoView(in: app, swipes: 3) }
+        XCTAssertTrue(check.waitForExistence(timeout: 5), app.debugDescription)
         check.tap()
         XCTAssertTrue(app.staticTexts["coach-rewrite"].waitForExistence(timeout: 10), app.debugDescription)
         sleep(2)

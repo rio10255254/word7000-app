@@ -688,6 +688,7 @@ struct TodayView: View {
                 Text(L.t("已會 \(mastered.formatted()) / \(total.formatted())", "\(mastered.formatted()) of \(total.formatted()) known"))
                     .font(.display(.title2, weight: .heavy))
                     .padding(.top, 24)
+                    .accessibilityIdentifier("today-shelf-total")
                 Shelf(chapters: chapters, current: current, height: 64, bookWidth: 16)
                 if let current {
                     Text(L.t("正在讀第 \(current + 1) 章", "Reading chapter \(current + 1)"))

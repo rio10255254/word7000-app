@@ -32,8 +32,9 @@ final class HomePageTests: XCTestCase {
         XCTAssertTrue(app.buttons["today-goal-0"].waitForExistence(timeout: 5))
         sleep(1)
         snap(app, "home-3-shelf")
-        // Pulled down by a plain row: a drag that starts on a chip is taken by the chip.
-        app.buttons["today-words"].pullSheetDown()
+        // Pulled down from its title at the top: a drag from a chip is taken
+        // by the chip, and one from the rows low in the sheet is too short.
+        app.staticTexts["today-shelf-total"].pullSheetDown()
 
         // The quiz stop: exam-style questions on learned words, then the score.
         let quiz = app.buttons["today-quiz"]

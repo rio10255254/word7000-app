@@ -58,7 +58,7 @@ final class LayoutTests: XCTestCase {
         let tabBar = app.tabBars.firstMatch
         let bottom = tabBar.exists ? tabBar.frame.minY : window.maxY
         for id in ["practice-missed", "practice-spell", "practice-exam-style", "practice-meaning", "practice-mock",
-                   "practice-scenarios", "practice-word-speaking"] {
+                   "practice-cards", "practice-scenarios", "practice-word-speaking"] {
             let row = app.buttons[id]
             guard row.exists else { continue }
             onScreen(row, in: window, id)

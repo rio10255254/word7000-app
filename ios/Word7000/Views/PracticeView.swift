@@ -11,9 +11,6 @@ struct PracticeView: View {
     var start: (Activity) -> Void
     @State private var quizSetupOpen = false
     @State private var quizQueued = false
-    /// The page's height, so the tiles grow into it rather than leave the
-    /// bottom half empty.
-    @State private var pageHeight: CGFloat = 0
 
     /// One way to practise, as the page shows it.
     private struct Item {
@@ -61,6 +58,15 @@ struct PracticeView: View {
                           locked: plus.decide(.examPractice) != .allowed) {
             start(.exam)
         })
+        // The tiles under the lead card come in pairs: an odd one out left a
+        // hole in the grid. The pair is made up with another set of cards.
+        if (items.count - 1) % 2 == 1 {
+            items.append(Item(id: "practice-cards", icon: "rectangle.on.rectangle.angled", tint: Palette.accent,
+                              title: L.t("翻卡", "Flip cards"), detail: L.t("再背一組", "One more set")) {
+                model.startStudySession()
+                start(.study)
+            })
+        }
         return items
     }
 
@@ -85,23 +91,14 @@ struct PracticeView: View {
         // the page is seen at a glance, as Duolingo's practice hub leads with
         // your mistakes.
         let words = wordItems
-        // Short tiles, icon beside the name, so the whole page fits one
-        // screen; it still scrolls at the large text sizes.
-        let tileHeight = tileHeight(wordTiles: max(0, words.count - 1))
-        ScrollView {
-            VStack(alignment: .leading, spacing: 10) {
-                if let featured = words.first { featuredCard(featured) }
-                header(L.t("單字", "Words")).padding(.top, 8)
-                grid(Array(words.dropFirst()), height: tileHeight)
-                header(L.t("口說", "Speaking")).padding(.top, 8)
-                grid(speakingItems, height: tileHeight)
-            }
-            .padding(.horizontal, Metrics.gutter)
-            .padding(.top, 8)
-            .padding(.bottom, 110)
+        // The tiles grow to fill whatever phone it is, so a tall screen has
+        // no empty bottom half; where even the short tiles do not fit (a
+        // small phone, the large text sizes), the page scrolls instead.
+        ViewThatFits(in: .vertical) {
+            page(words, fills: true)
+            ScrollView { page(words, fills: false) }
+                .scrollBounceBehavior(.basedOnSize)
         }
-        .scrollBounceBehavior(.basedOnSize)
-        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { pageHeight = $0 }
         .background { AmbientBackground() }
         .navigationTitle(L.t("練習", "Practice"))
         .sheet(isPresented: $quizSetupOpen, onDismiss: {
@@ -123,18 +120,26 @@ struct PracticeView: View {
         }
     }
 
-    /// What is left for the tiles once the card, the headers, the gaps and
-    /// the tab bar are counted, shared by the rows: never below the short
-    /// tile, never a slab. Its own function, so the body stays quick to
-    /// type-check on the release Xcode.
-    private func tileHeight(wordTiles: Int) -> CGFloat {
-        if dynamicTypeSize.isAccessibilitySize { return 68 }
-        let rowCount: Int = (wordTiles + 1) / 2 + (speakingItems.count + 1) / 2
-        let rows = CGFloat(max(1, rowCount))
-        let fixed: CGFloat = 118 + 96 + 68 + 40 + (rows - 2) * 10
-        let spare: CGFloat = pageHeight - fixed
-        return min(150, max(68, spare / rows))
+    /// The page: the card worth doing now, then the words and speaking
+    /// tiles. With `fills`, every row of tiles takes an equal share of the
+    /// height left (between the short tile and a tall one).
+    private func page(_ words: [Item], fills: Bool) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            if let featured = words.first { featuredCard(featured) }
+            header(L.t("單字", "Words")).padding(.top, 8)
+            grid(Array(words.dropFirst()), fills: fills)
+            header(L.t("口說", "Speaking")).padding(.top, 8)
+            grid(speakingItems, fills: fills)
+        }
+        .padding(.horizontal, Metrics.gutter)
+        .padding(.top, 8)
+        // Room for the floating tab bar.
+        .padding(.bottom, 100)
+        .frame(maxHeight: fills ? .infinity : nil, alignment: .top)
     }
+
+    private static let shortTile: CGFloat = 68
+    private static let tallestTile: CGFloat = 200
 
     /// The practice to do now, on the same leather or paper as Today's card.
     private func featuredCard(_ item: Item) -> some View {
@@ -172,11 +177,18 @@ struct PracticeView: View {
         .accessibilityIdentifier(item.id)
     }
 
-    private func grid(_ items: [Item], height: CGFloat) -> some View {
+    private func grid(_ items: [Item], fills: Bool) -> some View {
         // One column at the accessibility text sizes, where two cut the titles short.
         let columns = dynamicTypeSize.isAccessibilitySize ? 1 : 2
-        return LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: columns), spacing: 10) {
-            ForEach(items, id: \.id) { tile($0, height: height) }
+        let rows: [[Item]] = stride(from: 0, to: items.count, by: columns).map { Array(items[$0..<min(items.count, $0 + columns)]) }
+        return VStack(spacing: 10) {
+            ForEach(Array(rows.enumerated()), id: \.offset) { _, row in
+                HStack(spacing: 10) {
+                    ForEach(row, id: \.id) { tile($0, fills: fills) }
+                    if row.count < columns { Color.clear.frame(maxWidth: .infinity) }
+                }
+                .frame(minHeight: Self.shortTile, maxHeight: fills ? Self.tallestTile : nil)
+            }
         }
     }
 
@@ -193,22 +205,19 @@ struct PracticeView: View {
     private static let tilts: [String: Double] = [
         "practice-missed": -0.5, "practice-spell": 0.4, "practice-exam-style": -0.3,
         "practice-meaning": 0.5, "practice-mock": -0.4, "practice-scenarios": 0.4,
-        "practice-word-speaking": -0.4,
+        "practice-word-speaking": -0.4, "practice-cards": 0.3,
     ]
 
     /// A tile on the same plain paper as the rest, laid down a little by hand.
-    private func tile(_ item: Item, height: CGFloat) -> some View {
+    private func tile(_ item: Item, fills: Bool) -> some View {
         let tilt = Self.tilts[item.id] ?? 0
-        let tall = height >= 104
         return Button(action: item.action) {
-            Group {
-                if tall { tallTile(item) } else { shortTile(item) }
-            }
-            .padding(tall ? 14 : 12)
-            .frame(maxWidth: .infinity, minHeight: height, maxHeight: dynamicTypeSize.isAccessibilitySize ? nil : height, alignment: .topLeading)
+            // Icon above the name once the tile is tall enough, beside it below that.
+            PracticeTileFace(tall: { tallTile(item).padding(14) }, short: { shortTile(item).padding(12) })
+            .frame(maxWidth: .infinity, minHeight: Self.shortTile, maxHeight: fills ? .infinity : nil, alignment: .topLeading)
             .background(alignment: .bottomTrailing) {
                 // A big faint copy of the icon in the corner, so a tall tile is not bare.
-                if tall {
+                if fills {
                     Image(systemName: item.icon)
                         .font(.system(size: 64, weight: .bold))
                         .foregroundStyle(item.tint.opacity(0.13))
@@ -231,11 +240,12 @@ struct PracticeView: View {
 }
 
 extension PracticeView {
-    /// Icon on top, the name, and two lines on what it is.
+    /// Icon on top, the name, and two lines on what it is. Needs about 104
+    /// points; the short tile takes over below that.
     private func tallTile(_ item: Item) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             icon(item, size: 46)
-            Spacer(minLength: 6)
+            Spacer(minLength: 10)
             Text(item.title)
                 .font(.display(.headline, weight: .bold))
                 .foregroundStyle(Palette.ink)
@@ -275,6 +285,22 @@ extension PracticeView {
             .foregroundStyle(Palette.surface)
             .frame(width: size, height: size)
             .background { RaisedFill(shape: RoundedRectangle(cornerRadius: size * 0.3, style: .continuous), tint: item.tint, depth: 3) }
+    }
+}
+
+/// A tile's face by the height it was given: the tall layout (icon above
+/// the name) from about 104 points, the short one (icon beside it) below.
+private struct PracticeTileFace<Tall: View, Short: View>: View {
+    @ViewBuilder var tall: () -> Tall
+    @ViewBuilder var short: () -> Short
+    @State private var height: CGFloat = 0
+
+    var body: some View {
+        Group {
+            if height >= 104 { tall() } else { short() }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { height = $0 }
     }
 }
 

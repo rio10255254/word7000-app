@@ -446,7 +446,7 @@ final class ExperienceTests: XCTestCase {
         app.swipeDown()
         app.swipeDown()
         let intelligence = app.buttons["settings-intelligence"]
-        for _ in 0..<5 where !intelligence.isHittable { app.swipeDown() }
+        for _ in 0..<10 where !intelligence.isHittable { app.swipeDown() }
         intelligence.tap()
         XCTAssertTrue(app.switches["settings-ai-toggle"].waitForExistence(timeout: 5))
     }

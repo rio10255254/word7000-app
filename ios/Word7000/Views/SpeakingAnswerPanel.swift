@@ -119,12 +119,6 @@ struct SpeakingAnswerPanel: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityIdentifier("coach-privacy")
             }
-            // While typing, room below the notepad, so it can scroll up until
-            // its Check key shows above the keyboard. Without it a small phone
-            // (iPhone SE) ran out of page and left the key just out of sight.
-            if answerFocused {
-                Color.clear.frame(height: 160).accessibilityHidden(true)
-            }
         }
         .animation(reduceMotion ? nil : Motion.reveal, value: showsPad)
         .animation(reduceMotion ? nil : Motion.reveal, value: session.feedback != nil)
@@ -406,8 +400,23 @@ struct SpeakingAnswerPanel: View {
     /// the word was used sit small under it, then the Check key.
     private var chatPad: some View {
         VStack(alignment: .trailing, spacing: 10) {
+            HStack(alignment: .bottom, spacing: 0) {
+                Spacer(minLength: 48)
+                answerEditor(ruled: false)
+                    .frame(minHeight: 44, maxHeight: 200)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(Palette.accent.opacity(answerFocused ? 0.2 : 0.14), in: BubbleShape(tail: .trailing))
+                    .overlay {
+                        BubbleShape(tail: .trailing)
+                            .stroke(Palette.accent.opacity(answerFocused ? 0.5 : 0), lineWidth: 1.5)
+                    }
+            }
+            // While typing, Check sits right under the bubble: the chat keeps its
+            // end in view, and on a small phone (iPhone SE) the space left above
+            // the keyboard was too short to show it above the bubble.
             if answerFocused {
-                // The keyboard hides the Check key below; it sits above the bubble while typing.
                 HStack(spacing: 16) {
                     Spacer()
                     if provider.availability == .ready, hasText, !session.isWorking, !pendingSubmission {
@@ -429,19 +438,6 @@ struct SpeakingAnswerPanel: View {
                         .accessibilityLabel(L.t("收起鍵盤", "Dismiss keyboard"))
                         .accessibilityIdentifier("coach-keyboard-done")
                 }
-            }
-            HStack(alignment: .bottom, spacing: 0) {
-                Spacer(minLength: 48)
-                answerEditor(ruled: false)
-                    .frame(minHeight: 44, maxHeight: 200)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 6)
-                    .background(Palette.accent.opacity(answerFocused ? 0.2 : 0.14), in: BubbleShape(tail: .trailing))
-                    .overlay {
-                        BubbleShape(tail: .trailing)
-                            .stroke(Palette.accent.opacity(answerFocused ? 0.5 : 0), lineWidth: 1.5)
-                    }
             }
             padTools
             padStatus

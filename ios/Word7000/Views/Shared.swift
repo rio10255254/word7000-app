@@ -29,13 +29,15 @@ enum WordAudioSession {
 /// Reads a word aloud with the system voice; works offline.
 @MainActor
 @Observable
-final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
+final class Speaker: NSObject, AVSpeechSynthesizerDelegate, AVAudioPlayerDelegate {
     static let shared = Speaker()
     private(set) var activeText: String?
     private(set) var activeLanguage: String?
     private(set) var voices: [SpeechVoiceOption] = []
     @ObservationIgnored private var voicesTask: Task<[SpeechVoiceOption], Never>?
     @ObservationIgnored private var activeUtterance: AVSpeechUtterance?
+    /// WordCat Next: a recorded scenario line playing instead of the reader.
+    @ObservationIgnored private var activePlayer: AVAudioPlayer?
     @ObservationIgnored private var speechID: UUID?
     @ObservationIgnored private let audioQueue = WordAudioSession.queue
     @ObservationIgnored
@@ -103,6 +105,11 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
         speechID = id
         activeText = text
         activeLanguage = language
+        // WordCat Next: a scenario line plays its recording.
+        if let recording = ScenarioVoice.url(for: text, language: language) {
+            play(recording, id: id, preferences: preferences)
+            return
+        }
         Task { [weak self] in
           guard let self else { return }
           if voices.isEmpty { await refreshVoices() }
@@ -134,9 +141,40 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
         }
     }
 
+    /// Plays a recorded line, at the reading speed chosen in Settings.
+    private func play(_ url: URL, id: UUID, preferences: SpeechPreferences) {
+        audioQueue.async { [weak self] in
+            do {
+                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
+                try AVAudioSession.sharedInstance().setActive(true)
+            } catch {
+                Task { @MainActor in if self?.speechID == id { self?.stop() } }
+                return
+            }
+            Task { @MainActor in
+                guard let self, self.speechID == id else { return }
+                guard let player = try? AVAudioPlayer(contentsOf: url) else { self.stop(); return }
+                player.delegate = self
+                let rate = Float(preferences.speed.multiplier)
+                if rate != 1 {
+                    player.enableRate = true
+                    player.rate = rate
+                }
+                self.activePlayer = player
+                if !player.play() { self.stop() }
+            }
+        }
+    }
+
+    nonisolated func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        Task { @MainActor in if activePlayer === player { stop() } }
+    }
+
     func stop() {
         guard activeText != nil else { return }
         speechID = nil
+        activePlayer?.stop()
+        activePlayer = nil
         activeUtterance = nil
         activeText = nil
         activeLanguage = nil

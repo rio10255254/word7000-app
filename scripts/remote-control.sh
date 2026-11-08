@@ -3,7 +3,7 @@
 # ACTION: post | status | usage | fix | bank-publish | bank-remove | take-down | lift-update. Needs SUPABASE_ACCESS_TOKEN and PROJECT_REF.
 set -euo pipefail
 : "${TITLE_ZH:=}" "${BODY_ZH:=}" "${TITLE_EN:=}" "${BODY_EN:=}" "${AUDIENCE:=all}" "${BELOW:=}" "${DAYS:=7}"
-: "${LINK:=}" "${LINK_ZH:=}" "${LINK_EN:=}" "${PUSH:=false}" "${REQUIRE:=}"
+: "${LINK:=}" "${LINK_ZH:=}" "${LINK_EN:=}" "${PUSH:=false}" "${REQUIRE:=}" "${BROADCAST_PUSH_SECRET:=}"
 keys=$(supabase projects api-keys --project-ref "$PROJECT_REF" -o json --reveal 2>/dev/null \
   || supabase projects api-keys --project-ref "$PROJECT_REF" -o json)
 service=$(echo "$keys" | jq -r '([.[] | select(.name == "service_role")] + [.[] | select(.type == "secret")])[0].api_key')
@@ -114,6 +114,10 @@ post)
   if [ -n "$LINK" ] && [ "$LINK" != "plus" ] && [ "$LINK" != "update" ] && [[ "$LINK" != https://* ]]; then
     echo "::error::link must start with https://, or be plus or update"; exit 1
   fi
+  # Checked before anything is posted, so a message never goes out without its push.
+  if [ "$PUSH" = "true" ] && [ -z "$BROADCAST_PUSH_SECRET" ]; then
+    echo "::error::推播需要 BROADCAST_PUSH_SECRET：請在 GitHub 的 Actions secrets 和 Supabase 的 function secrets 都設定同一個值。"; exit 1
+  fi
   if [ -z "$TITLE_EN" ] || [ -z "$BODY_EN" ]; then
     echo "::warning::沒有填英文標題或內容：英文介面的使用者會看到中文。"
   fi
@@ -161,7 +165,7 @@ post)
   if [ "$PUSH" = "true" ]; then
     id=$(body_of "$reply" | jq -r '.[0].id')
     pushed=$(curl -sS -w '\n%{http_code}' -X POST "https://$PROJECT_REF.supabase.co/functions/v1/broadcast-push" \
-      -H 'Content-Type: application/json' -d "{\"id\":\"$id\"}")
+      -H 'Content-Type: application/json' -H "x-broadcast-secret: $BROADCAST_PUSH_SECRET" -d "{\"id\":\"$id\"}")
     say "🔔 推播結果：$(body_of "$pushed" | jq -r '"送出 \(.sent // 0) 台，失敗 \(.failed // 0) 台"' 2>/dev/null || body_of "$pushed")"
     [ "$(code_of "$pushed")" = "200" ] || { echo "::error::The push was not sent; the in-app message is posted"; exit 1; }
   fi

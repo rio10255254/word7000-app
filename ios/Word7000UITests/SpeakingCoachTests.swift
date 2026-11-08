@@ -303,9 +303,15 @@ final class SpeakingCoachTests: XCTestCase {
         if allow.waitForExistence(timeout: 5) {
             // A system sheet can still be animating when its button appears in
             // accessibility. Only retry that permission tap, never the recording.
-            for _ in 0..<2 where allow.exists {
-                wait(allow, matching: "exists == true AND hittable == true")
-                allow.tap()
+            // iOS 27's glass alert can ignore an element tap while it settles:
+            // the later tries tap the button's centre instead.
+            for attempt in 0..<3 where allow.exists {
+                let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == true AND hittable == true"), object: allow)
+                if XCTWaiter.wait(for: [ready], timeout: 5) == .completed, attempt == 0 {
+                    allow.tap()
+                } else if allow.exists {
+                    allow.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+                }
                 let dismissed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: allow)
                 if XCTWaiter.wait(for: [dismissed], timeout: 5) == .completed { break }
             }

@@ -93,6 +93,21 @@ struct RootView: View {
         }
         // The interface language follows the study mode; rebuild on change.
         .id(model.studyMode)
+        // WordCat Next: Silly Cat pops in from the edges now and then.
+        .overlay { CatPeekHost() }
+        .onChange(of: tab) { _, new in
+            CatPeek.shared.poke(CatPeek.tabLines(new), mood: .smug, chance: 0.35, gap: 30)
+        }
+        .task(id: scenePhase == .active && activity == nil) {
+            guard scenePhase == .active, activity == nil else { return }
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(Double.random(in: 45...80)))
+                guard !Task.isCancelled, !welcomeOpen, plus.paywallReason == nil else { continue }
+                CatPeek.shared.poke(CatPeek.idleLines, mood: [.smug, .idle, .cheeky].randomElement() ?? .smug, chance: 0.6, gap: 40)
+            }
+        }
+        .task { Feel.enabled = model.settings.hapticsEnabled ?? true }
+        .onChange(of: model.settings.hapticsEnabled) { _, on in Feel.enabled = on ?? true }
         .environment(\.locale, Locale(identifier: L.zh ? "zh_Hant_TW" : "en_US"))
         .sheet(item: Binding(get: { plus.paywallReason }, set: { plus.paywallReason = $0 })) { reason in
             PaywallView(reason: reason)
@@ -121,6 +136,7 @@ struct RootView: View {
             pendingActivity = nil
             activity = next
         }) { activity in
+            Group {
             switch activity {
             case .study:
                 StudySessionView(startQuiz: { switchTo(.quiz) })
@@ -151,6 +167,9 @@ struct RootView: View {
                     switchTo(.study)
                 })
             }
+            }
+            // The cat follows you into practice too, to comment on your answers.
+            .overlay { CatPeekHost() }
         }
         .fullScreenCover(isPresented: $dayCompleteOpen, onDismiss: openRequestedPractice) {
             DayCompleteView()

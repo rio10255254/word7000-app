@@ -19,6 +19,9 @@ struct Mascot: View {
         case smug
         /// Squeezed-shut >< eyes and a wobbly mouth: it has just been smacked.
         case annoyed
+        /// WordCat Next: a wink, one brow up and its tongue out at you:
+        /// mocking a miss, or just being a little brat.
+        case cheeky
     }
 
     var mood: Mood = .idle
@@ -155,8 +158,20 @@ struct Mascot: View {
         case .encourage: return -6
         case .thinking: return 5
         case .dizzy: return sin(t * 3.2) * 8
+        case .cheeky: return -7
+        // WordCat Next: never quite still: now and then it cocks its head at you.
+        case .idle, .smug: return reduceMotion ? 0 : Self.headCock(t)
         default: return 0
         }
+    }
+
+    /// A slow tilt of the head to one side and back, every 9 seconds,
+    /// alternating sides: sizing you up.
+    private static func headCock(_ t: Double) -> Double {
+        let cycle = t.truncatingRemainder(dividingBy: 9)
+        guard cycle > 2, cycle < 3.6 else { return 0 }
+        let side: Double = Int(t / 9) % 2 == 0 ? 1 : -1
+        return sin((cycle - 2) / 1.6 * .pi) * 7 * side
     }
 
     /// How far its legs are out, from 0 (tucked in, a lump) to 1 (standing):
@@ -303,6 +318,7 @@ struct Mascot: View {
         case .happy, .cheer: -4
         case .sleepy, .encourage: 12
         case .smug: 8
+        case .cheeky: 2
         case .annoyed: 14
         case .dizzy: 20
         default: 0
@@ -343,8 +359,9 @@ struct Mascot: View {
         switch mood {
         case .cheer, .happy: return sin(t * 6) * 14
         case .sleepy: return sin(t * 0.8) * 3
-        // Unimpressed: just the tail, flicking.
-        case .smug, .idle: return sin(t * 2.6) * 6
+        // Unimpressed, and restless with it: the tail never stops flicking.
+        case .smug, .idle: return sin(t * 3.4) * 9 + sin(t * 7.1) * 2
+        case .cheeky: return sin(t * 5) * 12
         default: return sin(t * 1.7) * 9
         }
     }
@@ -357,7 +374,7 @@ struct Mascot: View {
     }
 
     private func face(_ s: CGFloat, time t: Double, yawning: Bool) -> some View {
-        let opensEyes = !yawning && ([.idle, .smug, .encourage, .thinking] as [Mood]).contains(mood)
+        let opensEyes = !yawning && ([.idle, .smug, .encourage, .thinking, .cheeky] as [Mood]).contains(mood)
         let blink = !reduceMotion && opensEyes && Self.blinking(t)
         let thinking = mood == .thinking ? CGSize(width: s * 0.03, height: -s * 0.03) : .zero
         // While nobody is touching it, it glances to one side and back every few seconds.
@@ -369,6 +386,9 @@ struct Mascot: View {
                 eye(s, side: 1, blink: blink, yawning: yawning, time: t)
             }
             .offset(x: look.width, y: look.height)
+            // WordCat Next: brows, for attitude: one cocked in doubt at rest,
+            // knitted when it judges or has been smacked.
+            if !yawning { brows(s, time: t).offset(x: look.width * 0.8, y: look.height * 0.6) }
             HStack(spacing: s * 0.36) {
                 cheek(s)
                 cheek(s)
@@ -381,7 +401,7 @@ struct Mascot: View {
                 .overlay { MascotNose().stroke(Self.nose, style: StrokeStyle(lineWidth: s * 0.012, lineJoin: .round)) }
                 .frame(width: s * 0.045, height: s * 0.028)
                 .offset(x: look.width * 0.6, y: s * 0.075)
-            mouth(s, yawning: yawning)
+            mouth(s, yawning: yawning, time: t)
                 .offset(x: look.width * 0.6, y: s * 0.125)
         }
     }
@@ -421,8 +441,18 @@ struct Mascot: View {
     private func moodEye(_ s: CGFloat, side: Double, blink: Bool, time t: Double) -> some View {
         switch mood {
         case .idle:
-            // Its resting face: heavy-lidded and thoroughly unimpressed.
-            lidEye(s, lid: 0.4, tilt: 0, blink: blink)
+            // Its resting face: heavy-lidded, thoroughly unimpressed, one
+            // eye a little lower than the other, as if doubting you.
+            lidEye(s, lid: side < 0 ? 0.36 : 0.52, tilt: side < 0 ? 0 : -7, blink: blink)
+        case .cheeky:
+            // A wink on the left; the right eye half shut and knowing.
+            if side < 0 {
+                MascotArc(bulgesUp: true)
+                    .stroke(Self.ink, style: StrokeStyle(lineWidth: s * 0.032, lineCap: .round))
+                    .frame(width: s * 0.11, height: s * 0.045)
+            } else {
+                lidEye(s, lid: 0.45, tilt: -10, blink: blink)
+            }
         case .smug:
             // Lids lower and slanting in: a knowing, judging look.
             lidEye(s, lid: 0.58, tilt: side * -8, blink: blink)
@@ -499,14 +529,82 @@ struct Mascot: View {
     }
 
     @ViewBuilder
-    private func mouth(_ s: CGFloat, yawning: Bool) -> some View {
+    private func mouth(_ s: CGFloat, yawning: Bool, time t: Double) -> some View {
         if yawning {
             Ellipse()
                 .fill(Self.ink)
                 .frame(width: s * 0.08, height: s * 0.09)
         } else {
             moodMouth(s)
+                // WordCat Next: the tongue: always out when cheeky, and now
+                // and then at rest, a quick blep at you for no reason at all.
+                .overlay(alignment: .top) {
+                    if mood == .cheeky || (mood == .idle && !reduceMotion && Self.blepping(t)) {
+                        tongue(s)
+                            .offset(y: s * 0.012)
+                            .transition(.scale(scale: 0.2, anchor: .top))
+                    }
+                }
         }
+    }
+
+    private func tongue(_ s: CGFloat) -> some View {
+        UnevenRoundedRectangle(topLeadingRadius: s * 0.004, bottomLeadingRadius: s * 0.03,
+                               bottomTrailingRadius: s * 0.03, topTrailingRadius: s * 0.004, style: .continuous)
+            .fill(Self.tongueTint)
+            .overlay {
+                Capsule().fill(Self.nose.opacity(0.8)).frame(width: max(0.6, s * 0.006), height: s * 0.022).offset(y: -s * 0.004)
+            }
+            .frame(width: s * 0.05, height: s * 0.05)
+    }
+
+    /// A blep: the tongue out for a moment, once every 13 seconds.
+    private static func blepping(_ t: Double) -> Bool {
+        let cycle = (t + 5).truncatingRemainder(dividingBy: 13)
+        return cycle < 1.3
+    }
+
+    /// Brows over the eyes, set by mood: at rest the right one cocked up in
+    /// doubt (it twitches higher now and then), knitted when smug or smacked,
+    /// raised in the middle when worried, one shot up when cheeky.
+    private func brows(_ s: CGFloat, time t: Double) -> some View {
+        let raise = reduceMotion ? 0 : CGFloat(Self.twitch(t, every: 5.3, offset: 1.1) / 16)
+        // Each brow's angle and how far it sits below its usual place.
+        var left: (angle: Double, drop: CGFloat) = (0, 0)
+        var right: (angle: Double, drop: CGFloat) = (0, 0)
+        var shown = true
+        switch mood {
+        case .idle:
+            left = (4, 0)
+            right = (-14, -s * 0.03 - raise * s * 0.035)
+        case .smug:
+            left = (14, s * 0.012)
+            right = (-14, s * 0.012)
+        case .annoyed:
+            left = (24, s * 0.02)
+            right = (-24, s * 0.02)
+        case .encourage, .thinking:
+            left = (-14, -s * 0.01)
+            right = (14, -s * 0.01)
+        case .cheeky:
+            left = (10, s * 0.016)
+            right = (-18, -s * 0.045)
+        default:
+            shown = false
+        }
+        return HStack(spacing: s * 0.15) {
+            brow(s).rotationEffect(.degrees(left.angle)).offset(y: left.drop)
+            brow(s).rotationEffect(.degrees(right.angle)).offset(y: right.drop)
+        }
+        .offset(y: -s * 0.1)
+        .opacity(shown ? 1 : 0)
+        .animation(.spring(response: 0.3, dampingFraction: 0.55), value: mood)
+    }
+
+    private func brow(_ s: CGFloat) -> some View {
+        Capsule()
+            .fill(Self.shade)
+            .frame(width: s * 0.1, height: max(1, s * 0.022))
     }
 
     @ViewBuilder
@@ -538,7 +636,7 @@ struct Mascot: View {
                 .stroke(Self.ink, style: StrokeStyle(lineWidth: s * 0.022, lineCap: .round))
                 .frame(width: s * 0.08, height: s * 0.025)
                 .rotationEffect(.degrees(-10))
-        case .idle, .encourage:
+        case .idle, .encourage, .cheeky:
             MascotCatMouth()
                 .stroke(Self.ink, style: StrokeStyle(lineWidth: s * 0.02, lineCap: .round, lineJoin: .round))
                 .frame(width: s * 0.09, height: s * 0.026)
@@ -576,11 +674,12 @@ struct Mascot: View {
     /// A look to the side, from -1 (left) to 1 (right): held about a second,
     /// eased in and out, once every 7 seconds, alternating sides.
     private static func glance(_ t: Double) -> CGFloat {
-        let cycle = t.truncatingRemainder(dividingBy: 7)
-        guard cycle > 4.6, cycle < 6.2 else { return 0 }
-        let phase = (cycle - 4.6) / 1.6
+        // WordCat Next: shiftier: a side-eye every 5 seconds.
+        let cycle = t.truncatingRemainder(dividingBy: 5)
+        guard cycle > 3, cycle < 4.5 else { return 0 }
+        let phase = (cycle - 3) / 1.5
         let ease = sin(phase * .pi)
-        let side: Double = Int(t / 7) % 2 == 0 ? 1 : -1
+        let side: Double = Int(t / 5) % 2 == 0 ? 1 : -1
         return CGFloat(min(1, ease * 1.6) * side)
     }
 
@@ -599,6 +698,7 @@ struct Mascot: View {
     private static let cream = Color(red: 1.0, green: 0.95, blue: 0.86)
     private static let innerEar = Color(red: 0.98, green: 0.7, blue: 0.66)
     private static let nose = Color(red: 0.93, green: 0.52, blue: 0.52)
+    private static let tongueTint = Color(red: 0.98, green: 0.55, blue: 0.6)
     private static let ink = Color(red: 0.17, green: 0.1, blue: 0.07)
     private static let blush = Color(red: 0.95, green: 0.5, blue: 0.45)
     private static let gold = Color(red: 1.0, green: 0.86, blue: 0.4)
@@ -987,13 +1087,15 @@ struct MascotBuddy: View {
     @State private var seeingStars = false
     @State private var smartTask: Task<Void, Never>?
     @State private var shakes = 0
+    /// WordCat Next: after the sting wears off, it sticks its tongue out at you.
+    @State private var sassing = false
 
     var body: some View {
         let pull = CGSize(width: max(-1, min(1, drag.width / 80)), height: max(-1, min(1, drag.height / 80)))
         // Eyes on the finger while dragged, else where it is heading.
         let look = drag == .zero ? CGSize(width: facing * 0.8, height: 0) : pull
         let actionable = tip != nil && bubble == tip?.text
-        Mascot(mood: held ? .happy : seeingStars ? .dizzy : smarting ? .annoyed : mood,
+        Mascot(mood: held ? .happy : seeingStars ? .dizzy : smarting ? .annoyed : sassing ? .cheeky : mood,
                size: size, hop: hop, gaze: look, blush: held, walking: walking && drag == .zero,
                pace: pace, antic: antic, anticStart: anticStart)
             // Knocked sideways by a smack, squashed a little, then wobbling back upright.
@@ -1144,6 +1246,7 @@ struct MascotBuddy: View {
         }
         smartTask?.cancel()
         smarting = true
+        sassing = false
         let beaten = combo >= 6
         if beaten {
             combo = 0
@@ -1158,6 +1261,11 @@ struct MascotBuddy: View {
             guard !Task.isCancelled else { return }
             smarting = false
             seeingStars = false
+            guard !beaten else { return }
+            sassing = true
+            try? await Task.sleep(for: .seconds(1.3))
+            guard !Task.isCancelled else { return }
+            sassing = false
         }
 
         if beaten {

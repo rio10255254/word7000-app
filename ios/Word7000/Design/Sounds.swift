@@ -38,6 +38,8 @@ extension AppModel {
     var soundEffectsOn: Bool { settings.soundEffectsEnabled ?? true }
 
     func playSound(_ effect: SoundEffect) {
+        // WordCat Next: the cat hears every answer, sound on or off.
+        if effect == .correct || effect == .wrong { CatPeek.shared.noteAnswer(correct: effect == .correct) }
         guard soundEffectsOn else { return }
         SoundBoard.play(effect)
     }

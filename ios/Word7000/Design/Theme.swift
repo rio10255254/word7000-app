@@ -220,6 +220,10 @@ struct SoftPressStyle: ButtonStyle {
             .opacity(configuration.isPressed ? 0.72 : 1)
             .scaleEffect(configuration.isPressed && !reduceMotion ? 0.95 : 1)
             .animation(reduceMotion ? nil : configuration.isPressed ? Motion.press : Motion.pop, value: configuration.isPressed)
+            // WordCat Next: a soft tick under the finger as it goes down.
+            .onChange(of: configuration.isPressed) { _, pressed in
+                if pressed { Feel.tap(.soft, intensity: 0.55) }
+            }
     }
 }
 
@@ -447,12 +451,18 @@ extension View {
 /// The two kinds of action button in each look.
 private struct ActionButton: ViewModifier {
     @Environment(\.appStyle) private var appStyle
+    @Environment(\.isEnabled) private var isEnabled
     var prominent: Bool
     var tint: Color
 
     @ViewBuilder
     func body(content: Content) -> some View {
+        // WordCat Next: every action key answers with a tap you can feel,
+        // firmer for the main one.
         let labelled = content.modifier(OneLineLabel())
+            .simultaneousGesture(TapGesture().onEnded {
+                if isEnabled { Feel.tap(prominent ? .medium : .light, intensity: prominent ? 0.8 : 0.6) }
+            })
         if appStyle == .collage {
             labelled.buttonStyle(CollageButtonStyle(prominent: prominent, tint: tint)).tint(tint)
         } else if #available(iOS 26.0, *) {

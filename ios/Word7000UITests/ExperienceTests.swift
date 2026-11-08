@@ -429,7 +429,9 @@ final class ExperienceTests: XCTestCase {
         let reminder = app.switches["settings-reminder"]
         for _ in 0..<3 where !reminder.exists { app.swipeUp() }
         XCTAssertTrue(reminder.exists, app.debugDescription)
-        XCTAssertTrue(app.buttons["settings-intelligence"].exists)
+        let intelligenceRow = app.buttons["settings-intelligence"]
+        for _ in 0..<3 where !intelligenceRow.exists { app.swipeUp() }
+        XCTAssertTrue(intelligenceRow.exists)
         snapshot(app, "settings-top")
         let speech = app.buttons["settings-speech"]
         for _ in 0..<3 where !speech.isHittable { app.swipeUp() }

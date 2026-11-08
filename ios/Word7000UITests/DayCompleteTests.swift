@@ -24,7 +24,14 @@ final class DayCompleteTests: XCTestCase {
         let calendar = app.descendants(matching: .any)["me-calendar"].firstMatch
         for _ in 0..<3 where !calendar.exists { app.swipeUp() }
         XCTAssertTrue(calendar.waitForExistence(timeout: 5), app.debugDescription)
-        XCTAssertTrue(app.staticTexts["me-year-days"].exists)
+        // The days this year sit under the calendar; on a small phone the
+        // list only builds them once they are nearly in view, so drag a little.
+        let yearDays = app.staticTexts["me-year-days"]
+        for _ in 0..<4 where !yearDays.exists {
+            let from = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.7))
+            from.press(forDuration: 0.05, thenDragTo: from.withOffset(CGVector(dx: 0, dy: -160)))
+        }
+        XCTAssertTrue(yearDays.waitForExistence(timeout: 3), app.debugDescription)
         sleep(1)
         snap(app, "day-2-me")
         // A tap on a square names its day above it, as GitHub's calendar does.

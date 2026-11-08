@@ -119,6 +119,12 @@ struct SpeakingAnswerPanel: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityIdentifier("coach-privacy")
             }
+            // While typing, room below the notepad, so it can scroll up until
+            // its Check key shows above the keyboard. Without it a small phone
+            // (iPhone SE) ran out of page and left the key just out of sight.
+            if answerFocused {
+                Color.clear.frame(height: 160).accessibilityHidden(true)
+            }
         }
         .animation(reduceMotion ? nil : Motion.reveal, value: showsPad)
         .animation(reduceMotion ? nil : Motion.reveal, value: session.feedback != nil)

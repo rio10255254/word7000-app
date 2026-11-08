@@ -11,6 +11,15 @@ final class AppStoreScreenshotTests: XCTestCase {
 
     func testStoreEnglish() { walk(prefix: "store-en", chineseMode: true) }
 
+    /// WordCat Next's own screens: the daily path (cards, then writing, then
+    /// exam-style questions, then the summary), the plan, a speaking stage
+    /// (listen, repeat, answer, the map) and the day's stamp. `store-*-n*`.
+    func testStoreNextChinese() { walkNext(prefix: "store-zh", chineseMode: false) }
+
+    func testStoreNextEnglish() { walkNext(prefix: "store-en", chineseMode: true) }
+
+    private static let nextFlags = ["-uiTestingRoutine", "-uiTestingSpeakingRoutine", "-uiTestingDayComplete"]
+
     private func launch(chineseMode: Bool, _ extra: [String] = [], environment: [String: String] = [:]) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingLight", "-uiTestingFakePlans", "-uiTestingPlus"]
@@ -162,6 +171,156 @@ final class AppStoreScreenshotTests: XCTestCase {
         XCTAssertTrue(app.buttons["scan-save"].waitForExistence(timeout: 10))
         sleep(1)
         snap(app, "\(prefix)-6-scan")
+    }
+
+    private func walkNext(prefix: String, chineseMode: Bool) {
+        // Today, on the path.
+        var app = launch(chineseMode: chineseMode, Self.nextFlags)
+        snap(app, "\(prefix)-n1-today")
+
+        // The cards, then the checks that follow them.
+        app.buttons["today-start"].tap()
+        let handOff = app.descendants(matching: .any)["routine-hand-off"]
+        let summary = app.descendants(matching: .any)["routine-summary"]
+        var flipped = 0
+        while !handOff.exists, !summary.exists, flipped < 40 {
+            let show = app.buttons["study-show-answer"]
+            guard show.waitForExistence(timeout: 5) else { break }
+            let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true"), object: show)
+            _ = XCTWaiter.wait(for: [ready], timeout: 10)
+            show.tap()
+            let known = app.buttons["study-grade-known"]
+            guard known.waitForExistence(timeout: 5) else { break }
+            if flipped == 0 {
+                sleep(1)
+                snap(app, "\(prefix)-n2-card")
+            }
+            known.tap()
+            flipped += 1
+            _ = handOff.waitForExistence(timeout: 1)
+        }
+        if handOff.waitForExistence(timeout: 10) { app.buttons["routine-begin"].tap() }
+        // Writing: the word from its sentence.
+        let input = app.textFields["routine-input"]
+        var wrote = 0
+        while input.waitForExistence(timeout: 6), wrote < 12 {
+            let answer = app.staticTexts["cloze-sentence"].value as? String ?? ""
+            if wrote == 0 {
+                sleep(1)
+                snap(app, "\(prefix)-n3-write")
+            }
+            input.tap()
+            input.typeText(answer + "\n")
+            let next = app.buttons["routine-next"]
+            guard next.waitForExistence(timeout: 5) else { break }
+            if wrote == 0 {
+                sleep(1)
+                snap(app, "\(prefix)-n3-write-solved")
+            }
+            next.tap()
+            wrote += 1
+            if handOff.waitForExistence(timeout: 2) || summary.exists { break }
+        }
+        // Questions in the style of the learner's exam.
+        if app.buttons["routine-begin"].waitForExistence(timeout: 3) { app.buttons["routine-begin"].tap() }
+        var asked = 0
+        while app.buttons["routine-option-0"].waitForExistence(timeout: 8), asked < 12 {
+            if asked == 0 {
+                sleep(1)
+                snap(app, "\(prefix)-n4-exam")
+            }
+            app.buttons["routine-option-0"].tap()
+            let next = app.buttons["routine-next"]
+            guard next.waitForExistence(timeout: 5) else { break }
+            if asked == 0 {
+                sleep(1)
+                snap(app, "\(prefix)-n4-exam-answered")
+            }
+            next.tap()
+            asked += 1
+            if summary.waitForExistence(timeout: 2) { break }
+        }
+        if summary.waitForExistence(timeout: 10) {
+            sleep(2)
+            snap(app, "\(prefix)-n5-summary")
+        }
+        app.terminate()
+
+        // The plan: the pace to the exam (會考 for learners of English).
+        app = launch(chineseMode: chineseMode, Self.nextFlags)
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
+        let settings = app.buttons["me-settings"]
+        settings.scrollIntoView(in: app, swipes: 5)
+        if settings.waitForExistence(timeout: 5) {
+            settings.tap()
+            let plan = app.buttons["settings-plan"]
+            if plan.waitForExistence(timeout: 5) {
+                plan.tap()
+                let exam = app.buttons["plan-exam-2"]
+                if !chineseMode, exam.waitForExistence(timeout: 3) {
+                    exam.scrollIntoView(in: app, swipes: 3)
+                    exam.tap()
+                    for _ in 0..<4 { app.swipeDown() }
+                }
+                if app.descendants(matching: .any)["plan-card"].firstMatch.waitForExistence(timeout: 5) {
+                    sleep(2)
+                    snap(app, "\(prefix)-n6-plan")
+                }
+            }
+        }
+        app.terminate()
+
+        // A speaking stage: listen, say the reply, answer; then the map.
+        app = launch(chineseMode: chineseMode, Self.nextFlags + ["-uiTestingRecording", "-uiTestingToneShowcase"])
+        let speaking = app.buttons["today-speaking"]
+        speaking.scrollIntoView(in: app, swipes: 4)
+        if speaking.waitForExistence(timeout: 5) {
+            speaking.tap()
+            let done = app.buttons["speaking-listen-done"]
+            if done.waitForExistence(timeout: 10) {
+                sleep(2)
+                snap(app, "\(prefix)-n7-listen")
+                done.tap()
+            }
+            let record = app.buttons["shadow-record"]
+            if record.waitForExistence(timeout: 10) {
+                record.tap()
+                if app.descendants(matching: .any)["shadow-result"].firstMatch.waitForExistence(timeout: 10) {
+                    sleep(1)
+                    snap(app, "\(prefix)-n8-shadow")
+                }
+            }
+            if app.staticTexts["speaking-question"].waitForExistence(timeout: 12) {
+                sleep(1)
+                snap(app, "\(prefix)-n9-answer")
+            }
+            let map = app.buttons["speaking-scenarios"]
+            if map.waitForExistence(timeout: 5) {
+                map.tap()
+                sleep(2)
+                snap(app, "\(prefix)-n10-map")
+            }
+        }
+        app.terminate()
+
+        // The day's stamp, then the weeks on Me.
+        app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingSampleProgress", "-uiTestingLight", "-uiTestingFakePlans", "-uiTestingPlus",
+                               "-uiTestingDayCompleteNow"] + (chineseMode ? ["-uiTestingChineseMode"] : []) + Self.nextFlags
+        app.launch()
+        let keep = app.buttons["day-complete-keep"]
+        if keep.waitForExistence(timeout: 10) {
+            sleep(3)
+            snap(app, "\(prefix)-n11-stamp")
+            keep.tap()
+            if app.buttons["today-start"].waitForExistence(timeout: 10) {
+                app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
+                if app.descendants(matching: .any)["me-calendar"].firstMatch.waitForExistence(timeout: 5) {
+                    sleep(1)
+                    snap(app, "\(prefix)-n12-me")
+                }
+            }
+        }
     }
 
     private func snap(_ app: XCUIApplication, _ name: String) {

@@ -1,0 +1,10 @@
+Timestamp               Ty Process[PID:TID]
+2026-11-08 10:16:55.878 Df Photos[23672:54544] [com.apple.xpc:connection] [0x104a12fe0] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-11-08 10:16:55.906 Df Photos[23672:54544] [com.apple.accounts:core] "The connection to ACDAccountStore was invalidated."
+2026-11-08 10:17:17.909 Df Photos[23672:54544] [com.apple.photos.backend:PhotoKit] FeatureAvailability - availability was nil, initing new
+2026-11-08 10:18:22.294 Df Photos[23672:54544] [com.apple.photos.backend:PhotoKit] FeatureAvailability - availability was nil, initing new
+2026-11-08 10:19:25.299 Df Photos[23672:59334] [com.apple.photos.backend:PhotoKit] FeatureAvailability - availability was nil, initing new
+2026-11-08 10:20:30.246 Df Photos[23672:5ae57] [com.apple.photos.backend:PhotoKit] FeatureAvailability - availability was nil, initing new
+2026-11-08 10:21:33.282 Df Photos[23672:5ae57] [com.apple.photos.backend:PhotoKit] FeatureAvailability - availability was nil, initing new
+2026-11-08 10:23:47.396 Df Photos[23672:5ae57] [com.apple.photos.backend:PhotoKit] FeatureAvailability - availability was nil, initing new
+2026-11-08 10:24:51.509 Df Photos[23672:5ae57] [com.apple.photos.backend:PhotoKit] FeatureAvailability - availability was nil, initing new

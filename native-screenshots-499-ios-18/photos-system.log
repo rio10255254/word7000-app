@@ -1,0 +1,53 @@
+Timestamp               Ty Process[PID:TID]
+2026-11-08 10:25:36.295 Df Photos[12987:6d2a5] [com.apple.xpc:connection] [0x600003e02400] Re-initialization successful; calling out to event handler with XPC_ERROR_CONNECTION_INTERRUPTED
+2026-11-08 10:29:44.629 Df PhotosReliveWidget[13240:3d307] [com.apple.xpc:connection] [0x10170b470] activating connection: mach=false listener=false peer=true name=com.apple.mobileslideshow.PhotosReliveWidget.peer[9307].0x10170b470
+2026-11-08 10:29:44.651 Df PhotosReliveWidget[13240:3d307] [com.apple.chrono:timeline] Batch begin (ti-5c0975) - locale: en_US (fixed en_US)
+2026-11-08 10:29:44.651 Df PhotosReliveWidget[13240:3d307] [com.apple.chrono:timeline] intent = nil
+2026-11-08 10:29:44.652 Df PhotosReliveWidget[13240:3d307] [com.apple.chrono:timeline] Request began for com.apple.mobileslideshow.PhotosReliveWidget:systemSmall:(noIntent) - to archive: /Users/runner/Library/Developer/CoreSimulator/Devices/C3630581-519B-49DA-9400-67A78DCD42C8/data/tmp/com.apple.chrono/NSIRD_chronod_slfkTw/systemSmall----148.00w--148.00h--20.20r--2f--0.00t-0.00l-0.00b0.00t.chrono-timeline
+2026-11-08 10:29:44.665 Df PhotosReliveWidget[13240:a841] [com.apple.photos.backend:PhotoKit] PHPhotoLibrary openAndWaitWithUpgrade: authorization status is 3
+2026-11-08 10:29:44.666 Df PhotosReliveWidget[13240:a841] [com.apple.photos.PhotosReliveWidget:TimelineProvider] timeline requested for size systemSmall
+2026-11-08 10:29:44.675 Df PhotosReliveWidget[13240:a841] [com.apple.photos.ui:Memories] Prepare TimelineDataSource for WidgetSize:{148.00, 148.00}:
+2026-11-08 10:29:44.761 Df PhotosReliveWidget[13240:a841] [com.apple.photos.backend:PersistentHistory] beginObservingChanges: _observerCount became 1 (resuming), _lastToken = <NSPersistentHistoryToken - {
+    "3F642A05-50EB-4DB3-8C26-3554B5F25849" = 89;
+}>
+2026-11-08 10:29:44.767 Df PhotosReliveWidget[13240:a841] [com.apple.photos.backend:PersistentHistory] Change distributor advanced _lastToken to: <NSPersistentHistoryToken - {
+    "3F642A05-50EB-4DB3-8C26-3554B5F25849" = 93;
+}>
+2026-11-08 10:29:44.778 Df PhotosReliveWidget[13240:a841] [com.apple.photos.ui:SharedLibrary] PXSharedLibraryStatusProvider deferring initialization... (<Invitation: 0, Preview: 0, Shared Library: 0, Exiting: 0>)
+2026-11-08 10:29:44.787 Df PhotosReliveWidget[13240:a841] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Content Syndication not available because multilibrary mode is not enabled in this process.
+2026-11-08 10:29:44.789 Df PhotosReliveWidget[13240:a841] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Not yet ready to load the real data source manager, so loading an empty one instead.
+2026-11-08 10:29:44.791 Df PhotosReliveWidget[13240:a841] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Content syndication data source manager changed from (null) to PXContentSyndicationEmptyDataSourceManager
+2026-11-08 10:29:44.791 Df PhotosReliveWidget[13240:a841] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Content Syndication not available because multilibrary mode is not enabled in this process.
+2026-11-08 10:29:44.791 Df PhotosReliveWidget[13240:a841] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Content Syndication not available because multilibrary mode is not enabled in this process.
+2026-11-08 10:29:44.791 Df PhotosReliveWidget[13240:a841] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Content Syndication not available because multilibrary mode is not enabled in this process.
+2026-11-08 10:29:44.792 Df PhotosReliveWidget[13240:a841] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Loading real data source manager.
+2026-11-08 10:29:44.793 Df PhotosReliveWidget[13240:a841] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Content Syndication not available because multilibrary mode is not enabled in this process.
+2026-11-08 10:29:44.793 Df PhotosReliveWidget[13240:a841] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Using empty data source manager, as content syndication is not available.
+2026-11-08 10:29:44.793 Df PhotosReliveWidget[13240:a841] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Content syndication data source manager changed from (null) to PXContentSyndicationEmptyDataSourceManager
+2026-11-08 10:29:44.802 Df PhotosReliveWidget[13240:a841] [com.apple.photos.ui:Memories] 0 memories and 0 suggestions are featured
+2026-11-08 10:29:44.802 Df PhotosReliveWidget[13240:a841] [com.apple.photos.ui:Memories] Candidate For Scheduling - Memories:0, Suggestions:0
+2026-11-08 10:29:44.806 Df PhotosReliveWidget[13240:a841] [com.apple.photos.ui:Memories] No fallback memories
+2026-11-08 10:29:44.811 Df PhotosReliveWidget[13240:a841] [com.apple.photos.ui:Memories] No fallback suggestions
+2026-11-08 10:29:44.811 Df PhotosReliveWidget[13240:a841] [com.apple.photos.ui:Memories] Candidate For Scheduling - Memories:0, Suggestions:0
+2026-11-08 10:29:44.812 Df PhotosReliveWidget[13240:a841] [com.apple.photos.ui:Memories] Used For Scheduling - Memories:0, Suggestions:0
+2026-11-08 10:29:44.814 Df PhotosReliveWidget[13240:a841] [com.apple.photos.ui:Memories] WidgetTimeline Small - index: 0, timelines: 1
+2026-11-08 10:29:44.815 E  PhotosReliveWidget[13240:a841] [com.apple.photos.ui:Memories] No timeline candidates
+2026-11-08 10:29:44.824 Df PhotosReliveWidget[13240:a841] [com.apple.xpc:connection] [0x1016320b0] activating connection: mach=true listener=false peer=false name=com.apple.proactive.ProactiveSuggestionClientModel.xpc
+2026-11-08 10:29:44.824 Df PhotosReliveWidget[13240:a841] [com.apple.xpc:connection] [0x1016320b0] failed to do a bootstrap look-up: xpc_error=[3: No such process]
+2026-11-08 10:29:44.824 Df PhotosReliveWidget[13240:a841] [com.apple.xpc:connection] [0x1016320b0] invalidated after a failed init
+2026-11-08 10:29:44.825 Df PhotosReliveWidget[13240:a841] [com.apple.duetexpertd.atx:blending] Creating a ProactiveSuggestionClientModel object for clientModelId: com.apple.photos.small
+2026-11-08 10:29:44.825 E  PhotosReliveWidget[13240:74502] [com.apple.duetexpertd.atx:blending] Blending: Connection to Proactive Suggestion Client Model server interrupted for clientModelId: (null).
+2026-11-08 10:29:44.830 Df PhotosReliveWidget[13240:a841] [com.apple.photos.ui:Memories] ProactiveSuggester: 0 suggestions for com.apple.photos.small
+2026-11-08 10:29:44.832 Df PhotosReliveWidget[13240:a841] [com.apple.duetexpertd.atx:blending] Blending: (com.apple.photos.small) Updating suggestions. Client Model produced 0 new suggestions.
+2026-11-08 10:29:44.833 Df PhotosReliveWidget[13240:a841] [com.apple.duetexpertd.atx:blending] Blending: (com.apple.photos.small) Transmiting...
+2026-11-08 10:29:44.835 Df PhotosReliveWidget[13240:a841] [com.apple.duetexpertd.atx:blending] Blending: (com.apple.photos.small) Done transmitting.
+2026-11-08 10:29:44.837 Df PhotosReliveWidget[13240:a841] [com.apple.photos.PhotosReliveWidget:TimelineProvider] timeline request returned no entries; using fallback no-content state
+2026-11-08 10:29:44.837 E  PhotosReliveWidget[13240:74502] [com.apple.duetexpertd.atx:blending] Blending: Error while communicating with Suggestion Receiver. Error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.proactive.ProactiveSuggestionClientModel.xpc was invalidated: failed at lookup with error 3 - No such process." UserInfo={NSDebugDescription=The connection to service named com.apple.proactive.ProactiveSuggestionClientModel.xpc was invalidated: failed at lookup with error 3 - No such process.}.
+2026-11-08 10:29:44.845 Df PhotosReliveWidget[13240:a841] [com.apple.photos.PhotosReliveWidget:TimelineProvider] scheduled timeline reload because content unavailable at 2026-11-08 11:34:00 +0000
+2026-11-08 10:29:44.851 Df PhotosReliveWidget[13240:a841] [com.apple.photos.PhotosReliveWidget:TimelineProvider] timeline request completed for size systemSmall with entries [noContentEntry]
+2026-11-08 10:29:44.873 Df PhotosReliveWidget[13240:a841] [com.apple.chrono:timeline] Request ended for com.apple.mobileslideshow.PhotosReliveWidget:systemSmall:(noIntent) - success
+2026-11-08 10:29:44.873 Df PhotosReliveWidget[13240:a841] [com.apple.chrono:timeline] Batch end (ti-5c0975) - success
+2026-11-08 10:29:44.874 Df PhotosReliveWidget[13240:a841] [com.apple.photos.backend:PersistentHistory] endObservingChanges: _observerCount became 0 (pausing), _lastToken = <NSPersistentHistoryToken - {
+    "3F642A05-50EB-4DB3-8C26-3554B5F25849" = 93;
+}>
+2026-11-08 10:29:50.181 Df PhotosReliveWidget[13240:3d307] [com.apple.xpc:connection] [0x10170b470] invalidated because the client process (pid 9307) either cancelled the connection or exited

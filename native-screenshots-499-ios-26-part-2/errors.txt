@@ -1,0 +1,2 @@
+/Users/runner/work/word7000-app/word7000-app/ios/Word7000UITests/AppStoreScreenshotTests.swift:120: error: -[Word7000UITests.AppStoreScreenshotTests testStoreChinese] : XCTAssertTrue failed
+/Users/runner/work/word7000-app/word7000-app/ios/Word7000UITests/RoutineTests.swift:139: error: -[Word7000UITests.RoutineTests testLearnersOfChineseAreCheckedInChinese] : XCTAssertTrue failed - Show answer

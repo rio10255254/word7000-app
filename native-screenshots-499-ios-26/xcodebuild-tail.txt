@@ -1,0 +1,80 @@
+    t =    63.51s Tap "paywall-close" Button
+    t =    63.51s     Wait for com.rio.word7000 to idle
+    t =    63.51s     Find the "paywall-close" Button
+    t =    63.63s     Check for interrupting elements affecting "paywall-close" Button
+    t =    63.74s     Synthesize event
+    t =    64.07s     Wait for com.rio.word7000 to idle
+    t =    64.54s Waiting 5.0s for "coach-premium-check" Button to exist
+    t =    65.58s     Checking `Expect predicate `existsNoRetry == 1` for object "coach-premium-check" Button`
+    t =    65.58s         Checking existence of `"coach-premium-check" Button`
+    t =    65.67s Checking existence of `"coach-rewrite" StaticText`
+    t =    65.76s Checking existence of `"coach-tip" StaticText`
+    t =    65.87s Checking existence of `"coach-follow-up" StaticText`
+    t =    65.96s Waiting 1.0s for "speaking-next" Button to exist
+    t =    66.97s     Checking `Expect predicate `existsNoRetry == 1` for object "speaking-next" Button`
+    t =    66.97s         Checking existence of `"speaking-next" Button`
+    t =    67.05s     Checking existence of `"speaking-next" Button`
+    t =    67.13s Find the "speaking-next" Button
+    t =    67.25s Checking existence of `"speaking-next" Button`
+    t =    67.34s Find the "speaking-next" Button
+    t =    67.45s Find the "speaking-next" Button
+    t =    67.57s Checking existence of `"speaking-next" Button`
+    t =    67.67s Find the "speaking-next" Button
+    t =    67.77s Find the "speaking-next" Button
+    t =    67.88s Checking existence of `"speaking-next" Button`
+    t =    67.97s Find the "speaking-next" Button
+    t =    68.08s Find the "speaking-next" Button
+    t =    68.23s Checking existence of `"speaking-next" Button`
+    t =    68.32s Find the "speaking-next" Button
+    t =    68.41s Find the "speaking-next" Button
+    t =    68.53s Checking existence of `"speaking-next" Button`
+    t =    68.64s Find the "speaking-next" Button
+    t =    68.74s Find the "speaking-next" Button
+    t =    68.83s Checking existence of `"speaking-next" Button`
+    t =    68.91s Find the "speaking-next" Button
+    t =    69.01s Find the "speaking-next" Button
+    t =    69.12s Checking existence of `"speaking-next" Button`
+    t =    69.22s Find the "speaking-next" Button
+    t =    69.30s Find the "speaking-next" Button
+    t =    69.41s Checking existence of `"speaking-next" Button`
+    t =    69.49s Find the "speaking-next" Button
+    t =    69.59s Find the "speaking-next" Button
+    t =    69.70s Checking existence of `"speaking-next" Button`
+    t =    69.81s Find the "speaking-next" Button
+    t =    69.91s Find the "speaking-next" Button
+    t =    70.04s Checking existence of `"speaking-next" Button`
+    t =    70.15s Find the "speaking-next" Button
+    t =    70.26s Find the "speaking-next" Button
+    t =    70.38s Checking existence of `"speaking-next" Button`
+    t =    70.46s Find the "speaking-next" Button
+    t =    70.55s Waiting 5.0s for "speaking-next" Button to exist
+    t =    71.59s     Checking `Expect predicate `existsNoRetry == 1` for object "speaking-next" Button`
+    t =    71.59s         Checking existence of `"speaking-next" Button`
+    t =    71.68s Find the "speaking-next" Button
+    t =    71.80s Tap "speaking-next" Button
+    t =    71.80s     Wait for com.rio.word7000 to idle
+    t =    71.80s     Find the "speaking-next" Button
+    t =    71.90s     Check for interrupting elements affecting "speaking-next" Button
+    t =    71.98s     Synthesize event
+    t =    72.32s     Wait for com.rio.word7000 to idle
+    t =    73.51s Checking `Expect predicate `label BEGINSWITH "2 /"` for object "speaking-position" StaticText`
+    t =    73.51s     Find the "speaking-position" StaticText
+    t =    73.66s Find the "speaking-position" StaticText
+    t =    73.77s Tear Down
+Test Case '-[Word7000UITests.SpeakingCoachTests testWithoutDeviceAICheckingLeadsToPremiumAndPracticeContinues]' passed (74.433 seconds).
+Test Suite 'SpeakingCoachTests' passed at 2026-11-08 10:05:32.940.
+	 Executed 11 tests, with 0 failures (0 unexpected) in 1326.664 (1326.676) seconds
+Test Suite 'Word7000UITests.xctest' passed at 2026-11-08 10:05:32.944.
+	 Executed 27 tests, with 0 failures (0 unexpected) in 2123.453 (2123.495) seconds
+Test Suite 'Selected tests' passed at 2026-11-08 10:05:32.944.
+	 Executed 27 tests, with 0 failures (0 unexpected) in 2123.453 (2123.499) seconds
+2026-11-08 10:05:58.874 xcodebuild[35029:96292] [MT] IDETestOperationsObserverDebug: 2168.535 elapsed -- Testing started completed.
+2026-11-08 10:05:58.875 xcodebuild[35029:96292] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-08 10:05:58.875 xcodebuild[35029:96292] [MT] IDETestOperationsObserverDebug: 2168.535 sec, +2168.535 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/_temp/Word7000.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

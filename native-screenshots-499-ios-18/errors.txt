@@ -1,0 +1,1 @@
+/Users/runner/work/word7000-app/word7000-app/ios/Word7000UITests/DayCompleteTests.swift:27: error: -[Word7000UITests.DayCompleteTests testTheStampThenMe] : XCTAssertTrue failed

@@ -1,0 +1,111 @@
+Attributes: Application, 0x1057fe5e0, pid: 48976, label: 'WordCat'
+Element subtree:
+ →Application, 0x1057fe5e0, pid: 48976, label: 'WordCat'
+    Window (Main), 0x1057f2b60, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x1057fec90, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x1057fedb0, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x1057feb40, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x1057efde0, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x1057feed0, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x1057feff0, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x1057ff110, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x1057ff230, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x1057ff350, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x1057ff470, {{0.0, 0.0}, {375.0, 667.0}}
+                          Other, 0x1057ff590, {{0.0, 0.0}, {375.0, 667.0}}
+                            NavigationBar, 0x1057ff6b0, {{0.0, 20.0}, {375.0, 44.0}}, identifier: '我的學習計畫'
+                              Button, 0x1057ff7d0, {{0.0, 20.0}, {64.5, 44.0}}, label: '設定'
+                              StaticText, 0x1057ff8f0, {{137.0, 32.0}, {101.5, 20.5}}, label: '我的學習計畫'
+                            Other, 0x1057ffa10, {{0.0, 0.0}, {375.0, 667.0}}
+                              Other, 0x1057ffb30, {{0.0, 0.0}, {375.0, 667.0}}
+                                Other, 0x1057ffc50, {{0.0, 0.0}, {375.0, 667.0}}
+                                  Other, 0x1057ffd70, {{0.0, 0.0}, {375.0, 667.0}}
+                                    Image, 0x1057ffe90, {{0.0, 0.0}, {375.0, 667.0}}, label: 'PaperGrain'
+                                    CollectionView, 0x10578dd20, {{0.0, 0.0}, {375.0, 667.0}}
+                                      Other, 0x10578de40, {{-16.0, -1270.0}, {407.0, 1690.5}}
+                                      Cell, 0x10578df60, {{16.0, 99.0}, {343.0, 304.0}}
+                                        Other, 0x10578e080, {{16.0, 99.0}, {343.0, 304.0}}
+                                          Other, 0x1057fd8e0, {{16.0, 99.0}, {343.0, 304.0}}
+                                            Other, 0x1057fda00, {{16.0, 99.0}, {343.0, 304.0}}
+                                        Other, 0x1057fdb20, {{16.0, 99.0}, {343.0, 304.0}}
+                                          Other, 0x10578c750, {{16.0, 99.0}, {343.0, 304.0}}
+                                            Other, 0x10578c870, {{16.0, 99.0}, {343.0, 304.0}}
+                                              StaticText, 0x10578c990, {{16.0, 99.0}, {343.0, 304.0}}, identifier: 'plan-card', label: '你的學習路線、從第 1 章開始、還沒測過程度、每天 20 個字、新字和複習一起算；接下來一個月平均每天約 8 個新字、翻卡後拼 6 個、考 5 題、寫得穩就少抽，退步了就多抽、單字先，口說後、兩個每天都有'
+                                                Image, 0x10578cab0, {{16.0, 107.0}, {343.0, 288.0}}, label: 'PaperGrain'
+                                                StaticText, 0x1057e3b40, {{34.0, 125.0}, {115.0, 24.0}}, label: '你的學習路線'
+                                                Image, 0x1057e3c60, {{37.0, 164.5}, {20.0, 16.0}}, identifier: 'book.fill', label: '書籤'
+                                                StaticText, 0x1057e3d80, {{72.0, 163.0}, {100.5, 20.5}}, label: '從第 1 章開始'
+                                                StaticText, 0x1057e3ea0, {{72.0, 185.5}, {77.5, 16.0}}, label: '還沒測過程度'
+                                                Image, 0x1057e3fc0, {{38.5, 217.0}, {17.5, 17.5}}, identifier: 'plus.circle.fill', label: '加號'
+                                                StaticText, 0x1057e40e0, {{72.0, 215.5}, {97.0, 20.5}}, label: '每天 20 個字'
+                                                StaticText, 0x1057e4200, {{72.0, 238.0}, {262.0, 34.0}}, label: '新字和複習一起算；接下來一個月平均每天約 8 個新字'
+                                                Image, 0x1057e4320, {{36.5, 287.5}, {19.0, 17.5}}, identifier: 'pencil.line', label: 'pencil.line'
+                                                StaticText, 0x1057e4440, {{72.0, 286.0}, {173.0, 20.5}}, label: '翻卡後拼 6 個、考 5 題'
+                                                StaticText, 0x1057e4560, {{72.0, 308.5}, {168.0, 16.0}}, label: '寫得穩就少抽，退步了就多抽'
+                                                Image, 0x1057e4680, {{36.0, 340.0}, {22.0, 18.5}}, identifier: 'rectangle.on.rectangle.angled', label: '學習字卡'
+                                                StaticText, 0x10578bbd0, {{72.0, 338.5}, {118.0, 20.5}}, label: '單字先，口說後'
+                                                StaticText, 0x10578bcf0, {{72.0, 361.0}, {77.5, 16.0}}, label: '兩個每天都有'
+                                      Other, 0x10578be10, {{-16.0, 420.5}, {407.0, 272.0}}
+                                      Cell, 0x10578bf30, {{16.0, 420.5}, {343.0, 39.0}}
+                                        Other, 0x10578c050, {{16.0, 420.5}, {343.0, 39.0}}
+                                        Other, 0x1057a6520, {{16.0, 420.5}, {343.0, 39.0}}
+                                          Other, 0x1057a6640, {{16.0, 420.5}, {343.0, 39.0}}
+                                            Other, 0x1057a6760, {{16.0, 420.5}, {343.0, 39.0}}
+                                              StaticText, 0x1057a6880, {{16.0, 420.5}, {343.0, 39.0}}, label: '考試'
+                                      Cell, 0x1057a69a0, {{16.0, 459.5}, {343.0, 199.0}}
+                                        Other, 0x1057a6ac0, {{16.0, 459.5}, {343.0, 199.0}}
+                                          Other, 0x1057a6be0, {{16.0, 459.5}, {343.0, 199.0}}
+                                            Other, 0x1057a6d00, {{16.0, 459.5}, {343.0, 199.0}}
+                                              Image, 0x1057a6e20, {{16.0, 459.5}, {343.0, 199.0}}, label: 'PaperGrain'
+                                        Other, 0x1057a6f40, {{16.0, 459.5}, {343.0, 199.0}}
+                                          Other, 0x1057a7060, {{16.0, 459.5}, {343.0, 199.0}}
+                                            Other, 0x1057a7180, {{16.0, 459.5}, {343.0, 199.0}}
+                                              Image, 0x1057cf4e0, {{32.0, 474.5}, {29.0, 29.0}}, identifier: 'graduationcap.fill', label: 'Itunes U'
+                                              StaticText, 0x1057cf600, {{73.0, 478.8}, {84.5, 20.5}}, label: '準備的考試'
+                                              Other, 0x1057cf720, {{32.0, 513.5}, {247.5, 130.0}}, identifier: 'plan-exam'
+                                                Button, 0x1057cf840, {{32.0, 513.5}, {78.5, 38.0}}, identifier: 'plan-exam-0', label: '學測'
+                                                  Image, 0x1057e95e0, {{45.5, 525.0}, {16.5, 15.0}}, identifier: 'graduationcap.fill', label: 'Itunes U'
+                                                  StaticText, 0x1057e9700, {{68.5, 523.5}, {30.0, 18.0}}, label: '學測'
+                                                Button, 0x1057e9820, {{118.5, 513.5}, {76.5, 38.0}}, identifier: 'plan-exam-1', label: '統測'
+                                                  Image, 0x1057e9940, {{132.0, 525.5}, {15.0, 14.5}}, identifier: 'wrench.and.screwdriver.fill', label: 'wrench.and.screwdriver.fill'
+                                                  StaticText, 0x1057e9a60, {{153.0, 523.5}, {30.0, 18.0}}, label: '統測'
+                                                Button, 0x1057e9b80, {{203.0, 513.5}, {76.5, 38.0}}, identifier: 'plan-exam-2', label: '會考'
+                                                  Image, 0x1057e9ca0, {{216.5, 527.0}, {14.5, 11.5}}, identifier: 'book.fill', label: '書籤'
+                                                  StaticText, 0x1057e9dc0, {{237.5, 523.5}, {30.0, 18.0}}, label: '會考'
+                                                Button, 0x1057e9ee0, {{32.0, 559.5}, {117.0, 38.0}}, identifier: 'plan-exam-3', label: '英檢・多益'
+                                                  Image, 0x1057ea000, {{45.5, 571.5}, {10.5, 14.0}}, identifier: 'rosette', label: 'rosette'
+                                                  StaticText, 0x1057ea120, {{62.5, 569.5}, {74.5, 18.0}}, label: '英檢・多益'
+                                                Button, 0x1057ea240, {{32.0, 605.5}, {192.5, 38.0}}, identifier: 'plan-exam-4', label: '沒有考試，就是想變強', Selected
+                                                  Image, 0x1057ea360, {{43.8, 618.9}, {11.7, 11.2}}, identifier: 'checkmark', label: '已選取', Selected
+                                                  StaticText, 0x1057ea480, {{62.2, 615.3}, {152.0, 18.4}}, label: '沒有考試，就是想變強'
+                                      Cell, 0x1057ea5a0, {{16.0, 658.5}, {343.0, 34.0}}
+                                        Other, 0x1057ea6c0, {{16.0, 658.5}, {343.0, 34.0}}
+                                        Other, 0x1057ea7e0, {{16.0, 658.5}, {343.0, 34.0}}
+                                          Other, 0x1057ea900, {{16.0, 658.5}, {343.0, 34.0}}
+                                            Other, 0x1057eaa20, {{16.0, 658.5}, {343.0, 34.0}}
+                                              StaticText, 0x1057eab40, {{16.0, 658.5}, {343.0, 34.0}}, label: '題型名稱和考前讀到第幾章，都照這裡算。'
+                                      Other, 0x1057eac60, {{-16.0, 692.5}, {407.0, 270.5}}
+                                      Cell, 0x1057ead80, {{16.0, 692.5}, {343.0, 39.0}}
+                                        Other, 0x1057eaea0, {{16.0, 692.5}, {343.0, 39.0}}
+                                        Other, 0x1057eafc0, {{16.0, 692.5}, {343.0, 39.0}}
+                                          Other, 0x1057a4cb0, {{16.0, 692.5}, {343.0, 39.0}}
+                                            Other, 0x1057a4dd0, {{16.0, 692.5}, {343.0, 39.0}}
+                                              StaticText, 0x1057a4ef0, {{16.0, 692.5}, {343.0, 39.0}}, label: '每一天'
+                                      Other, 0x1057a5010, {{342.0, 64.0}, {30.0, 554.0}}, label: 'Vertical scroll bar, 3 pages', value: 0%
+                                        Other, 0x1057a5130, {{369.0, 67.0}, {3.0, 271.5}}
+                                      Other, 0x1057a5250, {{342.0, 64.0}, {30.0, 554.0}}, label: 'Vertical scroll bar, 3 pages', value: 0%
+                                        Other, 0x1057a5370, {{369.0, 67.0}, {3.0, 271.5}}
+                TabBar, 0x1057a5490, {{0.0, 618.0}, {375.0, 49.0}}, label: 'Tab Bar'
+                  Button, 0x1057a55b0, {{2.0, 619.0}, {90.0, 48.0}}, label: '今天'
+                  Button, 0x10575b1a0, {{96.0, 619.0}, {90.0, 48.0}}, label: '練習'
+                  Button, 0x10575b2c0, {{190.0, 619.0}, {89.0, 48.0}}, label: '單字'
+                  Button, 0x10575b3e0, {{283.0, 619.0}, {90.0, 48.0}}, label: '我', Selected
+                    Image, 0x10575b500, {{314.0, 622.5}, {27.5, 27.5}}, identifier: 'person.crop.circle.fill', label: 'account'
+              Other, 0x10575b620, {{0.0, 20.0}, {375.0, 647.0}}
+Path to element:
+ →Application, 0x1057fe5e0, pid: 48976, label: 'WordCat'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x114871950, pid: 48976, label: 'WordCat'
+  }

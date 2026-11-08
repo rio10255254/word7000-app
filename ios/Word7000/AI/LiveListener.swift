@@ -18,7 +18,10 @@ final class LiveListener: NSObject, AVAudioPlayerDelegate {
     /// once it ends, as before live listening. `recordOnly`: no recognition.
     enum Support { case checking, live, afterwards, recordOnly }
 
-    private(set) var state: State = .idle
+    private(set) var state: State = .idle {
+        // Nothing is read aloud from the tap until the take ends.
+        didSet { Speaker.shared.microphone(self, open: state == .requesting || state == .listening) }
+    }
     private(set) var support: Support = .checking
     /// 0...1, for the ring around the key.
     private(set) var level: Float = 0

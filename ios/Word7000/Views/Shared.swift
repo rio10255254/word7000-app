@@ -40,6 +40,21 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
     @ObservationIgnored private let audioQueue = WordAudioSession.queue
     @ObservationIgnored
     private let synthesizer = AVSpeechSynthesizer()
+    /// What has the microphone open (a recorder, a listener). While anything
+    /// does, nothing is read aloud, so a question or model reply still on
+    /// its way never ends up in the learner's own recording.
+    @ObservationIgnored private var microphones: Set<ObjectIdentifier> = []
+
+    /// `owner` opens or closes the microphone; opening it stops any reading at once.
+    func microphone(_ owner: AnyObject, open: Bool) {
+        let id = ObjectIdentifier(owner)
+        if open {
+            microphones.insert(id)
+            stop()
+        } else {
+            microphones.remove(id)
+        }
+    }
 
     override init() {
         super.init()
@@ -81,7 +96,7 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
     }
 
     func speak(_ text: String, language: String = "en-US", preferences: SpeechPreferences = SpeechPreferences()) {
-        guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+        guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, microphones.isEmpty else { return }
         if activeText == text, activeLanguage == language { stop(); return }
         stop()
         let id = UUID()

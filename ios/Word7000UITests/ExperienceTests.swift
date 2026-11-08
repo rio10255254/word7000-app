@@ -449,7 +449,11 @@ final class ExperienceTests: XCTestCase {
         // the first screen on a small phone now the choices are in the rows.
         let intelligence = app.buttons["settings-intelligence"]
         for _ in 0..<6 where !intelligence.isHittable { app.swipeDown() }
-        for _ in 0..<4 where !intelligence.isHittable { app.swipeUp() }
+        // A swipe can carry the row past the screen; drag a short way at a time.
+        for _ in 0..<8 where !(intelligence.exists && intelligence.isHittable) {
+            let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.7))
+            start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -160)))
+        }
         intelligence.tap()
         XCTAssertTrue(app.switches["settings-ai-toggle"].waitForExistence(timeout: 5))
     }

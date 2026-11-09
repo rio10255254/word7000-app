@@ -333,6 +333,22 @@ final class AppStoreScreenshotTests: XCTestCase {
         }
     }
 
+    /// The cat alone in each mood, on black and on white, still: the store
+    /// art cuts it out from the pair (scripts/generate-app-store-screenshots.mjs).
+    func testStoreMascots() {
+        for mood in ["happy", "cheer", "smug", "cheeky", "encourage"] {
+            for background in ["black", "white"] {
+                let app = XCUIApplication()
+                app.launchArguments = ["-uiTestingMascotPoster", "\(mood):\(background)"]
+                app.launch()
+                XCTAssertTrue(app.descendants(matching: .any)["mascot-poster"].firstMatch.waitForExistence(timeout: 10))
+                sleep(2)
+                snap(app, "store-cat-\(mood)-\(background)")
+                app.terminate()
+            }
+        }
+    }
+
     private func snap(_ app: XCUIApplication, _ name: String) {
         let screenshot = app.screenshot()
         let attachment = XCTAttachment(screenshot: screenshot)

@@ -661,6 +661,39 @@ enum AppRuntime {
     static let labOnboarding = !uiTesting || ProcessInfo.processInfo.arguments.contains("-uiTestingLabOnboarding")
     /// WordCat Next: a stamp when today's words and speaking are both done.
     static let dayComplete = !uiTesting || ProcessInfo.processInfo.arguments.contains("-uiTestingDayComplete")
+    /// The App Store art: `-uiTestingMascotPoster happy:white` shows only
+    /// the cat in that mood on white (or black), still, for cutting out.
+    static let mascotPoster: (mood: Mascot.Mood, white: Bool)? = {
+        let arguments = ProcessInfo.processInfo.arguments
+        guard let index = arguments.firstIndex(of: "-uiTestingMascotPoster"), index + 1 < arguments.count else { return nil }
+        let parts = arguments[index + 1].split(separator: ":").map(String.init)
+        let moods: [String: Mascot.Mood] = ["happy": .happy, "cheer": .cheer, "smug": .smug, "cheeky": .cheeky,
+                                            "encourage": .encourage, "idle": .idle, "thinking": .thinking]
+        guard let first = parts.first, let mood = moods[first] else { return nil }
+        return (mood, parts.count > 1 && parts[1] == "white")
+    }()
+}
+
+/// The cat alone, large and holding still, on plain black or white: the
+/// store art cuts it out by comparing the two (see
+/// scripts/generate-app-store-screenshots.mjs).
+struct MascotPosterView: View {
+    let mood: Mascot.Mood
+    let white: Bool
+
+    var body: some View {
+        ZStack {
+            (white ? Color.white : Color.black).ignoresSafeArea()
+            Mascot(mood: mood, size: 320)
+        }
+        // The cat itself is hidden from VoiceOver; the page stands for it.
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("WordCat")
+        .accessibilityIdentifier("mascot-poster")
+        .environment(\.accessibilityReduceMotion, true)
+        .environment(\.colorScheme, .light)
+        .statusBarHidden(true)
+    }
 }
 
 /// A sheet exactly as tall as what it holds: a note or a few rows does

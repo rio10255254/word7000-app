@@ -37,6 +37,17 @@ const EXAM: Cam = { x: 603, y: 1150, z: 0.62 };
 const SHADOW: Cam = { x: 603, y: 1700, z: 0.86 };
 const STAMP: Cam = { x: 603, y: 1050, z: 0.6 };
 
+/**
+ * The captions get a band of their own at the bottom of the frame: the
+ * phone fades out just above it, so a line never sits on top of the app's
+ * own text.
+ */
+const CAPTION_TOP = 1372;
+const ABOVE_CAPTIONS = {
+  WebkitMaskImage: 'linear-gradient(to bottom, #000 0, #000 1250px, transparent 1335px)',
+  maskImage: 'linear-gradient(to bottom, #000 0, #000 1250px, transparent 1335px)',
+};
+
 type Slot = { start: number; length: number; voiceStart: number; voiceLength: number };
 
 /** The olive desk the whole teaser sits on. */
@@ -224,7 +235,7 @@ export const Teaser = ({ id }: { id: string }) => {
       <Olive />
 
       {phoneShown ? (
-        <div style={{ position: 'absolute', inset: 0, filter: back ? `blur(${back * 7}px)` : undefined, opacity: 1 - 0.25 * back }}>
+        <div style={{ position: 'absolute', inset: 0, filter: back ? `blur(${back * 7}px)` : undefined, opacity: 1 - 0.25 * back, ...ABOVE_CAPTIONS }}>
           <Phone cam={cam} lift={(1 - phoneIn) * 1500}>
             <Screen shot="n1-today" t={t} at={0} until={toCard} cam={cam} />
             <Screen shot="n2-card" t={t} at={toCard} until={toWrite} cam={cam} />
@@ -268,7 +279,7 @@ export const Teaser = ({ id }: { id: string }) => {
       <Peek t={t} at={0} until={meet + 0.05} side={1} mood="smug" y={560} />
       {/* …jumping out, then moving into the phone */}
       {catOnScreen ? (
-        <div style={{ position: 'absolute', left: catX - todayShift * 0.3 * W * cam.z, top: catY, opacity: 1 - todayShift }}>
+        <div style={{ ...(moveIn > 0.5 ? ABOVE_CAPTIONS : {}), position: 'absolute', left: catX - todayShift * 0.3 * W * cam.z, top: catY, opacity: 1 - todayShift }}>
           <Mascot mood={moveIn < 1 ? 'cheeky' : 'idle'} size={catSize} sparkles={moveIn === 0 && jump > 0.6} next />
         </div>
       ) : null}
@@ -286,7 +297,7 @@ export const Teaser = ({ id }: { id: string }) => {
       ) : null}
 
       {lines.map((line, i) => (
-        <Caption key={i} text={line.text} start={timing.slots[i].start} length={timing.slots[i].length} t={t} first={i === 0} label="傻貓 SillyCat" />
+        <Caption key={i} text={line.text} start={timing.slots[i].start} length={timing.slots[i].length} t={t} first={i === 0} label="傻貓 SillyCat" top={CAPTION_TOP} size={62} />
       ))}
 
       {/* The end card: the new icon, the name, the date */}

@@ -129,6 +129,8 @@ export const Caption = ({
   t,
   first,
   label = 'SillyCat',
+  top = 1478,
+  size = 56,
 }: {
   text: string;
   start: number;
@@ -136,6 +138,9 @@ export const Caption = ({
   t: number;
   first: boolean;
   label?: string;
+  /** Where the caption's box starts, and its type size. */
+  top?: number;
+  size?: number;
 }) => {
   if (t < start || t > start + length) return null;
   const age = first ? 10 : t - start;
@@ -146,14 +151,14 @@ export const Caption = ({
   const count = words.reduce((n, word) => n + word.length, 0);
   const stagger = Math.min(0.03, 0.34 / count);
   return (
-    <div style={{ position: 'absolute', left: 70, right: 70, top: 1478, display: 'flex', justifyContent: 'center' }}>
+    <div style={{ position: 'absolute', left: 70, right: 70, top, display: 'flex', justifyContent: 'center' }}>
       <div
         style={{
           position: 'relative',
           background: 'rgba(43,38,32,0.94)',
           color: '#FFF8EE',
           fontWeight: 900,
-          fontSize: 56,
+          fontSize: size,
           lineHeight: 1.32,
           letterSpacing: '0.02em',
           padding: '22px 36px 20px',

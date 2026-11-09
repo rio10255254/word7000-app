@@ -29,25 +29,50 @@ enum WordAudioSession {
 /// Reads a word aloud with the system voice; works offline.
 @MainActor
 @Observable
-final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
+final class Speaker: NSObject, AVSpeechSynthesizerDelegate, AVAudioPlayerDelegate {
     static let shared = Speaker()
     private(set) var activeText: String?
     private(set) var activeLanguage: String?
     private(set) var voices: [SpeechVoiceOption] = []
     @ObservationIgnored private var voicesTask: Task<[SpeechVoiceOption], Never>?
     @ObservationIgnored private var activeUtterance: AVSpeechUtterance?
+    /// WordCat Next: a recorded scenario line playing instead of the reader.
+    @ObservationIgnored private var activePlayer: AVAudioPlayer?
     @ObservationIgnored private var speechID: UUID?
     @ObservationIgnored private let audioQueue = WordAudioSession.queue
     @ObservationIgnored
     private let synthesizer = AVSpeechSynthesizer()
+    /// What has the microphone open (a recorder, a listener). While anything
+    /// does, nothing is read aloud, so a question or model reply still on
+    /// its way never ends up in the learner's own recording.
+    @ObservationIgnored private var microphones: Set<ObjectIdentifier> = []
+
+    /// `owner` opens or closes the microphone; opening it stops any reading at once.
+    func microphone(_ owner: AnyObject, open: Bool) {
+        let id = ObjectIdentifier(owner)
+        if open {
+            microphones.insert(id)
+            stop()
+        } else {
+            microphones.remove(id)
+        }
+    }
 
     override init() {
         super.init()
         synthesizer.delegate = self
+        // A voice downloaded in Settings is used as soon as iOS has it,
+        // wherever the learner is, without opening the app again.
+        NotificationCenter.default.addObserver(forName: AVSpeechSynthesizer.availableVoicesDidChangeNotification,
+                                               object: nil, queue: .main) { _ in
+            Task { @MainActor in await Speaker.shared.refreshVoices(fresh: true) }
+        }
     }
 
-    func refreshVoices() async {
-        if let task = voicesTask { voices = await task.value; return }
+    /// Reads the installed voices again; `fresh` does not wait on a reading
+    /// already under way, which may predate a voice just downloaded.
+    func refreshVoices(fresh: Bool = false) async {
+        if !fresh, let task = voicesTask { voices = await task.value; return }
         let task = Task.detached(priority: .utility) { () -> [SpeechVoiceOption] in
             var options: [SpeechVoiceOption] = []
             for voice in AVSpeechSynthesisVoice.speechVoices() {
@@ -64,7 +89,7 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
         }
         voicesTask = task
         voices = await task.value
-        voicesTask = nil
+        if voicesTask == task { voicesTask = nil }
     }
 
     func selectedVoice(language: String, preferences: SpeechPreferences) -> SpeechVoiceOption? {
@@ -73,13 +98,18 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
     }
 
     func speak(_ text: String, language: String = "en-US", preferences: SpeechPreferences = SpeechPreferences()) {
-        guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+        guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, microphones.isEmpty else { return }
         if activeText == text, activeLanguage == language { stop(); return }
         stop()
         let id = UUID()
         speechID = id
         activeText = text
         activeLanguage = language
+        // WordCat Next: a scenario line plays its recording.
+        if let recording = ScenarioVoice.url(for: text, language: language) {
+            play(recording, id: id, preferences: preferences)
+            return
+        }
         Task { [weak self] in
           guard let self else { return }
           if voices.isEmpty { await refreshVoices() }
@@ -111,9 +141,40 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
         }
     }
 
+    /// Plays a recorded line, at the reading speed chosen in Settings.
+    private func play(_ url: URL, id: UUID, preferences: SpeechPreferences) {
+        audioQueue.async { [weak self] in
+            do {
+                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
+                try AVAudioSession.sharedInstance().setActive(true)
+            } catch {
+                Task { @MainActor in if self?.speechID == id { self?.stop() } }
+                return
+            }
+            Task { @MainActor in
+                guard let self, self.speechID == id else { return }
+                guard let player = try? AVAudioPlayer(contentsOf: url) else { self.stop(); return }
+                player.delegate = self
+                let rate = Float(preferences.speed.multiplier)
+                if rate != 1 {
+                    player.enableRate = true
+                    player.rate = rate
+                }
+                self.activePlayer = player
+                if !player.play() { self.stop() }
+            }
+        }
+    }
+
+    nonisolated func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        Task { @MainActor in if activePlayer === player { stop() } }
+    }
+
     func stop() {
         guard activeText != nil else { return }
         speechID = nil
+        activePlayer?.stop()
+        activePlayer = nil
         activeUtterance = nil
         activeText = nil
         activeLanguage = nil

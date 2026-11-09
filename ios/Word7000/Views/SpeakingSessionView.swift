@@ -30,6 +30,9 @@ struct SpeakingSessionView: View {
     @State private var started = false
     @State private var availableCount = 0
     @State private var finishedBounce = 0
+    /// The stage's stars have all landed: three of them shower paper, and
+    /// the streak's flame jumps.
+    @State private var starsLanded = false
     @State private var filtersOpen = false
     @State private var scenariosOpen = false
     @State private var previousFilter = FilterSelection()
@@ -47,7 +50,22 @@ struct SpeakingSessionView: View {
     @State private var shadowedThisWord = false
     /// How the stage went, once it is over.
     @State private var stageResult: SpeakingPath.Result?
+    /// WordCat Next: the whole conversation has been heard (or there was
+    /// nothing to hear first).
+    @State private var listened = true
+    /// WordCat Next: today's words offered once the turns are over; empty
+    /// when there are none or the step is done.
+    @State private var wordChoices: [String] = []
     @State private var bannerShown = false
+    /// WordCat Next: a stage's curtain is up (StageCurtain); nothing is read until it goes.
+    @State private var curtain = false
+    /// A new start of a stage, so the listening chat starts afresh even on the same stage.
+    @State private var runID = UUID()
+    /// A stage picked on the map, started once the map has slid away.
+    @State private var pickedStage: SpeakingScenarios.StageRef?
+    /// WordCat Next: what this practice is, docked at the top as it starts
+    /// (a stage without its curtain, or word practice).
+    @State private var notice: NoticeContent?
     @State private var coachAnswer = ""
     @State private var coachTranscriptNeedsReview = false
     @State private var coachContextID = UUID()
@@ -58,6 +76,9 @@ struct SpeakingSessionView: View {
     /// Which kind of prompt each word of this practice gets: a reviewed
     /// conversation question, or building on its example sentence.
     @State private var kinds: [String: SpeakingPractice.Activity] = [:]
+    /// WordCat Next: in a role-play, what the learner answered on each turn,
+    /// shown in the chat above the next turns in place of the model reply.
+    @State private var replies: [Int: String] = [:]
 
     private func isExample(_ word: WordEntry) -> Bool {
         kinds[word.id] == .examples || SpeakingPractice.entry(for: word) == nil
@@ -72,7 +93,7 @@ struct SpeakingSessionView: View {
 
     /// "Stage 3 · Restaurant", or word practice.
     private var stageTitle: String {
-        guard let ref = scenarioRef, let scenario = SpeakingScenarios.scenario(ref) else { return L.t("單字練習", "Word practice") }
+        guard let ref = scenarioRef, let scenario = SpeakingScenarios.scenario(ref) else { return L.t("單字口說", "Word speaking") }
         let number = SpeakingScenarios.number(ref)
         return L.t("第 \(number) 關 · \(scenario.title.zh)", "Stage \(number) · \(scenario.title.en)")
     }
@@ -95,12 +116,34 @@ struct SpeakingSessionView: View {
         NavigationStack {
             VStack(spacing: 12) {
                 // Hidden on a finished stage, where it would only compete with the result.
-                if started, index < count || count == 0 { trackPicker }
+                // WordCat Next: scenarios and word practice are chosen in the
+                // Practice tab, and the stage's place shows in the title, so the
+                // top stays clear.
+                if started, index < count || count == 0, !AppRuntime.speakingRoutine { trackPicker }
+                // WordCat Next: the stage's three steps, as today's words show theirs.
+                if let step = routineStep, step != .done {
+                    SpeakingStepStrip(step: step, turn: min(index, count), turns: count)
+                        .padding(.top, 4)
+                }
+                // While the iPhone still reads with its flat standard voice.
+                if started, index < count { VoiceTipStrip(language: speakLanguage) }
                 Group {
                     if !started {
                         ProgressView()
                     } else if count == 0 {
                         emptyScope
+                    } else if !listened, scenarioRef != nil {
+                        SpeakingListenView(title: stageTitle, lines: listenLines, language: speakLanguage,
+                                           paused: curtain || scenariosOpen) {
+                            bannerShown = true
+                            withAnimation(reduceMotion ? nil : Motion.reveal) { listened = true }
+                        }
+                        .id(runID)
+                    } else if index >= count, !wordChoices.isEmpty {
+                        UseTodaysWordView(place: scenarioPlace, wordIds: wordChoices) { wordId, used in
+                            model.recordTodaysWordUse(wordId: wordId, used: used)
+                            withAnimation(reduceMotion ? nil : Motion.reveal) { wordChoices = [] }
+                        }
                     } else if index >= count {
                         finished
                     } else {
@@ -111,6 +154,17 @@ struct SpeakingSessionView: View {
             .padding(.horizontal, Metrics.gutter)
             .padding(.bottom, 8)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .notice($notice)
+            .overlay {
+                if curtain, let ref = scenarioRef {
+                    StageCurtain(ref: ref) {
+                        bannerShown = true
+                        curtain = false
+                    }
+                    .id(runID)
+                    .transition(.opacity)
+                }
+            }
             .background { AmbientBackground(tint: Palette.known) }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -178,13 +232,18 @@ struct SpeakingSessionView: View {
         .sensoryFeedback(.success, trigger: attempted) { _, new in new && (model.settings.hapticsEnabled ?? true) }
         // Each new item is read aloud once (Settings → Reading voice): in a
         // role-play, what the other person says, then the reply to say after it.
-        .task(id: "\(started)-\(index)-\(count)-\(shadowing)-\(String(describing: source))") {
-            guard started, index < count, !AppRuntime.uiTesting,
+        .task(id: "\(started)-\(listened)-\(index)-\(count)-\(shadowing)-\(String(describing: source))-\(curtain)-\(scenariosOpen)") {
+            guard started, listened, index < count, !curtain, !scenariosOpen, !AppRuntime.uiTesting,
                   model.settings.speech?.autoReadQuestions ?? true else { return }
-            // The stage's opening banner goes first.
-            do { try await Task.sleep(for: .milliseconds(index == 0 && shadowing ? 1500 : 450)) } catch { return }
             let card = card(at: index)
             let sentence = shadowSentence(card)
+            // A role-play's answer step answers the line just heard: it is not read again.
+            if scenarioRef != nil, !shadowing, !sentence.isEmpty { return }
+            // The stage's opening banner goes first; on a later turn of a role-play,
+            // the other person's line is read once it has come in after typing.
+            let wait: Duration = index == 0 && shadowing ? .milliseconds(1500)
+                : scenarioRef != nil && shadowing ? ShadowStepView.typingPause + .milliseconds(300) : .milliseconds(450)
+            do { try await Task.sleep(for: wait) } catch { return }
             let preferences = model.settings.speech ?? SpeechPreferences()
             let saying = shadowing && !sentence.isEmpty
             if scenarioRef != nil || !saying {
@@ -228,44 +287,54 @@ struct SpeakingSessionView: View {
                 .compactSheet()
             }
         }
-        .sheet(isPresented: $scenariosOpen) {
-            ScenarioPickerView(progress: model.speakingPath, current: scenarioRef) { picked in
-                scenariosOpen = false
+        // WordCat Next: the map pauses the stage; whatever was being read stops at once.
+        .onChange(of: scenariosOpen) { _, open in if open { Speaker.shared.stop() } }
+        .sheet(isPresented: $scenariosOpen, onDismiss: {
+            // The new stage starts once the map is out of the way, so its curtain is seen.
+            if let picked = pickedStage {
+                pickedStage = nil
                 start(.scenario(picked))
             }
+        }) {
+            ScenarioPickerView(progress: model.speakingPath, current: scenarioRef) { picked in
+                Speaker.shared.stop()
+                pickedStage = picked
+                scenariosOpen = false
+            }
         }
-        .catTip(.speaking, at: .top, inset: 60)
+        .catTip(.speaking)
     }
 
     private var scopeNarrowed: Bool {
         model.usesOtherBank || (model.settings.speakingFilter ?? FilterSelection()).isActive
     }
 
+    /// Which word list: the core bank, the official ones open to this
+    /// learner, and their own; laid out as chips rather than a menu.
     private var scopePicker: some View {
-        Menu {
-            Button { model.selectBank(WordBanks.coreBankId) } label: {
-                Label(L.coreBankName, systemImage: model.usesOtherBank ? "character.book.closed" : "checkmark")
-            }
-            ForEach(model.officialBanks.filter { !$0.premium || plus.subscribed }) { bank in
-                Button { model.selectBank(bank.selectionId) } label: {
-                    Label(bank.localizedName, systemImage: model.settings.activeBankId == bank.selectionId ? "checkmark" : "books.vertical")
-                }
-            }
-            ForEach(model.customSets.sets) { set in
-                Button { model.selectBank(set.id) } label: {
-                    Label(set.name, systemImage: model.settings.activeBankId == set.id ? "checkmark" : "folder")
-                }
-            }
-        } label: {
-            HStack(spacing: 8) {
-                Label(L.t("詞庫", "Word list"), systemImage: "books.vertical").foregroundStyle(.primary)
-                Spacer(minLength: 8)
-                Text(model.bankName).lineLimit(1).foregroundStyle(.secondary)
-                Image(systemName: "chevron.up.chevron.down").font(.caption2.weight(.semibold)).foregroundStyle(.secondary)
-            }
-            .frame(minHeight: 44)
+        var options: [ChoiceOption<String>] = [
+            ChoiceOption(value: WordBanks.coreBankId, title: L.coreBankName, icon: "character.book.closed"),
+        ]
+        for bank in model.officialBanks where !bank.premium || plus.subscribed {
+            options.append(ChoiceOption(value: bank.selectionId, title: bank.localizedName, icon: "books.vertical"))
         }
-        .accessibilityIdentifier("speaking-bank")
+        for set in model.customSets.sets {
+            options.append(ChoiceOption(value: set.id, title: set.name, icon: "folder"))
+        }
+        let selection: String = model.usesOtherBank ? model.settings.activeBankId : WordBanks.coreBankId
+        return Group {
+            // One bank only: nothing to choose, so its name, not a lone chip.
+            if options.count == 1 {
+                SettingsLabel(L.t("字庫", "Word bank"), icon: "books.vertical", tint: Palette.accent, value: model.bankName)
+                    .accessibilityIdentifier("speaking-bank")
+            } else {
+                ChoiceRow(title: L.t("字庫", "Word bank"), icon: "books.vertical", tint: Palette.accent,
+                          options: options, selection: selection, equalWidths: false,
+                          identifier: "speaking-bank") { id in
+                    model.selectBank(id)
+                }
+            }
+        }
     }
 
     private var emptyScope: some View {
@@ -290,19 +359,14 @@ struct SpeakingSessionView: View {
 
     /// Everyday scenarios or word practice, side by side at the top.
     private var trackPicker: some View {
-        Picker(L.t("練習方式", "Practice"), selection: Binding(
-            get: { scenarioRef == nil },
-            set: { words in
-                guard words != (scenarioRef == nil) else { return }
-                model.settings.speakingWordsTab = words
-                start(words ? .words : nil)
-            }
-        )) {
-            Text(L.t("生活情境", "Scenarios")).tag(false)
-            Text(L.t("單字口說", "Words")).tag(true)
+        ChoiceChips(options: [
+            ChoiceOption(value: false, title: L.t("生活情境", "Scenarios"), icon: "bubble.left.and.bubble.right.fill"),
+            ChoiceOption(value: true, title: L.t("單字口說", "Words"), icon: "textformat.abc"),
+        ], selection: scenarioRef == nil, identifier: "speaking-track") { words in
+            guard words != (scenarioRef == nil) else { return }
+            model.settings.speakingWordsTab = words
+            start(words ? .words : nil)
         }
-        .pickerStyle(.segmented)
-        .accessibilityIdentifier("speaking-track")
     }
 
     /// Starts a stage: the one given, or the next on the tab last used (the
@@ -353,8 +417,31 @@ struct SpeakingSessionView: View {
         shadowed = 0
         shadowedThisWord = false
         stageResult = nil
+        starsLanded = false
         bannerShown = false
+        listened = !(AppRuntime.speakingRoutine && scenarioRef != nil)
+        runID = UUID()
+        curtain = scenarioRef != nil && AppRuntime.speakingRoutine && !AppRuntime.uiTesting
+        // Without a curtain, the notice says what this practice is; nothing waits on it.
+        if !curtain {
+            notice = NoticeContent(
+                title: scenarioRef.map { L.t("第 \(SpeakingScenarios.number($0)) 關", "Stage \(SpeakingScenarios.number($0))") } ?? stageTitle,
+                detail: stageCaption,
+                icon: scenarioRef.flatMap { SpeakingScenarios.scenario($0)?.icon } ?? "mic.fill",
+                tint: TodayView.speakingTint,
+                identifier: "speaking-stage-banner")
+            bannerShown = true
+        }
+        wordChoices = []
+        replies = [:]
         started = true
+    }
+
+    /// Whether the answer has the practice word in it: the English word (or
+    /// a form of it) for a learner of English, the Chinese for a learner of Chinese.
+    private func usedPracticeWord(_ word: WordEntry) -> Bool {
+        if model.learnsChinese { return coachAnswer.contains(ExamQuestions.chineseForm(word)) }
+        return TodaysWordUse.check(heard: coachAnswer, word: word.word).counts
     }
 
     private func clearCoach() {
@@ -380,8 +467,9 @@ struct SpeakingSessionView: View {
         guard scenarioRef != nil, index > 0 else { return [] }
         return turns.prefix(index).enumerated().flatMap { item -> [ShadowStepView.ChatLine] in
             let card = SpeakingScenarios.card(item.element, mode: mode)
+            let said = replies[item.offset]?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             return [ShadowStepView.ChatLine(id: "\(item.offset)-partner", text: card.question, mine: false),
-                    ShadowStepView.ChatLine(id: "\(item.offset)-reply", text: shadowSentence(card), mine: true)]
+                    ShadowStepView.ChatLine(id: "\(item.offset)-reply", text: said.isEmpty ? shadowSentence(card) : said, mine: true)]
         }
     }
 
@@ -415,22 +503,21 @@ struct SpeakingSessionView: View {
                 .modifier(PromptArrival(slides: turn == nil))
                 .id("shadow-\(index)")
             }
-            .overlay(alignment: .top) {
-                if index == 0, !bannerShown {
-                    StageBanner(title: scenarioRef.map { L.t("第 \(SpeakingScenarios.number($0)) 關", "Stage \(SpeakingScenarios.number($0))") } ?? stageTitle,
-                                subtitle: stageCaption) { bannerShown = true }
-                }
-            }
         } else {
             answerPage(at: index, card: card, builtOnSentence: !sentence.isEmpty)
         }
     }
 
     /// Two steps an item: the bar moves half an item for each.
+    /// WordCat Next: a scenario stage already shows its turns in the step
+    /// strip at the top, so a second bar under it would only be one too many.
+    @ViewBuilder
     private var progressBar: some View {
-        let steps = Double(index * 2 + (shadowing ? 0 : 1) + (attempted ? 1 : 0))
-        return BuddyProgressBar(fraction: steps / Double(max(1, count * 2)),
-                                tint: Palette.known, mood: attempted || shadowedThisWord ? .happy : .thinking, hop: index)
+        if routineStep == nil {
+            let steps = Double(index * 2 + (shadowing ? 0 : 1) + (attempted ? 1 : 0))
+            BuddyProgressBar(fraction: steps / Double(max(1, count * 2)),
+                             tint: Palette.known, mood: attempted || shadowedThisWord ? .happy : .thinking, hop: index)
+        }
     }
 
     /// What the item is about, above the question: the word with its meaning,
@@ -461,7 +548,134 @@ struct SpeakingSessionView: View {
         }
     }
 
+    @ViewBuilder
     private func answerPage(at index: Int, card: ConversationPromptCard, builtOnSentence: Bool) -> some View {
+        if scenarioRef != nil {
+            chatAnswerPage(at: index, card: card)
+        } else {
+            wordAnswerPage(at: index, card: card, builtOnSentence: builtOnSentence)
+        }
+    }
+
+    /// WordCat Next: a role-play's answer step as the chat itself. The whole
+    /// conversation so far scrolls above, the other person's line comes in as
+    /// the newest message with what to say under it, and the answer is
+    /// written or spoken in the box at the end; the keys stay at the bottom.
+    /// Moving on adds the next lines below instead of turning a page.
+    private func chatAnswerPage(at index: Int, card: ConversationPromptCard) -> some View {
+        VStack(spacing: 12) {
+            progressBar
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(spacing: 14) {
+                        ChatHistory(lines: earlierLines(before: index))
+                        TranslatableQuestion(
+                            caption: turns[index].role.practised(mode),
+                            question: card.question,
+                            pinyin: model.studyMode == .chinese ? ChineseDisplay.readablePinyin(ChineseDisplay.sentencePinyin(card.question)) : "",
+                            translation: card.questionGloss,
+                            language: speakLanguage,
+                            showsHint: !translationTried,
+                            onTranslate: { translationTried = true }
+                        )
+                        // What to answer, from the cat: in a word, and a word to use.
+                        HStack(alignment: .top, spacing: 8) {
+                            Mascot(mood: .happy, size: 40)
+                                .accessibilityHidden(true)
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text(card.questionSupport)
+                                    .font(.body.weight(.semibold))
+                                    .foregroundStyle(Palette.ink)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                if !card.keyword.isEmpty {
+                                    Label(L.t("試著用「\(card.keyword)」", "Try using \u{201C}\(card.keyword)\u{201D}"), systemImage: "lightbulb.fill")
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundStyle(Palette.accent)
+                                }
+                            }
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 10)
+                            .background(MascotBubble.cream, in: BubbleShape(tail: .leading))
+                            .environment(\.colorScheme, .light)
+                            Spacer(minLength: 24)
+                        }
+                        .modifier(ChatRise(step: 1, from: 20))
+                        .accessibilityElement(children: .combine)
+                        .accessibilityIdentifier("speaking-support")
+                        if revealed, !card.referenceAnswer.isEmpty {
+                            sampleBubble(card)
+                                .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: 12)))
+                        }
+                        answerPanel(at: index, card: card, examplesOnly: false, proxy: proxy)
+                            .modifier(ChatRise(step: 2, from: 28))
+                            .id(coachContextID)
+                    }
+                    .padding(.top, 4)
+                    .padding(.bottom, 12)
+                }
+                .defaultScrollAnchor(.bottom)
+                .scrollDismissesKeyboard(.interactively)
+                // A deep fade: earlier lines melt away under the steps
+                // rather than being cut through mid-line.
+                .softTopScrollEdge(48)
+                .onChange(of: revealed) { _, shown in
+                    guard shown else { return }
+                    withAnimation(reduceMotion ? nil : Motion.reveal) { proxy.scrollTo("sample", anchor: .center) }
+                }
+            }
+            ButtonRow {
+                Button {
+                    withAnimation(reduceMotion ? nil : Motion.reveal) { revealed.toggle() }
+                } label: {
+                    Text(revealed ? L.t("收起參考", "Hide sample") : L.showSample)
+                        .font(.headline).frame(maxWidth: .infinity)
+                }
+                .secondaryAction()
+                .disabled(card.referenceAnswer.isEmpty)
+                .accessibilityIdentifier("speaking-show-reference")
+                Button {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    withAnimation(reduceMotion ? nil : .spring(response: 0.5, dampingFraction: 0.88)) { next() }
+                } label: {
+                    HStack(spacing: 6) {
+                        Text(attempted ? (index + 1 >= count ? L.seeResults : L.t("繼續對話", "Carry on")) : L.t("跳過", "Skip"))
+                        if attempted, index + 1 < count { Image(systemName: "arrow.down") }
+                    }
+                    .font(.headline).frame(maxWidth: .infinity)
+                }
+                .modifier(NextKey(attempted: attempted))
+                .accessibilityIdentifier("speaking-next")
+            }
+        }
+    }
+
+    /// The sample reply, on the learner's side of the chat with a dashed edge:
+    /// one way to say it, not something said.
+    private func sampleBubble(_ card: ConversationPromptCard) -> some View {
+        HStack(alignment: .bottom, spacing: 8) {
+            Spacer(minLength: 40)
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    Text(L.sampleAnswer).font(.caption.weight(.semibold)).foregroundStyle(Palette.accent)
+                    Spacer(minLength: 8)
+                    SpeakButton(text: card.referenceAnswer, language: speakLanguage)
+                }
+                Text(card.referenceAnswer).lineSpacing(3).accessibilityIdentifier("speaking-reference-answer")
+                if !card.referenceTranslation.isEmpty {
+                    Text(card.referenceTranslation).font(.subheadline).foregroundStyle(.secondary)
+                }
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background {
+                BubbleShape(tail: .trailing)
+                    .stroke(Palette.accent.opacity(0.5), style: StrokeStyle(lineWidth: 1.5, dash: [5, 4]))
+            }
+        }
+        .id("sample")
+    }
+
+    private func wordAnswerPage(at index: Int, card: ConversationPromptCard, builtOnSentence: Bool) -> some View {
         let examplesOnly = scenarioRef == nil && isExample(words[index])
         return VStack(spacing: 16) {
             progressBar
@@ -612,7 +826,8 @@ struct SpeakingSessionView: View {
             onAttempt: {
                 guard contextID == coachContextID, !attempted else { return }
                 withAnimation(reduceMotion ? nil : Motion.pop) { attempted = true }
-            }
+            },
+            chat: scenarioRef != nil
         )
     }
 
@@ -621,7 +836,15 @@ struct SpeakingSessionView: View {
         guard index < count else { return }
         // Saying the model or answering is the practice; skipping is not.
         model.recordSpeaking(completed: attempted || shadowedThisWord)
+        // Word practice: the word itself said in the answer counts as a review
+        // of it (read before the answer is cleared below).
+        if scenarioRef == nil, attempted, usedPracticeWord(words[index]) {
+            model.creditWordUse(words[index].id)
+        }
         if attempted { answered += 1 }
+        if scenarioRef != nil, attempted, !coachAnswer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            replies[index] = coachAnswer
+        }
         clearCoach()
         if scenarioRef == nil { model.noteSpeakingPractised(words[index].id) }
         Speaker.shared.stop()
@@ -634,22 +857,58 @@ struct SpeakingSessionView: View {
             let result = SpeakingPath.Result(words: count, shadowed: shadowed, answered: answered)
             model.finishSpeakingStage(scenarioRef.map(SpeakingScenarios.key), result: result)
             stageResult = result
+            // WordCat Next: a cleared stage ends with one of today's words.
+            if AppRuntime.speakingRoutine, scenarioRef != nil, result.cleared {
+                wordChoices = model.todaysWordChoices()
+            }
         }
+    }
+
+    /// WordCat Next: where a scenario stage is, for its step chips; nil for
+    /// word practice.
+    private var routineStep: SpeakingStep? {
+        guard AppRuntime.speakingRoutine, started, scenarioRef != nil, count > 0 else { return nil }
+        if !listened { return .listen }
+        if index < count { return shadowing ? .shadow : .answer }
+        return wordChoices.isEmpty ? .done : .useWord
+    }
+
+    /// The stage's whole conversation, for the listening step: each line from
+    /// the other person, then the reply.
+    private var listenLines: [SpeakingListenView.Line] {
+        let gloss = model.studyMode != .chinese
+        return turns.enumerated().flatMap { item -> [SpeakingListenView.Line] in
+            let card = SpeakingScenarios.card(item.element, mode: mode)
+            return [SpeakingListenView.Line(id: item.offset * 2, text: card.question, gloss: card.questionGloss ?? "", mine: false,
+                                            role: item.element.role.practised(mode == .english ? .chinese : .english)),
+                    SpeakingListenView.Line(id: item.offset * 2 + 1, text: shadowSentence(card),
+                                            gloss: ShadowingCheck.sentence(from: card.referenceTranslation, chinese: gloss), mine: true,
+                                            role: L.t("我", "Me"))]
+        }
+    }
+
+    /// The scenario's name, for "say it at the café".
+    private var scenarioPlace: String {
+        guard let ref = scenarioRef, let scenario = SpeakingScenarios.scenario(ref) else { return "" }
+        return L.t(scenario.title.zh, scenario.title.en)
     }
 
     private var finished: some View {
         let result = stageResult ?? SpeakingPath.Result(words: count, answered: answered)
         let path = model.speakingPath
-        let streak = path.currentStreak(today: model.today)
+        // The same streak as the flame on Today and today's stamp.
+        let streak = model.progress.streak
         let ref = scenarioRef
+        // The stage that finishes the day leads to its stamp, not to another stage.
+        let wrapsUpTheDay = result.cleared && ref != nil && model.dayCompleteDue
         return VStack(spacing: 18) {
             Spacer()
             Mascot(mood: result.cleared ? .cheer : .encourage, size: 96, hop: finishedBounce)
                 .popIn()
             VStack(spacing: 4) {
                 Text(!result.cleared ? L.t("這關還沒過", "Not cleared yet")
-                     : ref.map { L.t("第 \(SpeakingScenarios.number($0)) 關 過關！", "Stage \(SpeakingScenarios.number($0)) cleared!") }
-                     ?? L.t("單字練習完成！", "Word practice done!"))
+                     : ref.map { L.t("第 \(SpeakingScenarios.number($0)) 關過關！", "Stage \(SpeakingScenarios.number($0)) cleared!") }
+                     ?? L.t("單字口說完成！", "Word speaking done!"))
                     .font(.display(.title, weight: .bold))
                     .accessibilityIdentifier("speaking-stage-result")
                 if ref != nil {
@@ -657,16 +916,18 @@ struct SpeakingSessionView: View {
                 }
             }
             .entrance(1)
-            StageStars(count: result.stars)
+            StageStars(count: result.stars) { starsLanded = true }
                 .entrance(2)
             if result.cleared {
                 if let ref { StagePathView(current: ref, progress: path).entrance(3) }
-                Label(path.clearedToday(model.today)
-                      ? L.t("今天的關卡完成 · 連續 \(streak) 天", "Today's stage done · \(streak)-day streak")
+                Label(streak < 1 ? L.t("今天的口說完成", "Today's speaking done")
+                      : path.clearedToday(model.today)
+                      ? L.t("今天的口說完成 · 連續 \(streak) 天", "Today's speaking done · \(streak)-day streak")
                       : L.t("連續 \(streak) 天", "\(streak)-day streak"),
                       systemImage: "flame.fill")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Palette.accent)
+                    .symbolEffect(.bounce, value: starsLanded)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
                     .background(Palette.accent.opacity(0.12), in: Capsule())
@@ -682,27 +943,48 @@ struct SpeakingSessionView: View {
             }
             Spacer()
             VStack(spacing: 12) {
-                Button {
+                if wrapsUpTheDay {
+                    Button { dismiss() } label: {
+                        Text(L.done).font(.headline).frame(maxWidth: .infinity)
+                    }
+                    .prominentAction()
+                    .accessibilityIdentifier("speaking-done")
+                }
+                let nextButton = Button {
                     // Next on the path; the same stage again when not cleared;
                     // another set of words in word practice.
                     let again: Source? = ref == nil ? .words : result.cleared ? nil : source
                     start(again)
                 } label: {
-                    Text(ref == nil ? L.nextSession : result.cleared ? L.t("下一關", "Next stage") : L.t("再試一次", "Try again"))
+                    Text(ref == nil ? L.nextSession
+                         : result.cleared ? (wrapsUpTheDay ? L.t("再一關", "One more stage") : L.t("下一關", "Next stage"))
+                         : L.t("再試一次", "Try again"))
                         .font(.headline).frame(maxWidth: .infinity)
                 }
-                .prominentAction()
                 .accessibilityIdentifier("speaking-again")
-                Button { dismiss() } label: {
-                    Text(result.cleared ? L.t("今天先到這裡", "That's it for today") : L.done)
-                        .font(.headline).frame(maxWidth: .infinity)
+                if wrapsUpTheDay {
+                    nextButton.secondaryAction()
+                } else {
+                    nextButton.prominentAction()
+                    Button { dismiss() } label: {
+                        Text(result.cleared ? L.t("今天先到這裡", "That's it for today") : L.done)
+                            .font(.headline).frame(maxWidth: .infinity)
+                    }
+                    .secondaryAction()
                 }
-                .secondaryAction()
             }
         }
         .overlay(alignment: .top) {
-            // Three stars earn a shower of paper.
-            if !reduceMotion, result.stars == 3 { ConfettiBurst().allowsHitTesting(false) }
+            // WordCat Next: every cleared stage earns a shower of paper once the
+            // stars are down; three stars, a shower of gold.
+            if !reduceMotion, result.cleared, starsLanded {
+                ConfettiBurst(colors: result.stars == 3 ? ConfettiBurst.gold : ConfettiBurst.paper)
+                    .allowsHitTesting(false)
+            }
+        }
+        .soundEffect(trigger: starsLanded) { (_: Bool, landed: Bool) -> SoundEffect? in landed && result.cleared ? .complete : nil }
+        .sensoryFeedback(trigger: starsLanded) { (_: Bool, landed: Bool) -> SensoryFeedback? in
+            landed && result.cleared && (model.settings.hapticsEnabled ?? true) ? SensoryFeedback.success : nil
         }
         .task {
             try? await Task.sleep(for: .milliseconds(450))

@@ -11,12 +11,11 @@ struct HistoryView: View {
     var body: some View {
         let locked = range > PlusPolicy.freeHistoryDays && plus.decide(.history) != .allowed
         VStack(spacing: 0) {
-            Picker(L.t("期間", "Range"), selection: $range) {
-                Text(L.t("7 天", "7 days")).tag(7)
-                Text(L.t("30 天", "30 days")).tag(30)
-                Text(L.t("90 天", "90 days")).tag(90)
-            }
-            .pickerStyle(.segmented)
+            ChoiceChips(options: [
+                ChoiceOption(value: 7, title: L.t("7 天", "7 days")),
+                ChoiceOption(value: 30, title: L.t("30 天", "30 days")),
+                ChoiceOption(value: 90, title: L.t("90 天", "90 days")),
+            ], selection: range, identifier: "history-range") { range = $0 }
             .padding(.horizontal, 20)
             .padding(.vertical, 10)
 
@@ -33,7 +32,6 @@ struct HistoryView: View {
         }
         .background { AmbientBackground() }
         .animation(.smooth, value: locked)
-        .sensoryFeedback(.selection, trigger: range) { _, _ in model.settings.hapticsEnabled ?? true }
         .navigationTitle(L.t("學習紀錄", "History"))
         .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(for: WordEntry.self) { word in WordDetailView(word: word) }

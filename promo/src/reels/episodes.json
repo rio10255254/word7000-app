@@ -5,6 +5,139 @@
   "outroNote": "下載連結在個人簡介",
   "episodes": [
     {
+      "id": "teaser",
+      "series": "11.16 上架",
+      "app": "WordCat 單字貓",
+      "launch": "11.16",
+      "voice": {
+        "engine": "elevenlabs",
+        "voiceId": "fQj4gJSexpu8RDE2Ii5m",
+        "model": "eleven_v4",
+        "language": "zh"
+      },
+      "outro": "追蹤我們，上架當天通知你",
+      "outroNote": "App Store 上架",
+      "hook": [
+        "欸，你。"
+      ],
+      "lines": [
+        {
+          "text": "欸，你。",
+          "say": "[smug] 欸，你。",
+          "beats": 4,
+          "cues": [
+            [
+              0.3,
+              "pop"
+            ]
+          ]
+        },
+        {
+          "text": "**11/16**，我要搬進你的手機。",
+          "say": "[smug] 十一月十六號，我要搬進你的手機。",
+          "beats": 8,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              2,
+              "pop"
+            ]
+          ]
+        },
+        {
+          "text": "每天一條路，走完就收工。",
+          "say": "每天一條路，走完就收工。",
+          "beats": 12,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              3,
+              "whoosh"
+            ],
+            [
+              4.6,
+              "tap"
+            ],
+            [
+              6,
+              "whoosh"
+            ],
+            [
+              7.6,
+              "wrong"
+            ],
+            [
+              9,
+              "whoosh"
+            ]
+          ]
+        },
+        {
+          "text": "開口說，**真人**陪你練。",
+          "beats": 10,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ]
+          ],
+          "clips": [
+            [
+              0.4,
+              "next/restaurant-0-0-partner-en.mp3",
+              0.9
+            ],
+            [
+              6.2,
+              "next/restaurant-0-0-reply-en.mp3",
+              0.9
+            ]
+          ]
+        },
+        {
+          "text": "蓋章那一下，會**上癮**。",
+          "say": "[satisfied] 蓋章那一下……會上癮。",
+          "beats": 6,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              0.9,
+              "stamp"
+            ],
+            [
+              1.2,
+              "ding"
+            ]
+          ]
+        },
+        {
+          "text": "背不起來？我會**笑你**。",
+          "say": "[mischievously] 背不起來？我會笑你喔。",
+          "beats": 6,
+          "cues": [
+            [
+              0,
+              "pop"
+            ]
+          ]
+        }
+      ],
+      "outroSay": "追蹤我們，上架當天通知你。",
+      "outroAt": 1.6,
+      "endBeats": 9,
+      "endStamp": true,
+      "grooveFrom": 1
+    },
+    {
       "id": "ep01",
       "series": "小笨貓日記 #1",
       "voice": false,

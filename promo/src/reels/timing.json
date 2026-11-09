@@ -130,5 +130,47 @@
         "voiceLength": 0.0
       }
     ]
+  },
+  "teaser": {
+    "total": 27.5,
+    "end": 23.0,
+    "slots": [
+      {
+        "start": 0.0,
+        "length": 2.0,
+        "voiceStart": 0.12,
+        "voiceLength": 1.387
+      },
+      {
+        "start": 2.0,
+        "length": 4.0,
+        "voiceStart": 2.12,
+        "voiceLength": 3.639
+      },
+      {
+        "start": 6.0,
+        "length": 6.0,
+        "voiceStart": 6.12,
+        "voiceLength": 2.559
+      },
+      {
+        "start": 12.0,
+        "length": 5.0,
+        "voiceStart": 12.12,
+        "voiceLength": 0.0
+      },
+      {
+        "start": 17.0,
+        "length": 3.0,
+        "voiceStart": 17.12,
+        "voiceLength": 2.765
+      },
+      {
+        "start": 20.0,
+        "length": 3.0,
+        "voiceStart": 20.12,
+        "voiceLength": 2.596
+      }
+    ]
   }
 }

@@ -14,6 +14,7 @@ The instruments are the soundtrack's (scripts/make-music.py). Needs numpy,
 scipy and ffmpeg.
 """
 import importlib.util
+import subprocess
 import json
 import math
 import sys
@@ -31,6 +32,8 @@ SR = m.SR
 SCRIPT = json.loads((ROOT / "src" / "reels" / "episodes.json").read_text())
 VOICE = ROOT / "public" / "reels" / "voice"
 BEAT = 0.5  # 120 bpm
+# --no-voice: the same mix without the cat's voice (captions only), as <episode>-novoice.mp3.
+SILENT = "--no-voice" in sys.argv
 LEAD_IN = 0.12  # the voice starts just after the card lands on the beat
 BREATH = 0.3
 END_BEATS = 6  # the end card: the sound logo, then a held B♭
@@ -39,11 +42,26 @@ END_BEATS = 6  # the end card: the sound logo, then a held B♭
 LOOP = [m.GM, m.EB, m.BB, m.F_]
 
 
+def decode(path):
+    """Any audio file as mono floats at the mix's rate."""
+    raw = subprocess.run(
+        ["ffmpeg", "-v", "error", "-i", str(path), "-ac", "1", "-ar", str(SR), "-f", "f32le", "-"], capture_output=True, check=True
+    ).stdout
+    return np.frombuffer(raw, np.float32).astype(float), SR
+
+
+def voice_file(episode, n):
+    """The recorded line for slot `n` (or "outro"), from either voice script, if there is one."""
+    for ext in ("mp3", "wav"):
+        path = VOICE / f"{episode['id']}-{n}.{ext}"
+        if path.exists():
+            return path
+    return None
+
+
 def load_voice(path):
     """A spoken line, trimmed of the model's silence, at the mix's rate, and polished."""
-    import soundfile as sf
-
-    audio, rate = sf.read(path)
+    audio, rate = decode(path)
     level = np.abs(audio)
     loud = np.where(level > 0.02 * level.max())[0]
     audio = audio[max(0, loud[0] - int(0.03 * rate)) : loud[-1] + int(0.08 * rate)]
@@ -64,12 +82,14 @@ def layout(episode):
     """Slots on the beat grid: (start, length, voice) per line, then the end card."""
     slots, t = [], 0.0
     for n, line in enumerate(episode["lines"]):
-        if "beats" in line:  # a silent shot, as long as written
+        if "beats" in line:  # a shot as long as written, spoken or not
             length = line["beats"] * BEAT
-            slots.append({"start": t, "length": length, "voiceStart": t, "voiceLength": 0.0, "audio": np.zeros(1)})
+            path = voice_file(episode, n) if "say" in line else None
+            audio = load_voice(path) if path else np.zeros(1)
+            slots.append({"start": t, "length": length, "voiceStart": t + LEAD_IN, "voiceLength": len(audio) / SR if path else 0.0, "audio": audio})
             t += length
             continue
-        voice = load_voice(VOICE / f"{episode['id']}-{n}.wav")
+        voice = load_voice(voice_file(episode, n))
         length = math.ceil((LEAD_IN + len(voice) / SR + BREATH) / BEAT) * BEAT
         slots.append({"start": t, "length": length, "voiceStart": t + LEAD_IN, "voiceLength": len(voice) / SR, "audio": voice})
         t += length
@@ -137,7 +157,7 @@ def logo(at, bus, tune):
 
 def mix(episode):
     slots, body = layout(episode)
-    total = body + END_BEATS * BEAT
+    total = body + episode.get("endBeats", END_BEATS) * BEAT
     n = int(total * SR)
     voice, sfx, band, tune = (np.zeros(n + SR) for _ in range(4))
     music = groove(body)[: n + SR]
@@ -148,9 +168,17 @@ def mix(episode):
     fade[a:b] = np.linspace(1, 0, b - a)
     fade[b:] = 0
     music *= fade
+    # A cold open: the groove comes in with the slot named here.
+    if "grooveFrom" in episode:
+        start = int(slots[episode["grooveFrom"]]["start"] * SR)
+        music[:start] = 0
     sounds = {"pop": (m.pop, 0.4), "tap": (m.tap, 0.9), "whoosh": (lambda: m.whoosh(BEAT), 0.45), "ding": (m.ding, 0.5), "stamp": (m.stamp, 0.5), "wrong": (wrong, 0.7)}
     for slot, line in zip(slots, episode["lines"]):
-        m.place(voice, slot["audio"], slot["voiceStart"])
+        if not SILENT:
+            m.place(voice, slot["audio"], slot["voiceStart"])
+        # Recordings from the app itself (the speaking stages' voices).
+        for beat, clip, gain in line.get("clips", []):
+            m.place(voice, decode(ROOT / "public" / clip)[0] * gain, slot["start"] + beat * BEAT)
         for beat, name in line.get("cues", []):
             make, gain = sounds[name]
             m.place(sfx, make(), slot["start"] + beat * BEAT, gain)
@@ -163,6 +191,11 @@ def mix(episode):
             m.place(sfx, wrong(), slot["start"] + 0.1, 0.7)
     m.place(sfx, m.whoosh(BEAT), body - BEAT, 0.5)
     logo(body, band, tune)
+    outro = voice_file(episode, "outro")
+    if outro and not SILENT:
+        m.place(voice, load_voice(outro), body + episode.get("outroAt", 1.0))
+    if episode.get("endStamp"):
+        m.place(sfx, m.stamp(), body, 0.6)
 
     # Duck the music under the voice (about −10 dB while the cat talks).
     if np.abs(voice).max() > 0:
@@ -188,14 +221,14 @@ def mix(episode):
 
 
 def main():
-    wanted = set(sys.argv[1:])
+    wanted = set(a for a in sys.argv[1:] if not a.startswith("--"))
     path = ROOT / "src" / "reels" / "timing.json"
     timings = json.loads(path.read_text()) if path.exists() else {}
     for episode in SCRIPT["episodes"]:
         if wanted and episode["id"] not in wanted:
             continue
         stereo, timing = mix(episode)
-        out = ROOT / "public" / "reels" / f"{episode['id']}.mp3"
+        out = ROOT / "public" / "reels" / f"{episode['id']}{'-novoice' if SILENT else ''}.mp3"
         m.write_mp3(stereo, out)
         timings[episode["id"]] = timing
         print(f"{episode['id']}: {timing['total']:.2f}s -> {out.relative_to(ROOT)}")

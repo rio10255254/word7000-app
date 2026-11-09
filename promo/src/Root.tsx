@@ -1,6 +1,7 @@
 import { Composition } from 'remotion';
 import { FULL_DURATION, Full } from './Full';
 import { Intro } from './reels/Intro';
+import { Teaser } from './reels/Teaser';
 import { EPISODES, REEL_FPS, Reel, reelFrames } from './reels/Reel';
 import { OUTPUT_FPS } from './time';
 
@@ -11,7 +12,7 @@ export const Root = () => (
       <Composition
         key={e.id}
         id={`Reel-${e.id}`}
-        component={e.id.startsWith('ep01') ? Intro : Reel}
+        component={e.id === 'teaser' ? Teaser : e.id.startsWith('ep01') ? Intro : Reel}
         defaultProps={{ id: e.id }}
         durationInFrames={reelFrames(e.id)}
         fps={REEL_FPS}

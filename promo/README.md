@@ -185,6 +185,25 @@ npm run reels          # 排時間、配樂、混音
 npm run render:reels   # 輸出 out/reel-ep01.mp4 …
 ```
 
+## 11/16 上架前導片（`Reel-teaser`）
+
+給 WordCat Next（2.0.2）11/16 正式上架前用的前導片，約 27 秒。整支片只講一句話：「11/16，有隻嘴賤的貓要搬進你的手機。」底色用新圖示的橄欖綠，貓叫傻貓（SillyCat），臉照新版 App：挑眉、眨眼、吐舌頭（`Mascot` 的 `next` 與 `cheeky`）。
+
+| 時間 | 畫面 | 字幕／聲音 |
+| --- | --- | --- |
+| 0–2s | 傻貓從右邊探頭斜眼看你，左上角貼著「11.16」（封面） | 欸，你。 |
+| 2–6s | 牠跳出來，手機從下面升上來，牠飛進今天頁單字卡的角落 | 11/16，我要搬進你的手機。（配樂從這裡進來） |
+| 6–12s | 一拍一個畫面：今天的路 → 翻卡 increase → 拼字打對 → 考題選錯「抓到了！」 | 每天一條路，走完就收工。 |
+| 12–17s | 餐廳情境：App 裡真人錄音的「Hi, welcome! How many in your party?」，學生的「Just two, thanks.」和 100% 隨聲音出現 | 開口說，真人陪你練。 |
+| 17–20s | 「今天的份完成！」印章重重蓋下、畫面一閃一震 | 蓋章那一下，會上癮。 |
+| 20–22s | 傻貓從左邊探頭吐舌頭，後面的考題糊掉 | 背不起來？我會笑你。 |
+| 22–27.5s | 新圖示、WordCat 單字貓、蓋上「11.16」、App Store 上架、聲音 logo | 追蹤我們，上架當天通知你。 |
+
+- **畫面**：`src/reels/Teaser.tsx`；截圖是 `lab-native-store-screenshots` 分支裡 WordCat Next 的 App Store 截圖（`public/next/`），圖示是新版的橄欖綠圖示（`public/icon-next.png`）。
+- **配音**：傻貓用 ElevenLabs 的「Yu 小宇」（年輕、有活力的台灣口音男聲）和 eleven_v4 模型，`say` 裡的 `[smug]` 之類的標籤只控制語氣、不會念出來。`scripts/make-voice-elevenlabs.py teaser` 產生 `public/reels/voice/teaser-*.mp3`；金鑰從 `ELEVENLABS_API_KEY` 或雲端環境的代理帶入。
+- **App 裡的真人錄音**：餐廳情境的兩句來自 App 的 `Resources/ScenarioAudio`（ElevenLabs 錄製），放在 `public/next/`。
+- **兩個版本**：`npm run reels` 之後再跑 `python3 scripts/make-reels.py teaser --no-voice` 會多一個只有字幕（沒有傻貓配音）的混音 `teaser-novoice.mp3`，影片相同、只換聲音。
+
 ## 授權
 
 小笨貓的配音由 Kokoro-82M（Apache-2.0）合成，不需標示。

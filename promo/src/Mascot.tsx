@@ -7,7 +7,7 @@ import { AUTHORED_FPS, useFrame } from './time';
  * ios/Word7000/Design/Mascot.swift (claude/friendly-darwin-obc3r1).
  * Drawn on a 100×100 square; `size` scales it.
  */
-export type Mood = 'idle' | 'smug' | 'happy' | 'annoyed';
+export type Mood = 'idle' | 'smug' | 'happy' | 'annoyed' | 'cheeky';
 
 const TOP = '#FAC48F';
 const BOTTOM = '#E38A57';
@@ -17,6 +17,8 @@ const NOSE = '#ED8585';
 const INK = '#2B1A12';
 const BLUSH = '#F28073';
 const GOLD = '#FFDB66';
+const SHADE = '#944A29';
+const TONGUE = '#FA8C99';
 const AMBER = '#FF994D';
 
 /** Cloud-edged squircle: MascotFluff(tufts: 20, puff: 0.015, roundness: 0.9, settle: 0.92). */
@@ -54,8 +56,8 @@ const blinking = (t: number) => {
   return cycle > 0.3 && cycle < 0.42 && Math.floor(t / 4.6) % 3 === 0;
 };
 
-const Eye = ({ cx, side, mood, blink, clipId }: { cx: number; side: number; mood: Mood; blink: boolean; clipId: string }) => {
-  if (mood === 'happy') {
+const Eye = ({ cx, side, mood, blink, clipId, next }: { cx: number; side: number; mood: Mood; blink: boolean; clipId: string; next?: boolean }) => {
+  if (mood === 'happy' || (mood === 'cheeky' && side < 0)) {
     return <path d={`M${cx - 6} 52.5 Q${cx} 42.5 ${cx + 6} 52.5`} fill="none" stroke={INK} strokeWidth={3.5} strokeLinecap="round" />;
   }
   if (mood === 'annoyed') {
@@ -73,8 +75,9 @@ const Eye = ({ cx, side, mood, blink, clipId }: { cx: number; side: number; mood
   }
   // Heavy-lidded resting face (idle), lower and slanted in when smug.
   const d = 11;
-  const lid = mood === 'smug' ? 0.58 : 0.4;
-  const tilt = mood === 'smug' ? side * -8 : 0;
+  // WordCat Next's resting face: one eye a little lower than the other, as if doubting you.
+  const lid = mood === 'smug' ? 0.58 : mood === 'cheeky' ? 0.45 : next ? (side < 0 ? 0.36 : 0.52) : 0.4;
+  const tilt = mood === 'smug' ? side * -8 : mood === 'cheeky' ? -10 : next && side > 0 ? -7 : 0;
   const top = 50 - d / 2;
   const lidY = top + d * lid;
   return (
@@ -130,6 +133,35 @@ const Mouth = ({ mood }: { mood: Mood }) => {
   }
 };
 
+/** WordCat Next: brows for attitude, set by mood (Mascot.swift `brows`). */
+const Brows = ({ mood, raise }: { mood: Mood; raise: number }) => {
+  const set: Partial<Record<Mood, [[number, number], [number, number]]>> = {
+    idle: [[4, 0], [-14, -3 - raise * 3.5]],
+    smug: [[14, 1.2], [-14, 1.2]],
+    annoyed: [[24, 2], [-24, 2]],
+    cheeky: [[10, 1.6], [-18, -4.5]],
+  };
+  const brows = set[mood];
+  if (!brows) return null;
+  return (
+    <>
+      {brows.map(([angle, drop], i) => {
+        const cx = i === 0 ? 37.5 : 62.5;
+        const cy = 40 + drop;
+        return <rect key={i} x={cx - 5} y={cy - 1.1} width={10} height={2.2} rx={1.1} fill={SHADE} transform={`rotate(${angle} ${cx} ${cy})`} />;
+      })}
+    </>
+  );
+};
+
+/** WordCat Next: the tongue, out when cheeky and now and then at rest (a blep). */
+const Tongue = () => (
+  <g>
+    <path d="M47.5 62.4 L52.5 62.4 L52.5 64.4 Q52.5 67.4 50 67.4 Q47.5 67.4 47.5 64.4 Z" fill={TONGUE} />
+    <rect x={49.7} y={62.6} width={0.6} height={2.2} rx={0.3} fill={NOSE} opacity={0.8} />
+  </g>
+);
+
 const Sparkle = ({ x, y, size, wave }: { x: number; y: number; size: number; wave: number }) => {
   const s = size * (0.6 + 0.4 * wave);
   return (
@@ -148,12 +180,15 @@ export const Mascot = ({
   sparkles = false,
   /** Seconds offset so two cats on screen don't blink together. */
   phase = 0,
+  /** WordCat Next's face: brows, a doubting resting look, a blep now and then. */
+  next = false,
 }: {
   mood?: Mood;
   size?: number;
   blush?: boolean;
   sparkles?: boolean;
   phase?: number;
+  next?: boolean;
 }) => {
   const frame = useFrame();
   const fps = AUTHORED_FPS;
@@ -161,10 +196,13 @@ export const Mascot = ({
   const uid = useId().replace(/:/g, '');
 
   const breathe = Math.sin(t * 2.1) * 0.022;
-  const opensEyes = mood === 'idle' || mood === 'smug';
+  const opensEyes = mood === 'idle' || mood === 'smug' || mood === 'cheeky';
+  // The doubting brow twitches higher now and then.
+  const twitchCycle = (t + 1.1) % 5.3;
+  const browTwitch = twitchCycle < 0.32 ? Math.sin((twitchCycle / 0.32) * Math.PI) : 0;
   const blink = opensEyes && blinking(t);
-  const tailSway = mood === 'happy' ? Math.sin(t * 6) * 14 : Math.sin(t * 2.6) * 6;
-  const droop = mood === 'happy' ? -4 : mood === 'smug' ? 8 : mood === 'annoyed' ? 14 : 0;
+  const tailSway = mood === 'happy' ? Math.sin(t * 6) * 14 : mood === 'cheeky' ? Math.sin(t * 5) * 12 : next ? Math.sin(t * 3.4) * 9 + Math.sin(t * 7.1) * 2 : Math.sin(t * 2.6) * 6;
+  const droop = mood === 'happy' ? -4 : mood === 'smug' ? 8 : mood === 'annoyed' ? 14 : mood === 'cheeky' ? 2 : 0;
   const quiver = Math.sin(t * 2.1) * 2;
   const cheek = blush ? 0.9 : mood === 'happy' ? 0.5 : 0;
   const sx = 1 - breathe * 0.6;
@@ -226,8 +264,9 @@ export const Mascot = ({
         <ellipse cx={35} cy={92} rx={7} ry={3.5} fill={CREAM} />
         <ellipse cx={65} cy={92} rx={7} ry={3.5} fill={CREAM} />
 
-        <Eye cx={36} side={-1} mood={mood} blink={blink} clipId={`eyeL${uid}`} />
-        <Eye cx={64} side={1} mood={mood} blink={blink} clipId={`eyeR${uid}`} />
+        <Eye cx={36} side={-1} mood={mood} blink={blink} clipId={`eyeL${uid}`} next={next} />
+        <Eye cx={64} side={1} mood={mood} blink={blink} clipId={`eyeR${uid}`} next={next} />
+        {next ? <Brows mood={mood} raise={browTwitch} /> : null}
         <ellipse cx={27} cy={58} rx={5} ry={2.5} fill={BLUSH} opacity={cheek} />
         <ellipse cx={73} cy={58} rx={5} ry={2.5} fill={BLUSH} opacity={cheek} />
         {[-1, 1].map((side) =>
@@ -251,6 +290,7 @@ export const Mascot = ({
         )}
         <path d="M47.75 56.1 L52.25 56.1 L50 58.9 Z" fill={NOSE} stroke={NOSE} strokeWidth={1.2} strokeLinejoin="round" />
         <Mouth mood={mood} />
+        {mood === 'cheeky' || (next && mood === 'idle' && (t + 5) % 13 < 1.3) ? <Tongue /> : null}
       </g>
 
       {sparkles

@@ -19,8 +19,8 @@ import { EndCard, REEL_FPS } from './Reel';
  * the camera says which point of it sits in the middle of the frame, and
  * how many frame pixels one screenshot pixel takes.
  */
-type Cam = { x: number; y: number; z: number };
-const STAGE = { x: 540, y: 820 };
+export type Cam = { x: number; y: number; z: number };
+export const STAGE = { x: 540, y: 820 };
 const W = 1206;
 const H = 2622;
 
@@ -41,10 +41,10 @@ const TAP_KNOW = { x: 884, y: 2416 };
 /** The little cat at the top of a study card, where it jumps out from. */
 const STUDY_CAT = { x: 94, y: 400, size: 104 };
 
-const inOut = Easing.bezier(0.65, 0, 0.35, 1);
-const out = Easing.bezier(0.16, 1, 0.3, 1);
+export const inOut = Easing.bezier(0.65, 0, 0.35, 1);
+export const out = Easing.bezier(0.16, 1, 0.3, 1);
 
-const lerpCam = (a: Cam, b: Cam, p: number): Cam => ({
+export const lerpCam = (a: Cam, b: Cam, p: number): Cam => ({
   x: a.x + (b.x - a.x) * p,
   y: a.y + (b.y - a.y) * p,
   // Zoom moves in ratios, so a push-in feels even all the way.
@@ -52,7 +52,7 @@ const lerpCam = (a: Cam, b: Cam, p: number): Cam => ({
 });
 
 /** Keyframes: [seconds, camera]. Between two, the camera eases. */
-const camAt = (keys: [number, Cam][], t: number): Cam => {
+export const camAt = (keys: [number, Cam][], t: number): Cam => {
   if (t <= keys[0][0]) return keys[0][1];
   for (let i = 1; i < keys.length; i++) {
     const [t0, c0] = keys[i - 1];
@@ -62,9 +62,9 @@ const camAt = (keys: [number, Cam][], t: number): Cam => {
   return keys[keys.length - 1][1];
 };
 
-const toStage = (cam: Cam, x: number, y: number) => ({ x: STAGE.x + (x - cam.x) * cam.z, y: STAGE.y + (y - cam.y) * cam.z });
+export const toStage = (cam: Cam, x: number, y: number) => ({ x: STAGE.x + (x - cam.x) * cam.z, y: STAGE.y + (y - cam.y) * cam.z });
 
-const Ripple = ({ at, t, x, y, cam }: { at: number; t: number; x: number; y: number; cam: Cam }) => {
+export const Ripple = ({ at, t, x, y, cam }: { at: number; t: number; x: number; y: number; cam: Cam }) => {
   const age = t - at;
   if (age < 0 || age > 0.6) return null;
   const p = toStage(cam, x, y);
@@ -122,7 +122,21 @@ const parse = (text: string) => {
  * A small "SillyCat" tab says who is talking; the characters come in one
  * after another, and the word to lean on is in peach.
  */
-const Caption = ({ text, start, length, t, first }: { text: string; start: number; length: number; t: number; first: boolean }) => {
+export const Caption = ({
+  text,
+  start,
+  length,
+  t,
+  first,
+  label = 'SillyCat',
+}: {
+  text: string;
+  start: number;
+  length: number;
+  t: number;
+  first: boolean;
+  label?: string;
+}) => {
   if (t < start || t > start + length) return null;
   const age = first ? 10 : t - start;
   const enter = interpolate(age, [0, 0.24], [0, 1], { ...clamp, easing: out });
@@ -170,7 +184,7 @@ const Caption = ({ text, start, length, t, first }: { text: string; start: numbe
           }}
         >
           <Mascot mood="smug" size={38} />
-          SillyCat
+          {label}
         </div>
         {words.map((word, w) => (
           <span key={w} style={{ display: 'inline-block', whiteSpace: 'pre' }}>

@@ -168,7 +168,7 @@ struct WelcomeView: View {
                 retestLoaded = true
                 mode = model.studyMode
                 target = model.progress.dailyTarget
-                profile = model.settings.learnerProfile ?? LearnerProfile()
+                profile = model.learnerProfile(for: mode)
                 exam = profile.exam.flatMap(WelcomeExam.init(rawValue:))
                 test = PlacementTest(start: profile.stage?.testStart ?? 2)
             }
@@ -355,6 +355,9 @@ struct WelcomeView: View {
         question = nil
         vocabulary = nil
         profile = LearnerProfile()
+        // An exam picked for the other language (by its school stage) goes too.
+        exam = nil
+        CatMemory.shared.examDate = nil
         advance()
     }
 
@@ -1006,7 +1009,8 @@ struct WelcomeView: View {
     // MARK: WordCat Next: the result
 
     private var plan: PersonalPlan {
-        PersonalPlan(test: test, profile: profile, target: target, daysToExam: CatMemory.shared.daysToExam, levelSizes: levelSizes)
+        PersonalPlan(test: test, profile: profile, target: target, daysToExam: CatMemory.shared.daysToExam, levelSizes: levelSizes,
+                     studiedFrom: { [model, retest] chapter in retest ? model.wordsStudied(fromChapter: chapter) : 0 })
     }
 
     private var result: some View {
@@ -1133,9 +1137,8 @@ struct WelcomeView: View {
         // Only a test actually taken sets where new words start.
         // (A retest with no answers keeps the start it had.)
         profile.startChapter = test.answers.isEmpty ? (retest ? profile.startChapter : nil) : plan.startChapter
-        profile.startMode = mode.rawValue
         profile.exam = exam?.rawValue
-        model.settings.learnerProfile = profile
+        model.saveLearnerProfile(profile, for: mode)
         // A new level check keeps the learner's own choice of what comes first.
         if !retest { model.settings.homeLead = profile.lead }
         let learning = spellOutcomes.filter { $0.value == .missed }.map(\.key)

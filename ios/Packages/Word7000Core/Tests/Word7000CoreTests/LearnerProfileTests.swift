@@ -126,4 +126,73 @@ final class LearnerProfileTests: XCTestCase {
         XCTAssertEqual(state.streak, 0, "not study: the day is left as it was")
         XCTAssertNil(state.dailyProgressDate)
     }
+
+    /// Each mode keeps its own start chapter and spelling score: a retest or
+    /// writing in Chinese leaves English's alone, and the reverse.
+    func testEachModeKeepsItsOwnStartAndSpelling() {
+        var profile = LearnerProfile(stage: .senior2, focus: [.spelling], spelling: 0.2)
+        profile.startChapter = 6
+        profile.startMode = "english"
+        profile.exam = "gsat"
+
+        // A profile from before per-mode values: the one start is English's.
+        XCTAssertEqual(profile.forMode("english").startChapter, 6)
+        XCTAssertEqual(profile.forMode("english").spelling, 0.2)
+        XCTAssertNil(profile.forMode("chinese").startChapter)
+        XCTAssertNil(profile.forMode("chinese").spelling)
+
+        // A Chinese test and Chinese writing.
+        var chinese = profile.forMode("chinese")
+        chinese.startChapter = 3
+        chinese.recordSpelling([.knew, .knew])
+        profile.update(mode: "chinese", with: chinese)
+        XCTAssertEqual(profile.forMode("chinese").startChapter, 3)
+        XCTAssertEqual(profile.forMode("chinese").spelling, 1)
+        XCTAssertEqual(profile.forMode("english").startChapter, 6, "English keeps its start")
+        XCTAssertEqual(profile.forMode("english").spelling, 0.2, "and its spelling")
+        XCTAssertEqual(profile.forMode("english").spellChecks, LearnerProfile(focus: [.spelling], spelling: 0.2).spellChecks)
+        XCTAssertEqual(profile.forMode("chinese").startMode, "chinese")
+        // The single fields keep the latest, for builds that know only those.
+        XCTAssertEqual(profile.startChapter, 3)
+        XCTAssertEqual(profile.startMode, "chinese")
+
+        // Moving English's start leaves Chinese's; shared answers stay shared.
+        var english = profile.forMode("english")
+        english.startChapter = 7
+        english.focus = [.exam]
+        profile.update(mode: "english", with: english)
+        XCTAssertEqual(profile.forMode("english").startChapter, 7)
+        XCTAssertEqual(profile.forMode("chinese").startChapter, 3)
+        XCTAssertEqual(profile.forMode("chinese").focus, [.exam])
+        XCTAssertEqual(profile.forMode("chinese").exam, "gsat")
+
+        // Taking a mode's start away does not bring back the old single one.
+        var none = profile.forMode("chinese")
+        none.startChapter = nil
+        profile.update(mode: "chinese", with: none)
+        XCTAssertNil(profile.forMode("chinese").startChapter)
+        XCTAssertEqual(profile.forMode("english").startChapter, 7)
+
+        // Kept and read back: the new fields survive a round trip, and data
+        // without them still decodes.
+        let decoded = try? JSONDecoder().decode(LearnerProfile.self, from: JSONEncoder().encode(profile))
+        XCTAssertEqual(decoded, profile)
+        let old = try? JSONDecoder().decode(LearnerProfile.self, from: Data(#"{"focus":[],"startChapter":4,"startMode":"english"}"#.utf8))
+        XCTAssertEqual(old?.forMode("english").startChapter, 4)
+        XCTAssertNil(old?.forMode("chinese").startChapter)
+    }
+
+    /// A retest counts the words studied from its chapter on as covered, so
+    /// the chapter reached by the exam is not counted from scratch.
+    func testRetestCountsStudiedWordsTowardTheExamChapter() {
+        var test = PlacementTest()
+        for (n, level) in [1, 5, 9, 7, 8, 7, 8, 7].enumerated() { test.record(wordId: "w\(n)", level: level, knew: level <= 7) }
+        let fresh = PersonalPlan(test: test, profile: LearnerProfile(), target: 20, daysToExam: 30)
+        let studied = PersonalPlan(test: test, profile: LearnerProfile(), target: 20, daysToExam: 30,
+                                   studiedFrom: { $0 == fresh.startChapter ? 1_000 : 0 })
+        let projected = LearningEngine.projectedNewWords(state: ProgressState(), today: "2026-01-01", dailyTarget: 20,
+                                                         days: 30, freshAvailable: 100_000)
+        XCTAssertEqual(studied.reachChapter, PlacementTest.chaptersReached(from: fresh.startChapter, newWords: 1_000 + projected))
+        XCTAssertGreaterThan(studied.reachChapter!, fresh.reachChapter!)
+    }
 }

@@ -569,9 +569,24 @@ final class AppModel {
     /// WordCat Next: the chapter the level test placed the learner at, for
     /// the built-in words of the mode it was taken in; new words start there.
     var placementStart: Int? {
-        guard settings.activeBankId == WordBanks.coreBankId, let profile = settings.learnerProfile,
-              profile.startMode == nil || profile.startMode == studyMode.rawValue else { return nil }
-        return profile.startChapter
+        guard settings.activeBankId == WordBanks.coreBankId, settings.learnerProfile != nil else { return nil }
+        return learnerProfile.startChapter
+    }
+
+    /// The learner profile as this study mode sees it: its own start chapter
+    /// and spelling score, the rest shared.
+    var learnerProfile: LearnerProfile { learnerProfile(for: studyMode) }
+
+    func learnerProfile(for mode: StudyMode) -> LearnerProfile {
+        (settings.learnerProfile ?? LearnerProfile()).forMode(mode.rawValue)
+    }
+
+    /// Keeps a changed `learnerProfile(for:)`: the start and the spelling
+    /// score for that mode only.
+    func saveLearnerProfile(_ changed: LearnerProfile, for mode: StudyMode? = nil) {
+        var stored = settings.learnerProfile ?? LearnerProfile()
+        stored.update(mode: (mode ?? studyMode).rawValue, with: changed)
+        settings.learnerProfile = stored
     }
 
     var studyPlan: (fresh: Int, review: Int, total: Int) {
@@ -979,7 +994,7 @@ final class AppModel {
     /// After the flip cards: picks today's checks from the cards marked known.
     func planRoutineChecks() {
         guard var routine = activeRoutine, routine.step == .flip, let session = studySession, session.isComplete else { return }
-        let profile = settings.learnerProfile ?? LearnerProfile()
+        let profile = learnerProfile
         routine.planChecks(knownIds: session.knownIds, unsureIds: session.reviewIds,
                            maxSpell: profile.spellChecks, maxExam: profile.examChecks,
                            canSpell: { [self] id in word(id: id).flatMap { Cloze.sentence(for: $0, chinese: learnsChinese) } != nil },
@@ -1033,9 +1048,9 @@ final class AppModel {
             routine.finishSpell()
             // The spelling score follows every routine, so tomorrow's checks
             // grow when spelling slips and shrink when it is solid.
-            var profile = settings.learnerProfile ?? LearnerProfile()
+            var profile = learnerProfile
             profile.recordSpelling(Array(routine.spellResults.values))
-            settings.learnerProfile = profile
+            saveLearnerProfile(profile)
         case .exam: routine.finishExam()
         case .flip, .done: return
         }
@@ -1094,6 +1109,14 @@ final class AppModel {
         }
         return LearningEngine.projectedNewWords(state: progress, today: today, dailyTarget: progress.dailyTarget,
                                                 days: days, freshAvailable: fresh)
+    }
+
+    /// Built-in words from `chapter` on that are no longer new: a projection
+    /// from that chapter counts them as covered already.
+    func wordsStudied(fromChapter chapter: Int) -> Int {
+        coreWords.filter { word in
+            (LearningEngine.coreLevel(word.group) ?? 0) >= chapter && (progress.words[word.id]?.status ?? .new) != .new
+        }.count
     }
 
     /// Speaking practice counts as activity; a word used in it is credited

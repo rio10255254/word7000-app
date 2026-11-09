@@ -1,5 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.108.2';
-import { verifyEntitlement } from './entitlement.ts';
+import { verifySubscriptionTransaction } from './entitlement.ts';
 import { AIFailure, complete } from './claude.ts';
 import { COACH_MODEL, COACH_MODEL_DAILY, coachUsesStrongModel, dailyLimit, InputError, isTaskName, planTask, tierFor } from './tasks.ts';
 
@@ -66,13 +66,16 @@ Deno.serve(async (request) => {
     throw error;
   }
 
-  // Plus only from a transaction Apple signed, not refunded, and used by at
-  // most three accounts a month.
-  const entitlement = await verifyEntitlement(body.entitlement, { bundleId: BUNDLE_ID, productIds: PLUS_PRODUCTS });
+  // Plus only from a transaction Apple signed, not refunded, current (or in
+  // Apple's billing grace period), and used by at most three accounts a month.
+  // The expiry and grace period are decided by the database.
+  const entitlement = await verifySubscriptionTransaction(body.entitlement, { bundleId: BUNDLE_ID, productIds: PLUS_PRODUCTS });
   let subscribed = false;
   if (entitlement) {
-    const { data: claimed, error: claimError } = await service.rpc('claim_plus_for', {
+    const { data: claimed, error: claimError } = await service.rpc('claim_plus_subscription', {
       p_user: user, p_original_transaction_id: entitlement.originalTransactionId,
+      p_transaction_id: entitlement.transactionId, p_expires_at: new Date(entitlement.expiresAt).toISOString(),
+      p_purchased_at: entitlement.purchasedAt == null ? null : new Date(entitlement.purchasedAt).toISOString(),
     });
     if (claimError) return reply({ error: 'unavailable' }, 503);
     subscribed = claimed === true;
@@ -81,9 +84,15 @@ Deno.serve(async (request) => {
   // The online AI is a Plus feature: without a subscription Apple signed
   // (its free trial included), nothing is counted and nothing is asked.
   if (!subscribed) return reply({ error: 'plus_required' }, 403);
-  // Counted before the call so a burst cannot outrun the limit.
+  // Counted before the call so a burst cannot outrun the limit, and given
+  // back when no answer comes (a bounded number a day; see refund_ai_quota_for).
+  const usageDate = new Date().toISOString().slice(0, 10);
   const { data: quota, error: quotaError } = await service.rpc('consume_ai_quota_for', { p_user: user });
   if (quotaError || !quota) return reply({ error: 'unavailable' }, 503);
+  const giveBack = async () => {
+    const { error } = await service.rpc('refund_ai_quota_for', { p_user: user, p_usage_date: usageDate });
+    if (error) console.error(error);
+  };
   const tier = tierFor(subscribed, quota.first_seen);
   const limit = dailyLimit(tier, {
     free: envLimit('AI_FREE_LIMIT', 5),
@@ -93,10 +102,15 @@ Deno.serve(async (request) => {
   if (!(used <= limit)) return reply({ error: 'quota', tier, limit, remaining: 0 }, 429);
   // A ceiling on the whole service's day, whatever happens to the per-learner
   // limits; only requests within a learner's allowance count towards it.
+  // A failed request still counts here: it may have cost tokens.
   const { data: total, error: totalError } = await service.rpc('count_ai_request_today');
-  if (totalError || total == null) return reply({ error: 'unavailable' }, 503);
+  if (totalError || total == null) {
+    await giveBack();
+    return reply({ error: 'unavailable' }, 503);
+  }
   if (Number(total) > envLimit('AI_GLOBAL_DAILY_LIMIT', 20_000)) {
     console.error(JSON.stringify({ budget: 'exhausted', total }));
+    await giveBack();
     return reply({ error: 'unavailable' }, 503);
   }
   const plan = planTask(task, body.input, tier);
@@ -121,6 +135,8 @@ Deno.serve(async (request) => {
     console.log(JSON.stringify({ task, tier, model: result.model, effort: result.effort, ...result.usage }));
     return reply({ result: result.content, model: result.model, effort: result.effort, tier, limit, remaining: Math.max(0, limit - used) });
   } catch (error) {
+    // No answer: the learner gets the request back.
+    await giveBack();
     if (error instanceof AIFailure) {
       if (error.kind === 'misconfigured') console.error(error.message);
       return reply({ error: error.kind === 'busy' ? 'busy' : 'unavailable', retryAfter: error.retryAfter ?? null },

@@ -16,6 +16,10 @@ export interface Entitlement {
   environment: string;
   /** The same for every renewal of one subscription; claims are bound to it. */
   originalTransactionId: string;
+  /** This renewal (or purchase); a refund names it. */
+  transactionId: string;
+  /** When this renewal was bought, or null when Apple did not say. */
+  purchasedAt: number | null;
 }
 
 export interface EntitlementRules {
@@ -80,21 +84,34 @@ export async function verifyAppleSigned(
   }
 }
 
-/** The active Plus subscription in a signed transaction, or null for anything else. */
-export async function verifyEntitlement(jws: unknown, rules: EntitlementRules): Promise<Entitlement | null> {
+/**
+ * A Plus subscription transaction Apple signed and has not revoked, whether or
+ * not its period has ended: in Apple's billing grace period the app still
+ * holds the last one, past its expiry. The server decides on grace itself.
+ */
+export async function verifySubscriptionTransaction(jws: unknown, rules: EntitlementRules): Promise<Entitlement | null> {
   const payload = await verifyAppleSigned(jws, { roots: rules.roots, now: rules.now });
   if (!payload) return null;
-  const now = rules.now ?? Date.now();
   if (payload.bundleId !== rules.bundleId || !rules.productIds.includes(String(payload.productId))) return null;
-  if (payload.revocationDate || typeof payload.expiresDate !== 'number' || payload.expiresDate <= now) return null;
+  if (payload.revocationDate || typeof payload.expiresDate !== 'number') return null;
   const original = String(payload.originalTransactionId ?? payload.transactionId ?? '');
-  if (!/^[0-9]{1,32}$/.test(original)) return null;
+  const transaction = String(payload.transactionId ?? original);
+  if (!/^[0-9]{1,32}$/.test(original) || !/^[0-9]{1,32}$/.test(transaction)) return null;
   return {
     productId: String(payload.productId),
     expiresAt: payload.expiresDate,
     environment: String(payload.environment ?? ''),
     originalTransactionId: original,
+    transactionId: transaction,
+    purchasedAt: typeof payload.purchaseDate === 'number' ? payload.purchaseDate : null,
   };
+}
+
+/** The active Plus subscription in a signed transaction, or null for anything else (an ended period included). */
+export async function verifyEntitlement(jws: unknown, rules: EntitlementRules): Promise<Entitlement | null> {
+  const entitlement = await verifySubscriptionTransaction(jws, rules);
+  if (!entitlement || entitlement.expiresAt <= (rules.now ?? Date.now())) return null;
+  return entitlement;
 }
 
 /** What an App Store server notification says about a Plus subscription. */
@@ -104,12 +121,21 @@ export interface SubscriptionNotice {
   originalTransactionId: string | null;
   /** True once Apple refunded or revoked it; false when a refund was reversed. */
   revoked: boolean | null;
+  /** The transaction the notice is about: for a refund, the refunded one. */
+  transactionId: string | null;
+  /** When that transaction's period ends (or ended), or null. */
+  expiresAt: number | null;
+  /**
+   * The subscription's renewal info, when the notice carries it: the end of
+   * its billing grace period (null: not in one) and when Apple signed it.
+   */
+  renewal: { graceUntil: number | null; signedAt: number } | null;
 }
 
 /**
- * Reads an App Store Server Notification (version 2). Only refunds, revocations
- * and reversed refunds change anything here; other notices verify but return
- * `revoked: null`.
+ * Reads an App Store Server Notification (version 2). Refunds, revocations
+ * and reversed refunds set `revoked`; other notices verify with
+ * `revoked: null`. Any notice may carry the renewal info (grace period).
  */
 export async function verifyNotification(signedPayload: unknown, rules: EntitlementRules): Promise<SubscriptionNotice | null> {
   // A notice carries the transaction and the renewal info, each a signed
@@ -118,12 +144,27 @@ export async function verifyNotification(signedPayload: unknown, rules: Entitlem
   if (!notice || typeof notice.notificationType !== 'string') return null;
   const data = (notice.data ?? {}) as Record<string, unknown>;
   if (data.bundleId !== rules.bundleId) return null;
-  if (data.signedTransactionInfo === undefined) return { type: notice.notificationType, originalTransactionId: null, revoked: null };
+  if (data.signedTransactionInfo === undefined) {
+    return { type: notice.notificationType, originalTransactionId: null, revoked: null, transactionId: null, expiresAt: null, renewal: null };
+  }
   const transaction = await verifyAppleSigned(data.signedTransactionInfo, { roots: rules.roots, now: rules.now });
   if (!transaction || transaction.bundleId !== rules.bundleId || !rules.productIds.includes(String(transaction.productId))) return null;
   const original = String(transaction.originalTransactionId ?? '');
   if (!/^[0-9]{1,32}$/.test(original)) return null;
+  const transactionId = /^[0-9]{1,32}$/.test(String(transaction.transactionId ?? '')) ? String(transaction.transactionId) : null;
   const type = notice.notificationType;
   const revoked = type === 'REFUND' || type === 'REVOKE' ? true : type === 'REFUND_REVERSED' ? false : null;
-  return { type, originalTransactionId: original, revoked };
+  // The renewal info is signed on its own; one about another subscription,
+  // or one that does not verify, is ignored rather than failing the notice.
+  let renewal: SubscriptionNotice['renewal'] = null;
+  if (data.signedRenewalInfo !== undefined) {
+    const info = await verifyAppleSigned(data.signedRenewalInfo, { roots: rules.roots, now: rules.now });
+    if (info && String(info.originalTransactionId ?? '') === original && typeof info.signedDate === 'number') {
+      renewal = { graceUntil: typeof info.gracePeriodExpiresDate === 'number' ? info.gracePeriodExpiresDate : null, signedAt: info.signedDate };
+    }
+  }
+  return {
+    type, originalTransactionId: original, revoked, transactionId,
+    expiresAt: typeof transaction.expiresDate === 'number' ? transaction.expiresDate : null, renewal,
+  };
 }

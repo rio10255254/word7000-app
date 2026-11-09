@@ -73,6 +73,7 @@ jobs:
       - name: 發公告
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          BROADCAST_PUSH_SECRET: ${{ secrets.BROADCAST_PUSH_SECRET }}
           DRY_RUN: ${{ inputs.dry_run }}
           ACTION: post
           TITLE_ZH: ${{ inputs.title_zh }}

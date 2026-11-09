@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import * as x509 from '@peculiar/x509';
-import { APPLE_ROOT_CA_G3, verifyEntitlement, verifyNotification } from '../supabase/functions/ai/entitlement';
+import { APPLE_ROOT_CA_G3, verifyEntitlement, verifyNotification, verifySubscriptionTransaction } from '../supabase/functions/ai/entitlement';
 
 // A stand-in for Apple's chain: same shape (root → intermediate → leaf, P-256,
 // Apple's marker extensions), signed with keys made here.
@@ -53,6 +53,8 @@ const subscription = {
   environment: 'Sandbox',
   type: 'Auto-Renewable Subscription',
   originalTransactionId: '2000000123456789',
+  transactionId: '2000000987654321',
+  purchaseDate: now - 10 * day,
 };
 const rules = (chain: Chain) => ({
   bundleId: 'com.rio.word7000',
@@ -68,7 +70,22 @@ describe('Plus entitlement', () => {
   it('accepts an active subscription signed through the trusted root', async () => {
     await expect(verifyEntitlement(await sign(chain, subscription), rules(chain))).resolves.toEqual({
       productId: 'com.rio.word7000.plus.monthly', expiresAt: subscription.expiresDate, environment: 'Sandbox',
-      originalTransactionId: '2000000123456789',
+      originalTransactionId: '2000000123456789', transactionId: '2000000987654321', purchasedAt: now - 10 * day,
+    });
+  });
+
+  it('passes on an ended period for the server to judge (billing grace), but never a revoked one', async () => {
+    const ended = await sign(chain, { ...subscription, expiresDate: now - day });
+    expect(await verifyEntitlement(ended, rules(chain))).toBeNull();
+    await expect(verifySubscriptionTransaction(ended, rules(chain))).resolves.toMatchObject({
+      expiresAt: now - day, originalTransactionId: '2000000123456789', transactionId: '2000000987654321',
+    });
+    expect(await verifySubscriptionTransaction(await sign(chain, { ...subscription, revocationDate: now - day }), rules(chain))).toBeNull();
+    expect(await verifySubscriptionTransaction(await sign(chain, { ...subscription, transactionId: 'abc' }), rules(chain))).toBeNull();
+    // An old transaction without its own id stands for the original purchase.
+    const { transactionId: _, purchaseDate: __, ...bare } = subscription;
+    await expect(verifySubscriptionTransaction(await sign(chain, bare), rules(chain))).resolves.toMatchObject({
+      transactionId: '2000000123456789', purchasedAt: null,
     });
   });
 
@@ -130,8 +147,25 @@ describe('App Store server notifications', () => {
     for (const [type, revoked] of [['REFUND', true], ['REVOKE', true], ['REFUND_REVERSED', false], ['DID_RENEW', null]] as const) {
       await expect(verifyNotification(await notice(type, subscription), rules(chain))).resolves.toEqual({
         type, originalTransactionId: '2000000123456789', revoked,
+        transactionId: '2000000987654321', expiresAt: subscription.expiresDate, renewal: null,
       });
     }
+  });
+
+  it('reads the billing grace period from the renewal info of the same subscription only', async () => {
+    const withRenewal = async (info: Record<string, unknown>) => sign(chain, {
+      notificationType: 'DID_FAIL_TO_RENEW', subtype: 'GRACE_PERIOD', signedDate: now - 1000,
+      data: { bundleId: 'com.rio.word7000', signedTransactionInfo: await sign(chain, subscription), signedRenewalInfo: await sign(chain, info) },
+    });
+    const renewal = { originalTransactionId: '2000000123456789', signedDate: now - 500, isInBillingRetryPeriod: true };
+    await expect(verifyNotification(await withRenewal({ ...renewal, gracePeriodExpiresDate: now + 16 * day }), rules(chain))).resolves.toMatchObject({
+      type: 'DID_FAIL_TO_RENEW', revoked: null, renewal: { graceUntil: now + 16 * day, signedAt: now - 500 },
+    });
+    await expect(verifyNotification(await withRenewal(renewal), rules(chain))).resolves.toMatchObject({
+      renewal: { graceUntil: null, signedAt: now - 500 },
+    });
+    await expect(verifyNotification(await withRenewal({ ...renewal, originalTransactionId: '1', gracePeriodExpiresDate: now + day }), rules(chain)))
+      .resolves.toMatchObject({ renewal: null });
   });
 
   it('accepts a notice as large as a real one, with its renewal info alongside', async () => {
@@ -146,7 +180,7 @@ describe('App Store server notifications', () => {
 
   it('accepts Apple’s test notice, which names no transaction', async () => {
     await expect(verifyNotification(await notice('TEST', undefined), rules(chain))).resolves.toEqual({
-      type: 'TEST', originalTransactionId: null, revoked: null,
+      type: 'TEST', originalTransactionId: null, revoked: null, transactionId: null, expiresAt: null, renewal: null,
     });
   });
 

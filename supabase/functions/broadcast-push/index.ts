@@ -1,10 +1,14 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.108.2';
+import { readAllPages, sameSecret } from './helpers.ts';
 
 // Sends one announcement (see the announcements table) as a push
 // notification to every iPhone that allowed them, or to its audience. The
 // announcement must ask for a push and not have been pushed yet; it is
-// marked pushed before anything is sent, so a second call, by anyone, sends
-// nothing. Called by the "Broadcast a message" workflow.
+// marked pushed before anything is sent, so a second call sends nothing.
+// Called by the "Broadcast a message" workflow (scripts/remote-control.sh),
+// which sends the project's service key in the x-broadcast-secret header;
+// announcements are public, so without that check anyone could push one that
+// asked for a push but had not been pushed yet.
 
 type Device = { token: string; language: 'zh' | 'en'; app_version: string | null; app_build: number | null };
 
@@ -27,6 +31,15 @@ const requiredEnvironment = ['SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY', 'APNS_
 
 Deno.serve(async (request) => {
   if (request.method !== 'POST') return Response.json({ error: 'method_not_allowed' }, { status: 405 });
+  // The caller proves itself with the project's service key (the
+  // announcement workflow reads it with its Supabase access token), or with
+  // BROADCAST_PUSH_SECRET where one is set: nothing to set up by hand.
+  const given = request.headers.get('x-broadcast-secret');
+  const accepted = [Deno.env.get('SUPABASE_SERVICE_ROLE_KEY'), Deno.env.get('BROADCAST_PUSH_SECRET')]
+    .filter((value): value is string => !!value);
+  let allowed = false;
+  for (const expected of accepted) allowed = (await sameSecret(given, expected)) || allowed;
+  if (!allowed) return Response.json({ error: 'unauthorized' }, { status: 401 });
   const missing = requiredEnvironment.filter((name) => !Deno.env.get(name));
   if (missing.length > 0) return Response.json({ error: `Missing secrets: ${missing.join(', ')}` }, { status: 500 });
 
@@ -48,12 +61,16 @@ Deno.serve(async (request) => {
   }
   if (!message) return Response.json({ error: 'nothing_to_push' }, { status: 409 });
 
-  let query = supabase.from('push_devices').select('token, language, app_version, app_build');
-  if (message.audience === 'tester') query = query.eq('tester', true);
-  else if (message.audience !== 'all') query = query.eq('audience', message.audience);
-  const { data: devices, error: devicesError } = await query.limit(100_000);
+  const { rows: devices, error: devicesError } = await readAllPages<Device>((from, to) => {
+    let query = supabase.from('push_devices').select('token, language, app_version, app_build');
+    if (message.audience === 'tester') query = query.eq('tester', true);
+    else if (message.audience !== 'all') query = query.eq('audience', message.audience);
+    return query.order('token').range(from, to);
+  }, (device) => device.token);
   if (devicesError) {
     console.error(devicesError);
+    // Nothing was sent: leave it to be pushed again.
+    await supabase.from('announcements').update({ pushed_at: null }).eq('id', message.id);
     return Response.json({ error: 'unavailable' }, { status: 500 });
   }
 
@@ -61,7 +78,7 @@ Deno.serve(async (request) => {
   const gone: string[] = [];
   let sent = 0;
   let failed = 0;
-  const list = ((devices ?? []) as Device[]).filter((device) => isBelow(device, message.below_version, message.below_build));
+  const list = devices.filter((device) => isBelow(device, message.below_version, message.below_build));
   for (let start = 0; start < list.length; start += APNS_CONCURRENCY) {
     await Promise.all(list.slice(start, start + APNS_CONCURRENCY).map(async (device) => {
       const english = device.language === 'en';

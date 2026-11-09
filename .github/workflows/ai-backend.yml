@@ -10,6 +10,8 @@
 #   ANTHROPIC_API_KEY      the Anthropic API key for this app (console.anthropic.com)
 #   SUPABASE_ACCESS_TOKEN  a Supabase personal access token (supabase.com/dashboard/account/tokens)
 #   SUPABASE_DB_PASSWORD   the project's database password, to apply the migrations
+# Optional: BROADCAST_PUSH_SECRET, a long random value broadcast-push also accepts
+# (by default it takes the project's service key from the announcement workflow).
 # Optional, so deleting an account also revokes Sign in with Apple (App Review 5.1.1(v)):
 #   APPLE_TEAM_ID, APPLE_SIWA_KEY_ID, APPLE_SIWA_PRIVATE_KEY  a Sign in with Apple key (.p8)
 #                          from developer.apple.com > Keys, enabled for Sign in with Apple
@@ -165,7 +167,13 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           APPLE_SIWA_KEY_ID: ${{ secrets.APPLE_SIWA_KEY_ID }}
           APPLE_SIWA_PRIVATE_KEY: ${{ secrets.APPLE_SIWA_PRIVATE_KEY }}
+          BROADCAST_PUSH_SECRET: ${{ secrets.BROADCAST_PUSH_SECRET }}
         run: |
+          # Optional: broadcast-push takes the project's service key from the
+          # announcement workflow; a separate secret is only used when one is set.
+          if [ -n "$BROADCAST_PUSH_SECRET" ]; then
+            supabase secrets set --project-ref "$PROJECT_REF" --yes BROADCAST_PUSH_SECRET="$BROADCAST_PUSH_SECRET"
+          fi
           supabase secrets set --project-ref "$PROJECT_REF" --yes ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" \
             AI_FREE_LIMIT="$FREE_LIMIT" AI_PLUS_LIMIT="$PLUS_LIMIT" AI_GLOBAL_DAILY_LIMIT="$GLOBAL_LIMIT"
           if [ -n "$APPLE_TEAM_ID" ] && [ -n "$APPLE_SIWA_KEY_ID" ] && [ -n "$APPLE_SIWA_PRIVATE_KEY" ]; then
@@ -190,7 +198,7 @@ jobs:
           # function checks its caller itself (Apple's signature, the cron secret).
           supabase functions deploy app-store-notifications --project-ref "$PROJECT_REF" --yes --use-api --no-verify-jwt
           supabase functions deploy send-streak-live-activities --project-ref "$PROJECT_REF" --yes --use-api --no-verify-jwt
-          # Sends one announcement that asked for it, once; anyone calling it again sends nothing.
+          # Sends one announcement that asked for it, once, to a caller with the service key.
           supabase functions deploy broadcast-push --project-ref "$PROJECT_REF" --yes --use-api --no-verify-jwt
 
       - name: Check the functions refuse strangers
@@ -209,6 +217,8 @@ jobs:
           expect 400 "$(curl -s -o /dev/null -w '%{http_code}' -X POST "$url/app-store-notifications" -H 'Content-Type: application/json' \
             -d '{"signedPayload":"a.b.c"}')" "an App Store notice Apple did not sign"
           expect 401 "$(curl -s -o /dev/null -w '%{http_code}' -X POST "$url/send-streak-live-activities")" "the reminder cron without its secret"
+          expect 401 "$(curl -s -o /dev/null -w '%{http_code}' -X POST "$url/broadcast-push" -H 'Content-Type: application/json' \
+            -d '{"id":"00000000-0000-0000-0000-000000000000"}')" "the announcement push without the service key"
 
       - name: Check who the function answers
         env:

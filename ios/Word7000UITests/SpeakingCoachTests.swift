@@ -107,7 +107,10 @@ final class SpeakingCoachTests: XCTestCase {
         // whichever tab was used last; word speaking is in the Practice tab.
         tap(app.buttons["today-speaking"], in: app)
         wait(app.staticTexts["speaking-stage"], matching: "label CONTAINS 'Restaurant'")
-        app.buttons["speaking-track-1"].tap()
+        // The stage opens behind its curtain; a tap before it lifts lands on it.
+        let curtain = app.descendants(matching: .any)["speaking-stage-curtain"].firstMatch
+        if curtain.exists { XCTAssertTrue(curtain.waitForNonExistence(timeout: 10)) }
+        tap(app.buttons["speaking-track-1"], in: app)
         wait(app.staticTexts["speaking-stage"], matching: "label == 'Word speaking'")
     }
 

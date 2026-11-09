@@ -322,10 +322,18 @@ struct SpeakingSessionView: View {
             options.append(ChoiceOption(value: set.id, title: set.name, icon: "folder"))
         }
         let selection: String = model.usesOtherBank ? model.settings.activeBankId : WordBanks.coreBankId
-        return ChoiceRow(title: L.t("字庫", "Word bank"), icon: "books.vertical", tint: Palette.accent,
-                         options: options, selection: selection, equalWidths: false,
-                         identifier: "speaking-bank") { id in
-            model.selectBank(id)
+        return Group {
+            // One bank only: nothing to choose, so its name, not a lone chip.
+            if options.count == 1 {
+                SettingsLabel(L.t("字庫", "Word bank"), icon: "books.vertical", tint: Palette.accent, value: model.bankName)
+                    .accessibilityIdentifier("speaking-bank")
+            } else {
+                ChoiceRow(title: L.t("字庫", "Word bank"), icon: "books.vertical", tint: Palette.accent,
+                          options: options, selection: selection, equalWidths: false,
+                          identifier: "speaking-bank") { id in
+                    model.selectBank(id)
+                }
+            }
         }
     }
 

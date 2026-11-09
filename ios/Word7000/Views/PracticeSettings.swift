@@ -16,7 +16,9 @@ struct FilterControls: View {
                   selection: selection.status, equalWidths: false, identifier: "filter-status") { selection.status = $0 }
         // Several chapters at once (say 3 to 5): each chip turns on or off.
         VStack(alignment: .leading, spacing: 10) {
-            SettingsLabel(L.filterLevel, icon: "books.vertical.fill", tint: Palette.chinese, value: L.levelSummary(selection.levels),
+            // The chips say it when every chapter is in; the row names a choice.
+            SettingsLabel(L.filterLevel, icon: "books.vertical.fill", tint: Palette.chinese,
+                          value: selection.levels.isEmpty ? nil : L.levelSummary(selection.levels),
                           trigger: AnyHashable(selection.level))
             FlowLayout(spacing: 8, lineSpacing: 8) {
                 chip(L.allLevels, on: selection.levels.isEmpty, identifier: "filter-level-all") { selection.level = "all" }
@@ -31,13 +33,15 @@ struct FilterControls: View {
         .padding(.vertical, 4)
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("filter-level")
-        // Twenty-six letters fold away until wanted.
+        // Twenty-six letters fold away until wanted. Learners of Chinese have
+        // no first letter to go by (the bank's words are Chinese).
+        if model.studyMode == .english {
         VStack(alignment: .leading, spacing: 10) {
             Button {
                 withAnimation(reduceMotion ? nil : Motion.reveal) { lettersOpen.toggle() }
             } label: {
                 HStack {
-                    SettingsLabel(L.t("開頭字母", "First letter"), icon: "textformat.abc", tint: Palette.known,
+                    SettingsLabel(L.t("開頭字母", "First letter"), icon: "character.textbox", tint: Palette.known,
                                   value: selection.initial == "all" ? L.t("全部", "All") : selection.initial)
                     Image(systemName: "chevron.down")
                         .font(.caption.weight(.bold))
@@ -61,6 +65,7 @@ struct FilterControls: View {
             }
         }
         .padding(.vertical, 4)
+        }
         if includesSort {
             ChoiceRow(title: L.filterSort, icon: "arrow.up.arrow.down", tint: Palette.review,
                       options: [ChoiceOption(value: LibrarySort.default, title: L.sortDefault),

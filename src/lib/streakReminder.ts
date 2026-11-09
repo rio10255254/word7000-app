@@ -127,13 +127,13 @@ export function buildStreakLiveActivityProps(
     activityKind: 'streak',
     countdownLabel: '剩餘時間',
     expiresAt: plan.expiresAt.getTime(),
-    keepStreakLabel: '完成 1 個單字即可保住連勝',
+    keepStreakLabel: '學 1 個字就能保住連續天數',
     progressCurrent: 0,
     progressTarget: 1,
     startedAt: plan.startsAt.getTime(),
     streak: plan.streak,
-    streakLabel: `連勝 ${plan.streak} 天`,
-    title: '你的連勝快中斷了',
+    streakLabel: `連續 ${plan.streak} 天`,
+    title: '你的連續天數快斷了',
   };
 }
 

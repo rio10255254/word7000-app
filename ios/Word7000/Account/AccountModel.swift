@@ -591,8 +591,14 @@ final class AccountModel {
             do {
                 let refreshed = try await client.refresh(refreshToken: current.refreshToken)
                 if session?.user.id == current.user.id { store(refreshed) }
-            } catch let refused as SupabaseError where (400..<500).contains(refused.status) {
+            } catch let refused as SupabaseError where refused.isUserGone {
                 await accountRemovedElsewhere(current)
+            } catch let refused as SupabaseError where (400..<500).contains(refused.status) && ![408, 429].contains(refused.status) {
+                // A refused refresh is not proof the account is gone: the token
+                // may have been used once already, or signed out elsewhere.
+                // Sign out here, but keep what has not reached the cloud yet;
+                // signing in again sends it.
+                await sessionExpired(current)
             } catch {}
         } catch {}
     }
@@ -604,6 +610,22 @@ final class AccountModel {
         forgetLocalAccount(gone)
         await bootstrap()
         message = A.deletedElsewhere
+    }
+
+    /// The sign-in can no longer be refreshed: carry on as a guest and ask
+    /// for a new sign-in. Unlike a deleted account, the changes not yet sent
+    /// stay in the outbox under this account, so nothing studied is lost.
+    private func sessionExpired(_ expired: AuthSession) async {
+        guard session?.user.id == expired.user.id else { return }
+        flushTask?.cancel()
+        // Everything on this iPhone goes in the outbox, as a sign-out does.
+        _ = Outbox(progress: app.syncedProgress, customSets: app.customSets).save(userId: expired.user.id)
+        store(nil)
+        dirty = SyncDirty()
+        app.replaceData(progress: ProgressState(dailyTarget: app.progress.dailyTarget), customSets: .empty)
+        app.setLocalOwner(nil, anonymous: true)
+        await bootstrap()
+        message = A.sessionExpired
     }
 
     private func forgetLocalAccount(_ gone: AuthSession) {
@@ -675,6 +697,7 @@ enum A {
     static var signedOutReminderUnconfirmed: String { L.t("已登出，但尚未確認停用這支手機的舊帳號提醒。", "Signed out, but reminders for the previous account on this iPhone could not be confirmed off.") }
     static var deleting: String { L.t("正在刪除帳號與資料…", "Deleting account and data…") }
     static var deleted: String { L.t("帳號已刪除", "Account deleted") }
+    static var sessionExpired: String { L.t("登入已經失效，請重新登入。這支 iPhone 上的進度都還在，登入後會補上。", "Your sign-in has expired. Sign in again; this iPhone's progress is kept and comes back when you do.") }
     static var deletedElsewhere: String { L.t("這個帳號已經在另一支手機刪除，這支 iPhone 改回訪客。", "This account was deleted on another iPhone, so this one is back to a guest.") }
     static var deleteFailed: String { L.t("刪除失敗，請稍後再試", "Could not delete. Please try again later.") }
     static var deleteCancelled: String { L.t("沒有刪除：需要用 Apple 確認才能刪除帳號", "Not deleted: confirm with Apple to delete the account") }

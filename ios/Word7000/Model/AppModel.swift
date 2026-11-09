@@ -626,7 +626,10 @@ final class AppModel {
     }
 
     func setDailyTarget(_ target: Int) {
+        guard target != progress.dailyTarget else { return }
         progress.dailyTarget = target
+        // Stamped, so this change wins over another device's older goal.
+        progress.dailyTargetUpdatedAt = DayMath.timestamp()
         scheduleSave()
     }
 

@@ -20,8 +20,9 @@ describe('native speaking recency integration', () => {
   it('routes all account transitions through the settings migration and immediate save', () => {
     expect(account).not.toMatch(/app\.settings\.localOwner(?:Id|IsAnonymous)\s*=(?!=)/);
     expect(account).toContain('app.setLocalOwner(activeSession.user.id, anonymous: activeSession.user.anonymous)');
-    // Signing out, deleting the account, and finding it deleted on another iPhone.
-    expect(account.match(/app\.setLocalOwner\(nil, anonymous: true\)/g)).toHaveLength(3);
+    // Signing out, deleting the account, finding it deleted on another iPhone,
+    // and a sign-in that can no longer be refreshed.
+    expect(account.match(/app\.setLocalOwner\(nil, anonymous: true\)/g)).toHaveLength(4);
     expect(app).toMatch(/func setLocalOwner[\s\S]*?settings\.setLocalOwner\(ownerId, anonymous: anonymous\)\s+saveNow\(\)/);
     const setter = persistence.slice(persistence.indexOf('mutating func setLocalOwner'), persistence.indexOf('mutating func forgetSpeakingHistory'));
     expect(setter.indexOf('migrateSpeakingHistory()')).toBeLessThan(setter.indexOf('localOwnerId = ownerId'));

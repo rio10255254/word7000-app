@@ -15,6 +15,8 @@ scipy and ffmpeg.
 """
 import importlib.util
 import subprocess
+import tempfile
+import wave
 import json
 import math
 import sys
@@ -76,6 +78,33 @@ def load_voice(path):
     gain = np.minimum(1.0, (env / (env.max() * 0.35)) ** -0.45)
     audio = audio * gain
     return audio / np.abs(audio).max() * 0.9
+
+
+def loudness(stereo):
+    """Integrated loudness (LUFS) of a stereo mix, by ffmpeg's EBU R128 meter."""
+    with tempfile.NamedTemporaryFile(suffix=".wav") as tmp:
+        with wave.open(tmp.name, "wb") as w:
+            w.setnchannels(2)
+            w.setsampwidth(2)
+            w.setframerate(SR)
+            w.writeframes((np.clip(stereo, -1, 1) * 32767).astype("<i2").tobytes())
+        log = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-i", tmp.name, "-af", "ebur128", "-f", "null", "-"], capture_output=True, text=True).stderr
+    return float(log.rsplit("I:", 1)[1].split("LUFS")[0])
+
+
+def master(out, target=-14.0, ceiling=0.89):
+    """To the loudness Instagram and TikTok play at (−14 LUFS), peaks held under −1 dBFS by a gentle limiter."""
+    out = out / np.abs(out).max() * ceiling
+    out = out * 10 ** ((target - loudness(out)) / 20)
+    # Look-ahead limiter: the gain needed for the loudest sample in the next
+    # 5 ms, released over about 80 ms, so nothing clips and nothing pumps.
+    from scipy.ndimage import maximum_filter1d, minimum_filter1d
+
+    peak = maximum_filter1d(np.abs(out).max(axis=1), size=int(0.005 * SR), origin=-int(0.0025 * SR))
+    gain = np.minimum(1.0, ceiling / np.maximum(peak, 1e-9))
+    gain = minimum_filter1d(gain, size=int(0.01 * SR))
+    gain = np.minimum(gain, m.lowpass(gain, 12))
+    return out * gain[:, None]
 
 
 def layout(episode):
@@ -159,7 +188,7 @@ def mix(episode):
     slots, body = layout(episode)
     total = body + episode.get("endBeats", END_BEATS) * BEAT
     n = int(total * SR)
-    voice, sfx, band, tune = (np.zeros(n + SR) for _ in range(4))
+    voice, sfx, band, tune, clips = (np.zeros(n + SR) for _ in range(5))
     music = groove(body)[: n + SR]
     music = np.pad(music, (0, n + SR - len(music)))
     # The groove gives way to the end card: a quick fade over the last beat.
@@ -177,8 +206,12 @@ def mix(episode):
         if not SILENT:
             m.place(voice, slot["audio"], slot["voiceStart"])
         # Recordings from the app itself (the speaking stages' voices).
+        # They get the same clean-up and level as the cat's voice, and the
+        # music steps further back for them, so they are never buried.
         for beat, clip, gain in line.get("clips", []):
-            m.place(voice, decode(ROOT / "public" / clip)[0] * gain, slot["start"] + beat * BEAT)
+            audio = load_voice(ROOT / "public" / clip) * gain
+            m.place(voice, audio, slot["start"] + beat * BEAT)
+            m.place(clips, audio, slot["start"] + beat * BEAT)
         for beat, name in line.get("cues", []):
             make, gain = sounds[name]
             m.place(sfx, make(), slot["start"] + beat * BEAT, gain)
@@ -201,6 +234,9 @@ def mix(episode):
     if np.abs(voice).max() > 0:
         env = m.lowpass(np.abs(voice), 8)
         music *= 1 - 0.68 * np.clip(env / (env.max() * 0.25), 0, 1)
+        if np.abs(clips).max() > 0:  # another 8 dB or so under the app's recordings
+            env = m.lowpass(np.abs(clips), 8)
+            music *= 1 - 0.6 * np.clip(env / (env.max() * 0.25), 0, 1)
     else:
         music *= 1.5  # no voice: the music carries the reel
     tune = m.echo(m.bright_not_harsh(tune), BEAT * 0.75, 0.25, 2)
@@ -211,7 +247,7 @@ def mix(episode):
     out = stereo(voice * 0.95) + stereo(music * 0.42) + stereo(sfx * 0.6) + stereo(band * 0.5) + stereo(m.widen(tune * 0.5))
     out = out[:n]
     out[-int(0.25 * SR) :] *= np.linspace(1, 0, int(0.25 * SR))[:, None]
-    out *= 0.89 / np.abs(out).max()
+    out = master(out)
     timing = {
         "total": round(total, 3),
         "end": round(body, 3),

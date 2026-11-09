@@ -204,6 +204,13 @@ npm run render:reels   # 輸出 out/reel-ep01.mp4 …
 - **App 裡的真人錄音**：餐廳情境的兩句來自 App 的 `Resources/ScenarioAudio`（ElevenLabs 錄製），放在 `public/next/`。
 - **字幕**：有自己的一條帶子（畫面下方約 1452–1580px），手機在它上面就淡掉，所以字幕永遠在橄欖綠的底上，不會疊在 App 的文字上混在一起。字幕框是深色底、奶油色字，重點詞用蜜桃色。
 - **英文版**（`Reel-teaser-en`）：給美國、加拿大想學台灣華語的人。畫面換成 App 的英文介面截圖，餐廳情境改放 App 裡的中文真人錄音（「歡迎光臨！請問幾位？」「兩位，謝謝。」），SillyCat 用 ElevenLabs 的「Callum」（沙啞、搗蛋鬼味道的美國男聲）。字幕：Hey. You.／11/16. I'm moving into your phone.／One short path a day. Then you're done.／Real voices. Real conversations.／That stamp? Addictive.／Forget a word? I'll laugh.／Follow us. We'll tell you when it's out.
+- **質感**（`src/reels/finish.tsx`）：
+  - 手機是一支真的 iPhone：鈦金屬邊框（一邊有反光）、黑色邊框、側邊按鍵、動態島、玻璃上會隨鏡頭移動的反光，加上兩層陰影（貼近桌面的一層、柔和擴散的一層）。整支手機像手持拍攝一樣輕輕飄動。
+  - 背景：橄欖綠的漸層，加上一道緩慢移動的暖光、兩張用視差慢慢漂移的拼貼紙（方格紙和橫線紙）、每格都會變的膠片顆粒，以及暗角。
+  - 畫面換頁時有動態模糊；蓋章那一下有金色光圈和火花；傻貓落進手機時會被壓扁再彈回；探頭的傻貓有柔和的影子。
+  - 日期印章和封面的「11.16」用 SVG 濾鏡做出油墨的粗糙邊緣和斑駁；片尾的圖示會閃過一道光。
+  - 字幕是霧面深色玻璃，邊緣有一道細光，字從模糊對焦進來（`Caption` 的 `glass`）。
+- **聲音**：App 的真人錄音跟傻貓的配音一樣經過清理和音量對齊，錄音出現時音樂再多退約 8 dB；整支片調到 −14 LUFS（IG、TikTok 播放的響度），峰值壓在 −1 dBFS 以下。
 - **兩個版本**：`npm run reels` 之後再跑 `python3 scripts/make-reels.py teaser --no-voice` 會多一個只有字幕（沒有傻貓配音）的混音 `teaser-novoice.mp3`，影片相同、只換聲音。
 
 ## 授權

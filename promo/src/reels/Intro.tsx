@@ -131,6 +131,7 @@ export const Caption = ({
   label = 'SillyCat',
   top = 1478,
   size = 56,
+  glass = false,
 }: {
   text: string;
   start: number;
@@ -141,6 +142,8 @@ export const Caption = ({
   /** Where the caption's box starts, and its type size. */
   top?: number;
   size?: number;
+  /** The finer finish: frosted dark glass, a light edge, characters focusing in. */
+  glass?: boolean;
 }) => {
   if (t < start || t > start + length) return null;
   const age = first ? 10 : t - start;
@@ -155,19 +158,23 @@ export const Caption = ({
       <div
         style={{
           position: 'relative',
-          background: 'rgba(43,38,32,0.94)',
+          background: glass ? 'linear-gradient(180deg, rgba(46,42,34,0.86), rgba(30,28,22,0.9))' : 'rgba(43,38,32,0.94)',
+          backdropFilter: glass ? 'blur(14px) saturate(140%)' : undefined,
+          border: glass ? '1.5px solid rgba(255,250,235,0.14)' : undefined,
           color: '#FFF8EE',
           fontWeight: 900,
           fontSize: size,
           lineHeight: 1.32,
           letterSpacing: '0.02em',
           padding: '22px 36px 20px',
-          borderRadius: 24,
-          boxShadow: '0 14px 34px rgba(43,38,32,0.28)',
+          borderRadius: glass ? 28 : 24,
+          boxShadow: glass
+            ? 'inset 0 1.5px 0 rgba(255,250,235,0.12), 0 20px 46px rgba(20,24,10,0.34), 0 4px 10px rgba(20,24,10,0.22)'
+            : '0 14px 34px rgba(43,38,32,0.28)',
           textAlign: 'center',
           textWrap: 'balance',
           opacity: enter * leave,
-          transform: `translateY(${(1 - enter) * 18}px) scale(${0.97 + 0.03 * enter})`,
+          transform: `translateY(${(1 - enter) * 18 + (1 - leave) * 10}px) scale(${0.97 + 0.03 * enter})`,
         }}
       >
         <div
@@ -180,9 +187,10 @@ export const Caption = ({
             gap: 6,
             padding: '4px 16px 4px 6px',
             borderRadius: 999,
-            background: COLLAGE.clay,
+            background: glass ? 'linear-gradient(180deg, #D8784F, #B9583A)' : COLLAGE.clay,
+            boxShadow: glass ? '0 6px 14px rgba(120,50,20,0.35), inset 0 1px 0 rgba(255,255,255,0.25)' : undefined,
             color: '#FFF8EE',
-            fontSize: 24,
+            fontSize: glass ? 26 : 24,
             fontWeight: 800,
             letterSpacing: '0.04em',
             lineHeight: 1,
@@ -203,6 +211,7 @@ export const Caption = ({
                     display: 'inline-block',
                     opacity: p,
                     transform: `translateY(${(1 - p) * 10}px)`,
+                    filter: glass && p < 1 ? `blur(${(1 - p) * 6}px)` : undefined,
                     color: strong ? '#F7B98F' : undefined,
                     whiteSpace: 'pre',
                   }}

@@ -11,10 +11,8 @@ web version have been removed.
 - `src/data/words.ts`, `content/`: the reviewed word list and speaking
   content the native app is built from (`scripts/export-native-words.mjs`,
   `scripts/build-native-speaking-library.mjs`, `scripts/build-coach-evaluation.mjs`).
-- `src/lib/`: the TypeScript learning rules (progress, study sessions, scan
-  parsing, Chinese display, ...) that the Swift port follows. Their tests
-  produce the golden results in `ios/Packages/Word7000Core` (see
-  `src/nativeParity.test.ts` and `src/nativeParityChinese.test.ts`).
+- The learning rules live only in Swift (`ios/Packages/Word7000Core`), with
+  their tests there. The web app and its TypeScript copy of the rules are gone.
 - `supabase/`: the account, AI and Live Activity backend.
 - `public/`: the few static files the iOS app links to or fetches, served by
   the `word7000-app` Cloudflare Worker (`wrangler.jsonc`):
@@ -38,7 +36,7 @@ npm ci
 npm run verify
 ```
 
-`verify` runs the TypeScript tests (including the native parity and data
+`verify` runs the TypeScript tests (the backend functions and the data
 checks), the word-content audits and the type check. The native app is built
 and tested by `.github/workflows/ios-native.yml`.
 

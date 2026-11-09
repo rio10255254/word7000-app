@@ -111,7 +111,7 @@ public struct ProgressStats: Equatable, Sendable {
     public var studiedToday: Int
 }
 
-/// The spaced-repetition rules, ported one-to-one from `src/lib/progress.ts`.
+/// The spaced-repetition rules (first ported from the web app's progress.ts).
 public enum LearningEngine {
     /// Days to wait before a word comes back, indexed by stage. A word marked
     /// "still learning" drops to stage 0 and is due again the same day; every

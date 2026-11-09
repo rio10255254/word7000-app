@@ -19,7 +19,7 @@ final class SpeakingPracticeTests: XCTestCase {
     }
 
     func testEveryExpandedWordHasPairedCardsInBothLanguages() throws {
-        let byWord = Dictionary(uniqueKeysWithValues: ParityTests.words.map { ($0.word, $0) })
+        let byWord = Dictionary(uniqueKeysWithValues: BundledWords.words.map { ($0.word, $0) })
         for entry in SpeakingPractice.entries {
             let word = try XCTUnwrap(byWord[entry.word], entry.word)
             let english = try XCTUnwrap(SpeakingPractice.card(for: word, mode: .english), entry.word)
@@ -40,7 +40,7 @@ final class SpeakingPracticeTests: XCTestCase {
     }
 
     func testExampleExercisesCanBeReadInTheLearnersOwnLanguage() throws {
-        let word = try XCTUnwrap(ParityTests.words.first { !$0.example.isEmpty })
+        let word = try XCTUnwrap(BundledWords.words.first { !$0.example.isEmpty })
         let english = SpeakingPractice.exampleExercise(for: word, mode: .english)
         let chinese = SpeakingPractice.exampleExercise(for: word, mode: .chinese)
         XCTAssertEqual(english.questionGloss, chinese.question)
@@ -48,10 +48,10 @@ final class SpeakingPracticeTests: XCTestCase {
     }
 
     func testExpandedQuestionsSurviveLevelFiltersAndRandomSessions() {
-        let candidates = SpeakingPractice.candidates(from: ParityTests.words, activity: .questions)
+        let candidates = SpeakingPractice.candidates(from: BundledWords.words, activity: .questions)
         XCTAssertEqual(candidates.count, 600)
         XCTAssertEqual(Set(candidates.map(\.group)).count, 14)
-        for group in Set(ParityTests.words.map(\.group)) {
+        for group in Set(BundledWords.words.map(\.group)) {
             let scoped = candidates.filter { $0.group == group }
             XCTAssertFalse(scoped.isEmpty, group)
             let session = QuizBuilder.session(words: scoped, count: 10, seed: "speaking-expanded-" + group)
@@ -66,14 +66,14 @@ final class SpeakingPracticeTests: XCTestCase {
     }
 
     func testOnePracticeMixesQuestionsAndExamples() {
-        let mixed = SpeakingPractice.mixedSession(from: ParityTests.words, recent: [], count: 10, seed: "mixed")
+        let mixed = SpeakingPractice.mixedSession(from: BundledWords.words, recent: [], count: 10, seed: "mixed")
         XCTAssertEqual(mixed.count, 10)
         XCTAssertEqual(Set(mixed.map(\.word.id)).count, 10)
         XCTAssertEqual(mixed.first?.activity, .questions)
         XCTAssertEqual(mixed.filter { $0.activity == .questions }.count, 6)
         XCTAssertTrue(mixed.filter { $0.activity == .questions }.allSatisfy { SpeakingPractice.entry(for: $0.word) != nil })
         // A bank with no reviewed questions still gets example prompts.
-        let noQuestions = ParityTests.words.filter { SpeakingPractice.entry(for: $0) == nil }.prefix(3)
+        let noQuestions = BundledWords.words.filter { SpeakingPractice.entry(for: $0) == nil }.prefix(3)
         let examplesOnly = SpeakingPractice.mixedSession(from: Array(noQuestions), recent: [], count: 10, seed: "mixed")
         XCTAssertEqual(examplesOnly.count, 3)
         XCTAssertTrue(examplesOnly.allSatisfy { $0.activity == .examples })
@@ -81,7 +81,7 @@ final class SpeakingPracticeTests: XCTestCase {
     }
 
     func testAboutQuestionAndBothLanguagesUseReviewedAnswers() throws {
-        let word = try XCTUnwrap(ParityTests.words.first { $0.word == "about" })
+        let word = try XCTUnwrap(BundledWords.words.first { $0.word == "about" })
         let english = try XCTUnwrap(SpeakingPractice.card(for: word, mode: .english))
         let chinese = try XCTUnwrap(SpeakingPractice.card(for: word, mode: .chinese))
         XCTAssertEqual(english.question, "What is a topic you can talk about for a long time?")
@@ -92,19 +92,19 @@ final class SpeakingPracticeTests: XCTestCase {
     }
 
     func testCustomMeaningDoesNotBorrowAnUnrelatedQuestion() throws {
-        var word = try XCTUnwrap(ParityTests.words.first { $0.word == "about" })
+        var word = try XCTUnwrap(BundledWords.words.first { $0.word == "about" })
         word.id = "scan-about-local"
         word.meaningZh = "大約"
         XCTAssertNil(SpeakingPractice.card(for: word, mode: .chinese))
     }
 
     func testQuestionsNeverSilentlyTurnIntoAnExampleExercise() throws {
-        var custom = try XCTUnwrap(ParityTests.words.first { $0.word == "about" })
+        var custom = try XCTUnwrap(BundledWords.words.first { $0.word == "about" })
         custom.id = "scan-about-local"
         custom.meaningZh = "大約"
         XCTAssertTrue(SpeakingPractice.candidates(from: [custom], activity: .questions).isEmpty)
         XCTAssertEqual(SpeakingPractice.candidates(from: [custom], activity: .examples), [custom])
-        XCTAssertFalse(SpeakingPractice.candidates(from: ParityTests.words, activity: .questions).isEmpty)
+        XCTAssertFalse(SpeakingPractice.candidates(from: BundledWords.words, activity: .questions).isEmpty)
     }
 
     func testBothPracticeChoicesSurviveSaving() throws {
@@ -131,7 +131,7 @@ final class SpeakingPracticeTests: XCTestCase {
     }
 
     func testSessionsPreferQuestionsNotPractisedRecently() {
-        let candidates = SpeakingPractice.candidates(from: ParityTests.words, activity: .questions)
+        let candidates = SpeakingPractice.candidates(from: BundledWords.words, activity: .questions)
         var recent: [String] = []
         var asked = Set<String>()
         for round in 0..<60 {
@@ -150,7 +150,7 @@ final class SpeakingPracticeTests: XCTestCase {
     }
 
     func testSmallScopesRefillWithTheLongestAgoPractisedWords() {
-        let words = Array(ParityTests.words.prefix(12))
+        let words = Array(BundledWords.words.prefix(12))
         let recent = words.prefix(10).map(\.id)
         let session = SpeakingPractice.session(from: words, recent: recent, count: 5, seed: "small")
         XCTAssertEqual(Set(session.map(\.id)), Set([words[10].id, words[11].id, words[0].id, words[1].id, words[2].id]))

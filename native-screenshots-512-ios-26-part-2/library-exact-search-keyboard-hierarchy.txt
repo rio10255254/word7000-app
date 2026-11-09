@@ -1,0 +1,222 @@
+Attributes: Application, 0x1019f2ec0, pid: 73067, label: 'WordCat'
+Element subtree:
+ →Application, 0x1019f2ec0, pid: 73067, label: 'WordCat'
+    Window (Main), 0x1019ef850, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1019f1ec0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1019f1680, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x1019a1180, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x1019f1aa0, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x1019f0660, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x1148055c0, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x1148056e0, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x114805800, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x114805920, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x114805a40, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x114805b60, {{0.0, 0.0}, {402.0, 874.0}}
+                            NavigationBar, 0x114805c80, {{0.0, 62.0}, {402.0, 60.0}}, identifier: '單字'
+                              SearchField, 0x114805da0, {{16.0, 70.0}, {315.0, 44.0}}, label: '搜尋英文、中文或例句', placeholderValue: '搜尋英文、中文或例句', value: capture, Keyboard Focused
+                                Image, 0x114805ec0, {{28.0, 82.3}, {20.3, 18.7}}, identifier: 'magnifyingglass', label: 'Search'
+                                Button, 0x114805fe0, {{296.7, 82.7}, {19.7, 19.0}}, label: 'Clear text'
+                              Button, 0x114806100, {{342.0, 70.0}, {44.0, 44.0}}, label: 'Close'
+                            Other, 0x114806220, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x114806340, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x114806460, {{0.0, 0.0}, {402.0, 874.0}}
+                                  Other, 0x114806580, {{0.0, 0.0}, {402.0, 874.0}}
+                                    Image, 0x1148066a0, {{0.0, 0.0}, {402.0, 874.0}}, label: 'PaperGrain'
+                                    CollectionView, 0x1148067c0, {{0.0, 0.0}, {402.0, 874.0}}
+                                      Other, 0x1148068e0, {{-16.0, -1626.0}, {434.0, 3908.0}}
+                                      Other, 0x114806a00, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x114806b20, {{0.0, 0.0}, {402.0, 178.8}}
+                                        Other, 0x114806c40, {{0.0, 603.8}, {402.0, 122.4}}
+                                      Other, 0x114806d60, {{0.0, 0.0}, {402.0, 874.0}}
+                                      Cell, 0x114806e80, {{16.0, 122.0}, {370.0, 40.3}}
+                                        Other, 0x114806fa0, {{16.0, 122.0}, {370.0, 40.3}}
+                                        Other, 0x1148070c0, {{16.0, 122.0}, {370.0, 40.3}}
+                                          Other, 0x1148071e0, {{16.0, 122.0}, {370.0, 40.3}}
+                                            Other, 0x114807300, {{16.0, 122.0}, {370.0, 40.3}}
+                                              StaticText, 0x114807420, {{32.0, 132.0}, {34.0, 20.3}}, label: '全部'
+                                              StaticText, 0x114804080, {{338.0, 132.0}, {32.0, 20.3}}, label: '5 個'
+                                      Cell, 0x1148041a0, {{16.0, 162.3}, {370.0, 70.3}}
+                                        Other, 0x1148042c0, {{16.0, 162.3}, {370.0, 70.3}}
+                                          Other, 0x1148043e0, {{16.0, 162.3}, {370.0, 70.3}}
+                                            Other, 0x101adae90, {{16.0, 162.3}, {370.0, 70.3}}
+                                              Image, 0x101adaa70, {{16.0, 162.3}, {370.0, 70.3}}, label: 'PaperGrain'
+                                        Other, 0x101a8ee60, {{16.0, 162.3}, {370.0, 70.3}}
+                                          Other, 0x101a921f0, {{16.0, 162.3}, {370.0, 70.3}}
+                                            Other, 0x101adb2b0, {{16.0, 162.3}, {370.0, 70.3}}
+                                              Button, 0x101adb3d0, {{16.0, 162.3}, {370.0, 70.3}}, label: '新字、capture、拍下'
+                                                Image, 0x101adb4f0, {{34.0, 191.3}, {12.3, 12.3}}, identifier: 'circle', label: '新字'
+                                                StaticText, 0x101adb610, {{60.0, 177.3}, {63.3, 20.3}}, label: 'capture'
+                                                StaticText, 0x101adb730, {{60.0, 199.7}, {30.0, 18.0}}, label: '拍下'
+                                                Image, 0x101adb850, {{360.7, 191.7}, {7.0, 12.0}}, identifier: 'chevron.forward'
+                                      Cell, 0x101adb970, {{16.0, 232.7}, {370.0, 70.3}}
+                                        Other, 0x101adba90, {{16.0, 232.7}, {370.0, 70.3}}
+                                          Other, 0x101adbbb0, {{16.0, 232.7}, {370.0, 70.3}}
+                                            Other, 0x101adbcd0, {{16.0, 232.7}, {370.0, 70.3}}
+                                              Image, 0x101ac0920, {{16.0, 232.7}, {370.0, 70.3}}, label: 'PaperGrain'
+                                        Other, 0x101ac0a40, {{16.0, 232.7}, {370.0, 70.3}}
+                                          Other, 0x101ac0b60, {{16.0, 232.7}, {370.0, 70.3}}
+                                            Other, 0x101ac0c80, {{16.0, 232.7}, {370.0, 70.3}}
+                                              Button, 0x101ac0da0, {{16.0, 232.7}, {370.0, 70.3}}, label: '新字、accidental、意外的'
+                                                Image, 0x101ac0ec0, {{34.0, 261.7}, {12.3, 12.3}}, identifier: 'circle', label: '新字'
+                                                StaticText, 0x101adbea0, {{60.0, 247.7}, {85.7, 20.3}}, label: 'accidental'
+                                                StaticText, 0x101adbfc0, {{60.0, 270.0}, {44.7, 18.0}}, label: '意外的'
+                                                Image, 0x101adc0e0, {{360.7, 262.0}, {7.0, 12.0}}, identifier: 'chevron.forward'
+                                      Cell, 0x101adc200, {{16.0, 303.0}, {370.0, 70.3}}
+                                        Other, 0x101adc320, {{16.0, 303.0}, {370.0, 70.3}}
+                                          Other, 0x101adc440, {{16.0, 303.0}, {370.0, 70.3}}
+                                            Other, 0x101adc560, {{16.0, 303.0}, {370.0, 70.3}}
+                                              Image, 0x101adc680, {{16.0, 303.0}, {370.0, 70.3}}, label: 'PaperGrain'
+                                        Other, 0x101adc7a0, {{16.0, 303.0}, {370.0, 70.3}}
+                                          Other, 0x101adc8c0, {{16.0, 303.0}, {370.0, 70.3}}
+                                            Other, 0x101abf110, {{16.0, 303.0}, {370.0, 70.3}}
+                                              Button, 0x101abf230, {{16.0, 303.0}, {370.0, 70.3}}, label: '新字、glory、榮景'
+                                                Image, 0x101abf350, {{34.0, 332.0}, {12.3, 12.3}}, identifier: 'circle', label: '新字'
+                                                StaticText, 0x101abf470, {{60.0, 318.0}, {43.0, 20.3}}, label: 'glory'
+                                                StaticText, 0x101abf590, {{60.0, 340.3}, {30.0, 18.0}}, label: '榮景'
+                                                Image, 0x101abf6b0, {{360.7, 332.3}, {7.0, 12.0}}, identifier: 'chevron.forward'
+                                      Cell, 0x101abf7d0, {{16.0, 373.3}, {370.0, 70.3}}
+                                        Other, 0x101abf8f0, {{16.0, 373.3}, {370.0, 70.3}}
+                                          Other, 0x101abfa10, {{16.0, 373.3}, {370.0, 70.3}}
+                                            Other, 0x101abfb30, {{16.0, 373.3}, {370.0, 70.3}}
+                                              Image, 0x101abfc50, {{16.0, 373.3}, {370.0, 70.3}}, label: 'PaperGrain'
+                                        Other, 0x101abfd70, {{16.0, 373.3}, {370.0, 70.3}}
+                                          Other, 0x101abfe90, {{16.0, 373.3}, {370.0, 70.3}}
+                                            Other, 0x101abffb0, {{16.0, 373.3}, {370.0, 70.3}}
+                                              Button, 0x101ac00d0, {{16.0, 373.3}, {370.0, 70.3}}, label: '新字、recorder、錄音機'
+                                                Image, 0x101ac01f0, {{34.0, 402.3}, {12.3, 12.3}}, identifier: 'circle', label: '新字'
+                                                StaticText, 0x101ac0310, {{60.0, 388.3}, {71.3, 20.3}}, label: 'recorder'
+                                                StaticText, 0x101ac0430, {{60.0, 410.7}, {44.7, 18.0}}, label: '錄音機'
+                                                Image, 0x101ac0550, {{360.7, 402.7}, {7.0, 12.0}}, identifier: 'chevron.forward'
+                                      Cell, 0x101ac0670, {{16.0, 443.7}, {370.0, 70.3}}
+                                        Other, 0x101ae2960, {{16.0, 443.7}, {370.0, 70.3}}
+                                          Other, 0x101ae2a80, {{16.0, 443.7}, {370.0, 70.3}}
+                                            Other, 0x101ae2ba0, {{16.0, 443.7}, {370.0, 70.3}}
+                                              Image, 0x101ad6650, {{16.0, 443.7}, {370.0, 70.3}}, label: 'PaperGrain'
+                                        Other, 0x101ad6770, {{16.0, 443.7}, {370.0, 70.3}}
+                                          Other, 0x101ad6890, {{16.0, 443.7}, {370.0, 70.3}}
+                                            Other, 0x101ad69b0, {{16.0, 443.7}, {370.0, 70.3}}
+                                              Button, 0x101ad6ad0, {{16.0, 443.7}, {370.0, 70.3}}, label: '新字、recording、錄音'
+                                                Image, 0x101a9b730, {{34.0, 472.7}, {12.3, 12.3}}, identifier: 'circle', label: '新字'
+                                                StaticText, 0x101a9b850, {{60.0, 458.7}, {80.7, 20.3}}, label: 'recording'
+                                                StaticText, 0x101a9b970, {{60.0, 481.0}, {30.0, 18.0}}, label: '錄音'
+                                                Image, 0x101a9ba90, {{360.7, 473.0}, {7.0, 12.0}}, identifier: 'chevron.forward'
+                                      Other, 0x101a9bbb0, {{369.0, 122.0}, {30.0, 417.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                                        Other, 0x101a9bcd0, {{396.0, 125.0}, {3.0, 36.0}}
+                                      Other, 0x101a9bdf0, {{369.0, 122.0}, {30.0, 417.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                                        Other, 0x101a9bf10, {{396.0, 125.0}, {3.0, 36.0}}
+                                Other, 0x101a9c030, {{0.0, 0.0}, {402.0, 874.0}}
+                                  Other, 0x101a9c150, {{0.0, 0.0}, {402.0, 874.0}}
+                                    Other, 0x101a9c270, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x101a9c390, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x101a9c4b0, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x101a9c5d0, {{0.0, 791.0}, {402.0, 83.0}}
+                  Other, 0x101a9c6f0, {{0.0, 0.0}, {402.0, 874.0}}
+                    TabBar, 0x101a9c810, {{0.0, 791.0}, {402.0, 83.0}}, label: 'Tab Bar'
+                      Other, 0x101a9c930, {{21.0, 791.0}, {360.0, 62.0}}
+                        Other, 0x101a9ca50, {{21.0, 791.0}, {98.0, 54.0}}
+                        Other, 0x101a9cb70, {{21.0, 791.0}, {360.0, 62.0}}
+                          Button, 0x101a9cc90, {{25.0, 795.0}, {98.0, 54.0}}, identifier: 'sun.max.fill', label: '今天'
+                            Image, 0x101a9cdb0, {{60.0, 800.0}, {29.0, 29.3}}, identifier: 'sun.max.fill', label: 'brightness higher'
+                          Button, 0x101a9ced0, {{109.7, 795.0}, {98.0, 54.0}}, identifier: 'dumbbell.fill', label: '練習'
+                            Image, 0x101a9cff0, {{141.7, 804.3}, {35.0, 21.0}}, identifier: 'dumbbell.fill', label: 'dumbbell.fill'
+                          Button, 0x101a9d110, {{194.3, 795.0}, {98.0, 54.0}}, identifier: 'books.vertical.fill', label: '單字', Selected
+                            Image, 0x101a9d230, {{226.3, 800.0}, {33.3, 29.3}}, identifier: 'books.vertical.fill', label: 'Bookshelf'
+                          Button, 0x101a9d350, {{279.0, 795.0}, {98.0, 54.0}}, identifier: 'person.crop.circle.fill', label: '我'
+                            Image, 0x101a9d470, {{314.0, 801.3}, {27.3, 27.3}}, identifier: 'person.crop.circle.fill', label: 'account'
+                        Other, 0x101a9d590, {{194.3, 795.0}, {98.0, 54.0}}
+                          Other, 0x101a9d6b0, {{194.3, 795.0}, {98.0, 54.0}}
+                            Other, 0x101ac6d30, {{194.3, 795.0}, {98.0, 54.0}}
+                            Other, 0x101ac6e50, {{194.3, 795.0}, {98.0, 54.0}}
+                              Other, 0x101ac6f70, {{194.3, 795.0}, {98.0, 54.0}}
+                                Other, 0x101ac7090, {{194.3, 795.0}, {98.0, 54.0}}
+                                  Other, 0x101ac71b0, {{194.3, 795.0}, {98.0, 54.0}}
+                                Other, 0x101ac72d0, {{194.3, 795.0}, {98.0, 54.0}}
+                              Other, 0x101ac73f0, {{194.3, 795.0}, {98.0, 54.0}}
+                  Other, 0x101ac7510, {{0.0, 791.0}, {402.0, 83.0}}
+                    Other, 0x101ac7630, {{0.0, 791.0}, {402.0, 83.0}}
+                      Other, 0x101ac7750, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x101ac7870, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x101ac7990, {{0.0, 791.0}, {402.0, 83.0}}
+                            Other, 0x101ac7ab0, {{0.0, 791.0}, {402.0, 83.0}}
+                        Other, 0x101ac7bd0, {{0.0, 791.0}, {402.0, 83.0}}
+                          Other, 0x101ac7cf0, {{0.0, 791.0}, {402.0, 83.0}}
+              Other, 0x101ad87e0, {{0.0, 62.0}, {402.0, 477.0}}
+    Window, 0x101ad8900, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x101ad8a20, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x101ad8b40, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x101ab4890, {{0.0, 539.0}, {402.0, 335.0}}
+          Other, 0x101ab49b0, {{0.0, 539.0}, {402.0, 335.0}}, identifier: 'inputView'
+    Window, 0x101ab4ad0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x101ab4bf0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x101ab4d10, {{0.0, 539.0}, {402.0, 335.0}}
+          Other, 0x101ab4e30, {{0.0, 539.0}, {402.0, 44.0}}, identifier: 'SystemInputAssistantView'
+            Other, 0x101ab4f50, {{0.0, 539.0}, {402.0, 44.0}}
+              Other, 0x101ab5070, {{0.0, 539.0}, {402.0, 44.0}}, identifier: 'CenterPageView'
+                Other, 0x101ab5190, {{0.0, -61.0}, {402.0, 1244.0}}
+                  ScrollView, 0x101ab52b0, {{0.0, 539.0}, {402.0, 44.0}}
+                Other, 0x101ab53d0, {{0.0, 539.0}, {402.0, 44.0}}
+                  Other, 0x101a7e840, {{0.0, 539.0}, {402.0, 44.0}}, label: 'Typing Predictions'
+                    Other, 0x101a7e960, {{0.0, 539.0}, {402.0, 44.0}}
+                      Other, 0x101a7ea80, {{0.0, 539.0}, {402.0, 44.0}}
+                        Other, 0x101a7eba0, {{0.0, 539.0}, {134.0, 44.0}}
+                        Other, 0x101a7ecc0, {{134.0, 539.0}, {134.0, 44.0}}
+                        Other, 0x101a7ede0, {{268.0, 539.0}, {134.0, 44.0}}
+          Other, 0x101a7ef00, {{0.0, 539.0}, {402.0, 335.0}}
+            Other, 0x101ad7b60, {{0.0, 539.0}, {402.0, 335.0}}
+              Other, 0x101ad7c80, {{0.0, 539.0}, {402.0, 335.0}}
+          Other, 0x101ad7da0, {{0.0, 583.0}, {402.0, 233.0}}
+            Keyboard, 0x101ad7ec0, {{0.0, 583.0}, {402.0, 233.0}}
+              Other, 0x101ad7fe0, {{0.0, 583.0}, {402.0, 233.0}}
+                Other, 0x101ad8100, {{0.0, 583.0}, {402.0, 233.0}}, identifier: 'UIKeyboardLayoutStar Preview'
+                  Key, 0x101a95b10, {{0.0, 583.0}, {0.0, 0.0}}, label: 'Padding-Left'
+                  Key, 0x101a95c30, {{4.7, 590.0}, {39.3, 54.0}}, label: 'q'
+                  Key, 0x101a95d50, {{44.0, 590.0}, {39.7, 54.0}}, label: 'w'
+                  Key, 0x101a95e70, {{83.7, 590.0}, {39.3, 54.0}}, label: 'e'
+                  Key, 0x101a95f90, {{123.0, 590.0}, {39.7, 54.0}}, label: 'r'
+                  Key, 0x101a960b0, {{162.7, 590.0}, {39.3, 54.0}}, label: 't'
+                  Key, 0x101acb5b0, {{202.0, 590.0}, {39.7, 54.0}}, label: 'y'
+                  Key, 0x101acb6d0, {{241.7, 590.0}, {39.3, 54.0}}, label: 'u'
+                  Key, 0x101acb7f0, {{281.0, 590.0}, {39.7, 54.0}}, label: 'i'
+                  Key, 0x101aa26b0, {{320.7, 590.0}, {39.3, 54.0}}, label: 'o'
+                  Key, 0x101aa27d0, {{360.0, 590.0}, {39.7, 54.0}}, label: 'p'
+                  Key, 0x101aa28f0, {{0.0, 583.0}, {0.0, 0.0}}, label: 'Padding-Right'
+                  Key, 0x101aa2a10, {{0.0, 583.0}, {0.0, 0.0}}, label: 'Padding-Left'
+                  Key, 0x101aa2c70, {{24.3, 644.0}, {39.3, 54.0}}, label: 'a'
+                  Key, 0x101aa2d90, {{63.7, 644.0}, {39.7, 54.0}}, label: 's'
+                  Key, 0x101aa2eb0, {{103.3, 644.0}, {39.3, 54.0}}, label: 'd'
+                  Key, 0x101aa2fd0, {{142.7, 644.0}, {39.7, 54.0}}, label: 'f'
+                  Key, 0x101aa30f0, {{182.3, 644.0}, {39.3, 54.0}}, label: 'g'
+                  Key, 0x101aa3210, {{221.7, 644.0}, {39.7, 54.0}}, label: 'h'
+                  Key, 0x101aa3330, {{261.3, 644.0}, {39.3, 54.0}}, label: 'j'
+                  Key, 0x101aa3450, {{300.7, 644.0}, {39.7, 54.0}}, label: 'k'
+                  Key, 0x101aa3570, {{340.3, 644.0}, {39.3, 54.0}}, label: 'l'
+                  Key, 0x101aa3690, {{0.0, 583.0}, {0.0, 0.0}}, label: 'Padding-Right'
+                  Button, 0x101aa37b0, {{4.7, 698.0}, {51.3, 54.0}}, identifier: 'shift', label: 'shift'
+                  Key, 0x101aa38d0, {{0.0, 583.0}, {0.0, 0.0}}, label: 'Padding-Left'
+                  Key, 0x101aa39f0, {{63.7, 698.0}, {39.7, 54.0}}, label: 'z'
+                  Key, 0x101aa3b10, {{103.3, 698.0}, {39.3, 54.0}}, label: 'x'
+                  Key, 0x101aa3d80, {{142.7, 698.0}, {39.7, 54.0}}, label: 'c'
+                  Key, 0x101aa3ea0, {{182.3, 698.0}, {39.3, 54.0}}, label: 'v'
+                  Key, 0x101aa3fc0, {{221.7, 698.0}, {39.7, 54.0}}, label: 'b'
+                  Key, 0x101aa40e0, {{261.3, 698.0}, {39.3, 54.0}}, label: 'n'
+                  Key, 0x101aa4200, {{300.7, 698.0}, {39.7, 54.0}}, label: 'm'
+                  Key, 0x101aa4320, {{0.0, 583.0}, {0.0, 0.0}}, label: 'Padding-Right'
+                  Key, 0x101aa4440, {{348.0, 698.0}, {51.7, 54.0}}, identifier: 'delete', label: 'delete'
+                  Key, 0x101aa4560, {{4.7, 752.0}, {98.7, 54.0}}, identifier: 'more', label: 'numbers'
+                  Key, 0x101aa4680, {{103.3, 752.0}, {197.3, 54.0}}, identifier: 'space', label: ' '
+                  Button, 0x101aa47a0, {{300.7, 752.0}, {99.0, 54.0}}, identifier: 'Search', label: 'search'
+          Other, 0x101aa4ac0, {{0.0, 583.0}, {402.0, 291.0}}
+            Button, 0x101aa4be0, {{8.5, 805.7}, {68.1, 68.7}}, label: 'Emoji'
+              StaticText, 0x101aa4d00, {{8.5, 805.7}, {0.0, 0.0}}
+            Button, 0x101aa4e20, {{325.4, 805.4}, {68.1, 68.7}}, identifier: 'dictation', label: 'Dictate'
+              StaticText, 0x101aa4f40, {{325.4, 805.4}, {0.0, 0.0}}
+            Button, 0x101ae3440, {{325.4, 805.4}, {68.1, 68.7}}, identifier: 'dictation', label: 'Dictate'
+              StaticText, 0x101ae3560, {{325.4, 805.4}, {0.0, 0.0}}
+Path to element:
+ →Application, 0x1019f2ec0, pid: 73067, label: 'WordCat'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x1017dd610, pid: 73067, label: 'WordCat'
+  }

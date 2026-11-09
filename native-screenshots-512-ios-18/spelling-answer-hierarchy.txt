@@ -1,0 +1,118 @@
+Attributes: Application, 0x1114a3540, pid: 76941, label: 'WordCat'
+Element subtree:
+ →Application, 0x1114a3540, pid: 76941, label: 'WordCat'
+    Window (Main), 0x1114a49e0, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x1114a0640, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x11149a880, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x1114a12a0, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x1114a2060, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x11149ce20, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x1114a5640, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x1114a0a60, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x1114a5220, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x1114a3120, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x111351d70, {{0.0, 0.0}, {375.0, 667.0}}
+                          Image, 0x111352db0, {{0.0, 0.0}, {375.0, 667.0}}, label: 'PaperGrain'
+                          ScrollView, 0x111353c10, {{0.0, 0.0}, {375.0, 667.0}}
+                            Other, 0x1113537f0, {{0.0, 20.0}, {375.0, 633.0}}
+                              StaticText, 0x1113a0bf0, {{16.0, 28.0}, {129.0, 33.5}}, label: 'Morning!'
+                              Image, 0x111352990, {{17.5, 80.0}, {17.0, 17.0}}, identifier: 'sun.max.fill', label: 'Brightness Higher'
+                              StaticText, 0x111351730, {{40.0, 79.5}, {81.5, 18.0}}, label: 'Mon, Nov 9'
+                              Button, 0x111354030, {{218.0, 69.5}, {55.5, 38.0}}, identifier: 'today-streak', label: '2-day streak'
+                                Button, 0x111354150, {{218.0, 69.5}, {55.5, 38.0}}, label: '2'
+                                  Image, 0x111354270, {{218.0, 69.5}, {55.5, 38.0}}, label: 'PaperGrain'
+                                  Image, 0x111354390, {{231.5, 79.0}, {15.0, 19.0}}, identifier: 'flame.fill', label: 'Flame'
+                                  StaticText, 0x1113544b0, {{252.0, 78.2}, {9.5, 20.5}}, label: '2'
+                              Button, 0x1113545d0, {{281.5, 69.5}, {77.5, 38.0}}, identifier: 'today-shelf', label: '46 words known'
+                                Button, 0x1113546f0, {{281.5, 69.5}, {77.5, 38.0}}, label: '46'
+                                  Image, 0x111354810, {{281.5, 69.5}, {77.5, 38.0}}, label: 'PaperGrain'
+                                  Image, 0x111354930, {{295.5, 79.0}, {23.5, 19.0}}, identifier: 'books.vertical.fill', label: 'Bookshelf'
+                                  StaticText, 0x111354a50, {{325.0, 78.2}, {22.0, 20.5}}, label: '46'
+                              StaticText, 0x111354b70, {{36.0, 181.5}, {189.0, 18.0}}, label: 'Today's words · chapter 1'
+                              Button, 0x111342c60, {{272.2, 106.7}, {75.6, 75.6}}, identifier: 'today-mascot', label: 'Silly Cat'
+                                Other, 0x111342d80, {{272.2, 106.7}, {75.6, 75.6}}
+                              Other, 0x111342ea0, {{114.9, 190.9}, {145.3, 145.3}}, label: '8 of 20 words today'
+                                Other, 0x111342fc0, {{114.9, 190.9}, {145.3, 145.3}}, value: 40%
+                                Image, 0x1113430e0, {{164.0, 244.0}, {46.5, 39.5}}, identifier: 'rectangle.on.rectangle.angled', label: 'Study Cards'
+                                StaticText, 0x111343200, {{173.2, 293.7}, {28.5, 14.5}}, label: '8/20'
+                              StaticText, 0x111343320, {{90.8, 327.5}, {193.5, 33.5}}, label: 'Flip the cards'
+                              StaticText, 0x111343440, {{113.8, 367.0}, {147.5, 20.5}}, label: '7 to review · 5 new'
+                              Button, 0x111343560, {{48.2, 397.7}, {47.5, 65.3}}, identifier: 'today-node-cards', label: 'Cards'
+                                Image, 0x1114a2d00, {{60.1, 411.2}, {24.3, 20.5}}, identifier: 'rectangle.on.rectangle.angled', label: 'Study Cards'
+                                StaticText, 0x1114a16c0, {{53.2, 448.5}, {37.0, 14.5}}, label: 'Cards'
+                              Button, 0x1114a0e80, {{127.0, 399.5}, {44.0, 63.5}}, identifier: 'today-spelling', label: 'Write'
+                                Image, 0x1114a4e00, {{139.0, 413.0}, {18.5, 17.5}}, identifier: 'pencil.line', label: 'pencil.line'
+                                StaticText, 0x1114a41a0, {{132.0, 448.5}, {34.0, 14.5}}, label: 'Write'
+                              Button, 0x1114a3d80, {{204.5, 399.5}, {44.0, 63.5}}, identifier: 'today-quiz', label: 'Quiz'
+                                Image, 0x1114a3960, {{217.0, 413.5}, {19.0, 16.5}}, identifier: 'checklist', label: 'checklist'
+                                StaticText, 0x1114a45c0, {{212.0, 448.5}, {28.5, 14.5}}, label: 'Quiz'
+                              Button, 0x1114993a0, {{281.5, 399.5}, {44.0, 63.5}}, identifier: 'today-speaking', label: 'Speak'
+                                Image, 0x1114ac3f0, {{297.0, 412.5}, {13.5, 18.0}}, identifier: 'mic.fill', label: 'Microphone'
+                                StaticText, 0x1114ac510, {{284.0, 448.5}, {39.0, 14.5}}, label: 'Speak'
+                              Button, 0x1114ac630, {{36.0, 475.0}, {303.0, 52.0}}, identifier: 'today-start', label: 'Keep flipping'
+                                StaticText, 0x1114ac750, {{107.0, 489.0}, {128.5, 24.0}}, label: 'Keep flipping'
+                                Image, 0x1114ac870, {{246.0, 493.0}, {19.5, 16.5}}, identifier: 'arrow.right', label: 'Right'
+                              Button, 0x1114ac990, {{16.0, 561.0}, {343.0, 76.0}}, identifier: 'today-review', label: 'Missed words, 9 still shaky'
+                                Image, 0x1114acab0, {{15.6, 559.2}, {343.8, 79.6}}, label: 'PaperGrain'
+                                Other, 0x1114acbd0, {{159.4, 549.9}, {55.4, 24.3}}
+                                Image, 0x1114accf0, {{47.0, 588.0}, {18.0, 22.0}}, identifier: 'arrow.counterclockwise', label: 'arrow.counterclockwise'
+                                StaticText, 0x1114ace10, {{94.0, 577.0}, {135.0, 24.0}}, label: 'Missed words'
+                                StaticText, 0x1114acf30, {{94.0, 603.0}, {81.0, 18.0}}, label: '9 still shaky'
+                                Image, 0x1114ad050, {{333.0, 591.5}, {9.0, 15.0}}, identifier: 'chevron.right', label: 'Forward'
+                TabBar, 0x1114ad170, {{0.0, 618.0}, {375.0, 49.0}}, label: 'Tab Bar'
+                  Button, 0x1114ad290, {{2.0, 619.0}, {90.0, 48.0}}, identifier: 'sun.max.fill', label: 'Today', Selected
+                    Image, 0x1114ad3b0, {{32.0, 621.5}, {29.0, 29.5}}, identifier: 'sun.max.fill', label: 'brightness higher'
+                  Button, 0x1114ad4d0, {{96.0, 619.0}, {90.0, 48.0}}, identifier: 'dumbbell.fill', label: 'Practice'
+                  Button, 0x1114ad5f0, {{190.0, 619.0}, {89.0, 48.0}}, identifier: 'books.vertical.fill', label: 'Words'
+                  Button, 0x1114ad710, {{283.0, 619.0}, {90.0, 48.0}}, identifier: 'person.crop.circle.fill', label: 'Me'
+              Other, 0x1114ad830, {{0.0, 20.0}, {375.0, 647.0}}
+      Other, 0x1114ad950, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x1114ada70, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x1114adb90, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x1114adcb0, {{0.0, 0.0}, {375.0, 667.0}}
+              NavigationBar, 0x1114addd0, {{0.0, 20.0}, {375.0, 44.0}}, identifier: '_TtGC7SwiftUI32NavigationStackHosting'
+                Other, 0x1114adef0, {{16.0, 27.5}, {30.0, 29.0}}, identifier: 'spelling-close', label: 'Close'
+                  Other, 0x1114ae010, {{16.0, 27.5}, {30.0, 29.0}}
+                    Button, 0x1114ae130, {{16.0, 27.5}, {30.0, 29.0}}, identifier: 'spelling-close', label: 'Close'
+                Other, 0x1114ae250, {{167.5, 33.0}, {40.0, 18.0}}
+                  Other, 0x1114ae370, {{167.5, 33.0}, {40.0, 18.0}}
+                    StaticText, 0x1114ae490, {{167.5, 33.0}, {40.0, 18.0}}, identifier: 'spelling-position', label: '1 / 10'
+              Other, 0x1114ae5b0, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x1114ae6d0, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x1114ae7f0, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x1114ae910, {{0.0, 0.0}, {375.0, 667.0}}
+                      Image, 0x1114aea30, {{0.0, 0.0}, {375.0, 667.0}}, label: 'PaperGrain'
+                      ScrollView, 0x1114aeb50, {{16.0, 0.0}, {343.0, 659.0}}
+                        Other, 0x1114aec70, {{16.0, 64.0}, {343.0, 484.5}}
+                          StaticText, 0x1114aed90, {{168.5, 122.5}, {38.0, 18.0}}, label: 'pron.'
+                          Button, 0x1114aeeb0, {{326.0, 124.0}, {22.0, 17.5}}, identifier: 'speaker.wave.2.fill', label: 'Pronounce'
+                          StaticText, 0x1114aefd0, {{145.0, 148.5}, {85.0, 33.5}}, identifier: 'spelling-meaning', label: 'which'
+                          TextField, 0x1114af0f0, {{15.0, 211.0}, {345.0, 58.0}}, identifier: 'spelling-input', placeholderValue: 'Characters or pinyin', value: qqqq
+                          StaticText, 0x1114af210, {{33.5, 315.1}, {113.0, 20.5}}, identifier: 'spelling-result', label: 'It's written'
+                          Button, 0x1114af330, {{310.0, 315.5}, {22.0, 17.5}}, identifier: 'speaker.wave.2.fill', label: 'Pronounce'
+                          StaticText, 0x1114af450, {{32.0, 357.9}, {27.0, 33.5}}, identifier: 'spelling-answer', label: '哪'
+                          StaticText, 0x1114af570, {{32.0, 393.4}, {18.5, 20.5}}, label: 'nǎ'
+                          StaticText, 0x1114af690, {{32.0, 419.9}, {113.0, 18.0}}, label: 'You typed: qqqq'
+                          StaticText, 0x1114af7b0, {{32.0, 453.9}, {101.5, 20.5}}, label: '你是哪國人？'
+                          StaticText, 0x1114af8d0, {{32.0, 478.4}, {106.5, 16.0}}, label: 'nǐ shì nǎ guó rén?'
+                          StaticText, 0x1114af9f0, {{32.0, 498.4}, {190.5, 18.0}}, label: 'What country are you from?'
+                        Other, 0x1114afb10, {{326.0, 64.0}, {30.0, 521.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                          Other, 0x1114afc30, {{353.0, 103.5}, {3.0, 478.5}}
+                        Other, 0x1114afd50, {{326.0, 64.0}, {30.0, 521.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                          Other, 0x1114afe70, {{353.0, 103.5}, {3.0, 478.5}}
+                      Image, 0x1114aff90, {{16.0, 575.0}, {343.0, 84.0}}, label: 'PaperGrain'
+                      Button, 0x1114b00b0, {{16.0, 601.0}, {343.0, 50.0}}, identifier: 'spelling-next', label: 'Next'
+                        Image, 0x1114b01d0, {{16.0, 601.0}, {343.0, 50.0}}, label: 'PaperGrain'
+                        StaticText, 0x1114b02f0, {{16.0, 601.0}, {343.0, 50.0}}, label: 'Next'
+            Other, 0x1114b0410, {{0.0, 20.0}, {375.0, 647.0}}
+    Window, 0x1114b0530, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x1114b0650, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x1114b0770, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x1114b0890, {{0.0, 667.0}, {375.0, 216.0}}
+Path to element:
+ →Application, 0x1114a3540, pid: 76941, label: 'WordCat'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x1114bed90, pid: 76941, label: 'WordCat'
+  }

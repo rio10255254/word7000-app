@@ -1,0 +1,190 @@
+Attributes: Application, 0x111387a50, pid: 65573, label: 'WordCat'
+Element subtree:
+ →Application, 0x111387a50, pid: 65573, label: 'WordCat'
+    Window (Main), 0x111387e70, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x111388a40, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x111388b60, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x101cc04e0, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x101cb9930, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x101c92170, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x101cf2b80, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x101cf5f10, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x101cf6330, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x101cf6750, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x101cf5af0, {{0.0, 0.0}, {375.0, 667.0}}
+                          Other, 0x101cf6b70, {{0.0, 0.0}, {375.0, 667.0}}
+                            NavigationBar, 0x101cf6f90, {{0.0, 20.0}, {375.0, 44.0}}, identifier: '我的學習計畫'
+                              Button, 0x101cf7bf0, {{0.0, 20.0}, {64.5, 44.0}}, label: '設定'
+                              StaticText, 0x101cfcad0, {{137.0, 32.0}, {101.5, 20.5}}, label: '我的學習計畫'
+                            Other, 0x101cf77d0, {{0.0, 0.0}, {375.0, 667.0}}
+                              Other, 0x101cf73b0, {{0.0, 0.0}, {375.0, 667.0}}
+                                Other, 0x101cf8010, {{0.0, 0.0}, {375.0, 667.0}}
+                                  Other, 0x101cf8430, {{0.0, 0.0}, {375.0, 667.0}}
+                                    Image, 0x101cf56d0, {{0.0, 0.0}, {375.0, 667.0}}, label: 'PaperGrain'
+                                    CollectionView, 0x101cf52b0, {{0.0, 0.0}, {375.0, 667.0}}
+                                      Other, 0x101cf4e90, {{-16.0, -258.5}, {407.0, 272.0}}
+                                      Cell, 0x101cf4a70, {{16.0, -20.5}, {343.0, 34.0}}
+                                        Other, 0x101cf4650, {{16.0, -20.5}, {343.0, 34.0}}
+                                        Other, 0x101cf3ce0, {{16.0, -20.5}, {343.0, 34.0}}
+                                          Other, 0x101cb87c0, {{16.0, -20.5}, {343.0, 34.0}}
+                                            Other, 0x101cf4100, {{16.0, -20.5}, {343.0, 34.0}}
+                                              StaticText, 0x101cb9e30, {{16.0, -20.5}, {343.0, 34.0}}, label: '題型名稱和考前讀到第幾章，都照這裡算。'
+                                      Other, 0x101cb9f50, {{-16.0, 13.5}, {407.0, 270.5}}
+                                      Cell, 0x1113888f0, {{16.0, 13.5}, {343.0, 39.0}}
+                                        Other, 0x1113907b0, {{16.0, 13.5}, {343.0, 39.0}}
+                                        Other, 0x101cba070, {{16.0, 13.5}, {343.0, 39.0}}
+                                          Other, 0x101cfcef0, {{16.0, 13.5}, {343.0, 39.0}}
+                                            Other, 0x101cfd010, {{16.0, 13.5}, {343.0, 39.0}}
+                                              StaticText, 0x101cfd130, {{16.0, 13.5}, {343.0, 39.0}}, label: '每一天'
+                                      Cell, 0x101cfd250, {{16.0, 52.5}, {343.0, 107.0}}
+                                        Other, 0x101cfd370, {{16.0, 52.5}, {343.0, 107.0}}
+                                          Other, 0x101cfd490, {{16.0, 52.5}, {343.0, 107.0}}
+                                            Other, 0x101cfd5b0, {{16.0, 52.5}, {343.0, 107.0}}
+                                              Image, 0x101cfd6d0, {{16.0, 52.5}, {343.0, 107.0}}, label: 'PaperGrain'
+                                        Other, 0x101cfd7f0, {{16.0, 52.5}, {343.0, 107.0}}
+                                          Other, 0x101cfd910, {{16.0, 52.5}, {343.0, 107.0}}
+                                            Other, 0x101c9c510, {{16.0, 52.5}, {343.0, 107.0}}
+                                              Image, 0x101c9c630, {{32.0, 67.5}, {29.0, 29.0}}, identifier: 'target', label: 'target'
+                                              StaticText, 0x101c9c750, {{73.0, 71.8}, {67.5, 20.5}}, label: '每日目標'
+                                              Other, 0x101c8f6c0, {{32.0, 106.5}, {311.0, 38.0}}, identifier: 'plan-daily-target'
+                                                Button, 0x101c8f7e0, {{32.0, 106.5}, {72.0, 38.0}}, identifier: 'plan-daily-target-0', label: '10 個'
+                                                Button, 0x101c8f900, {{112.0, 106.5}, {71.5, 38.0}}, identifier: 'plan-daily-target-1', label: '20 個', Selected
+                                                  Image, 0x101cfa4b0, {{126.1, 119.9}, {11.7, 11.2}}, identifier: 'checkmark', label: '已選取', Selected
+                                                  StaticText, 0x101cfa5d0, {{144.4, 118.6}, {26.5, 13.8}}, label: '20 個'
+                                                Button, 0x101cfa6f0, {{191.5, 106.5}, {72.0, 38.0}}, identifier: 'plan-daily-target-2', label: '30 個'
+                                                Button, 0x101cfa810, {{271.5, 106.5}, {71.5, 38.0}}, identifier: 'plan-daily-target-3', label: '50 個'
+                                      Cell, 0x101cfa930, {{16.0, 159.5}, {343.0, 107.0}}
+                                        Other, 0x101cfaa50, {{16.0, 159.5}, {343.0, 107.0}}
+                                          Other, 0x101cfab70, {{16.0, 159.5}, {343.0, 107.0}}
+                                            Other, 0x101cfac90, {{16.0, 159.5}, {343.0, 107.0}}
+                                              Image, 0x101cfadb0, {{16.0, 159.5}, {343.0, 107.0}}, label: 'PaperGrain'
+                                        Other, 0x101cfaed0, {{16.0, 159.5}, {343.0, 107.0}}
+                                          Other, 0x101cfaff0, {{16.0, 159.5}, {343.0, 107.0}}
+                                            Other, 0x101cfb110, {{16.0, 159.5}, {343.0, 107.0}}
+                                              Image, 0x101cfb230, {{32.0, 174.5}, {29.0, 29.0}}, identifier: 'arrow.right.circle.fill', label: '箭頭向右圓圈'
+                                              StaticText, 0x101cfb350, {{73.0, 178.8}, {67.5, 20.5}}, label: '每天先做'
+                                              Other, 0x101cfb470, {{32.0, 213.5}, {311.0, 38.0}}, identifier: 'plan-lead'
+                                                Button, 0x101cfb590, {{32.0, 213.5}, {151.5, 38.0}}, identifier: 'plan-lead-0', label: '先背單字', Selected
+                                                  Image, 0x101cfb6b0, {{68.7, 226.9}, {11.7, 11.2}}, identifier: 'checkmark', label: '已選取', Selected
+                                                  StaticText, 0x101cfb7d0, {{87.1, 223.3}, {61.2, 18.4}}, label: '先背單字'
+                                                Button, 0x101cfb8f0, {{191.5, 213.5}, {151.5, 38.0}}, identifier: 'plan-lead-1', label: '先練口說'
+                                                  Image, 0x101cfba10, {{230.0, 226.0}, {10.0, 13.5}}, identifier: 'mic.fill', label: '麥克風'
+                                                  StaticText, 0x101cfbb30, {{246.2, 223.5}, {60.0, 18.0}}, label: '先練口說'
+                                      Other, 0x101cfbc50, {{49.9, 159.0}, {309.1, 0.5}}
+                                      Other, 0x101cfbd70, {{-16.0, 284.0}, {407.0, 341.0}}
+                                      Cell, 0x101cfbe90, {{16.0, 284.0}, {343.0, 39.0}}
+                                        Other, 0x101cfbfb0, {{16.0, 284.0}, {343.0, 39.0}}
+                                        Other, 0x101cfc0d0, {{16.0, 284.0}, {343.0, 39.0}}
+                                          Other, 0x101cfc1f0, {{16.0, 284.0}, {343.0, 39.0}}
+                                            Other, 0x101cfc310, {{16.0, 284.0}, {343.0, 39.0}}
+                                              StaticText, 0x101cfc430, {{16.0, 284.0}, {343.0, 39.0}}, label: '想加強的（最多兩個）'
+                                      Cell, 0x101cc59d0, {{16.0, 323.0}, {343.0, 44.0}}
+                                        Other, 0x101cc5af0, {{16.0, 323.0}, {343.0, 44.0}}
+                                          Other, 0x101cc5c10, {{16.0, 323.0}, {343.0, 44.0}}
+                                            Other, 0x101cc5d30, {{16.0, 323.0}, {343.0, 44.0}}
+                                              Image, 0x101cc5e50, {{16.0, 323.0}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x101cc5f70, {{16.0, 323.0}, {343.0, 44.0}}
+                                          Other, 0x101cc6090, {{16.0, 323.0}, {343.0, 44.0}}
+                                            Other, 0x101cc61b0, {{16.0, 323.0}, {343.0, 44.0}}
+                                              Button, 0x101cc62d0, {{16.0, 323.0}, {343.0, 44.0}}, identifier: 'plan-focus-vocabulary', label: '單字量', value: 已選, Selected
+                                                Image, 0x101cc63f0, {{32.0, 330.5}, {29.0, 29.0}}, identifier: 'books.vertical.fill', label: '書架'
+                                                StaticText, 0x101cc6510, {{73.0, 334.8}, {51.0, 20.5}}, label: '單字量'
+                                                Image, 0x101cc6630, {{321.5, 335.0}, {20.0, 20.0}}, identifier: 'checkmark.circle.fill', label: '已選取', Selected
+                                      Cell, 0x101cc6750, {{16.0, 367.0}, {343.0, 44.0}}
+                                        Other, 0x101cc6870, {{16.0, 367.0}, {343.0, 44.0}}
+                                          Other, 0x101cc6990, {{16.0, 367.0}, {343.0, 44.0}}
+                                            Other, 0x101cc6ab0, {{16.0, 367.0}, {343.0, 44.0}}
+                                              Image, 0x101cc6bd0, {{16.0, 367.0}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x101c9c970, {{16.0, 367.0}, {343.0, 44.0}}
+                                          Other, 0x101c9ca90, {{16.0, 367.0}, {343.0, 44.0}}
+                                            Other, 0x101c9cbb0, {{16.0, 367.0}, {343.0, 44.0}}
+                                              Button, 0x101cee2f0, {{16.0, 367.0}, {343.0, 44.0}}, identifier: 'plan-focus-spelling', label: '拼字', value: 已選, Selected
+                                                Image, 0x101cee410, {{32.0, 374.5}, {29.0, 29.0}}, identifier: 'pencil.line', label: 'pencil.line'
+                                                StaticText, 0x101cee530, {{73.0, 378.8}, {34.0, 20.5}}, label: '拼字'
+                                                Image, 0x101cee650, {{321.5, 379.0}, {20.0, 20.0}}, identifier: 'checkmark.circle.fill', label: '已選取', Selected
+                                      Other, 0x101cee770, {{73.0, 366.5}, {286.0, 0.5}}
+                                      Cell, 0x101cee890, {{16.0, 411.0}, {343.0, 44.0}}
+                                        Other, 0x101cee9b0, {{16.0, 411.0}, {343.0, 44.0}}
+                                          Other, 0x11123e3e0, {{16.0, 411.0}, {343.0, 44.0}}
+                                            Other, 0x11123e500, {{16.0, 411.0}, {343.0, 44.0}}
+                                              Image, 0x11123e620, {{16.0, 411.0}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x11123e740, {{16.0, 411.0}, {343.0, 44.0}}
+                                          Other, 0x11123e860, {{16.0, 411.0}, {343.0, 44.0}}
+                                            Other, 0x11123e980, {{16.0, 411.0}, {343.0, 44.0}}
+                                              Button, 0x11123eaa0, {{16.0, 411.0}, {343.0, 44.0}}, identifier: 'plan-focus-exam', label: '考試題型'
+                                                Image, 0x11123ebc0, {{32.0, 418.5}, {29.0, 29.0}}, identifier: 'checklist', label: 'checklist'
+                                                StaticText, 0x11123ece0, {{73.0, 422.8}, {67.5, 20.5}}, label: '考試題型'
+                                                Image, 0x11123ee00, {{321.5, 423.0}, {20.0, 20.0}}, identifier: 'circle', label: 'circle'
+                                      Other, 0x11123ef20, {{73.0, 410.5}, {286.0, 0.5}}
+                                      Cell, 0x11123f040, {{16.0, 455.0}, {343.0, 44.0}}
+                                        Other, 0x11123f160, {{16.0, 455.0}, {343.0, 44.0}}
+                                          Other, 0x11123f280, {{16.0, 455.0}, {343.0, 44.0}}
+                                            Other, 0x11123f3a0, {{16.0, 455.0}, {343.0, 44.0}}
+                                              Image, 0x11123f4c0, {{16.0, 455.0}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x11123f5e0, {{16.0, 455.0}, {343.0, 44.0}}
+                                          Other, 0x11123f700, {{16.0, 455.0}, {343.0, 44.0}}
+                                            Other, 0x11123f820, {{16.0, 455.0}, {343.0, 44.0}}
+                                              Button, 0x11123f940, {{16.0, 455.0}, {343.0, 44.0}}, identifier: 'plan-focus-speaking', label: '口說'
+                                                Image, 0x11123fa60, {{32.0, 462.5}, {29.0, 29.0}}, identifier: 'mic.fill', label: '麥克風'
+                                                StaticText, 0x11123fb80, {{73.0, 466.8}, {34.0, 20.5}}, label: '口說'
+                                                Image, 0x11123fca0, {{321.5, 467.0}, {20.0, 20.0}}, identifier: 'circle', label: 'circle'
+                                      Other, 0x11123fdc0, {{73.0, 454.5}, {286.0, 0.5}}
+                                      Cell, 0x11123fee0, {{16.0, 499.0}, {343.0, 60.0}}
+                                        Other, 0x111240000, {{16.0, 499.0}, {343.0, 60.0}}
+                                          Other, 0x111240120, {{16.0, 499.0}, {343.0, 60.0}}
+                                            Other, 0x111240240, {{16.0, 499.0}, {343.0, 60.0}}
+                                              Image, 0x111240360, {{16.0, 499.0}, {343.0, 60.0}}, label: 'PaperGrain'
+                                        Other, 0x111240480, {{16.0, 499.0}, {343.0, 60.0}}
+                                          Other, 0x1112405a0, {{16.0, 499.0}, {343.0, 60.0}}
+                                            Other, 0x1112406c0, {{16.0, 499.0}, {343.0, 60.0}}
+                                              Other, 0x1112407e0, {{34.0, 510.0}, {309.0, 38.0}}, identifier: 'plan-suggestion'
+                                                Image, 0x111240900, {{34.0, 519.5}, {11.5, 19.5}}, identifier: 'lightbulb.fill', label: '電燈'
+                                                StaticText, 0x111240a20, {{57.5, 510.0}, {164.5, 38.0}}, label: '建議每天 30 個字（現在 20 個）'
+                                                Button, 0x111240b40, {{269.0, 519.0}, {34.0, 20.5}}, identifier: 'plan-suggestion-dismiss', label: '不用'
+                                                Button, 0x111240c60, {{313.0, 520.0}, {30.0, 18.0}}, identifier: 'plan-suggestion-apply', label: '套用'
+                                      Other, 0x111240d80, {{73.0, 498.5}, {286.0, 0.5}}
+                                      Cell, 0x111240ea0, {{16.0, 559.0}, {343.0, 66.0}}
+                                        Other, 0x111240fc0, {{16.0, 559.0}, {343.0, 66.0}}
+                                        Other, 0x1112410e0, {{16.0, 559.0}, {343.0, 66.0}}
+                                          Other, 0x111241200, {{16.0, 559.0}, {343.0, 66.0}}
+                                            Other, 0x111241320, {{16.0, 559.0}, {343.0, 66.0}}
+                                              StaticText, 0x111241440, {{16.0, 559.0}, {343.0, 66.0}}, label: '拼字、考試題型：改變每天翻卡後拼幾個、考幾題。單字量、口說：會建議每天的量和先做什麼，按「套用」才會改。'
+                                      Other, 0x111241560, {{-16.0, 625.0}, {407.0, 1478.5}}
+                                      Cell, 0x111241680, {{16.0, 625.0}, {343.0, 39.0}}
+                                        Other, 0x1112417a0, {{16.0, 625.0}, {343.0, 39.0}}
+                                        Other, 0x1112418c0, {{16.0, 625.0}, {343.0, 39.0}}
+                                          Other, 0x1112419e0, {{16.0, 625.0}, {343.0, 39.0}}
+                                            Other, 0x111241b00, {{16.0, 625.0}, {343.0, 39.0}}
+                                              StaticText, 0x111241c20, {{16.0, 625.0}, {343.0, 39.0}}, label: '程度'
+                                      Cell, 0x111241d40, {{16.0, 664.0}, {343.0, 44.0}}
+                                        Other, 0x111241e60, {{16.0, 664.0}, {343.0, 44.0}}
+                                          Other, 0x111241f80, {{16.0, 664.0}, {343.0, 44.0}}
+                                            Other, 0x1112420a0, {{16.0, 664.0}, {343.0, 44.0}}
+                                              Image, 0x1112421c0, {{16.0, 664.0}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x1112422e0, {{16.0, 664.0}, {343.0, 44.0}}
+                                          Other, 0x111242400, {{16.0, 664.0}, {343.0, 44.0}}
+                                            Other, 0x111242520, {{16.0, 664.0}, {343.0, 44.0}}
+                                              Other, 0x111242640, {{16.0, 664.0}, {343.0, 44.0}}, identifier: 'plan-start-chapter', label: '新字從第 1 章開始', value: 1
+                                                Image, 0x111242760, {{32.0, 671.5}, {29.0, 29.0}}, identifier: 'book.fill', label: '書籤'
+                                                StaticText, 0x111242880, {{73.0, 675.8}, {134.5, 20.5}}, label: '新字從第 1 章開始'
+                                                Button, 0x1112429a0, {{233.0, 670.0}, {32.0, 32.0}}, identifier: 'minus', label: '移除', Disabled
+                                                StaticText, 0x111242ac0, {{282.8, 675.8}, {10.5, 20.5}}, label: '1'
+                                                Button, 0x111242be0, {{311.0, 670.0}, {32.0, 32.0}}, identifier: 'plus', label: '加號'
+                                      Other, 0x111242d00, {{342.0, 64.0}, {30.0, 554.0}}, label: 'Vertical scroll bar, 3 pages', value: 82%
+                                        Other, 0x111242e20, {{369.0, 325.5}, {3.0, 254.5}}
+                                      Other, 0x111242f40, {{342.0, 64.0}, {30.0, 554.0}}, label: 'Vertical scroll bar, 3 pages', value: 82%
+                                        Other, 0x111243060, {{369.0, 325.5}, {3.0, 254.5}}
+                TabBar, 0x111243180, {{0.0, 618.0}, {375.0, 49.0}}, label: 'Tab Bar'
+                  Button, 0x1112432a0, {{2.0, 619.0}, {90.0, 48.0}}, identifier: 'sun.max.fill', label: '今天'
+                  Button, 0x1112433c0, {{96.0, 619.0}, {90.0, 48.0}}, identifier: 'dumbbell.fill', label: '練習'
+                  Button, 0x1112434e0, {{190.0, 619.0}, {89.0, 48.0}}, identifier: 'books.vertical.fill', label: '單字'
+                  Button, 0x111243600, {{283.0, 619.0}, {90.0, 48.0}}, identifier: 'person.crop.circle.fill', label: '我', Selected
+                    Image, 0x111243720, {{314.0, 622.5}, {27.5, 27.5}}, identifier: 'person.crop.circle.fill', label: 'account'
+              Other, 0x111243840, {{0.0, 20.0}, {375.0, 647.0}}
+Path to element:
+ →Application, 0x111387a50, pid: 65573, label: 'WordCat'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x111243b80, pid: 65573, label: 'WordCat'
+  }

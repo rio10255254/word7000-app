@@ -1,0 +1,1 @@
+/Users/runner/work/word7000-app/word7000-app/ios/Word7000UITests/SpeakingCoachTests.swift:313: error: -[Word7000UITests.SpeakingCoachTests testNativeRecorderPermissionTimerPlaybackAndCleanup] : Failed to get matching snapshot: Find single matching element. Multiple matching elements found for <XCUIElementQuery: 0x109579c70>.

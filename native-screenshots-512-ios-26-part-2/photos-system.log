@@ -1,0 +1,531 @@
+Timestamp               Ty Process[PID:TID]
+2026-11-09 06:17:39.596 Df PhotosPosterProvider[4526:4b1f] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-09 06:17:43.499 Df PhotosReliveWidget[6546:54426] [com.apple.BoardServices:XPCErrors] [S:5] Alloc XPCServiceListener:6546:com.apple.mobileslideshow.PhotosReliveWidget:91FFCB53-E328-4037-8481-5CF5B03B2D77
+2026-11-09 06:17:43.503 Df PhotosReliveWidget[6546:54426] [com.apple.xpc:connection] [0x102a06150] activating connection: mach=false listener=false peer=true name=com.apple.mobileslideshow.PhotosReliveWidget.peer[3675].0x102a06150
+2026-11-09 06:17:43.511 Df PhotosReliveWidget[6546:56918] [com.apple.chrono:timeline] Batch begin (ti-e42622) - locale: en_US (fixed en_US)
+2026-11-09 06:17:43.525 Df PhotosReliveWidget[6546:56918] [com.apple.chrono:timeline] intent = {
+    "_extensionBundleId" = "com.apple.mobileslideshow.PhotosReliveWidget";
+    "_launchId" = "com.apple.mobileslideshow";
+    appIntentIdentifier = PhotosReliveWidgetFeaturedConfiguration;
+    serializedParameters =     {
+        alwaysDisplayInFullColor = 0;
+        enableSpatialEffect = 1;
+    };
+}
+2026-11-09 06:17:43.525 Df PhotosReliveWidget[6546:56918] [com.apple.chrono:timeline] Request began for com.apple.mobileslideshow.PhotosReliveWidget:systemSmall:9042110358117915459 - to archive: /Users/runner/Library/Developer/CoreSimulator/Devices/2FEACF5E-886C-4FB8-A137-C571FBA5CF5C/data/tmp/com.apple.chrono/NSIRD_chronod_Z2Vdvm/systemSmall--9042110358117915459----164.33w-164.33h-27.94r-1VTNgEwDUstZ1uS6fX0#4whja22jdasM+9uwBap5KvY=.chrono-timeline
+2026-11-09 06:17:43.653 Df PhotosReliveWidget[6546:56918] [com.apple.appintents:Execution] Beginning InitializeAction <<SB:784D4C5EF87F>>
+2026-11-09 06:17:43.655 Df PhotosReliveWidget[6546:56918] [com.apple.appintents:Execution] [InitializeAction <<N:784D4C5EF87F>>] Found PhotosReliveWidgetFeaturedConfiguration matching PhotosReliveWidgetFeaturedConfiguration registered with AppManager
+2026-11-09 06:17:43.660 Df PhotosReliveWidget[6546:56918] [com.apple.appintents:Execution] Prepared alwaysDisplayInFullColor to Bool(false))
+2026-11-09 06:17:43.661 Df PhotosReliveWidget[6546:56918] [com.apple.appintents:Execution] Prepared enableSpatialEffect to Bool(true))
+2026-11-09 06:17:43.661 Df PhotosReliveWidget[6546:56918] [com.apple.appintents:Execution] Ending InitializeAction <<SE:784D4C5EF87F>>
+2026-11-09 06:17:43.661 Df PhotosReliveWidget[6546:56918] [com.apple.appintents:Execution] Beginning ResolveParameters <<SB:7AF11E393D8B>>
+2026-11-09 06:17:43.663 Df PhotosReliveWidget[6546:56918] [com.apple.appintents:Execution] Building resolver for parameter alwaysDisplayInFullColor<Bool> = false
+2026-11-09 06:17:43.668 Df PhotosReliveWidget[6546:56918] [com.apple.appintents:Execution] Building resolver: Bool → Bool:PhotosReliveWidgetFeaturedConfiguration:alwaysDisplayInFullColor
+2026-11-09 06:17:43.668 Df PhotosReliveWidget[6546:56918] [com.apple.appintents:Execution] Building resolver for parameter enableSpatialEffect<Bool> = true
+2026-11-09 06:17:43.668 Df PhotosReliveWidget[6546:56918] [com.apple.appintents:Execution] Building resolver: Bool → Bool:PhotosReliveWidgetFeaturedConfiguration:enableSpatialEffect
+2026-11-09 06:17:43.668 Df PhotosReliveWidget[6546:56918] [com.apple.appintents:Execution] Ending ResolveParameters <<SE:7AF11E393D8B>>
+2026-11-09 06:17:43.669 Df PhotosReliveWidget[6546:6492] [com.apple.photos.backend:PhotoKit] PHPhotoLibrary openAndWaitWithUpgrade: authorization status is 3
+2026-11-09 06:17:43.669 Df PhotosReliveWidget[6546:6492] [com.apple.photos.PhotosReliveWidget:TimelineProvider] timeline requested for size systemSmall
+2026-11-09 06:17:43.671 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:Memories] Prepare TimelineDataSource for WidgetSize:{164.33, 164.33}:
+2026-11-09 06:17:43.698 Df PhotosReliveWidget[6546:6492] [com.apple.photos.backend:PersistentHistory] beginObservingChanges: _observerCount became 1 (resuming), _lastToken = <NSPersistentHistoryToken - {
+    "3F642A05-50EB-4DB3-8C26-3554B5F25849" = 89;
+}>
+2026-11-09 06:17:43.699 Df PhotosReliveWidget[6546:6492] [com.apple.photos.backend:PersistentHistory] Change distributor advanced _lastToken to: <NSPersistentHistoryToken - {
+    "3F642A05-50EB-4DB3-8C26-3554B5F25849" = 89;
+}>
+2026-11-09 06:17:43.699 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SharedLibrary] PXSharedLibraryStatusProvider deferring initialization... (<Invitation: 0, Preview: 0, Shared Library: 0, Exiting: 0>)
+2026-11-09 06:17:43.701 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Content Syndication not available because multilibrary mode is not enabled in this process.
+2026-11-09 06:17:43.701 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Not yet ready to load the real data source manager, so loading an empty one instead.
+2026-11-09 06:17:43.701 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Content syndication data source manager changed from (null) to PXContentSyndicationEmptyDataSourceManager
+2026-11-09 06:17:43.701 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Content Syndication not available because multilibrary mode is not enabled in this process.
+2026-11-09 06:17:43.701 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Content Syndication not available because multilibrary mode is not enabled in this process.
+2026-11-09 06:17:43.701 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Content Syndication not available because multilibrary mode is not enabled in this process.
+2026-11-09 06:17:43.701 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Loading real data source manager.
+2026-11-09 06:17:43.701 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Content Syndication not available because multilibrary mode is not enabled in this process.
+2026-11-09 06:17:43.701 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Using empty data source manager, as content syndication is not available.
+2026-11-09 06:17:43.702 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Content syndication data source manager changed from (null) to PXContentSyndicationEmptyDataSourceManager
+2026-11-09 06:17:43.707 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:Memories] 0 memories and 0 suggestions are featured
+2026-11-09 06:17:43.708 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:Memories] Candidate For Scheduling - Memories:0, Suggestions:0
+2026-11-09 06:17:43.711 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:Memories] No fallback memories
+2026-11-09 06:17:43.714 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:Memories] No fallback suggestions
+2026-11-09 06:17:43.714 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:Memories] Candidate For Scheduling - Memories:0, Suggestions:0
+2026-11-09 06:17:43.714 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:Memories] Used For Scheduling - Memories:0, Suggestions:0
+2026-11-09 06:17:43.715 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:Memories] WidgetTimeline Small - index: 0, timelines: 1
+2026-11-09 06:17:43.715 E  PhotosReliveWidget[6546:6492] [com.apple.photos.ui:Memories] No timeline candidates
+2026-11-09 06:17:43.717 Df PhotosReliveWidget[6546:6492] [com.apple.xpc:connection] [0x102c090d0] activating connection: mach=true listener=false peer=false name=com.apple.proactive.ProactiveSuggestionClientModel.xpc
+2026-11-09 06:17:43.717 Df PhotosReliveWidget[6546:6492] [com.apple.xpc:connection] [0x102c090d0] failed to do a bootstrap look-up: xpc_error=[3: No such process]
+2026-11-09 06:17:43.717 Df PhotosReliveWidget[6546:6492] [com.apple.xpc:connection] [0x102c090d0] invalidated after a failed init
+2026-11-09 06:17:43.717 Df PhotosReliveWidget[6546:6492] [com.apple.duetexpertd.atx:blending] Creating a ProactiveSuggestionClientModel object for clientModelId: com.apple.photos.small
+2026-11-09 06:17:43.717 E  PhotosReliveWidget[6546:56918] [com.apple.duetexpertd.atx:blending] Blending: Connection to Proactive Suggestion Client Model server interrupted for clientModelId: (null).
+2026-11-09 06:17:43.721 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:Memories] ProactiveSuggester: 0 suggestions for com.apple.photos.small
+2026-11-09 06:17:43.721 Df PhotosReliveWidget[6546:6492] [com.apple.duetexpertd.atx:blending] Blending: (com.apple.photos.small) Updating suggestions. Client Model produced 0 new suggestions.
+2026-11-09 06:17:43.721 Df PhotosReliveWidget[6546:6492] [com.apple.duetexpertd.atx:blending] Blending: (com.apple.photos.small) Transmiting...
+2026-11-09 06:17:43.722 Df PhotosReliveWidget[6546:6492] [com.apple.duetexpertd.atx:blending] Blending: (com.apple.photos.small) Done transmitting.
+2026-11-09 06:17:43.723 E  PhotosReliveWidget[6546:54426] [com.apple.duetexpertd.atx:blending] Blending: Error while communicating with Suggestion Receiver. Error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.proactive.ProactiveSuggestionClientModel.xpc was invalidated: Connection init failed at lookup with error 3 - No such process." UserInfo={NSDebugDescription=The connection to service named com.apple.proactive.ProactiveSuggestionClientModel.xpc was invalidated: Connection init failed at lookup with error 3 - No such process.}.
+2026-11-09 06:17:43.723 Df PhotosReliveWidget[6546:6492] [com.apple.photos.PhotosReliveWidget:TimelineProvider] timeline request returned no entries; using fallback no-content state
+2026-11-09 06:17:43.725 Df PhotosReliveWidget[6546:6492] [com.apple.photos.PhotosReliveWidget:TimelineProvider] scheduled timeline reload because content unavailable at 2026-11-09 07:18:19 +0000
+2026-11-09 06:17:43.727 Df PhotosReliveWidget[6546:6492] [com.apple.photos.PhotosReliveWidget:TimelineProvider] timeline request completed for size systemSmall with entries [noContentEntry]
+2026-11-09 06:17:43.727 Df PhotosReliveWidget[6546:6492] [com.apple.photos.backend:PersistentHistory] endObservingChanges: _observerCount became 0 (pausing), _lastToken = <NSPersistentHistoryToken - {
+    "3F642A05-50EB-4DB3-8C26-3554B5F25849" = 89;
+}>
+2026-11-09 06:17:43.730 Df PhotosReliveWidget[6546:6492] [com.apple.chrono:widget] Archive deployment version: DeploymentVersion(base: SwiftUI.ArchivedViewInput.DeploymentVersion(rawValue: 2))
+2026-11-09 06:17:43.734 Df PhotosReliveWidget[6546:6492] [com.apple.chrono:widget] Supports content layers? true, archiveVersion=3
+2026-11-09 06:17:43.737 Df PhotosReliveWidget[6546:6492] [com.apple.chrono:widget] Supports content layers? true, archiveVersion=3
+2026-11-09 06:17:43.776 Df PhotosReliveWidget[6546:6492] [com.apple.chrono:timeline] Request ended for com.apple.mobileslideshow.PhotosReliveWidget:systemSmall:9042110358117915459 - success
+2026-11-09 06:17:43.776 Df PhotosReliveWidget[6546:6492] [com.apple.chrono:timeline] Batch end (ti-e42622) - success
+2026-11-09 06:17:52.824 Df PhotosReliveWidget[6546:54426] [com.apple.xpc:connection] [0x102a06150] invalidated because the client process (pid 3675) either cancelled the connection or exited
+2026-11-09 06:17:52.826 E  PhotosReliveWidget[6546:54426] [com.apple.BoardServices:XPCErrors] [S:5] Error received: Connection invalidated.
+2026-11-09 06:17:57.766 A  Photos[6507:46ca5] (CoreFoundation) Loading Preferences From User Session CFPrefsD
+2026-11-09 06:18:11.256 A  Photos[6507:638a] (SyncedDefaults) kvs/get-object
+2026-11-09 06:18:11.884 Df Photos[6507:6479] [com.apple.photos.ui:UI] PXMediaTypeInfoManager - Query returned no asset! Error: (null)
+2026-11-09 06:18:42.808 A  Photos[6507:46ca5] (CoreFoundation) Loading Preferences From User Session CFPrefsD
+2026-11-09 06:19:11.377 Df Photos[6507:56e02] [com.apple.MobileAsset:V2] Got the download meta data reply for com.apple.MobileAsset.MediaSupport, response: 0 (MADownloadSuccessful)
+2026-11-09 06:19:22.813 Df Photos[6507:6474] [com.apple.photos.ui:Memories] Calling reloadTimeline on CHSTimelineController for widget kind com.apple.mobileslideshow.PhotosReliveWidget
+2026-11-09 06:19:35.132 Df Photos[6507:46ca5] [com.apple.xpc:connection] [0x1009daeb0] activating connection: mach=true listener=false peer=false name=com.apple.geoanalyticsd
+2026-11-09 06:19:38.624 A  Photos[6507:638a] (SyncedDefaults) kvs/set-object
+2026-11-09 06:19:46.659 Df Photos[6507:6474] [com.apple.chrono:ChronoServices] Creating connection
+2026-11-09 06:19:51.026 Df Photos[6507:589bc] [com.apple.xpc:connection] [0x1009c4080] activating connection: mach=false listener=false peer=false name=com.apple.MapKit.SnapshotService
+2026-11-09 06:19:51.289 Df Photos[6507:6474] [com.apple.BoardServices:XPCErrors] [C:3] Alloc com.apple.chronoservices
+2026-11-09 06:19:51.290 Df Photos[6507:6474] [com.apple.xpc:connection] [0x100862ec0] activating connection: mach=false listener=false peer=false name=(anonymous)
+2026-11-09 06:19:57.836 Df Photos[6507:6479] [com.apple.xpc:connection] [0x1009d86c0] activating connection: mach=false listener=false peer=false name=com.apple.MapKit.SnapshotService
+2026-11-09 06:20:10.662 Df PhotosReliveWidget[6546:58611] [com.apple.BoardServices:XPCErrors] [S:6] Alloc XPCServiceListener:6546:com.apple.mobileslideshow.PhotosReliveWidget:91FFCB53-E328-4037-8481-5CF5B03B2D77
+2026-11-09 06:20:10.667 Df PhotosReliveWidget[6546:58611] [com.apple.xpc:connection] [0x102c10260] activating connection: mach=false listener=false peer=true name=com.apple.mobileslideshow.PhotosReliveWidget.peer[3675].0x102c10260
+2026-11-09 06:20:10.676 Df PhotosReliveWidget[6546:59a7a] [com.apple.chrono:timeline] Batch begin (ti-2542fe) - locale: en_US (fixed en_US)
+2026-11-09 06:20:10.677 Df PhotosReliveWidget[6546:59a7a] [com.apple.chrono:timeline] intent = {
+    "_extensionBundleId" = "com.apple.mobileslideshow.PhotosReliveWidget";
+    "_launchId" = "com.apple.mobileslideshow";
+    appIntentIdentifier = PhotosReliveWidgetFeaturedConfiguration;
+    serializedParameters =     {
+        alwaysDisplayInFullColor = 0;
+        enableSpatialEffect = 1;
+    };
+}
+2026-11-09 06:20:10.677 Df PhotosReliveWidget[6546:59a7a] [com.apple.chrono:timeline] Request began for com.apple.mobileslideshow.PhotosReliveWidget:systemSmall:9042110358117915459 - to archive: /Users/runner/Library/Developer/CoreSimulator/Devices/2FEACF5E-886C-4FB8-A137-C571FBA5CF5C/data/tmp/com.apple.chrono/NSIRD_chronod_LyUmUT/systemSmall--9042110358117915459----164.33w-164.33h-27.94r-1VTNgEwDUstZ1uS6fX0#4whja22jdasM+9uwBap5KvY=.chrono-timeline
+2026-11-09 06:20:10.766 Df PhotosReliveWidget[6546:59a7a] [com.apple.appintents:Execution] Beginning InitializeAction <<SB:787F09478946>>
+2026-11-09 06:20:10.766 Df PhotosReliveWidget[6546:59a7a] [com.apple.appintents:Execution] [InitializeAction <<N:787F09478946>>] Found PhotosReliveWidgetFeaturedConfiguration matching PhotosReliveWidgetFeaturedConfiguration registered with AppManager
+2026-11-09 06:20:10.767 Df PhotosReliveWidget[6546:59a7a] [com.apple.appintents:Execution] Prepared alwaysDisplayInFullColor to Bool(false))
+2026-11-09 06:20:10.767 Df PhotosReliveWidget[6546:59a7a] [com.apple.appintents:Execution] Prepared enableSpatialEffect to Bool(true))
+2026-11-09 06:20:10.767 Df PhotosReliveWidget[6546:59a7a] [com.apple.appintents:Execution] Ending InitializeAction <<SE:787F09478946>>
+2026-11-09 06:20:10.767 Df PhotosReliveWidget[6546:59a7a] [com.apple.appintents:Execution] Beginning ResolveParameters <<SB:9D93CB216BA5>>
+2026-11-09 06:20:10.767 Df PhotosReliveWidget[6546:59a7a] [com.apple.appintents:Execution] Building resolver for parameter alwaysDisplayInFullColor<Bool> = false
+2026-11-09 06:20:10.767 Df PhotosReliveWidget[6546:59a7a] [com.apple.appintents:Execution] Building resolver: Bool → Bool:PhotosReliveWidgetFeaturedConfiguration:alwaysDisplayInFullColor
+2026-11-09 06:20:10.767 Df PhotosReliveWidget[6546:59a7a] [com.apple.appintents:Execution] Building resolver for parameter enableSpatialEffect<Bool> = true
+2026-11-09 06:20:10.767 Df PhotosReliveWidget[6546:59a7a] [com.apple.appintents:Execution] Building resolver: Bool → Bool:PhotosReliveWidgetFeaturedConfiguration:enableSpatialEffect
+2026-11-09 06:20:10.767 Df PhotosReliveWidget[6546:59a7a] [com.apple.appintents:Execution] Ending ResolveParameters <<SE:9D93CB216BA5>>
+2026-11-09 06:20:10.768 Df PhotosReliveWidget[6546:6492] [com.apple.photos.backend:PhotoKit] PHPhotoLibrary openAndWaitWithUpgrade: authorization status is 3
+2026-11-09 06:20:10.768 Df PhotosReliveWidget[6546:6492] [com.apple.photos.PhotosReliveWidget:TimelineProvider] timeline requested for size systemSmall
+2026-11-09 06:20:10.768 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:Memories] Prepare TimelineDataSource for WidgetSize:{164.33, 164.33}:
+2026-11-09 06:20:10.783 Df PhotosReliveWidget[6546:6492] [com.apple.photos.backend:PersistentHistory] beginObservingChanges: _observerCount became 1 (resuming), _lastToken = <NSPersistentHistoryToken - {
+    "3F642A05-50EB-4DB3-8C26-3554B5F25849" = 89;
+}>
+2026-11-09 06:20:10.784 Df PhotosReliveWidget[6546:6492] [com.apple.photos.backend:PersistentHistory] Change distributor advanced _lastToken to: <NSPersistentHistoryToken - {
+    "3F642A05-50EB-4DB3-8C26-3554B5F25849" = 91;
+}>
+2026-11-09 06:20:10.784 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SharedLibrary] PXSharedLibraryStatusProvider deferring initialization... (<Invitation: 0, Preview: 0, Shared Library: 0, Exiting: 0>)
+2026-11-09 06:20:10.785 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Content Syndication not available because multilibrary mode is not enabled in this process.
+2026-11-09 06:20:10.785 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Not yet ready to load the real data source manager, so loading an empty one instead.
+2026-11-09 06:20:10.785 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Content syndication data source manager changed from (null) to PXContentSyndicationEmptyDataSourceManager
+2026-11-09 06:20:10.785 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Content Syndication not available because multilibrary mode is not enabled in this process.
+2026-11-09 06:20:10.785 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Content Syndication not available because multilibrary mode is not enabled in this process.
+2026-11-09 06:20:10.785 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Content Syndication not available because multilibrary mode is not enabled in this process.
+2026-11-09 06:20:10.785 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Loading real data source manager.
+2026-11-09 06:20:10.785 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Content Syndication not available because multilibrary mode is not enabled in this process.
+2026-11-09 06:20:10.785 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Using empty data source manager, as content syndication is not available.
+2026-11-09 06:20:10.785 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:SyndicationUI] ContentSyndicationConfiguration: Content syndication data source manager changed from (null) to PXContentSyndicationEmptyDataSourceManager
+2026-11-09 06:20:10.801 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:Memories] 0 memories and 0 suggestions are featured
+2026-11-09 06:20:10.801 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:Memories] Candidate For Scheduling - Memories:0, Suggestions:0
+2026-11-09 06:20:10.811 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:Memories] No fallback memories
+2026-11-09 06:20:10.814 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:Memories] No fallback suggestions
+2026-11-09 06:20:10.815 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:Memories] Candidate For Scheduling - Memories:0, Suggestions:0
+2026-11-09 06:20:10.815 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:Memories] Used For Scheduling - Memories:0, Suggestions:0
+2026-11-09 06:20:10.815 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:Memories] WidgetTimeline Small - index: 0, timelines: 1
+2026-11-09 06:20:10.815 E  PhotosReliveWidget[6546:6492] [com.apple.photos.ui:Memories] No timeline candidates
+2026-11-09 06:20:10.816 Df PhotosReliveWidget[6546:6492] [com.apple.xpc:connection] [0x102a1d750] activating connection: mach=true listener=false peer=false name=com.apple.proactive.ProactiveSuggestionClientModel.xpc
+2026-11-09 06:20:10.817 Df PhotosReliveWidget[6546:6492] [com.apple.xpc:connection] [0x102a1d750] failed to do a bootstrap look-up: xpc_error=[3: No such process]
+2026-11-09 06:20:10.817 Df PhotosReliveWidget[6546:6492] [com.apple.xpc:connection] [0x102a1d750] invalidated after a failed init
+2026-11-09 06:20:10.817 Df PhotosReliveWidget[6546:6492] [com.apple.duetexpertd.atx:blending] Creating a ProactiveSuggestionClientModel object for clientModelId: com.apple.photos.small
+2026-11-09 06:20:10.817 E  PhotosReliveWidget[6546:58611] [com.apple.duetexpertd.atx:blending] Blending: Connection to Proactive Suggestion Client Model server interrupted for clientModelId: (null).
+2026-11-09 06:20:10.818 Df PhotosReliveWidget[6546:6492] [com.apple.photos.ui:Memories] ProactiveSuggester: 0 suggestions for com.apple.photos.small
+2026-11-09 06:20:10.820 Df PhotosReliveWidget[6546:6492] [com.apple.duetexpertd.atx:blending] Blending: (com.apple.photos.small) Updating suggestions. Client Model produced 0 new suggestions.
+2026-11-09 06:20:10.821 Df PhotosReliveWidget[6546:6492] [com.apple.duetexpertd.atx:blending] Blending: (com.apple.photos.small) Transmiting...
+2026-11-09 06:20:10.823 Df PhotosReliveWidget[6546:6492] [com.apple.duetexpertd.atx:blending] Blending: (com.apple.photos.small) Done transmitting.
+2026-11-09 06:20:10.823 E  PhotosReliveWidget[6546:58611] [com.apple.duetexpertd.atx:blending] Blending: Error while communicating with Suggestion Receiver. Error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.proactive.ProactiveSuggestionClientModel.xpc was invalidated: Connection init failed at lookup with error 3 - No such process." UserInfo={NSDebugDescription=The connection to service named com.apple.proactive.ProactiveSuggestionClientModel.xpc was invalidated: Connection init failed at lookup with error 3 - No such process.}.
+2026-11-09 06:20:10.824 Df PhotosReliveWidget[6546:6492] [com.apple.photos.PhotosReliveWidget:TimelineProvider] timeline request returned no entries; using fallback no-content state
+2026-11-09 06:20:10.825 Df PhotosReliveWidget[6546:6492] [com.apple.photos.PhotosReliveWidget:TimelineProvider] scheduled timeline reload because content unavailable at 2026-11-09 07:22:04 +0000
+2026-11-09 06:20:10.826 Df PhotosReliveWidget[6546:6492] [com.apple.photos.PhotosReliveWidget:TimelineProvider] timeline request completed for size systemSmall with entries [noContentEntry]
+2026-11-09 06:20:10.826 Df PhotosReliveWidget[6546:6492] [com.apple.photos.backend:PersistentHistory] endObservingChanges: _observerCount became 0 (pausing), _lastToken = <NSPersistentHistoryToken - {
+    "3F642A05-50EB-4DB3-8C26-3554B5F25849" = 91;
+}>
+2026-11-09 06:20:10.833 Df PhotosReliveWidget[6546:6492] [com.apple.chrono:widget] Archive deployment version: DeploymentVersion(base: SwiftUI.ArchivedViewInput.DeploymentVersion(rawValue: 2))
+2026-11-09 06:20:10.835 Df PhotosReliveWidget[6546:6492] [com.apple.chrono:widget] Supports content layers? true, archiveVersion=3
+2026-11-09 06:20:10.840 Df PhotosReliveWidget[6546:6492] [com.apple.chrono:widget] Supports content layers? true, archiveVersion=3
+2026-11-09 06:20:10.905 Df PhotosReliveWidget[6546:6492] [com.apple.chrono:timeline] Request ended for com.apple.mobileslideshow.PhotosReliveWidget:systemSmall:9042110358117915459 - success
+2026-11-09 06:20:10.905 Df PhotosReliveWidget[6546:6492] [com.apple.chrono:timeline] Batch end (ti-2542fe) - success
+2026-11-09 06:20:12.037 Df Photos[6507:58b20] [com.apple.chrono:ChronoServices] chrono widget service (service-side) connection activated
+2026-11-09 06:20:12.630 Df Photos[6507:6474] [com.apple.photos.ui:Memories] CHSTimelineController reloadTimeline completed for widget kind com.apple.mobileslideshow.PhotosReliveWidget
+2026-11-09 06:20:31.303 Df PhotosReliveWidget[6546:58611] [com.apple.xpc:connection] [0x102c10260] invalidated because the client process (pid 3675) either cancelled the connection or exited
+2026-11-09 06:20:33.061 E  PhotosReliveWidget[6546:58611] [com.apple.BoardServices:XPCErrors] [S:6] Error received: Connection invalidated.
+2026-11-09 06:21:09.653 Df Photos[6507:58b20] [com.apple.chrono:Subscriptions] [extensions] Resubscribing to server if necessary
+2026-11-09 06:21:09.654 Df Photos[6507:58b20] [com.apple.chrono:Subscriptions] [extensions] No server subscription necessary.
+2026-11-09 06:21:09.727 Df Photos[6507:6474] [com.apple.photos.ui:Memories] Calling reloadTimeline on CHSTimelineController for widget kind com.apple.mobileslideshow.PhotosReliveWidget.collections
+2026-11-09 06:21:10.221 Df Photos[6507:58b20] [com.apple.chrono:Subscriptions] [remoteDevices] Resubscribing to server if necessary
+2026-11-09 06:21:10.222 Df Photos[6507:58b20] [com.apple.chrono:Subscriptions] [remoteDevices] No server subscription necessary.
+2026-11-09 06:21:10.251 Df Photos[6507:58b20] [com.apple.chrono:Subscriptions] [timelineEntryRelevance] Resubscribing to server if necessary
+2026-11-09 06:21:10.283 Df Photos[6507:58b20] [com.apple.chrono:Subscriptions] [timelineEntryRelevance] No server subscription necessary.
+2026-11-09 06:21:10.284 Df Photos[6507:58b20] [com.apple.chrono:Subscriptions] [widgetRelevance] Resubscribing to server if necessary
+2026-11-09 06:21:10.284 Df Photos[6507:58b20] [com.apple.chrono:Subscriptions] [widgetRelevance] No server subscription necessary.
+2026-11-09 06:21:15.459 Df Photos[6507:6474] [com.apple.photos.ui:Memories] CHSTimelineController reloadTimeline completed for widget kind com.apple.mobileslideshow.PhotosReliveWidget.collections
+2026-11-09 06:21:15.473 A  Photos[6507:638a] (SyncedDefaults) kvs/set-object
+2026-11-09 06:21:23.313 A  Photos[6507:638a] (SyncedDefaults) kvs/set-object
+2026-11-09 06:21:23.600 E  Photos[6507:49b2d] [com.apple.appintents:Metadata] Failed to refresh AppShortcut parameters with error: Error Domain=LNConnectionErrorDomain Code=1002 "LNConnectionErrorCodeRequestTimeout" UserInfo={NSLocalizedDescription=LNConnectionErrorCodeRequestTimeout}
+2026-11-09 06:21:29.304 Df Photos[6507:648c] [com.apple.xpc:connection] [0x1007d7180] activating connection: mach=true listener=false peer=false name=com.apple.photoanalysisd
+2026-11-09 06:21:42.967 A  Photos[6507:638a] (SyncedDefaults) kvs/set-object
+2026-11-09 06:21:51.287 Df Photos[6507:58612] [com.apple.xpc:connection] [0x1007d7180] Re-initialization successful; calling out to event handler with XPC_ERROR_CONNECTION_INTERRUPTED
+2026-11-09 06:22:12.984 E  Photos[6507:58612] (PhotoLibraryServices) Photo analysis client XPC connection interrupted
+2026-11-09 06:22:13.194 E  Photos[6507:648c] [com.apple.photos.ui:UI] PXAnalyticsFeatureUsageCountDestination - recordFeatureUsageCounts failed. Error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.photoanalysisd" UserInfo={NSDebugDescription=connection to service named com.apple.photoanalysisd}
+2026-11-09 06:22:28.113 Df Photos[6507:634c] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-09 06:22:31.660 Df Photos[6507:5bfe9] [com.apple.photos.backend:PhotoKit] FeatureAvailability - availability was nil, initing new
+2026-11-09 06:22:32.606 Df Photos[6507:634c] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-09 06:22:33.720 Df Photos[6507:634c] [com.apple.photos.backend:PhotoSharing] PLAccountStore did change; invalidating sharedStreamsEnabled
+2026-11-09 06:22:36.148 Df Photos[6507:634c] [com.apple.photos.backend:MyPhotoStream] Clearing cached PLPhotoSharingHelper state
+2026-11-09 06:22:40.181 A  Photos[6507:634c] (Accounts) accounts/accounts-with-types-sync
+2026-11-09 06:22:45.187 Df Photos[6507:634c] [com.apple.xpc:connection] [0x1007b4d60] activating connection: mach=true listener=false peer=false name=com.apple.accountsd.accountmanager
+2026-11-09 06:22:45.244 Df Photos[6507:634c] [com.apple.photos.backend:Backend] No primaryAppleAccount
+2026-11-09 06:22:45.245 Df Photos[6507:634c] [com.apple.photos.backend:PhotoSharing] Determining if Shared Albums enabled: Found (null) with:
+isEnabledForSharedStreams: NO
+isProvisionedForDataclass: NO
+isEDUMode: NO
+isLockdownMode: NO
+2026-11-09 06:22:45.252 Df Photos[6507:634c] [com.apple.photos.backend:PhotoSharing] sharedStreamsEnabled: NO
+2026-11-09 06:22:57.450 Df Photos[6507:634c] [com.apple.photos.ui.Lemonade:SharedAlbumsActivityItems] [Notifications:Invitations] Initialized Item List Manager. Batch fetch limit: 0. Unread only: No
+2026-11-09 06:23:02.386 Df Photos[6507:634c] [com.apple.photos.ui:InAppNotifications] Updating invitation notifications. Shared Library: 0. Shared Album: 0
+2026-11-09 06:23:03.419 Df Photos[6507:634c] [com.apple.photos.ui.Lemonade:SharedAlbumsActivityItems] [Notifications:Activity] Initialized Item List Manager. Batch fetch limit: 1. Unread only: Yes
+2026-11-09 06:23:04.937 Df Photos[6507:634c] [com.apple.photos.ui:ContentPrivacyUI] [SystemAuthenticationObserver] Scheduling async authentication type update
+2026-11-09 06:23:04.940 Df Photos[6507:634c] [com.apple.photos.ui:ContentPrivacyUI] PrivacyController [recentlydeleted]: Smart album 'Recently Deleted' just changed privacy sensitivity to YES
+2026-11-09 06:23:04.956 Df Photos[6507:5d058] [com.apple.photos.ui:ContentPrivacyUI] [SystemAuthenticationObserver] Performing authentication type update in background
+2026-11-09 06:23:04.956 Df Photos[6507:5d058] [com.apple.photos.ui:ContentPrivacyUI] [SystemAuthenticationObserver] Calculating authentication type
+2026-11-09 06:23:04.957 Df Photos[6507:634c] [com.apple.photos.ui:UI] [UndoActionsInvalidator] Initializing
+2026-11-09 06:23:05.005 Df Photos[6507:5d058] [com.apple.LocalAuthentication:Client] LA logging set up for this process.
+2026-11-09 06:23:05.011 Df Photos[6507:5d058] [com.apple.LocalAuthentication:Client,LAContext] Creating LAContext new cid:1
+2026-11-09 06:23:05.045 Df Photos[6507:5d058] [com.apple.xpc:connection] [0x1008f1080] activating connection: mach=true listener=false peer=false name=com.apple.CoreAuthentication.daemon
+2026-11-09 06:23:05.070 Df Photos[6507:634c] [com.apple.photos.ui:UserStatus] <PXCPLPhotoLibrarySource: 0x6000033148c0> IsCloudPhotosEnabled: 0, IsLocalModeEnabled: 0, IsKeepOriginalsEnabled: 1, FractionCompletedForRebuild: -, IsRebuildingThumbnails: 0 (new)
+2026-11-09 06:23:05.116 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Checking Memory Creation availability
+2026-11-09 06:23:07.484 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Checking Memory Creation availability
+2026-11-09 06:23:07.899 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Checking Memory Creation availability
+2026-11-09 06:23:08.837 Df Photos[6507:634c] [com.apple.photos.ui.Lemonade:SharedAlbumsActivityItems] [Notifications:Invitations] Retrieved 0 activities. Cannot fetch any more activities.
+2026-11-09 06:23:08.844 Df Photos[6507:634c] [com.apple.photos.ui:InAppNotifications] Initial shared album invitation fetch is complete
+2026-11-09 06:23:08.844 Df Photos[6507:634c] [com.apple.photos.ui:InAppNotifications] Updating invitation notifications. Shared Library: 0. Shared Album: 0
+2026-11-09 06:23:08.865 Df Photos[6507:634c] [com.apple.photos.ui.Lemonade:SharedAlbumsActivityItems] [Notifications:Activity] Retrieved 0 activities. Cannot fetch any more activities.
+2026-11-09 06:23:20.716 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Apple Intelligence availability for device language code en is restricted
+2026-11-09 06:23:20.808 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Apple Intelligence availability for device language code en is restricted
+2026-11-09 06:23:21.290 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Apple Intelligence availability for device language code en is restricted
+2026-11-09 06:23:27.639 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons: [siriAssetIsNotReady, assetIsNotReady]
+2026-11-09 06:23:27.722 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons: [siriAssetIsNotReady, assetIsNotReady]
+2026-11-09 06:23:28.771 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons has .policyLimited? <private>
+2026-11-09 06:23:28.818 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons has .policyLimited? <private>
+2026-11-09 06:23:28.821 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Is policyLimited? <private>
+2026-11-09 06:23:29.265 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Is policyLimited? <private>
+2026-11-09 06:23:29.267 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Device is unavailable for Memory Creation: 🔄 Unavailable: Device is eligible to use MC but waiting on resource downloads 
+
+    [✅] Enough storage to run Apple Intelligence features
+    [❌] Apple Intelligence model assets finished downloading
+    [❌] Apple Intelligence Siri assets finished downloading 
+    [✅] Regional safety assets are up-to-date
+    [Not run] Shared Library enabled and "Both Libraries" option selected
+2026-11-09 06:23:29.565 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Device is unavailable for Memory Creation: 🔄 Unavailable: Device is eligible to use MC but waiting on resource downloads 
+
+    [✅] Enough storage to run Apple Intelligence features
+    [❌] Apple Intelligence model assets finished downloading
+    [❌] Apple Intelligence Siri assets finished downloading 
+    [✅] Regional safety assets are up-to-date
+    [Not run] Shared Library enabled and "Both Libraries" option selected
+2026-11-09 06:23:30.617 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons: [siriAssetIsNotReady, assetIsNotReady]
+2026-11-09 06:23:30.618 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons has .policyLimited? <private>
+2026-11-09 06:23:30.618 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Is policyLimited? <private>
+2026-11-09 06:23:30.618 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Device is unavailable for Memory Creation: 🔄 Unavailable: Device is eligible to use MC but waiting on resource downloads 
+
+    [✅] Enough storage to run Apple Intelligence features
+    [❌] Apple Intelligence model assets finished downloading
+    [❌] Apple Intelligence Siri assets finished downloading 
+    [✅] Regional safety assets are up-to-date
+    [Not run] Shared Library enabled and "Both Libraries" option selected
+2026-11-09 06:23:30.618 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Checking Memory Creation availability
+2026-11-09 06:23:30.687 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Checking Memory Creation availability
+2026-11-09 06:23:30.688 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Checking Memory Creation availability
+2026-11-09 06:23:37.072 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Apple Intelligence availability for device language code en is restricted
+2026-11-09 06:23:37.073 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons: [siriAssetIsNotReady, assetIsNotReady]
+2026-11-09 06:23:37.582 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Apple Intelligence availability for device language code en is restricted
+2026-11-09 06:23:37.582 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons: [assetIsNotReady, siriAssetIsNotReady]
+2026-11-09 06:23:37.582 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons has .policyLimited? <private>
+2026-11-09 06:23:37.582 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Is policyLimited? <private>
+2026-11-09 06:23:37.582 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Device is unavailable for Memory Creation: 🔄 Unavailable: Device is eligible to use MC but waiting on resource downloads 
+
+    [✅] Enough storage to run Apple Intelligence features
+    [❌] Apple Intelligence model assets finished downloading
+    [❌] Apple Intelligence Siri assets finished downloading 
+    [✅] Regional safety assets are up-to-date
+    [Not run] Shared Library enabled and "Both Libraries" option selected
+2026-11-09 06:23:37.583 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Checking Memory Creation availability
+2026-11-09 06:23:37.583 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons has .policyLimited? <private>
+2026-11-09 06:23:37.583 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Is policyLimited? <private>
+2026-11-09 06:23:37.583 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Device is unavailable for Memory Creation: 🔄 Unavailable: Device is eligible to use MC but waiting on resource downloads 
+
+    [✅] Enough storage to run Apple Intelligence features
+    [❌] Apple Intelligence model assets finished downloading
+    [❌] Apple Intelligence Siri assets finished downloading 
+    [✅] Regional safety assets are up-to-date
+    [Not run] Shared Library enabled and "Both Libraries" option selected
+2026-11-09 06:23:37.583 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Checking Memory Creation availability
+2026-11-09 06:23:38.889 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Apple Intelligence availability for device language code en is restricted
+2026-11-09 06:23:38.890 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons: [siriAssetIsNotReady, assetIsNotReady]
+2026-11-09 06:23:38.891 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons has .policyLimited? <private>
+2026-11-09 06:23:38.892 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Is policyLimited? <private>
+2026-11-09 06:23:38.893 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Device is unavailable for Memory Creation: 🔄 Unavailable: Device is eligible to use MC but waiting on resource downloads 
+
+    [✅] Enough storage to run Apple Intelligence features
+    [❌] Apple Intelligence model assets finished downloading
+    [❌] Apple Intelligence Siri assets finished downloading 
+    [✅] Regional safety assets are up-to-date
+    [Not run] Shared Library enabled and "Both Libraries" option selected
+2026-11-09 06:23:41.480 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Checking Memory Creation availability
+2026-11-09 06:23:42.535 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Apple Intelligence availability for device language code en is restricted
+2026-11-09 06:23:42.536 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons: [assetIsNotReady, siriAssetIsNotReady]
+2026-11-09 06:23:42.536 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons has .policyLimited? <private>
+2026-11-09 06:23:42.536 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Is policyLimited? <private>
+2026-11-09 06:23:42.536 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Device is unavailable for Memory Creation: 🔄 Unavailable: Device is eligible to use MC but waiting on resource downloads 
+
+    [✅] Enough storage to run Apple Intelligence features
+    [❌] Apple Intelligence model assets finished downloading
+    [❌] Apple Intelligence Siri assets finished downloading 
+    [✅] Regional safety assets are up-to-date
+    [Not run] Shared Library enabled and "Both Libraries" option selected
+2026-11-09 06:23:42.536 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Checking Memory Creation availability
+2026-11-09 06:23:42.584 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Apple Intelligence availability for device language code en is restricted
+2026-11-09 06:23:42.584 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons: [siriAssetIsNotReady, assetIsNotReady]
+2026-11-09 06:23:42.584 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons has .policyLimited? <private>
+2026-11-09 06:23:42.584 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Is policyLimited? <private>
+2026-11-09 06:23:42.584 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Device is unavailable for Memory Creation: 🔄 Unavailable: Device is eligible to use MC but waiting on resource downloads 
+
+    [✅] Enough storage to run Apple Intelligence features
+    [❌] Apple Intelligence model assets finished downloading
+    [❌] Apple Intelligence Siri assets finished downloading 
+    [✅] Regional safety assets are up-to-date
+    [Not run] Shared Library enabled and "Both Libraries" option selected
+2026-11-09 06:23:42.584 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Checking Memory Creation availability
+2026-11-09 06:23:42.599 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Apple Intelligence availability for device language code en is restricted
+2026-11-09 06:23:42.600 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons: [assetIsNotReady, siriAssetIsNotReady]
+2026-11-09 06:23:42.600 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons has .policyLimited? <private>
+2026-11-09 06:23:42.600 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Is policyLimited? <private>
+2026-11-09 06:23:42.600 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Device is unavailable for Memory Creation: 🔄 Unavailable: Device is eligible to use MC but waiting on resource downloads 
+
+    [✅] Enough storage to run Apple Intelligence features
+    [❌] Apple Intelligence model assets finished downloading
+    [❌] Apple Intelligence Siri assets finished downloading 
+    [✅] Regional safety assets are up-to-date
+    [Not run] Shared Library enabled and "Both Libraries" option selected
+2026-11-09 06:23:42.600 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Checking Memory Creation availability
+2026-11-09 06:23:43.366 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Apple Intelligence availability for device language code en is restricted
+2026-11-09 06:23:43.368 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons: [assetIsNotReady, siriAssetIsNotReady]
+2026-11-09 06:23:43.368 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons has .policyLimited? <private>
+2026-11-09 06:23:43.368 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Is policyLimited? <private>
+2026-11-09 06:23:43.368 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Device is unavailable for Memory Creation: 🔄 Unavailable: Device is eligible to use MC but waiting on resource downloads 
+
+    [✅] Enough storage to run Apple Intelligence features
+    [❌] Apple Intelligence model assets finished downloading
+    [❌] Apple Intelligence Siri assets finished downloading 
+    [✅] Regional safety assets are up-to-date
+    [Not run] Shared Library enabled and "Both Libraries" option selected
+2026-11-09 06:23:43.368 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Checking Memory Creation availability
+2026-11-09 06:23:43.424 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Apple Intelligence availability for device language code en is restricted
+2026-11-09 06:23:43.424 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons: [siriAssetIsNotReady, assetIsNotReady]
+2026-11-09 06:23:43.424 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons has .policyLimited? <private>
+2026-11-09 06:23:43.424 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Is policyLimited? <private>
+2026-11-09 06:23:43.424 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Device is unavailable for Memory Creation: 🔄 Unavailable: Device is eligible to use MC but waiting on resource downloads 
+
+    [✅] Enough storage to run Apple Intelligence features
+    [❌] Apple Intelligence model assets finished downloading
+    [❌] Apple Intelligence Siri assets finished downloading 
+    [✅] Regional safety assets are up-to-date
+    [Not run] Shared Library enabled and "Both Libraries" option selected
+2026-11-09 06:23:43.425 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Checking Memory Creation availability
+2026-11-09 06:23:43.453 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Apple Intelligence availability for device language code en is restricted
+2026-11-09 06:23:43.453 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons: [siriAssetIsNotReady, assetIsNotReady]
+2026-11-09 06:23:43.453 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons has .policyLimited? <private>
+2026-11-09 06:23:43.453 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Is policyLimited? <private>
+2026-11-09 06:23:44.115 Df Photos[6507:5d0a0] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Device is unavailable for Memory Creation: 🔄 Unavailable: Device is eligible to use MC but waiting on resource downloads 
+
+    [✅] Enough storage to run Apple Intelligence features
+    [❌] Apple Intelligence model assets finished downloading
+    [❌] Apple Intelligence Siri assets finished downloading 
+    [✅] Regional safety assets are up-to-date
+    [Not run] Shared Library enabled and "Both Libraries" option selected
+2026-11-09 06:23:44.223 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Apple Intelligence availability for device language code en is restricted
+2026-11-09 06:23:44.224 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons: [siriAssetIsNotReady, assetIsNotReady]
+2026-11-09 06:23:44.224 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons has .policyLimited? <private>
+2026-11-09 06:23:44.225 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Is policyLimited? <private>
+2026-11-09 06:23:44.225 Df Photos[6507:5c719] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Device is unavailable for Memory Creation: 🔄 Unavailable: Device is eligible to use MC but waiting on resource downloads 
+
+    [✅] Enough storage to run Apple Intelligence features
+    [❌] Apple Intelligence model assets finished downloading
+    [❌] Apple Intelligence Siri assets finished downloading 
+    [✅] Regional safety assets are up-to-date
+    [Not run] Shared Library enabled and "Both Libraries" option selected
+2026-11-09 06:23:44.226 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Apple Intelligence availability for device language code en is restricted
+2026-11-09 06:23:44.226 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons: [siriAssetIsNotReady, assetIsNotReady]
+2026-11-09 06:23:44.226 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] greymatterRestrictedReasons has .policyLimited? <private>
+2026-11-09 06:23:44.226 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Is policyLimited? <private>
+2026-11-09 06:23:44.226 Df Photos[6507:5d0e5] [com.apple.photos.intelligence:MemoryCreationAvailabilityMonitor] Device is unavailable for Memory Creation: 🔄 Unavailable: Device is eligible to use MC but waiting on resource downloads 
+
+    [✅] Enough storage to run Apple Intelligence features
+    [❌] Apple Intelligence model assets finished downloading
+    [❌] Apple Intelligence Siri assets finished downloading 
+    [✅] Regional safety assets are up-to-date
+    [Not run] Shared Library enabled and "Both Libraries" option selected
+2026-11-09 06:23:44.227 Df Photos[6507:5c719] [com.apple.xpc:connection] [0x1007b4d60] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-11-09 06:23:44.228 Df Photos[6507:5c719] [com.apple.accounts:core] "The connection to ACDAccountStore was invalidated."
+2026-11-09 06:23:45.594 E  Photos[6507:5d0a0] [com.apple.MapKit:Snapshot] <0xb3> Snapshot failed to render: Error Domain=com.apple.maps.snapshot.timeout Code=-6 "(null)"
+2026-11-09 06:23:47.012 Df Photos[6507:5d0a0] [com.apple.xpc:connection] [0x1009c4080] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-11-09 06:23:51.413 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003516730> Received PXDataSourceManagerChangedDataSource
+2026-11-09 06:23:51.414 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003516730> Re-Prepare Counts
+2026-11-09 06:23:51.414 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003516730> ⎡ Will Prepare Asset Type Counts
+2026-11-09 06:23:51.415 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003516730> Is Prepared:1 (preparing:1 || usable:0)
+2026-11-09 06:23:51.461 Df Photos[6507:5d0a0] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003516730> ⎜ Prepare Asset Type Counts success:YES
+2026-11-09 06:23:54.228 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003516730> ⎣ Did Prepare Asset Type Counts
+2026-11-09 06:23:54.229 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003516730> >>> Counts (photos:11, videos:0, others:0)
+2026-11-09 06:23:54.232 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003516730> Prepare Counts If Needed
+2026-11-09 06:23:54.232 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003516730> Skipping Prepare (preparing:0 || usable:1)
+2026-11-09 06:23:55.067 Df PhotosFileProvider[18208:4ad9d] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-09 06:23:55.068 Df PhotosFileProvider[18208:4ad9d] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-09 06:23:55.072 Df PhotosReliveWidget[6546:6492] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-09 06:23:55.073 Df PhotosReliveWidget[6546:6492] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-09 06:23:55.073 Df PhotosFileProvider[6603:652d] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-09 06:23:55.073 Df PhotosFileProvider[6603:652d] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-09 06:23:56.767 Df PhotosPosterProvider[4526:4b1f] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-09 06:23:56.942 Df PhotosFileProvider[6595:6510] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-09 06:23:57.338 Df PhotosFileProvider[6595:6510] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-09 06:23:57.347 Df PhotosPosterProvider[4526:4b1f] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-09 06:23:57.984 Df Photos[6507:634c] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-09 06:23:57.987 Df Photos[6507:634c] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-09 06:23:57.989 Df Photos[6507:634c] [com.apple.photos.backend:PhotoSharing] PLAccountStore did change; invalidating sharedStreamsEnabled
+2026-11-09 06:23:57.994 Df Photos[6507:634c] [com.apple.photos.backend:MyPhotoStream] Clearing cached PLPhotoSharingHelper state
+2026-11-09 06:23:58.009 A  Photos[6507:634c] (Accounts) accounts/accounts-with-types-sync
+2026-11-09 06:23:58.010 Df Photos[6507:634c] [com.apple.xpc:connection] [0x1008fc0d0] activating connection: mach=true listener=false peer=false name=com.apple.accountsd.accountmanager
+2026-11-09 06:23:58.025 Df Photos[6507:634c] [com.apple.photos.backend:Backend] No primaryAppleAccount
+2026-11-09 06:23:58.026 Df Photos[6507:634c] [com.apple.photos.backend:PhotoSharing] Determining if Shared Albums enabled: Found (null) with:
+isEnabledForSharedStreams: NO
+isProvisionedForDataclass: NO
+isEDUMode: NO
+isLockdownMode: NO
+2026-11-09 06:23:58.026 Df Photos[6507:634c] [com.apple.photos.backend:PhotoSharing] sharedStreamsEnabled: NO
+2026-11-09 06:23:58.341 Df PhotosPosterProvider[4526:4b1f] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-09 06:23:58.342 Df PhotosFileProvider[6595:6510] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-09 06:23:58.342 Df PhotosReliveWidget[6546:6492] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-09 06:23:58.342 Df PhotosReliveWidget[6546:6492] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-09 06:23:58.343 Df PhotosFileProvider[6603:652d] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-09 06:23:58.343 Df PhotosFileProvider[6603:652d] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-09 06:23:58.343 Df PhotosFileProvider[6595:6510] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-09 06:23:58.343 Df PhotosFileProvider[18208:4ad9d] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-09 06:23:58.343 Df PhotosFileProvider[18208:4ad9d] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-09 06:23:58.353 Df Photos[6507:634c] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-09 06:23:58.353 Df Photos[6507:634c] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-09 06:23:58.353 Df Photos[6507:634c] [com.apple.photos.backend:PhotoSharing] PLAccountStore did change; invalidating sharedStreamsEnabled
+2026-11-09 06:23:58.353 Df Photos[6507:634c] [com.apple.photos.backend:MyPhotoStream] Clearing cached PLPhotoSharingHelper state
+2026-11-09 06:23:58.434 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003516730> Received PXDataSourceManagerChangedDataSource
+2026-11-09 06:23:58.435 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003516730> Re-Prepare Counts
+2026-11-09 06:23:58.435 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003516730> ⎡ Will Prepare Asset Type Counts
+2026-11-09 06:23:58.435 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003516730> Is Prepared:1 (preparing:1 || usable:0)
+2026-11-09 06:23:58.436 Df Photos[6507:5e170] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003516730> ⎜ Prepare Asset Type Counts success:YES
+2026-11-09 06:23:58.448 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000351e940> Received PXDataSourceManagerChangedDataSource
+2026-11-09 06:23:58.448 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000351e940> Re-Prepare Counts
+2026-11-09 06:23:58.448 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000351e940> ⎡ Will Prepare Asset Type Counts
+2026-11-09 06:23:58.449 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000351e940> Is Prepared:1 (preparing:1 || usable:0)
+2026-11-09 06:23:58.449 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003516730> ⎣ Did Prepare Asset Type Counts
+2026-11-09 06:23:58.449 Df Photos[6507:5d0a0] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000351e940> ⎜ Prepare Asset Type Counts success:YES
+2026-11-09 06:23:58.449 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000351e940> ⎣ Did Prepare Asset Type Counts
+2026-11-09 06:23:58.701 A  Photos[6507:47238] (Accounts) accounts/accounts-with-types-sync
+2026-11-09 06:23:58.702 Df Photos[6507:47238] [com.apple.photos.backend:Backend] No primaryAppleAccount
+2026-11-09 06:23:59.698 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003516730> Received PXDataSourceManagerChangedDataSource
+2026-11-09 06:23:59.698 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003516730> Re-Prepare Counts
+2026-11-09 06:23:59.698 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003516730> ⎡ Will Prepare Asset Type Counts
+2026-11-09 06:23:59.698 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003516730> Is Prepared:1 (preparing:1 || usable:0)
+2026-11-09 06:23:59.699 Df Photos[6507:5e170] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003516730> ⎜ Prepare Asset Type Counts success:YES
+2026-11-09 06:24:01.532 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000351e940> Received PXDataSourceManagerChangedDataSource
+2026-11-09 06:24:01.532 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000351e940> Re-Prepare Counts
+2026-11-09 06:24:01.532 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000351e940> ⎡ Will Prepare Asset Type Counts
+2026-11-09 06:24:01.532 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000351e940> Is Prepared:1 (preparing:1 || usable:0)
+2026-11-09 06:24:01.532 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x600003516730> ⎣ Did Prepare Asset Type Counts
+2026-11-09 06:24:01.533 Df Photos[6507:634c] [com.apple.photos.backend:PhotoSharing] Determining if Shared Albums enabled: Found (null) with:
+isEnabledForSharedStreams: NO
+isProvisionedForDataclass: NO
+isEDUMode: NO
+isLockdownMode: NO
+2026-11-09 06:24:01.533 Df Photos[6507:634c] [com.apple.photos.backend:PhotoSharing] sharedStreamsEnabled: NO
+2026-11-09 06:24:01.749 Df Photos[6507:5d0a0] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000351e940> ⎜ Prepare Asset Type Counts success:YES
+2026-11-09 06:24:01.762 Df PhotosPosterProvider[4526:4b1f] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-09 06:24:01.873 Df Photos[6507:634c] [com.apple.photos.ui:AssetsDataSourceCounts] <PXAssetsDataSourceCountsController:0x60000351e940> ⎣ Did Prepare Asset Type Counts
+2026-11-09 06:24:10.504 Df PhotosPosterProvider[4526:4b1f] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-09 06:24:10.539 Df Photos[6507:634c] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-09 06:24:10.540 Df PhotosFileProvider[6603:652d] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-09 06:24:10.540 Df PhotosFileProvider[6603:652d] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-09 06:24:10.541 Df PhotosFileProvider[18208:4ad9d] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-09 06:24:10.541 Df PhotosFileProvider[18208:4ad9d] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-09 06:24:10.546 Df Photos[6507:634c] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-09 06:24:10.580 Df Photos[6507:634c] [com.apple.photos.backend:PhotoSharing] PLAccountStore did change; invalidating sharedStreamsEnabled
+2026-11-09 06:24:10.580 Df PhotosReliveWidget[6546:6492] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-09 06:24:10.580 Df PhotosReliveWidget[6546:6492] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-09 06:24:10.581 Df Photos[6507:634c] [com.apple.photos.backend:MyPhotoStream] Clearing cached PLPhotoSharingHelper state
+2026-11-09 06:24:10.584 A  Photos[6507:634c] (Accounts) accounts/accounts-with-types-sync
+2026-11-09 06:24:10.959 Df PhotosFileProvider[6595:6510] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange, clearing cached properties in PLAccountStore.
+2026-11-09 06:24:10.959 Df PhotosFileProvider[6595:6510] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-09 06:24:11.358 Df Photos[6507:634c] [com.apple.photos.backend:Backend] No primaryAppleAccount
+2026-11-09 06:24:11.358 Df Photos[6507:634c] [com.apple.photos.backend:PhotoSharing] Determining if Shared Albums enabled: Found (null) with:
+isEnabledForSharedStreams: NO
+isProvisionedForDataclass: NO
+isEDUMode: NO
+isLockdownMode: NO
+2026-11-09 06:24:11.359 Df Photos[6507:634c] [com.apple.photos.backend:PhotoSharing] sharedStreamsEnabled: NO
+2026-11-09 06:24:13.894 Df PhotosPosterProvider[4526:4b1f] [com.apple.photos.backend:Backend] ACAccountStore accountDidChange. Posting PLAccountStoreDidChange notification.
+2026-11-09 06:24:13.945 Df Photos[6507:5ed53] [com.apple.photos.backend:PhotoKit] FeatureAvailability - availability was nil, initing new
+2026-11-09 06:24:40.589 Df Photos[6507:5d058] [com.apple.LocalAuthentication:Client,LAContext] LAContext[1:1:0] created new cid:1
+2026-11-09 06:24:47.302 Df Photos[6507:5d058] [com.apple.LocalAuthentication:Client,Biometry] canEvaluatePolicy:1 on LAContext[1:1:0] cid:2 returned Error Domain=com.apple.LocalAuthentication Code=-7 "No identities are enrolled." UserInfo={NSDebugDescription=No identities are enrolled., NSLocalizedDescription=Biometry is not enrolled.}
+2026-11-09 06:24:49.621 Df Photos[6507:5d058] [com.apple.LocalAuthentication:Client,LAContext] LAContext[1:1:0] deallocated
+2026-11-09 06:24:51.511 Df Photos[6507:5d058] [com.apple.LocalAuthentication:Client,LAContext] Creating LAContext new cid:3
+2026-11-09 06:25:00.716 Df Photos[6507:5fbac] [com.apple.xpc:connection] [0x1008f1080] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-11-09 06:25:01.042 Df Photos[6507:60007] [com.apple.xpc:connection] [0x1008fc0d0] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-11-09 06:25:01.285 Df Photos[6507:60038] [com.apple.accounts:core] "The connection to ACDAccountStore was invalidated."
+2026-11-09 06:25:30.475 Df Photos[6507:6068c] [com.apple.photos.backend:PhotoKit] FeatureAvailability - availability was nil, initing new
+2026-11-09 06:25:31.003 Df Photos[6507:5d058] [com.apple.xpc:connection] [0x105c1bd10] activating connection: mach=true listener=false peer=false name=com.apple.CoreAuthentication.daemon
+2026-11-09 06:25:31.245 Df Photos[6507:5d058] [com.apple.LocalAuthentication:Client,LAContext] LAContext[2:2:0] created new cid:3
+2026-11-09 06:25:31.384 Df Photos[6507:332c0] [com.apple.xpc:connection] [0x1009d86c0] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-11-09 06:25:32.367 Df Photos[6507:5d058] [com.apple.LocalAuthentication:Client] canEvaluatePolicy:2 on LAContext[2:2:0] cid:4 returned YES
+2026-11-09 06:25:32.367 Df Photos[6507:5d058] [com.apple.LocalAuthentication:Client,LAContext] Creating LAContext new cid:5
+2026-11-09 06:25:32.368 Df Photos[6507:5d058] [com.apple.xpc:connection] [0x1008f0d10] activating connection: mach=true listener=false peer=false name=com.apple.CoreAuthentication.daemon
+2026-11-09 06:25:32.537 Df Photos[6507:5d058] [com.apple.LocalAuthentication:Client,LAContext] LAContext[3:3:0] created new cid:5
+2026-11-09 06:25:32.584 Df Photos[6507:5d058] [com.apple.LocalAuthentication:Client] canEvaluatePolicy:3 on LAContext[3:3:0] cid:6 returned Error Domain=com.apple.LocalAuthentication Code=-1020 "This call is not supported on iOS Simulator." UserInfo={NSDebugDescription=This call is not supported on iOS Simulator., NSLocalizedDescription=Authentication failure.}
+2026-11-09 06:25:32.586 Df Photos[6507:5d058] [com.apple.LocalAuthentication:Client,Interactive,SPI] DomainState on LAContext[3:3:0]
+2026-11-09 06:25:32.909 Df Photos[6507:5d058] [com.apple.LocalAuthentication:Client,Interactive,SPI] DomainState on LAContext[3:3:0] returned: {
+    kLACDomainStateResultKeyAvailableBiometryTypes =     {
+        2 = 1;
+    };
+    kLACDomainStateResultKeyBiometryStateHashes =     {
+        2 = {length = 32, bytes = 0x00000000 00000000 00000000 00000000 ... 00000000 00000000 };
+    };
+}
+2026-11-09 06:25:32.910 Df Photos[6507:5d058] [com.apple.LocalAuthentication:Client,LAContext] LAContext[3:3:0] deallocated
+2026-11-09 06:25:32.910 Df Photos[6507:60a7e] [com.apple.xpc:connection] [0x1008f0d10] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-11-09 06:25:32.910 Df Photos[6507:5d058] [com.apple.LocalAuthentication:Client,LAContext] LAContext[2:2:0] deallocated
+2026-11-09 06:25:32.911 Df Photos[6507:60a7e] [com.apple.xpc:connection] [0x105c1bd10] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-11-09 06:25:32.912 Df Photos[6507:5d058] [com.apple.photos.ui:ContentPrivacyUI] [SystemAuthenticationObserver] Calculated authentication type as Passcode, took 147.9s
+2026-11-09 06:26:05.375 Df Photos[6507:60038] [com.apple.xpc:connection] [0x1008d1e80] activating connection: mach=false listener=false peer=false name=com.apple.intents.intents-helper
+2026-11-09 06:26:05.377 A  Photos[6507:60038] (Intents) Inject Image Proxy
+2026-11-09 06:26:07.493 A  Photos[6507:60038] (Intents) Inject Image Proxy
+2026-11-09 06:26:10.186 Df Photos[6507:60038] [com.apple.appintents:Execution] Prepared target to CollectionEntity(nil))
+2026-11-09 06:26:20.111 A  Photos[6507:60038] (Intents) Inject Image Proxy
+2026-11-09 06:26:22.277 A  Photos[6507:60038] (Intents) Inject Image Proxy
+2026-11-09 06:26:26.480 A  Photos[6507:60038] (Intents) Inject Image Proxy
+2026-11-09 06:26:26.841 E  Photos[6507:60a7f] [com.apple.siri:Intents] INImageProxyInjectionUtilitiesInjectProxiesIntoObjectWithContinuationHandler_block_invoke Timing out after 1 seconds during proxy injection to <_INDataImage: 0x6000021ae3a0>
+2026-11-09 06:26:26.843 E  Photos[6507:60a7f] [com.apple.siri:Intents] INImageProxyInjectionUtilitiesInjectProxiesIntoObjectWithContinuationHandler_block_invoke Timing out after 1 seconds during proxy injection to <_INDataImage: 0x6000021bb430>
+2026-11-09 06:26:26.844 E  Photos[6507:60a7f] [com.apple.siri:Intents] INImageProxyInjectionUtilitiesInjectProxiesIntoObjectWithContinuationHandler_block_invoke Timing out after 1 seconds during proxy injection to <_INDataImage: 0x6000021b8e60>
+2026-11-09 06:26:26.844 E  Photos[6507:60a7f] [com.apple.siri:Intents] INImageProxyInjectionUtilitiesInjectProxiesIntoObjectWithContinuationHandler_block_invoke Timing out after 1 seconds during proxy injection to <_INDataImage: 0x6000021b9a40>
+2026-11-09 06:26:26.880 A  Photos[6507:60038] (Intents) Inject Image Proxy
+2026-11-09 06:26:35.919 Df Photos[6507:6124a] [com.apple.photos.backend:PhotoKit] FeatureAvailability - availability was nil, initing new

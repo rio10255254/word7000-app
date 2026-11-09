@@ -1,0 +1,120 @@
+Attributes: Application, 0x10196e9b0, pid: 63722, label: 'WordCat'
+Element subtree:
+ →Application, 0x10196e9b0, pid: 63722, label: 'WordCat'
+    Window (Main), 0x101956800, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x101960c10, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x10196f2f0, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x10196f410, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x1019cd650, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x101990c80, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x101983d40, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x101983e60, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x101983f80, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x1019840a0, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x1019841c0, {{0.0, 0.0}, {381.0, 667.0}}
+                          Image, 0x1019842e0, {{0.0, 0.0}, {375.0, 667.0}}, label: 'PaperGrain'
+                          Image, 0x101984400, {{265.0, 169.3}, {116.0, 390.0}}, label: 'PaperGrain'
+                          Image, 0x101984520, {{16.0, 163.5}, {343.0, 385.5}}, label: 'PaperGrain'
+                          Other, 0x101984640, {{16.0, 489.0}, {110.0, 60.0}}
+                          Other, 0x101984760, {{33.0, 149.8}, {64.0, 27.4}}
+                          StaticText, 0x101984880, {{36.0, 182.2}, {130.5, 18.0}}, label: '今天的單字 · 第 1 章'
+                          Other, 0x1019849a0, {{131.6, 208.6}, {111.8, 111.9}}, label: '今天 0 / 20 個字'
+                            Other, 0x101984ac0, {{131.6, 208.6}, {111.8, 111.8}}, value: 0%
+                            Image, 0x101984be0, {{164.0, 244.5}, {46.5, 39.5}}, identifier: 'rectangle.on.rectangle.angled', label: '學習字卡'
+                            StaticText, 0x101984d00, {{173.2, 294.4}, {28.5, 14.5}}, label: '0/20'
+                          StaticText, 0x101984e20, {{160.8, 328.2}, {53.5, 33.5}}, label: '翻卡'
+                          StaticText, 0x101984f40, {{149.5, 367.8}, {76.0, 20.5}}, label: '20 個新字'
+                          Button, 0x101985060, {{48.2, 398.7}, {47.5, 63.8}}, identifier: 'today-node-cards', label: '翻卡'
+                            Image, 0x101985180, {{60.1, 412.2}, {24.3, 20.5}}, identifier: 'rectangle.on.rectangle.angled', label: '學習字卡'
+                            StaticText, 0x1019852a0, {{61.2, 449.5}, {21.0, 13.0}}, label: '翻卡'
+                          Button, 0x1019853c0, {{127.0, 400.5}, {44.0, 62.0}}, identifier: 'today-spelling', label: '拼字'
+                            Image, 0x1019854e0, {{139.0, 414.0}, {18.5, 17.5}}, identifier: 'pencil.line', label: 'pencil.line'
+                            StaticText, 0x101985600, {{138.5, 449.5}, {21.0, 13.0}}, label: '拼字'
+                          Button, 0x101985720, {{204.5, 400.5}, {44.0, 62.0}}, identifier: 'today-quiz', label: '考考看'
+                            Image, 0x101970550, {{217.0, 414.5}, {19.0, 16.5}}, identifier: 'checklist', label: 'checklist'
+                            StaticText, 0x101970670, {{210.5, 449.5}, {31.5, 13.0}}, label: '考考看'
+                          Button, 0x101970790, {{281.5, 400.5}, {44.0, 62.0}}, identifier: 'today-speaking', label: '口說'
+                            Image, 0x1019708b0, {{297.0, 413.5}, {13.5, 18.0}}, identifier: 'mic.fill', label: '麥克風'
+                            StaticText, 0x1019709d0, {{293.0, 449.5}, {21.0, 13.0}}, label: '口說'
+                          Button, 0x101970af0, {{36.0, 474.5}, {303.0, 52.0}}, identifier: 'today-start', label: '開始翻卡'
+                            StaticText, 0x101970c10, {{132.8, 488.5}, {77.0, 24.0}}, label: '開始翻卡'
+                            Image, 0x101970d30, {{220.5, 492.5}, {19.5, 16.5}}, identifier: 'arrow.right', label: '向右'
+                          Button, 0x101970e50, {{272.2, 106.7}, {75.6, 75.6}}, identifier: 'today-mascot', label: '傻貓'
+                            Other, 0x101970f70, {{272.2, 106.7}, {75.6, 75.6}}
+                          StaticText, 0x101971090, {{16.0, 28.0}, {80.0, 33.5}}, label: '早安！'
+                          Image, 0x1019711b0, {{17.5, 80.0}, {17.0, 17.0}}, identifier: 'sun.max.fill', label: '調高亮度'
+                          StaticText, 0x1019712d0, {{40.0, 79.5}, {87.5, 18.0}}, label: '11月9日 週一'
+                          Button, 0x1019713f0, {{226.0, 69.5}, {58.5, 38.0}}, identifier: 'today-streak', label: '連續 0 天'
+                            Button, 0x101971510, {{226.0, 69.5}, {58.5, 38.0}}, label: '0'
+                              Image, 0x101971630, {{226.0, 69.5}, {58.5, 38.0}}, label: 'PaperGrain'
+                              Image, 0x101971750, {{239.5, 79.0}, {15.0, 19.0}}, identifier: 'flame.fill', label: '火焰'
+                              StaticText, 0x101971870, {{260.0, 78.2}, {12.5, 20.5}}, label: '0'
+                          Button, 0x101971990, {{292.5, 69.5}, {66.5, 38.0}}, identifier: 'today-shelf', label: '已會 0 個字'
+                            Button, 0x101971ab0, {{292.5, 69.5}, {66.5, 38.0}}, label: '0'
+                              Image, 0x101971bd0, {{292.5, 69.5}, {66.5, 38.0}}, label: 'PaperGrain'
+                              Image, 0x101971cf0, {{306.5, 79.0}, {23.5, 19.0}}, identifier: 'books.vertical.fill', label: '書架'
+                              StaticText, 0x101971e10, {{336.0, 78.2}, {11.0, 20.5}}, label: '0'
+                TabBar, 0x101971f30, {{0.0, 618.0}, {375.0, 49.0}}, label: 'Tab Bar'
+                  Button, 0x101972050, {{2.0, 619.0}, {90.0, 48.0}}, identifier: 'sun.max.fill', label: '今天', Selected
+                    Image, 0x101972170, {{32.5, 621.5}, {29.0, 29.5}}, identifier: 'sun.max.fill', label: 'brightness higher'
+                  Button, 0x101972290, {{96.0, 619.0}, {90.0, 48.0}}, identifier: 'dumbbell.fill', label: '練習'
+                  Button, 0x1019723b0, {{190.0, 619.0}, {89.0, 48.0}}, identifier: 'books.vertical.fill', label: '單字'
+                  Button, 0x1019724d0, {{283.0, 619.0}, {90.0, 48.0}}, identifier: 'person.crop.circle.fill', label: '我'
+              Other, 0x1019725f0, {{0.0, 20.0}, {375.0, 647.0}}
+      Other, 0x101972710, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x101972830, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x101972950, {{0.0, 0.0}, {375.0, 667.0}}
+            Image, 0x101972a70, {{0.0, 0.0}, {375.0, 667.0}}, label: 'PaperGrain'
+            Button, 0x101972b90, {{8.0, 20.0}, {44.0, 44.0}}, identifier: 'chevron.left', label: '上一步', Disabled
+            Other, 0x101972cb0, {{60.0, 30.0}, {255.0, 24.2}}, label: '你的計畫', value: 20%
+              StaticText, 0x101972dd0, {{105.8, 40.8}, {33.0, 13.5}}, label: '認識你'
+              StaticText, 0x101972ef0, {{230.8, 40.8}, {44.0, 13.5}}, label: '你的計畫'
+            ScrollView, 0x101973010, {{0.0, 64.0}, {375.0, 603.0}}
+              Other, 0x101973130, {{0.0, 64.0}, {375.0, 941.5}}
+                StaticText, 0x101973250, {{120.0, 84.0}, {202.5, 86.5}}, label: '最後一件事：我的聲音可以更像真人。iPhone 的好聲音要你自己下載一次，免費。'
+                StaticText, 0x101973370, {{16.0, 202.5}, {343.0, 581.0}}, identifier: 'welcome-voice-steps', label: '1, 按下面的「打開設定」，會先到單字貓自己的頁面。按左上角「‹ 設定」回到最上層。, 設定, 單字貓, 2, 往下滑，點「輔助使用」, 輔助使用, 3, 點「朗讀內容」，再點「聲音」, 朗讀內容, 聲音, 4, 點「英文」→「Ava」，下載「優質」那個, Ava（優質）, 5, 回到單字貓。下載好我會自動換上，不用再設定。, 找不到？在設定最上面的搜尋欄打「朗讀內容」。檔案有點大，建議連 Wi-Fi，背景下載時可以先學。'
+                  StaticText, 0x101973660, {{41.0, 222.5}, {8.0, 18.0}}, label: '1'
+                  StaticText, 0x101973780, {{68.0, 221.5}, {268.0, 58.0}}, label: '按下面的「打開設定」，會先到單字貓自己的頁面。按左上角「‹ 設定」回到最上層。'
+                  Image, 0x1019738a0, {{85.0, 301.5}, {8.0, 13.5}}, identifier: 'chevron.left', label: 'Back'
+                  StaticText, 0x1019739c0, {{98.0, 299.5}, {30.0, 18.0}}, label: '設定'
+                  StaticText, 0x101973ae0, {{178.0, 299.5}, {45.0, 18.0}}, label: '單字貓'
+                  StaticText, 0x101973c00, {{40.0, 347.5}, {10.0, 18.0}}, label: '2'
+                  StaticText, 0x101973d20, {{68.0, 346.5}, {164.0, 18.0}}, label: '往下滑，點「輔助使用」'
+                  Image, 0x101973e40, {{86.0, 387.0}, {12.5, 12.5}}, identifier: 'accessibility', label: 'accessibility'
+                  StaticText, 0x101973f60, {{114.0, 384.5}, {60.0, 18.0}}, label: '輔助使用'
+                  Image, 0x101974080, {{318.0, 388.0}, {6.5, 11.0}}, identifier: 'chevron.right', label: 'Forward'
+                  StaticText, 0x1019741a0, {{39.8, 432.5}, {10.5, 18.0}}, label: '3'
+                  StaticText, 0x1019742c0, {{68.0, 431.5}, {208.5, 18.0}}, label: '點「朗讀內容」，再點「聲音」'
+                  Image, 0x1019743e0, {{85.5, 472.0}, {13.5, 13.0}}, identifier: 'text.bubble.fill', label: 'Comment Lines'
+                  StaticText, 0x101974500, {{114.0, 469.5}, {60.0, 18.0}}, label: '朗讀內容'
+                  Image, 0x101974620, {{318.0, 473.0}, {6.5, 11.0}}, identifier: 'chevron.right', label: 'Forward'
+                  StaticText, 0x101974740, {{80.0, 514.5}, {30.0, 18.0}}, label: '聲音'
+                  Image, 0x101974860, {{318.0, 518.0}, {6.5, 11.0}}, identifier: 'chevron.right', label: 'Forward'
+                  StaticText, 0x101974980, {{39.8, 559.5}, {10.5, 18.0}}, label: '4'
+                  StaticText, 0x101974aa0, {{68.0, 558.5}, {248.0, 38.0}}, label: '點「英文」→「Ava」，下載「優質」那個'
+                  StaticText, 0x101974bc0, {{80.0, 616.5}, {84.5, 18.0}}, label: 'Ava（優質）'
+                  Image, 0x101974ce0, {{302.0, 615.0}, {21.5, 21.0}}, identifier: 'icloud.and.arrow.down', label: 'Icloud Download'
+                  StaticText, 0x101974e00, {{39.8, 664.5}, {10.5, 18.0}}, label: '5'
+                  StaticText, 0x101974f20, {{68.0, 663.5}, {268.0, 38.0}}, label: '回到單字貓。下載好我會自動換上，不用再設定。'
+                  Image, 0x101975040, {{33.5, 716.5}, {12.5, 13.0}}, identifier: 'magnifyingglass', label: 'Search'
+                  StaticText, 0x101975160, {{33.5, 715.5}, {306.0, 52.0}}, label: '找不到？在設定最上面的搜尋欄打「朗讀內容」。檔案有點大，建議連 Wi-Fi，背景下載時可以先學。'
+                Button, 0x101975280, {{16.0, 803.5}, {343.0, 50.0}}, identifier: 'welcome-voice-preview', label: '聽聽現在的聲音'
+                  Image, 0x1019d1170, {{16.0, 803.5}, {343.0, 50.0}}, label: 'PaperGrain'
+                  Image, 0x1019d1290, {{114.5, 820.5}, {20.0, 15.5}}, identifier: 'speaker.wave.2.fill', label: 'Volume High'
+                  StaticText, 0x1019d13b0, {{16.0, 803.5}, {343.0, 50.0}}, label: '聽聽現在的聲音'
+                Button, 0x1019d14d0, {{16.0, 877.5}, {343.0, 50.0}}, identifier: 'welcome-voice-settings', label: '打開設定'
+                  Image, 0x1019d15f0, {{16.0, 877.5}, {343.0, 50.0}}, label: 'PaperGrain'
+                  Image, 0x1019d1710, {{140.5, 893.0}, {19.0, 19.0}}, identifier: 'gear', label: 'Settings'
+                  StaticText, 0x1019d1830, {{16.0, 877.5}, {343.0, 50.0}}, label: '打開設定'
+                Button, 0x1019d1950, {{120.5, 950.5}, {134.0, 18.0}}, identifier: 'welcome-voice-done', label: '先開始，晚點再下載'
+              Other, 0x1019d1a70, {{342.0, 64.0}, {30.0, 603.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                Other, 0x1019d1b90, {{369.0, 139.5}, {3.0, 524.5}}
+              Other, 0x1019d1cb0, {{342.0, 64.0}, {30.0, 603.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                Other, 0x1019d1dd0, {{369.0, 139.5}, {3.0, 524.5}}
+Path to element:
+ →Application, 0x10196e9b0, pid: 63722, label: 'WordCat'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x101c9f6e0, pid: 63722, label: 'WordCat'
+  }

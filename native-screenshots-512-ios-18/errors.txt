@@ -1,0 +1,1 @@
+/Users/runner/work/word7000-app/word7000-app/ios/Word7000UITests/AppStoreScreenshotTests.swift:139: error: -[Word7000UITests.AppStoreScreenshotTests testStoreChinese] : XCTAssertTrue failed - Attributes: Application, 0x10199a050, pid: 20442, label: 'WordCat'

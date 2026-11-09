@@ -1,0 +1,143 @@
+Attributes: Application, 0x1113e8e10, pid: 73577, label: 'WordCat'
+Element subtree:
+ →Application, 0x1113e8e10, pid: 73577, label: 'WordCat'
+    Window (Main), 0x1113e89f0, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x1113ea260, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x1113ea380, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x1113ea110, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x1113e6c50, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x1113ea4a0, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x1113ea5c0, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x1113ea6e0, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x1113ea800, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x1113ea920, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x1113eaa40, {{0.0, 0.0}, {375.0, 667.0}}
+                          Other, 0x1113eab60, {{0.0, 0.0}, {375.0, 667.0}}
+                            NavigationBar, 0x1113eac80, {{0.0, 20.0}, {375.0, 44.0}}, identifier: '朗讀聲音'
+                              Button, 0x1113eada0, {{0.0, 20.0}, {64.5, 44.0}}, label: '設定'
+                              StaticText, 0x1113eaec0, {{154.0, 32.0}, {67.5, 20.5}}, label: '朗讀聲音'
+                            Other, 0x1113eafe0, {{0.0, 0.0}, {375.0, 667.0}}
+                              Other, 0x1113eb100, {{0.0, 0.0}, {375.0, 667.0}}
+                                Other, 0x1113eb220, {{0.0, 0.0}, {375.0, 667.0}}
+                                  Other, 0x1113eb340, {{0.0, 0.0}, {375.0, 667.0}}
+                                    Image, 0x1113eb460, {{0.0, 0.0}, {375.0, 667.0}}, label: 'PaperGrain'
+                                    CollectionView, 0x1113eb580, {{0.0, 0.0}, {375.0, 667.0}}
+                                      Other, 0x1113eb6a0, {{-16.0, -1270.0}, {407.0, 1575.0}}
+                                      Cell, 0x1113eb7c0, {{16.0, 99.0}, {343.0, 144.5}}
+                                        Other, 0x1113eb8e0, {{16.0, 99.0}, {343.0, 144.5}}
+                                          Other, 0x1113eba00, {{16.0, 99.0}, {343.0, 144.5}}
+                                            Other, 0x1113ebb20, {{16.0, 99.0}, {343.0, 144.5}}
+                                              Image, 0x1113ebc40, {{16.0, 99.0}, {343.0, 144.5}}, label: 'PaperGrain'
+                                        Other, 0x1113ebd60, {{16.0, 99.0}, {343.0, 144.5}}
+                                          Other, 0x1113ebe80, {{16.0, 99.0}, {343.0, 144.5}}
+                                            Other, 0x1113ebfa0, {{16.0, 99.0}, {343.0, 144.5}}
+                                              StaticText, 0x1113ec0c0, {{16.0, 99.0}, {343.0, 144.5}}, identifier: 'speech-better-voice', label: '下載更自然的聲音、iPhone 內建的標準聲音比較生硬。到 iPhone「設定 → 輔助使用 → 朗讀內容 → 聲音」，下載英文的 Ava（優質）和中文（台灣）的美佳（增強），單字貓會自動改用。'
+                                                Image, 0x1113ec1e0, {{34.5, 113.5}, {24.5, 22.0}}, identifier: 'waveform.badge.plus', label: 'waveform.badge.plus'
+                                                StaticText, 0x1113ec300, {{69.0, 110.0}, {135.0, 20.5}}, label: '下載更自然的聲音'
+                                                StaticText, 0x1113ec420, {{69.0, 134.5}, {274.0, 98.0}}, label: 'iPhone 內建的標準聲音比較生硬。到 iPhone「設定 → 輔助使用 → 朗讀內容 → 聲音」，下載英文的 Ava（優質）和中文（台灣）的美佳（增強），單字貓會自動改用。'
+                                      Cell, 0x1113ec540, {{16.0, 243.5}, {343.0, 44.0}}
+                                        Other, 0x1113ec660, {{16.0, 243.5}, {343.0, 44.0}}
+                                          Other, 0x1113ec780, {{16.0, 243.5}, {343.0, 44.0}}
+                                            Other, 0x1113ec8a0, {{16.0, 243.5}, {343.0, 44.0}}
+                                              Image, 0x1113ec9c0, {{16.0, 243.5}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x1113ecae0, {{16.0, 243.5}, {343.0, 44.0}}
+                                          Other, 0x1113ecc00, {{16.0, 243.5}, {343.0, 44.0}}
+                                            Other, 0x1113ecd20, {{16.0, 243.5}, {343.0, 44.0}}
+                                              Button, 0x1113ece40, {{16.0, 243.5}, {343.0, 44.0}}, identifier: 'speech-voice-steps', label: '一步一步教我'
+                                                StaticText, 0x1113ecf60, {{32.0, 255.2}, {101.5, 20.5}}, label: '一步一步教我'
+                                                Button, 0x1113ed080, {{332.5, 259.0}, {10.5, 13.5}}
+                                                  Image, 0x1113ed1a0, {{332.5, 259.0}, {10.5, 13.5}}, identifier: 'collapsed'
+                                      Other, 0x1113ed2c0, {{69.0, 243.0}, {290.0, 0.5}}
+                                      Other, 0x1113ed3e0, {{-16.0, 305.0}, {407.0, 139.5}}
+                                      Cell, 0x1113ed500, {{16.0, 322.5}, {343.0, 44.0}}
+                                        Other, 0x1113ed620, {{16.0, 322.5}, {343.0, 44.0}}
+                                          Other, 0x1113ed740, {{16.0, 322.5}, {343.0, 44.0}}
+                                            Other, 0x1113ed860, {{16.0, 322.5}, {343.0, 44.0}}
+                                              Image, 0x1113ed980, {{16.0, 322.5}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x1113edaa0, {{16.0, 322.5}, {343.0, 44.0}}
+                                          Other, 0x1113edbc0, {{16.0, 322.5}, {343.0, 44.0}}
+                                            Other, 0x1113edce0, {{16.0, 322.5}, {343.0, 44.0}}
+                                              Button, 0x1113ede00, {{16.0, 322.5}, {343.0, 44.0}}, identifier: 'speech-voice-en-US', label: '英文聲音', value: Daniel
+                                                StaticText, 0x1113edf20, {{32.0, 334.2}, {67.5, 20.5}}, label: '英文聲音'
+                                                StaticText, 0x1113ee040, {{277.0, 334.2}, {47.5, 20.5}}, label: 'Daniel'
+                                                Image, 0x1113ee160, {{335.0, 338.5}, {7.0, 12.0}}, identifier: 'chevron.forward'
+                                      Cell, 0x1113ee280, {{16.0, 366.5}, {343.0, 44.0}}
+                                        Other, 0x1113ee3a0, {{16.0, 366.5}, {343.0, 44.0}}
+                                          Other, 0x1113ee4c0, {{16.0, 366.5}, {343.0, 44.0}}
+                                            Other, 0x1113ee5e0, {{16.0, 366.5}, {343.0, 44.0}}
+                                              Image, 0x1113ee700, {{16.0, 366.5}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x1113ee820, {{16.0, 366.5}, {343.0, 44.0}}
+                                          Other, 0x1113ee940, {{16.0, 366.5}, {343.0, 44.0}}
+                                            Other, 0x1113eea60, {{16.0, 366.5}, {343.0, 44.0}}
+                                              Button, 0x1113eeb80, {{16.0, 366.5}, {343.0, 44.0}}, identifier: 'speech-voice-zh-TW', label: '中文聲音', value: Meijia
+                                                StaticText, 0x1113eeca0, {{32.0, 378.2}, {67.5, 20.5}}, label: '中文聲音'
+                                                StaticText, 0x1113eedc0, {{280.5, 378.2}, {44.0, 20.5}}, label: 'Meijia'
+                                                Image, 0x1113eeee0, {{335.0, 382.5}, {7.0, 12.0}}, identifier: 'chevron.forward'
+                                      Other, 0x1113ef000, {{32.0, 366.0}, {327.0, 0.5}}
+                                      Cell, 0x1113ef120, {{16.0, 410.5}, {343.0, 34.0}}
+                                        Other, 0x1113ef240, {{16.0, 410.5}, {343.0, 34.0}}
+                                        Other, 0x1113ef360, {{16.0, 410.5}, {343.0, 34.0}}
+                                          Other, 0x1113ef480, {{16.0, 410.5}, {343.0, 34.0}}
+                                            Other, 0x1113ef5a0, {{16.0, 410.5}, {343.0, 34.0}}
+                                              StaticText, 0x1113ef6c0, {{16.0, 410.5}, {343.0, 34.0}}, label: '更多聲音可在 iPhone「設定 → 輔助使用」下載。'
+                                      Other, 0x1113ef7e0, {{-16.0, 444.5}, {407.0, 124.5}}
+                                      Cell, 0x1113ef900, {{16.0, 444.5}, {343.0, 39.0}}
+                                        Other, 0x1113efa20, {{16.0, 444.5}, {343.0, 39.0}}
+                                        Other, 0x1113efb40, {{16.0, 444.5}, {343.0, 39.0}}
+                                          Other, 0x1113efc60, {{16.0, 444.5}, {343.0, 39.0}}
+                                            Other, 0x1113efd80, {{16.0, 444.5}, {343.0, 39.0}}
+                                              StaticText, 0x1113efea0, {{16.0, 444.5}, {343.0, 39.0}}, label: '語速'
+                                      Cell, 0x1113effc0, {{16.0, 483.5}, {343.0, 68.0}}
+                                        Other, 0x1113f00e0, {{16.0, 483.5}, {343.0, 68.0}}
+                                          Other, 0x1113f0200, {{16.0, 483.5}, {343.0, 68.0}}
+                                            Other, 0x1113f0320, {{16.0, 483.5}, {343.0, 68.0}}
+                                              Image, 0x1113f0440, {{16.0, 483.5}, {343.0, 68.0}}, label: 'PaperGrain'
+                                        Other, 0x1113f0560, {{16.0, 483.5}, {343.0, 68.0}}
+                                          Other, 0x1113f0680, {{16.0, 483.5}, {343.0, 68.0}}
+                                            Other, 0x1113f07a0, {{16.0, 483.5}, {343.0, 68.0}}
+                                              Other, 0x1113f08c0, {{32.0, 498.5}, {311.0, 38.0}}, identifier: 'speech-speed'
+                                                Button, 0x1113f09e0, {{32.0, 498.5}, {98.5, 38.0}}, identifier: 'speech-speed-0', label: '慢速', Selected
+                                                  Image, 0x1113f0b00, {{57.5, 511.9}, {11.7, 11.2}}, identifier: 'checkmark', label: '已選取', Selected
+                                                  StaticText, 0x1113f0c20, {{75.9, 508.3}, {30.6, 18.4}}, label: '慢速'
+                                                Button, 0x1113f0d40, {{138.5, 498.5}, {98.0, 38.0}}, identifier: 'speech-speed-1', label: '自然'
+                                                  Image, 0x1113f0e60, {{163.5, 511.5}, {14.0, 12.5}}, identifier: 'person.wave.2.fill', label: 'person.wave.2.fill'
+                                                  StaticText, 0x1113f0f80, {{183.2, 508.5}, {30.0, 18.0}}, label: '自然'
+                                                Button, 0x1113f10a0, {{244.5, 498.5}, {98.5, 38.0}}, identifier: 'speech-speed-2', label: '稍快'
+                                                  Image, 0x1113f11c0, {{267.0, 511.0}, {18.5, 13.5}}, identifier: 'hare.fill', label: '增加速度'
+                                                  StaticText, 0x1113f12e0, {{292.0, 508.5}, {30.0, 18.0}}, label: '稍快'
+                                      Other, 0x1113f1400, {{-16.0, 569.0}, {407.0, 188.5}}
+                                      Cell, 0x1113f1520, {{16.0, 569.0}, {343.0, 39.0}}
+                                        Other, 0x1113f1640, {{16.0, 569.0}, {343.0, 39.0}}
+                                        Other, 0x1113f1760, {{16.0, 569.0}, {343.0, 39.0}}
+                                          Other, 0x1113f1880, {{16.0, 569.0}, {343.0, 39.0}}
+                                            Other, 0x1113f19a0, {{16.0, 569.0}, {343.0, 39.0}}
+                                              StaticText, 0x1113f1ac0, {{16.0, 569.0}, {343.0, 39.0}}, label: '試聽'
+                                      Cell, 0x1113f1be0, {{16.0, 608.0}, {343.0, 66.0}}
+                                        Other, 0x1113f1d00, {{16.0, 608.0}, {343.0, 66.0}}
+                                          Other, 0x1113f1e20, {{16.0, 608.0}, {343.0, 66.0}}
+                                            Other, 0x1113f1f40, {{16.0, 608.0}, {343.0, 66.0}}
+                                              Image, 0x1113f2060, {{16.0, 608.0}, {343.0, 66.0}}, label: 'PaperGrain'
+                                        Other, 0x1113f2180, {{16.0, 608.0}, {343.0, 66.0}}
+                                          Other, 0x1113f22a0, {{16.0, 608.0}, {343.0, 66.0}}
+                                            Other, 0x1113f23c0, {{16.0, 608.0}, {343.0, 66.0}}
+                                              Button, 0x1113f24e0, {{16.0, 608.0}, {343.0, 66.0}}, identifier: 'speech-preview-en-US', label: '試聽英文'
+                                                Image, 0x1113f2600, {{39.0, 632.0}, {16.0, 18.0}}, identifier: 'play.fill', label: '播放'
+                                                StaticText, 0x1113f2720, {{39.0, 630.8}, {104.5, 20.5}}, label: '試聽英文'
+                                      Other, 0x1113f2840, {{342.0, 64.0}, {30.0, 554.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                        Other, 0x1113f2960, {{369.0, 67.0}, {3.0, 380.0}}
+                                      Other, 0x1113bc750, {{342.0, 64.0}, {30.0, 554.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                        Other, 0x1113bc870, {{369.0, 67.0}, {3.0, 380.0}}
+                TabBar, 0x1113bc990, {{0.0, 618.0}, {375.0, 49.0}}, label: 'Tab Bar'
+                  Button, 0x1113bcab0, {{2.0, 619.0}, {90.0, 48.0}}, identifier: 'sun.max.fill', label: '今天'
+                  Button, 0x1113bcbd0, {{96.0, 619.0}, {90.0, 48.0}}, identifier: 'dumbbell.fill', label: '練習'
+                  Button, 0x1113bccf0, {{190.0, 619.0}, {89.0, 48.0}}, identifier: 'books.vertical.fill', label: '單字'
+                  Button, 0x11134fe80, {{283.0, 619.0}, {90.0, 48.0}}, identifier: 'person.crop.circle.fill', label: '我', Selected
+                    Image, 0x11134ffa0, {{314.0, 622.5}, {27.5, 27.5}}, identifier: 'person.crop.circle.fill', label: 'account'
+              Other, 0x1113500c0, {{0.0, 20.0}, {375.0, 647.0}}
+Path to element:
+ →Application, 0x1113e8e10, pid: 73577, label: 'WordCat'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x1114aa910, pid: 73577, label: 'WordCat'
+  }

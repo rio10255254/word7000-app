@@ -1,0 +1,185 @@
+Attributes: Application, 0x111429830, pid: 71013, label: 'WordCat'
+Element subtree:
+ →Application, 0x111429830, pid: 71013, label: 'WordCat'
+    Window (Main), 0x110fbf770, {{0.0, 0.0}, {375.0, 667.0}}
+      Other, 0x110fbca10, {{0.0, 0.0}, {375.0, 667.0}}
+        Other, 0x110fbce30, {{0.0, 0.0}, {375.0, 667.0}}
+          Other, 0x110fb9690, {{0.0, 0.0}, {375.0, 667.0}}
+            Other, 0x110fbc5f0, {{0.0, 0.0}, {375.0, 667.0}}
+              Other, 0x110fcdbc0, {{0.0, 0.0}, {375.0, 667.0}}
+                Other, 0x110fa8910, {{0.0, 0.0}, {375.0, 667.0}}
+                  Other, 0x110fbe2d0, {{0.0, 0.0}, {375.0, 667.0}}
+                    Other, 0x110fbd250, {{0.0, 0.0}, {375.0, 667.0}}
+                      Other, 0x110fbb090, {{0.0, 0.0}, {375.0, 667.0}}
+                        Other, 0x110fbe6f0, {{0.0, 0.0}, {375.0, 667.0}}
+                          Other, 0x110fbda90, {{0.0, 0.0}, {375.0, 667.0}}
+                            NavigationBar, 0x110fbc1d0, {{0.0, 20.0}, {375.0, 44.0}}, identifier: '設定'
+                              Button, 0x110fbb990, {{0.0, 20.0}, {47.5, 44.0}}, label: '我'
+                              StaticText, 0x110fb7070, {{170.5, 32.0}, {34.0, 20.5}}, label: '設定'
+                            Other, 0x110f65b90, {{0.0, 0.0}, {375.0, 667.0}}
+                              Other, 0x110fbd670, {{0.0, 0.0}, {375.0, 667.0}}
+                                Other, 0x110fbdeb0, {{0.0, 0.0}, {375.0, 667.0}}
+                                  Other, 0x110fba750, {{0.0, 0.0}, {375.0, 667.0}}
+                                    Image, 0x110fd2d80, {{0.0, 0.0}, {375.0, 667.0}}, label: 'PaperGrain'
+                                    CollectionView, 0x110fd2ea0, {{0.0, 0.0}, {375.0, 667.0}}
+                                      Other, 0x110fd2fc0, {{-16.0, -113.5}, {407.0, 144.5}}
+                                      Cell, 0x110fd30e0, {{16.0, -30.5}, {343.0, 44.0}}
+                                        Other, 0x110fd3200, {{16.0, -30.5}, {343.0, 44.0}}
+                                          Other, 0x110fd3320, {{16.0, -30.5}, {343.0, 44.0}}
+                                            Other, 0x110fd3440, {{16.0, -30.5}, {343.0, 44.0}}
+                                              Image, 0x110fd3560, {{16.0, -30.5}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x110fd3680, {{16.0, -30.5}, {343.0, 44.0}}
+                                          Other, 0x110fd37a0, {{16.0, -30.5}, {343.0, 44.0}}
+                                            Other, 0x110fd38c0, {{16.0, -30.5}, {343.0, 44.0}}
+                                              Button, 0x110fd39e0, {{16.0, -30.5}, {343.0, 44.0}}, identifier: 'settings-speech', label: '朗讀聲音、自然'
+                                                Image, 0x110fd3b00, {{32.0, -23.0}, {29.0, 29.0}}, identifier: 'speaker.wave.2.fill', label: '高音量'
+                                                StaticText, 0x110fd3c20, {{73.0, -18.8}, {67.5, 20.5}}, label: '朗讀聲音'
+                                                StaticText, 0x110fd3d40, {{290.5, -18.8}, {34.0, 20.5}}, label: '自然'
+                                                Image, 0x110fd3e60, {{335.0, -14.5}, {7.0, 12.0}}, identifier: 'chevron.forward'
+                                      Other, 0x110fd3f80, {{-16.0, 31.0}, {407.0, 295.5}}
+                                      Cell, 0x110fd40a0, {{16.0, 31.0}, {343.0, 39.0}}
+                                        Other, 0x110fd41c0, {{16.0, 31.0}, {343.0, 39.0}}
+                                        Other, 0x110fd42e0, {{16.0, 31.0}, {343.0, 39.0}}
+                                          Other, 0x110fd4400, {{16.0, 31.0}, {343.0, 39.0}}
+                                            Other, 0x110fd4520, {{16.0, 31.0}, {343.0, 39.0}}
+                                              StaticText, 0x110fd4640, {{16.0, 31.0}, {343.0, 39.0}}, label: '顯示與操作'
+                                      Cell, 0x110fd4760, {{16.0, 70.0}, {343.0, 107.0}}
+                                        Other, 0x110fd4880, {{16.0, 70.0}, {343.0, 107.0}}
+                                          Other, 0x110fd49a0, {{16.0, 70.0}, {343.0, 107.0}}
+                                            Other, 0x110fd4ac0, {{16.0, 70.0}, {343.0, 107.0}}
+                                              Image, 0x110fd4be0, {{16.0, 70.0}, {343.0, 107.0}}, label: 'PaperGrain'
+                                        Other, 0x110fd4d00, {{16.0, 70.0}, {343.0, 107.0}}
+                                          Other, 0x110fd4e20, {{16.0, 70.0}, {343.0, 107.0}}
+                                            Other, 0x110fd4f40, {{16.0, 70.0}, {343.0, 107.0}}
+                                              Image, 0x110fd5060, {{32.0, 85.0}, {29.0, 29.0}}, identifier: 'sun.max.fill', label: '調高亮度'
+                                              StaticText, 0x110fd5180, {{73.0, 89.2}, {34.0, 20.5}}, label: '外觀'
+                                              Other, 0x110fd52a0, {{32.0, 124.0}, {311.0, 38.0}}, identifier: 'settings-theme'
+                                                Button, 0x110fd53c0, {{32.0, 124.0}, {98.5, 38.0}}, identifier: 'settings-theme-0', label: '自動'
+                                                  Image, 0x110fd54e0, {{57.5, 137.0}, {12.5, 12.5}}, identifier: 'circle.lefthalf.filled', label: 'circle.lefthalf.filled'
+                                                  StaticText, 0x110fd5600, {{76.0, 134.0}, {30.0, 18.0}}, label: '自動'
+                                                Button, 0x110fd5720, {{138.5, 124.0}, {98.0, 38.0}}, identifier: 'settings-theme-1', label: '淺色', Selected
+                                                  Image, 0x110fd5840, {{164.0, 137.4}, {11.7, 11.2}}, identifier: 'checkmark', label: '已選取', Selected
+                                                  StaticText, 0x110fd5960, {{182.1, 133.8}, {30.6, 18.4}}, label: '淺色'
+                                                Button, 0x110fd5a80, {{244.5, 124.0}, {98.5, 38.0}}, identifier: 'settings-theme-2', label: '深色'
+                                                  Image, 0x110fd5ba0, {{270.5, 137.0}, {11.5, 12.0}}, identifier: 'moon.fill', label: '勿擾模式'
+                                                  StaticText, 0x110fd5cc0, {{288.0, 134.0}, {30.0, 18.0}}, label: '深色'
+                                      Cell, 0x110fd5de0, {{16.0, 177.0}, {343.0, 44.0}}
+                                        Other, 0x110fd5f00, {{16.0, 177.0}, {343.0, 44.0}}
+                                          Other, 0x110fd6020, {{16.0, 177.0}, {343.0, 44.0}}
+                                            Other, 0x110fd6140, {{16.0, 177.0}, {343.0, 44.0}}
+                                              Image, 0x110fd6260, {{16.0, 177.0}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x110fd6380, {{16.0, 177.0}, {343.0, 44.0}}
+                                          Other, 0x110fd64a0, {{16.0, 177.0}, {343.0, 44.0}}
+                                            Other, 0x110fd65c0, {{16.0, 177.0}, {343.0, 44.0}}
+                                              Button, 0x110fd66e0, {{16.0, 177.0}, {343.0, 44.0}}, identifier: 'settings-style', label: 'App 風格、紙張拼貼'
+                                                Image, 0x110fd6800, {{32.0, 184.5}, {29.0, 29.0}}, identifier: 'paintpalette.fill', label: 'paintpalette.fill'
+                                                StaticText, 0x110fd6920, {{73.0, 188.8}, {69.0, 20.5}}, label: 'App 風格'
+                                                StaticText, 0x110fd6a40, {{257.0, 188.8}, {67.5, 20.5}}, label: '紙張拼貼'
+                                                Image, 0x110fd6b60, {{335.0, 193.0}, {7.0, 12.0}}, identifier: 'chevron.forward'
+                                      Other, 0x110fd6c80, {{73.0, 176.5}, {286.0, 0.5}}
+                                      Cell, 0x110fd6da0, {{16.0, 221.0}, {343.0, 44.0}}
+                                        Other, 0x110fd6ec0, {{16.0, 221.0}, {343.0, 44.0}}
+                                          Other, 0x110fd6fe0, {{16.0, 221.0}, {343.0, 44.0}}
+                                            Other, 0x110fd7100, {{16.0, 221.0}, {343.0, 44.0}}
+                                              Image, 0x110fd7220, {{16.0, 221.0}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x110fd7340, {{16.0, 221.0}, {343.0, 44.0}}
+                                          Other, 0x110fd7460, {{16.0, 221.0}, {343.0, 44.0}}
+                                            Other, 0x110fd7580, {{16.0, 221.0}, {343.0, 44.0}}
+                                              Switch, 0x110fd76a0, {{16.0, 221.0}, {343.0, 44.0}}, label: '觸覺回饋', value: 1
+                                                Image, 0x110fd77c0, {{105.0, 228.5}, {29.0, 29.0}}, identifier: 'hand.tap.fill', label: 'hand.tap.fill'
+                                                StaticText, 0x110fd78e0, {{145.8, 232.8}, {67.5, 20.5}}, label: '觸覺回饋'
+                                                Switch, 0x110fd7a00, {{0.0, 0.0}, {0.0, 0.0}}, value: 1
+                                      Other, 0x110fd7b20, {{73.0, 220.5}, {286.0, 0.5}}
+                                      Cell, 0x110fd7c40, {{16.0, 265.0}, {343.0, 44.0}}
+                                        Other, 0x110fd7d60, {{16.0, 265.0}, {343.0, 44.0}}
+                                          Other, 0x110fd7e80, {{16.0, 265.0}, {343.0, 44.0}}
+                                            Other, 0x110fd7fa0, {{16.0, 265.0}, {343.0, 44.0}}
+                                              Image, 0x110fd80c0, {{16.0, 265.0}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x110fd81e0, {{16.0, 265.0}, {343.0, 44.0}}
+                                          Other, 0x110fd8300, {{16.0, 265.0}, {343.0, 44.0}}
+                                            Other, 0x110fd8420, {{16.0, 265.0}, {343.0, 44.0}}
+                                              Switch, 0x110fd8540, {{16.0, 265.0}, {343.0, 44.0}}, identifier: 'settings-sounds', label: '音效', value: 1
+                                                Image, 0x110fd8660, {{121.5, 272.5}, {29.0, 29.0}}, identifier: 'speaker.wave.2.fill', label: '高音量'
+                                                StaticText, 0x110fd8780, {{162.5, 276.8}, {34.0, 20.5}}, label: '音效'
+                                                Switch, 0x110fd88a0, {{0.0, 0.0}, {0.0, 0.0}}, value: 1
+                                      Other, 0x110fd89c0, {{73.0, 264.5}, {286.0, 0.5}}
+                                      Other, 0x110fd8ae0, {{-16.0, 326.5}, {407.0, 100.5}}
+                                      Cell, 0x110fd8c00, {{16.0, 326.5}, {343.0, 39.0}}
+                                        Other, 0x110fd8d20, {{16.0, 326.5}, {343.0, 39.0}}
+                                        Other, 0x110fd8e40, {{16.0, 326.5}, {343.0, 39.0}}
+                                          Other, 0x110fd8f60, {{16.0, 326.5}, {343.0, 39.0}}
+                                            Other, 0x110fd9080, {{16.0, 326.5}, {343.0, 39.0}}
+                                              StaticText, 0x110fd91a0, {{16.0, 326.5}, {343.0, 39.0}}, label: 'Account'
+                                      Cell, 0x110fd92c0, {{16.0, 365.5}, {343.0, 44.0}}
+                                        Other, 0x110fd93e0, {{16.0, 365.5}, {343.0, 44.0}}
+                                          Other, 0x110fd9500, {{16.0, 365.5}, {343.0, 44.0}}
+                                            Other, 0x110fd9620, {{16.0, 365.5}, {343.0, 44.0}}
+                                              Image, 0x110fd9740, {{16.0, 365.5}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x110fd9860, {{16.0, 365.5}, {343.0, 44.0}}
+                                          Other, 0x110fd9980, {{16.0, 365.5}, {343.0, 44.0}}
+                                            Other, 0x110fd9aa0, {{16.0, 365.5}, {343.0, 44.0}}
+                                              Image, 0x110fd9bc0, {{39.5, 376.5}, {13.5, 22.5}}, identifier: 'iphone', label: 'iphone'
+                                              StaticText, 0x110fd9ce0, {{16.0, 365.5}, {343.0, 44.0}}, label: 'Progress is saved on this iPhone'
+                                      Other, 0x110fd9e00, {{-16.0, 427.0}, {407.0, 1525.0}}
+                                      Cell, 0x110fd9f20, {{16.0, 427.0}, {343.0, 39.0}}
+                                        Other, 0x110fda040, {{16.0, 427.0}, {343.0, 39.0}}
+                                        Other, 0x110fda160, {{16.0, 427.0}, {343.0, 39.0}}
+                                          Other, 0x110fda280, {{16.0, 427.0}, {343.0, 39.0}}
+                                            Other, 0x110fda3a0, {{16.0, 427.0}, {343.0, 39.0}}
+                                              StaticText, 0x110fda4c0, {{16.0, 427.0}, {343.0, 39.0}}, label: '關於'
+                                      Cell, 0x110fda5e0, {{16.0, 466.0}, {343.0, 44.0}}
+                                        Other, 0x110fda700, {{16.0, 466.0}, {343.0, 44.0}}
+                                          Other, 0x110fda820, {{16.0, 466.0}, {343.0, 44.0}}
+                                            Other, 0x110fda940, {{16.0, 466.0}, {343.0, 44.0}}
+                                              Image, 0x110fdaa60, {{16.0, 466.0}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x110fdab80, {{16.0, 466.0}, {343.0, 44.0}}
+                                          Other, 0x110fdaca0, {{16.0, 466.0}, {343.0, 44.0}}
+                                            Other, 0x110fdadc0, {{16.0, 466.0}, {343.0, 44.0}}
+                                              Button, 0x110fdaee0, {{16.0, 466.0}, {343.0, 44.0}}, label: '隱私權政策'
+                                                Image, 0x110fdb000, {{32.0, 473.5}, {29.0, 29.0}}, identifier: 'hand.raised.fill', label: '封鎖'
+                                                StaticText, 0x110fdb120, {{73.0, 477.8}, {84.5, 20.5}}, label: '隱私權政策'
+                                                Image, 0x110fdb240, {{331.5, 483.0}, {10.0, 10.0}}, identifier: 'arrow.up.right', label: 'arrow.up.right'
+                                      Cell, 0x110fdb360, {{16.0, 510.0}, {343.0, 44.0}}
+                                        Other, 0x110fdb480, {{16.0, 510.0}, {343.0, 44.0}}
+                                          Other, 0x110fdb5a0, {{16.0, 510.0}, {343.0, 44.0}}
+                                            Other, 0x110fdb6c0, {{16.0, 510.0}, {343.0, 44.0}}
+                                              Image, 0x110fdb7e0, {{16.0, 510.0}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x111425b90, {{16.0, 510.0}, {343.0, 44.0}}
+                                          Other, 0x11141b0b0, {{16.0, 510.0}, {343.0, 44.0}}
+                                            Other, 0x11141b1d0, {{16.0, 510.0}, {343.0, 44.0}}
+                                              Button, 0x11141b2f0, {{16.0, 510.0}, {343.0, 44.0}}, label: '支援'
+                                                Image, 0x11141b410, {{32.0, 517.5}, {29.0, 29.0}}, identifier: 'questionmark.circle.fill', label: 'questionmark.circle.fill'
+                                                StaticText, 0x11141b530, {{73.0, 521.8}, {34.0, 20.5}}, label: '支援'
+                                                Image, 0x11141bb90, {{331.5, 527.0}, {10.0, 10.0}}, identifier: 'arrow.up.right', label: 'arrow.up.right'
+                                      Other, 0x11141bcb0, {{73.0, 509.5}, {286.0, 0.5}}
+                                      Cell, 0x11141bdd0, {{16.0, 554.0}, {343.0, 44.0}}
+                                        Other, 0x11141bef0, {{16.0, 554.0}, {343.0, 44.0}}
+                                          Other, 0x11141c010, {{16.0, 554.0}, {343.0, 44.0}}
+                                            Other, 0x11141c130, {{16.0, 554.0}, {343.0, 44.0}}
+                                              Image, 0x11141c250, {{16.0, 554.0}, {343.0, 44.0}}, label: 'PaperGrain'
+                                        Other, 0x11141c370, {{16.0, 554.0}, {343.0, 44.0}}
+                                          Other, 0x11141c490, {{16.0, 554.0}, {343.0, 44.0}}
+                                            Other, 0x11141c5b0, {{16.0, 554.0}, {343.0, 44.0}}
+                                              StaticText, 0x1112e91d0, {{16.0, 554.0}, {343.0, 44.0}}, label: '版本、2.1.0 (26)'
+                                                Image, 0x1112e74f0, {{32.0, 561.5}, {29.0, 29.0}}, identifier: 'info.circle.fill', label: '資訊'
+                                                StaticText, 0x1112e8150, {{73.0, 565.8}, {34.0, 20.5}}, label: '版本'
+                                                StaticText, 0x1112e8990, {{265.5, 565.8}, {77.5, 20.5}}, label: '2.1.0 (26)'
+                                      Other, 0x1112e9e30, {{73.0, 553.5}, {286.0, 0.5}}
+                                      Other, 0x1112eaae0, {{342.0, 64.0}, {30.0, 554.0}}, label: 'Vertical scroll bar, 3 pages', value: 100%
+                                        Other, 0x1112e8db0, {{369.0, 360.0}, {3.0, 255.0}}
+                                      Other, 0x1112e6210, {{342.0, 64.0}, {30.0, 554.0}}, label: 'Vertical scroll bar, 3 pages', value: 100%
+                                        Other, 0x1112e9a10, {{369.0, 360.0}, {3.0, 255.0}}
+                TabBar, 0x1112958a0, {{0.0, 618.0}, {375.0, 49.0}}, label: 'Tab Bar'
+                  Button, 0x1112941e0, {{2.0, 619.0}, {90.0, 48.0}}, identifier: 'sun.max.fill', label: '今天'
+                  Button, 0x111295480, {{96.0, 619.0}, {90.0, 48.0}}, identifier: 'dumbbell.fill', label: '練習'
+                  Button, 0x1112e7d30, {{190.0, 619.0}, {89.0, 48.0}}, identifier: 'books.vertical.fill', label: '單字'
+                  Button, 0x1112e7910, {{283.0, 619.0}, {90.0, 48.0}}, identifier: 'person.crop.circle.fill', label: '我', Selected
+                    Image, 0x1112e70d0, {{314.0, 622.5}, {27.5, 27.5}}, identifier: 'person.crop.circle.fill', label: 'account'
+              Other, 0x1112f8d30, {{0.0, 20.0}, {375.0, 647.0}}
+Path to element:
+ →Application, 0x111429830, pid: 71013, label: 'WordCat'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x111289c70, pid: 71013, label: 'WordCat'
+  }

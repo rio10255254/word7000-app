@@ -1,0 +1,1 @@
+/Users/runner/work/word7000-app/word7000-app/ios/Word7000UITests/SpeakingCoachTests.swift:111: error: -[Word7000UITests.SpeakingCoachTests testScenarioListAndTheWordPracticeTab] : XCTAssertEqual failed: ("XCTWaiterResult(rawValue: 2)") is not equal to ("XCTWaiterResult(rawValue: 1)") - label == 'Word speaking'

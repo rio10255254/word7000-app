@@ -1,0 +1,80 @@
+    t =   117.78s     Find the Button (First Match)
+    t =   117.84s     Check for interrupting elements affecting "books.vertical.fill" Button
+    t =   117.89s     Synthesize event
+    t =   118.20s     Wait for com.rio.word7000 to idle
+    t =   121.37s Find the Target Application 'com.rio.word7000'
+    t =   121.69s Added attachment named 'words'
+    t =   121.70s Waiting 5.0s for Cell (Element at index 2) to exist
+    t =   122.73s     Checking `Expect predicate `existsNoRetry == 1` for object Cell (Element at index 2)`
+    t =   122.73s         Checking existence of `Cell (Element at index 2)`
+    t =   122.85s Tap Cell (Element at index 2)
+    t =   122.85s     Wait for com.rio.word7000 to idle
+    t =   122.85s     Find the Cell (Element at index 2)
+    t =   122.92s     Check for interrupting elements affecting Cell
+    t =   123.00s     Synthesize event
+    t =   123.31s     Wait for com.rio.word7000 to idle
+    t =   124.83s Find the Target Application 'com.rio.word7000'
+    t =   125.08s Added attachment named 'word-detail'
+    t =   125.09s Tap Button (Element at index 0)
+    t =   125.09s     Wait for com.rio.word7000 to idle
+    t =   125.09s     Find the Button (Element at index 0)
+    t =   125.16s     Check for interrupting elements affecting "BackButton" Button
+    t =   125.21s     Synthesize event
+    t =   125.53s     Wait for com.rio.word7000 to idle
+    t =   125.97s Waiting 5.0s for Button (First Match) to exist
+    t =   127.00s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =   127.00s         Checking existence of `Button (First Match)`
+    t =   127.03s Tap Button (First Match)
+    t =   127.03s     Wait for com.rio.word7000 to idle
+    t =   127.04s     Find the Button (First Match)
+    t =   127.09s     Check for interrupting elements affecting "person.crop.circle.fill" Button
+    t =   127.20s     Synthesize event
+    t =   127.53s     Wait for com.rio.word7000 to idle
+    t =   130.88s Find the Target Application 'com.rio.word7000'
+    t =   131.24s Added attachment named 'me'
+    t =   131.24s Swipe up Target Application 'com.rio.word7000'
+    t =   131.24s     Wait for com.rio.word7000 to idle
+    t =   131.25s     Find the Target Application 'com.rio.word7000'
+    t =   131.36s     Check for interrupting elements affecting "WordCat" Application
+    t =   131.47s     Synthesize event
+    t =   131.94s     Wait for com.rio.word7000 to idle
+    t =   133.72s Find the Target Application 'com.rio.word7000'
+    t =   134.02s Added attachment named 'me-more'
+    t =   134.02s Swipe up Target Application 'com.rio.word7000'
+    t =   134.02s     Wait for com.rio.word7000 to idle
+    t =   134.03s     Find the Target Application 'com.rio.word7000'
+    t =   134.11s     Check for interrupting elements affecting "WordCat" Application
+    t =   134.18s     Synthesize event
+    t =   134.61s     Wait for com.rio.word7000 to idle
+    t =   136.29s Find the Target Application 'com.rio.word7000'
+    t =   136.59s Added attachment named 'me-end'
+    t =   136.59s Find the "me-settings" Button
+    t =   136.71s Find the "me-settings" Button
+    t =   136.82s Find the "me-settings" Button
+    t =   136.93s Checking existence of `"me-settings" Button`
+    t =   137.01s Tap "me-settings" Button
+    t =   137.01s     Wait for com.rio.word7000 to idle
+    t =   137.02s     Find the "me-settings" Button
+    t =   137.10s     Check for interrupting elements affecting "me-settings" Button
+    t =   137.18s     Synthesize event
+    t =   137.48s     Wait for com.rio.word7000 to idle
+    t =   138.55s Find the Target Application 'com.rio.word7000'
+    t =   138.85s Added attachment named 'settings'
+    t =   138.86s Tear Down
+Test Case '-[Word7000UITests.TourTests testEveryPageDarkCollage]' passed (139.408 seconds).
+Test Suite 'TourTests' passed at 2026-11-09 06:54:39.457.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 299.995 (299.998) seconds
+Test Suite 'Word7000UITests.xctest' passed at 2026-11-09 06:54:39.458.
+	 Executed 46 tests, with 0 failures (0 unexpected) in 6034.400 (6034.632) seconds
+Test Suite 'Selected tests' passed at 2026-11-09 06:54:39.459.
+	 Executed 46 tests, with 0 failures (0 unexpected) in 6034.400 (6034.637) seconds
+2026-11-09 06:54:40.959 xcodebuild[39264:102922] [MT] IDETestOperationsObserverDebug: 6048.937 elapsed -- Testing started completed.
+2026-11-09 06:54:40.959 xcodebuild[39264:102922] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-09 06:54:40.959 xcodebuild[39264:102922] [MT] IDETestOperationsObserverDebug: 6048.937 sec, +6048.937 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/_temp/Word7000.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

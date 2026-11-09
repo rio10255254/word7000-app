@@ -1,0 +1,80 @@
+    t =   147.07s             Check for interrupting elements affecting "paywall-close" Button
+    t =   147.78s             Synthesize event
+    t =   148.30s             Wait for com.rio.word7000 to idle
+    t =   149.01s         Waiting 5.0s for "coach-premium-check" Button to exist
+    t =   150.07s             Checking `Expect predicate `existsNoRetry == 1` for object "coach-premium-check" Button`
+    t =   150.07s                 Checking existence of `"coach-premium-check" Button`
+    t =   150.60s         Checking existence of `"coach-rewrite" StaticText`
+    t =   151.01s         Checking existence of `"coach-tip" StaticText`
+    t =   151.28s         Checking existence of `"coach-follow-up" StaticText`
+    t =   151.60s         Waiting 1.0s for "speaking-next" Button to exist
+    t =   152.61s             Checking `Expect predicate `existsNoRetry == 1` for object "speaking-next" Button`
+    t =   152.61s                 Checking existence of `"speaking-next" Button`
+    t =   152.90s             Checking existence of `"speaking-next" Button`
+    t =   153.17s         Find the "speaking-next" Button
+    t =   153.56s         Checking existence of `"speaking-next" Button`
+    t =   153.80s         Find the "speaking-next" Button
+    t =   154.10s         Find the "speaking-next" Button
+    t =   154.38s         Checking existence of `"speaking-next" Button`
+    t =   154.84s         Find the "speaking-next" Button
+    t =   155.06s         Find the "speaking-next" Button
+    t =   155.36s         Checking existence of `"speaking-next" Button`
+    t =   155.50s         Find the "speaking-next" Button
+    t =   155.77s         Find the "speaking-next" Button
+    t =   156.02s         Checking existence of `"speaking-next" Button`
+    t =   156.20s         Find the "speaking-next" Button
+    t =   156.40s         Find the "speaking-next" Button
+    t =   156.73s         Checking existence of `"speaking-next" Button`
+    t =   156.90s         Find the "speaking-next" Button
+    t =   157.23s         Find the "speaking-next" Button
+    t =   157.51s         Checking existence of `"speaking-next" Button`
+    t =   157.78s         Find the "speaking-next" Button
+    t =   158.07s         Find the "speaking-next" Button
+    t =   158.33s         Checking existence of `"speaking-next" Button`
+    t =   158.48s         Find the "speaking-next" Button
+    t =   158.71s         Find the "speaking-next" Button
+    t =   159.02s         Checking existence of `"speaking-next" Button`
+    t =   159.30s         Find the "speaking-next" Button
+    t =   159.58s         Find the "speaking-next" Button
+    t =   159.87s         Checking existence of `"speaking-next" Button`
+    t =   160.12s         Find the "speaking-next" Button
+    t =   160.35s         Find the "speaking-next" Button
+    t =   160.68s         Checking existence of `"speaking-next" Button`
+    t =   160.92s         Find the "speaking-next" Button
+    t =   161.08s         Find the "speaking-next" Button
+    t =   161.48s         Checking existence of `"speaking-next" Button`
+    t =   161.65s         Find the "speaking-next" Button
+    t =   161.85s         Waiting 5.0s for "speaking-next" Button to exist
+    t =   162.88s             Checking `Expect predicate `existsNoRetry == 1` for object "speaking-next" Button`
+    t =   162.89s                 Checking existence of `"speaking-next" Button`
+    t =   163.10s         Find the "speaking-next" Button
+    t =   163.70s         Tap "speaking-next" Button
+    t =   163.70s             Wait for com.rio.word7000 to idle
+    t =   163.71s             Find the "speaking-next" Button
+    t =   164.06s             Check for interrupting elements affecting "speaking-next" Button
+    t =   164.23s             Synthesize event
+    t =   164.59s             Wait for com.rio.word7000 to idle
+    t =   165.66s         Checking `Expect predicate `label BEGINSWITH "2 /"` for object "speaking-position" StaticText`
+    t =   165.66s             Find the "speaking-position" StaticText
+    t =   166.43s         Find the "speaking-position" StaticText
+    t =   166.66s Tear Down
+Test Case '-[Word7000UITests.SpeakingCoachTests testWithoutDeviceAICheckingLeadsToPremiumAndPracticeContinues]' passed (167.559 seconds).
+Test Suite 'SpeakingCoachTests' failed at 2026-11-09 06:21:15.650.
+	 Executed 11 tests, with 1 failure (0 unexpected) in 2152.241 (2152.263) seconds
+Test Suite 'Word7000UITests.xctest' failed at 2026-11-09 06:21:15.757.
+	 Executed 27 tests, with 1 failure (0 unexpected) in 3179.797 (3179.969) seconds
+Test Suite 'Selected tests' failed at 2026-11-09 06:21:15.760.
+	 Executed 27 tests, with 1 failure (0 unexpected) in 3179.797 (3179.984) seconds
+2026-11-09 06:22:08.560 xcodebuild[45826:123497] [MT] IDETestOperationsObserverDebug: 3257.529 elapsed -- Testing started completed.
+2026-11-09 06:22:08.562 xcodebuild[45826:123497] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-09 06:22:08.562 xcodebuild[45826:123497] [MT] IDETestOperationsObserverDebug: 3257.529 sec, +3257.529 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/_temp/Word7000.xcresult
+
+Failing tests:
+	SpeakingCoachTests.testNativeRecorderPermissionTimerPlaybackAndCleanup()
+
+** TEST EXECUTE FAILED **
+
+Testing started

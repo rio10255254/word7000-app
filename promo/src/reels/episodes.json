@@ -406,7 +406,7 @@
         {
           "text": "考試哪天，**你記得嗎**？",
           "say": "[smug] 你考試哪天，你記得嗎？",
-          "beats": 4,
+          "beats": 6,
           "cues": [
             [
               0.3,
@@ -733,7 +733,7 @@
         {
           "text": "How many words today? **Be honest.**",
           "say": "[smug] How many words did you learn today? Be honest.",
-          "beats": 7,
+          "beats": 8,
           "cues": [
             [
               0.3,

@@ -6,7 +6,8 @@ import { clamp } from '../kit';
 import script from './episodes.json';
 import timings from './timing.json';
 import { REEL_FPS } from './Reel';
-import { type Cam, Caption, Ripple, camAt, inOut, out } from './Intro';
+import { type Cam, Caption, Ripple, camAt, inOut, out, toStage } from './Intro';
+import { Calendar, Counter, Route, Track } from './props';
 import { ABOVE_CAPTIONS, CAPTION_TOP, Peek, Phone } from './Teaser';
 import { Backdrop, Grade, InkFilters, Motes, Sheen } from './finish';
 
@@ -39,6 +40,13 @@ type Episode = {
   marks: [number, number, 'ring' | 'marker', number, number, number, number][];
   taps: [number, number, number, number][];
   lines: { text: string }[];
+  /** Things that fly out of the phone: see props.tsx. Times are [slot, beat]; `from` is a point on the screen. */
+  props?: (
+    | { kind: 'calendar'; slot: number; beat: number; until?: [number, number]; from: [number, number]; pages: [string, string, string, string][]; final: [string, string, string, string]; tag: string }
+    | { kind: 'counter'; slot: number; beat: number; until?: [number, number]; from: [number, number]; at: [number, number]; tilt: number; label: string; unit: string; to: number }
+    | { kind: 'track'; slot: number; beat: number; until?: [number, number]; from: [number, number]; at: [number, number]; tilt: number; title: string; steps: string[]; stepWord: string; flag: string }
+    | { kind: 'route'; slot: number; beat: number; until?: [number, number]; from: [number, number]; at: [number, number]; tilt: number; stops: string[]; stopBeats: number[]; doneBeat: number; doneText: string }
+  )[];
 };
 
 /** The days left, as a rubber stamp on cream paper: "還有 6 天" / "6 days to go", and the date under a rule. */
@@ -178,6 +186,12 @@ export const Countdown = ({ id }: { id: string }) => {
   const knock = end + 0.75;
   const endShake = t > knock && t < knock + 0.25 ? Math.sin((t - knock) * 80) * 5 * (1 - (t - knock) / 0.25) : 0;
   const coverOut = interpolate(t, [show - 0.1, show + 0.25], [0, 1], { ...clamp, easing: inOut });
+  // While the calendar is out, the phone sinks back a little.
+  const calendar = (episode.props ?? []).find((pr) => pr.kind === 'calendar');
+  const sink = calendar
+    ? interpolate(t, [at(calendar.slot, calendar.beat), at(calendar.slot, calendar.beat) + 0.4], [0, 1], clamp) *
+      (calendar.until ? interpolate(t, [at(...calendar.until), at(...calendar.until) + 0.35], [1, 0], clamp) : 1)
+    : 0;
   const stamp = <DaysStamp days={episode.days} words={episode.dayWords} note={episode.note} />;
 
   return (
@@ -197,7 +211,7 @@ export const Countdown = ({ id }: { id: string }) => {
       ) : null}
 
       {t >= show && t < end + 0.4 ? (
-        <div style={{ position: 'absolute', inset: 0, filter: back ? `blur(${back * 7 + exit * 8}px)` : undefined, opacity: 1 - 0.25 * back, ...ABOVE_CAPTIONS }}>
+        <div style={{ position: 'absolute', inset: 0, filter: back || sink ? `blur(${back * 7 + exit * 8 + sink * 3}px) brightness(${1 - 0.18 * sink})` : undefined, opacity: 1 - 0.25 * back, ...ABOVE_CAPTIONS }}>
           <div style={{ position: 'absolute', inset: 0, transform: `${hold} scale(${1 - 0.08 * exit})`, transformOrigin: '50% 43%', opacity: 1 - exit }}>
             <Phone cam={cam} lift={(1 - phoneIn) * 1500} t={t}>
               <Img src={staticFile(`next/${episode.screen}.jpg`)} style={{ position: 'absolute', width: '100%', height: '100%' }} />
@@ -215,6 +229,33 @@ export const Countdown = ({ id }: { id: string }) => {
           </div>
         </div>
       ) : null}
+
+      {(episode.props ?? []).map((pr, i) => {
+        const when = at(pr.slot, pr.beat);
+        const until = pr.until ? at(...pr.until) : end - 0.2;
+        const from = toStage(cam, pr.from[0], pr.from[1]);
+        if (pr.kind === 'calendar') return <Calendar key={i} t={t} at={when} until={until} from={from} pages={pr.pages} final={pr.final} tag={pr.tag} />;
+        if (pr.kind === 'counter')
+          return <Counter key={i} t={t} at={when} until={until} from={from} left={pr.at[0]} top={pr.at[1]} tilt={pr.tilt} label={pr.label} unit={pr.unit} to={pr.to} />;
+        if (pr.kind === 'track')
+          return <Track key={i} t={t} at={when} until={until} from={from} left={pr.at[0]} top={pr.at[1]} tilt={pr.tilt} title={pr.title} steps={pr.steps} stepWord={pr.stepWord} flag={pr.flag} />;
+        return (
+          <Route
+            key={i}
+            t={t}
+            at={when}
+            until={until}
+            from={from}
+            left={pr.at[0]}
+            top={pr.at[1]}
+            tilt={pr.tilt}
+            stops={pr.stops}
+            stopTimes={pr.stopBeats.map((b) => at(pr.slot, b))}
+            doneAt={at(pr.slot, pr.doneBeat)}
+            doneText={pr.doneText}
+          />
+        );
+      })}
 
       <Peek t={t} at={0} until={show + 0.05} side={1} mood="smug" y={760} />
       <Peek t={t} at={mock + 0.05} until={end + 0.4} side={-1} mood="cheeky" y={520} outAt={end - 0.15} />

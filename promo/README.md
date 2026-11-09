@@ -202,7 +202,8 @@ npm run render:reels   # 輸出 out/reel-ep01.mp4 …
 - **畫面**：`src/reels/Teaser.tsx`；截圖是 `lab-native-store-screenshots` 分支裡 WordCat Next 的 App Store 截圖（`public/next/`），圖示是新版的橄欖綠圖示（`public/icon-next.png`）。
 - **配音**：傻貓用 ElevenLabs 的「Yu 小宇」（年輕、有活力的台灣口音男聲）和 eleven_v4 模型，`say` 裡的 `[smug]` 之類的標籤只控制語氣、不會念出來。`scripts/make-voice-elevenlabs.py teaser` 產生 `public/reels/voice/teaser-*.mp3`；金鑰從 `ELEVENLABS_API_KEY` 或雲端環境的代理帶入。
 - **App 裡的真人錄音**：餐廳情境的兩句來自 App 的 `Resources/ScenarioAudio`（ElevenLabs 錄製），放在 `public/next/`。
-- **字幕**：有自己的一條帶子（畫面下方約 1372–1500px），手機在它上面就淡掉，所以字幕永遠在橄欖綠的底上，不會疊在 App 的文字上混在一起。字幕框是深色底、奶油色字，重點詞用蜜桃色。
+- **字幕**：有自己的一條帶子（畫面下方約 1452–1580px），手機在它上面就淡掉，所以字幕永遠在橄欖綠的底上，不會疊在 App 的文字上混在一起。字幕框是深色底、奶油色字，重點詞用蜜桃色。
+- **英文版**（`Reel-teaser-en`）：給美國、加拿大想學台灣華語的人。畫面換成 App 的英文介面截圖，餐廳情境改放 App 裡的中文真人錄音（「歡迎光臨！請問幾位？」「兩位，謝謝。」），SillyCat 用 ElevenLabs 的「Callum」（沙啞、搗蛋鬼味道的美國男聲）。字幕：Hey. You.／11/16. I'm moving into your phone.／One short path a day. Then you're done.／Real voices. Real conversations.／That stamp? Addictive.／Forget a word? I'll laugh.／Follow us. We'll tell you when it's out.
 - **兩個版本**：`npm run reels` 之後再跑 `python3 scripts/make-reels.py teaser --no-voice` 會多一個只有字幕（沒有傻貓配音）的混音 `teaser-novoice.mp3`，影片相同、只換聲音。
 
 ## 授權

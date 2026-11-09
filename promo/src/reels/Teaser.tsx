@@ -42,10 +42,21 @@ const STAMP: Cam = { x: 603, y: 1050, z: 0.6 };
  * phone fades out just above it, so a line never sits on top of the app's
  * own text.
  */
-const CAPTION_TOP = 1372;
+const CAPTION_TOP = 1452;
 const ABOVE_CAPTIONS = {
-  WebkitMaskImage: 'linear-gradient(to bottom, #000 0, #000 1250px, transparent 1335px)',
-  maskImage: 'linear-gradient(to bottom, #000 0, #000 1250px, transparent 1335px)',
+  WebkitMaskImage: 'linear-gradient(to bottom, #000 0, #000 1330px, transparent 1420px)',
+  maskImage: 'linear-gradient(to bottom, #000 0, #000 1330px, transparent 1420px)',
+};
+
+/** The screens each beat cuts to, and where the speaking and stamp screens keep their parts. */
+const SCREENS = {
+  today: 'n1-today',
+  card: 'n2-card',
+  write: 'n3-write-solved',
+  exam: 'n4-exam-answered',
+  shadow: 'n8-shadow',
+  stamp: 'n11-stamp',
+  mock: 'n4-exam',
 };
 
 type Slot = { start: number; length: number; voiceStart: number; voiceLength: number };
@@ -98,10 +109,10 @@ const Screen = ({ shot, t, at, until, cam, children }: { shot: string; t: number
  * the strip at `to`, so a line can be hidden until it is spoken without a
  * visible patch.
  */
-const Patch = ({ from, to, height, z, opacity }: { from: number; to: number; height: number; z: number; opacity: number }) =>
+const Patch = ({ shot, from, to, height, z, opacity }: { shot: string; from: number; to: number; height: number; z: number; opacity: number }) =>
   opacity <= 0 ? null : (
     <div style={{ position: 'absolute', left: 0, right: 0, top: to * z, height: height * z, overflow: 'hidden', opacity }}>
-      <Img src={staticFile('next/n8-shadow.jpg')} style={{ position: 'absolute', left: 0, top: -from * z, width: W * z, height: H * z }} />
+      <Img src={staticFile(`next/${shot}.jpg`)} style={{ position: 'absolute', left: 0, top: -from * z, width: W * z, height: H * z }} />
     </div>
   );
 
@@ -161,10 +172,22 @@ export const Teaser = ({ id }: { id: string }) => {
   const t = useCurrentFrame() / REEL_FPS;
   const episode = script.episodes.find((e) => e.id === id)! as (typeof script.episodes)[number] & {
     launch?: string;
+    label?: string;
+    screens?: Partial<typeof SCREENS>;
+    shadowCam?: Cam;
+    patches?: number[][];
+    ringY?: number;
     app?: string;
     outroNote?: string;
     outro?: string;
   };
+  const sc = { ...SCREENS, ...episode.screens };
+  const shadowCam = episode.shadowCam ?? SHADOW;
+  const patches = episode.patches ?? [
+    [700, 1240, 300],
+    [620, 1545, 330],
+  ];
+  const ringY = episode.ringY ?? 1120;
   const timing = (timings as Record<string, { total: number; end: number; slots: Slot[] }>)[id];
   const [, meet, path, speak, stamp, mock] = timing.slots.map((s) => s.start);
   const end = timing.end;
@@ -188,8 +211,8 @@ export const Teaser = ({ id }: { id: string }) => {
       [toExam - 0.1, CARD],
       [toExam + 0.4, EXAM],
       [speak - 0.1, { ...EXAM, z: 0.64 }],
-      [speak + 0.5, SHADOW],
-      [stamp - 0.1, { ...SHADOW, z: 0.9 }],
+      [speak + 0.5, shadowCam],
+      [stamp - 0.1, { ...shadowCam, z: shadowCam.z + 0.04 }],
       [stamp + 0.5, STAMP],
       [mock - 0.1, { ...STAMP, z: 0.62 }],
       [mock + 0.4, { ...EXAM, z: 0.5 }],
@@ -237,16 +260,16 @@ export const Teaser = ({ id }: { id: string }) => {
       {phoneShown ? (
         <div style={{ position: 'absolute', inset: 0, filter: back ? `blur(${back * 7}px)` : undefined, opacity: 1 - 0.25 * back, ...ABOVE_CAPTIONS }}>
           <Phone cam={cam} lift={(1 - phoneIn) * 1500}>
-            <Screen shot="n1-today" t={t} at={0} until={toCard} cam={cam} />
-            <Screen shot="n2-card" t={t} at={toCard} until={toWrite} cam={cam} />
-            <Screen shot="n3-write-solved" t={t} at={toWrite} until={toExam} cam={cam} />
-            <Screen shot="n4-exam-answered" t={t} at={toExam} until={speak} cam={cam} />
-            <Screen shot="n8-shadow" t={t} at={speak} until={stamp} cam={cam}>
+            <Screen shot={sc.today} t={t} at={0} until={toCard} cam={cam} />
+            <Screen shot={sc.card} t={t} at={toCard} until={toWrite} cam={cam} />
+            <Screen shot={sc.write} t={t} at={toWrite} until={toExam} cam={cam} />
+            <Screen shot={sc.exam} t={t} at={toExam} until={speak} cam={cam} />
+            <Screen shot={sc.shadow} t={t} at={speak} until={stamp} cam={cam}>
               {/* The server's line, then the learner's reply, as they are spoken. */}
-              <Patch from={700} to={1240} height={300} z={cam.z} opacity={1 - partnerShown} />
-              <Patch from={620} to={1545} height={330} z={cam.z} opacity={1 - replyShown} />
+              <Patch shot={sc.shadow} from={patches[0][0]} to={patches[0][1]} height={patches[0][2]} z={cam.z} opacity={1 - partnerShown} />
+              <Patch shot={sc.shadow} from={patches[1][0]} to={patches[1][1]} height={patches[1][2]} z={cam.z} opacity={1 - replyShown} />
             </Screen>
-            <Screen shot="n11-stamp" t={t} at={stamp} until={mock} cam={cam}>
+            <Screen shot={sc.stamp} t={t} at={stamp} until={mock} cam={cam}>
               <div style={{ position: 'absolute', inset: 0, background: '#FFE7A6', opacity: stampFlash, mixBlendMode: 'screen' }} />
             </Screen>
             {t >= stamp && t < mock + 0.5 ? (
@@ -255,7 +278,7 @@ export const Teaser = ({ id }: { id: string }) => {
                 style={{
                   position: 'absolute',
                   left: (603 - 300) * cam.z,
-                  top: (1120 - 300) * cam.z,
+                  top: (ringY - 300) * cam.z,
                   width: 600 * cam.z,
                   height: 600 * cam.z,
                   overflow: 'hidden',
@@ -265,12 +288,12 @@ export const Teaser = ({ id }: { id: string }) => {
                 }}
               >
                 <Img
-                  src={staticFile('next/n11-stamp.jpg')}
-                  style={{ position: 'absolute', left: -(603 - 300) * cam.z, top: -(1120 - 300) * cam.z, width: W * cam.z, height: H * cam.z }}
+                  src={staticFile(`next/${sc.stamp}.jpg`)}
+                  style={{ position: 'absolute', left: -(603 - 300) * cam.z, top: -(ringY - 300) * cam.z, width: W * cam.z, height: H * cam.z }}
                 />
               </div>
             ) : null}
-            {t >= mock ? <Screen shot="n4-exam" t={t} at={mock} cam={cam} /> : null}
+            {t >= mock ? <Screen shot={sc.mock} t={t} at={mock} cam={cam} /> : null}
           </Phone>
         </div>
       ) : null}
@@ -297,7 +320,7 @@ export const Teaser = ({ id }: { id: string }) => {
       ) : null}
 
       {lines.map((line, i) => (
-        <Caption key={i} text={line.text} start={timing.slots[i].start} length={timing.slots[i].length} t={t} first={i === 0} label="傻貓 SillyCat" top={CAPTION_TOP} size={62} />
+        <Caption key={i} text={line.text} start={timing.slots[i].start} length={timing.slots[i].length} t={t} first={i === 0} label={episode.label ?? '傻貓 SillyCat'} top={CAPTION_TOP} size={62} />
       ))}
 
       {/* The end card: the new icon, the name, the date */}

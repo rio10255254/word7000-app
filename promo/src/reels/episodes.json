@@ -138,6 +138,167 @@
       "grooveFrom": 1
     },
     {
+      "id": "teaser-en",
+      "series": "Out 11.16",
+      "app": "WordCat",
+      "launch": "11.16",
+      "voice": {
+        "engine": "elevenlabs",
+        "voiceId": "N2lVS1w4EtoT3dr4eOWO",
+        "model": "eleven_v4",
+        "language": "en"
+      },
+      "outro": "Follow us. We'll tell you when it's out.",
+      "outroNote": "On the App Store",
+      "hook": [
+        "Hey. You."
+      ],
+      "lines": [
+        {
+          "text": "Hey. You.",
+          "say": "[smug] Hey. You.",
+          "beats": 4,
+          "cues": [
+            [
+              0.3,
+              "pop"
+            ]
+          ]
+        },
+        {
+          "text": "**11/16**. I'm moving into your phone.",
+          "say": "[smug] November sixteenth. I'm moving into your phone.",
+          "beats": 8,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              2,
+              "pop"
+            ]
+          ]
+        },
+        {
+          "text": "One short path a day. Then you're done.",
+          "say": "One short path a day. Then you're done.",
+          "beats": 12,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              3,
+              "whoosh"
+            ],
+            [
+              4.6,
+              "tap"
+            ],
+            [
+              6,
+              "whoosh"
+            ],
+            [
+              7.6,
+              "wrong"
+            ],
+            [
+              9,
+              "whoosh"
+            ]
+          ]
+        },
+        {
+          "text": "Real voices. **Real** conversations.",
+          "beats": 10,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ]
+          ],
+          "clips": [
+            [
+              0.4,
+              "next/restaurant-0-0-partner-zh.mp3",
+              0.9
+            ],
+            [
+              6.2,
+              "next/restaurant-0-0-reply-zh.mp3",
+              0.9
+            ]
+          ]
+        },
+        {
+          "text": "That stamp? **Addictive.**",
+          "say": "[satisfied] That stamp? ...Addictive.",
+          "beats": 6,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              0.9,
+              "stamp"
+            ],
+            [
+              1.2,
+              "ding"
+            ]
+          ]
+        },
+        {
+          "text": "Forget a word? I'll **laugh**.",
+          "say": "[mischievously] Forget a word? I'll laugh at you.",
+          "beats": 6,
+          "cues": [
+            [
+              0,
+              "pop"
+            ]
+          ]
+        }
+      ],
+      "outroSay": "Follow us. We'll tell you when it's out.",
+      "outroAt": 1.6,
+      "endBeats": 9,
+      "endStamp": true,
+      "grooveFrom": 1,
+      "label": "SillyCat",
+      "screens": {
+        "today": "en-n1-today",
+        "card": "en-n2-card",
+        "write": "en-n3-write-solved",
+        "exam": "en-3-quiz",
+        "shadow": "en-n8-shadow",
+        "stamp": "en-n11-stamp",
+        "mock": "en-n3-write"
+      },
+      "shadowCam": {
+        "x": 603,
+        "y": 1560,
+        "z": 0.9
+      },
+      "patches": [
+        [
+          600,
+          1110,
+          280
+        ],
+        [
+          560,
+          1395,
+          450
+        ]
+      ],
+      "ringY": 1080
+    },
+    {
       "id": "ep01",
       "series": "小笨貓日記 #1",
       "voice": false,

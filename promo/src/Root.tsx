@@ -12,7 +12,7 @@ export const Root = () => (
       <Composition
         key={e.id}
         id={`Reel-${e.id}`}
-        component={e.id === 'teaser' ? Teaser : e.id.startsWith('ep01') ? Intro : Reel}
+        component={e.id.startsWith('teaser') ? Teaser : e.id.startsWith('ep01') ? Intro : Reel}
         defaultProps={{ id: e.id }}
         durationInFrames={reelFrames(e.id)}
         fps={REEL_FPS}

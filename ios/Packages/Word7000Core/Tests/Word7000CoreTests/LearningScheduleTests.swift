@@ -187,6 +187,16 @@ final class LearningScheduleTests: XCTestCase {
         XCTAssertGreaterThan(firsts.count, 1)
     }
 
+    func testQuizTopsUpFromTheChapterTheLevelTestPlacedTheLearnerAt() {
+        let words = (1...6).flatMap { level in
+            (0..<20).map { WordEntry(id: "L\(level)-\($0)", word: "word", partOfSpeech: "n", pronunciation: "", meaningZh: "字",
+                                     example: "", exampleZh: "", group: "Core \(level)") }
+        }
+        let session = QuizBuilder.seenFirstSession(words: words, state: .empty, count: 10, seed: "placed", startLevel: 4)
+        XCTAssertEqual(session.count, 10)
+        XCTAssertTrue(session.allSatisfy { (LearningEngine.coreLevel($0.group) ?? 0) >= 4 }, "no words from chapters too easy")
+    }
+
     func testQuizWithEnoughSeenWordsAsksOnlySeenWords() {
         let words = (0..<200).map { word("w\($0)") }
         var state = ProgressState.empty

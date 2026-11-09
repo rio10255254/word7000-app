@@ -251,7 +251,7 @@ struct AIExplanationSection: View {
                         .accessibilityIdentifier("ai-explain-loading")
                 } else {
                     Button(action: start) {
-                        Label(L.t("叫傻貓解說：用法、搭配與例句", "Have Silly Cat explain: usage, collocations, examples"), systemImage: "sparkles")
+                        Label(L.t("解說用法、搭配和例句", "Explain usage, collocations and examples"), systemImage: "sparkles")
                     }
                     .accessibilityIdentifier("ai-explain")
                     if let failure { AIFailureNote(failure: failure) }

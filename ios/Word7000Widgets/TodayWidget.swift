@@ -100,7 +100,7 @@ struct TodayWidgetView: View {
     private func goalLine(_ display: HomeWidgetSnapshot.Display) -> String {
         if display.goalDone { return entry.t("今天的目標完成了", "Today's goal is done") }
         let left = display.target - display.studied
-        return entry.t("還差 \(left) 個字", "\(left) words to go")
+        return entry.t("還差 \(left) 個字", left == 1 ? "1 word to go" : "\(left) words to go")
     }
 
     // MARK: Home screen

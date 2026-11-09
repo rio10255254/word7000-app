@@ -24,6 +24,10 @@ struct SpeakingAnswerPanel: View {
     var scrollTo: (String) -> Void
     /// Called once something was said or written for this question.
     var onAttempt: () -> Void
+    /// WordCat Next: in a role-play's chat the answer is the learner's own
+    /// chat bubble (the words heard stay in it, and it can be edited there)
+    /// instead of a notepad.
+    var chat = false
 
     @State private var recording = LiveListener()
     /// This take was started from the notepad (record again), so its words
@@ -92,7 +96,7 @@ struct SpeakingAnswerPanel: View {
     var body: some View {
         VStack(spacing: 16) {
             if let followUpQuestion { followUpBanner(followUpQuestion) }
-            if showsPad { pad } else { recorderKey }
+            if showsPad { if chat { chatPad } else { pad } } else { recorderKey }
             if provider.availability == .ready, let message = visibleFailure {
                 HStack(alignment: .top) {
                     Image(systemName: "exclamationmark.circle").accessibilityHidden(true)
@@ -389,6 +393,92 @@ struct SpeakingAnswerPanel: View {
         }
         .modifier(AnswerPaper(kind: .sage, seed: 5))
         .id(Self.padAnchor)
+    }
+
+    /// The answer as the learner's chat bubble: the words just heard stay in
+    /// it as they came, a tap edits them; replay, record again and whether
+    /// the word was used sit small under it, then the Check key.
+    private var chatPad: some View {
+        VStack(alignment: .trailing, spacing: 10) {
+            HStack(alignment: .bottom, spacing: 0) {
+                Spacer(minLength: 48)
+                answerEditor(ruled: false)
+                    .frame(minHeight: 44, maxHeight: 200)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(Palette.accent.opacity(answerFocused ? 0.2 : 0.14), in: BubbleShape(tail: .trailing))
+                    .overlay {
+                        BubbleShape(tail: .trailing)
+                            .stroke(Palette.accent.opacity(answerFocused ? 0.5 : 0), lineWidth: 1.5)
+                    }
+            }
+            // While typing, Check sits right under the bubble: the chat keeps its
+            // end in view, and on a small phone (iPhone SE) the space left above
+            // the keyboard was too short to show it above the bubble.
+            if answerFocused {
+                HStack(spacing: 16) {
+                    Spacer()
+                    if provider.availability == .ready, hasText, !session.isWorking, !pendingSubmission {
+                        Button {
+                            guard canSubmitAnswer else { return }
+                            needsTranscriptReview = false
+                            submit()
+                        } label: {
+                            Label(L.t("批改", "Check"), systemImage: "sparkles")
+                                .font(.subheadline.weight(.bold))
+                        }
+                        .buttonStyle(.borderless)
+                        .disabled(!canSubmitAnswer)
+                        .accessibilityIdentifier("coach-submit")
+                    }
+                    Button { dismissKeyboard() } label: { Image(systemName: "keyboard.chevron.compact.down") }
+                        .buttonStyle(.borderless)
+                        .frame(minWidth: 44, minHeight: 44)
+                        .accessibilityLabel(L.t("收起鍵盤", "Dismiss keyboard"))
+                        .accessibilityIdentifier("coach-keyboard-done")
+                }
+            }
+            padTools
+            padStatus
+            checkArea
+        }
+        .id(Self.padAnchor)
+    }
+
+    private func answerEditor(ruled: Bool) -> some View {
+        let placeholder = live ? L.t("請說…", "Go ahead…")
+            : chinese ? L.t("在這裡用中文寫下你的回答", "Write your answer in Chinese here")
+            : L.t("在這裡用英文寫下你的回答", "Write your answer in English here")
+        return PracticeAnswerEditor(text: $answer, focused: $answerFocused,
+                                    editable: !live && recording.state != .finishing,
+                                    ruled: ruled,
+                                    onEdit: { text in
+                                        if text != submittedAnswer { session.reset() }
+                                        if !fixes.isEmpty { fixes = [] }
+                                        inputCommitFailed = false
+                                        Speaker.shared.stop()
+                                    }, onCommit: { finishInput(committedText: $0) },
+                                    committedOverride: {
+                                        #if DEBUG
+                                        return pendingSubmission ? provider.testingCommittedAnswer : nil
+                                        #else
+                                        return nil
+                                        #endif
+                                    })
+            .accessibilityLabel(L.t("你的回答", "Your answer"))
+            .accessibilityIdentifier("coach-answer")
+            .overlay(alignment: .topLeading) {
+                if answer.isEmpty {
+                    Text(placeholder)
+                        .foregroundStyle(.tertiary)
+                        .padding(.top, 8)
+                        .padding(.leading, 5)
+                        .allowsHitTesting(false)
+                        .accessibilityHidden(true)
+                }
+            }
+
     }
 
     private var notepad: some View {
@@ -803,7 +893,8 @@ struct SpeakingAnswerPanel: View {
             .disabled(recording.busy || session.isBusy)
             .accessibilityIdentifier("coach-original-question")
         }
-        .modifier(AnswerPaper(kind: .peach, seed: 3))
+        // Taped on like the cat's other notes, so it reads as one of them.
+        .modifier(AnswerPaper(kind: .peach, tilt: -0.4, torn: [.bottom], tape: true, seed: 3))
         .id(Self.topAnchor)
     }
 
@@ -854,11 +945,11 @@ struct SpeakingAnswerPanel: View {
 
     private var privacyNote: String {
         if provider.usesOnline, IntelligenceSettings.shared.cloudConsent == true {
-            return L.t("錄音只留在這部手機，離開即刪除。批改時，回答文字會傳送到 Anthropic 的 Claude 線上 AI 處理。AI 建議可能有誤，也不評分發音。",
-                       "Recordings stay on this iPhone and are deleted when you leave. To check an answer, its text is sent to Anthropic's Claude online AI. AI suggestions may be wrong and do not score pronunciation.")
+            return L.t("錄音只留在手機。批改時只傳文字給 Claude 線上 AI，建議可能有誤。",
+                       "Recordings stay on your iPhone. Checking sends only the text to Claude, an online AI; it can be wrong.")
         }
-        return L.t("錄音與回答只留在這部手機，離開即刪除錄音。",
-                   "Recordings and answers stay on this iPhone; leaving deletes the recording.")
+        return L.t("錄音和回答只留在手機，離開就刪除錄音。",
+                   "Recordings and answers stay on your iPhone; leaving deletes the recording.")
     }
 
     private var unavailableIsSettled: Bool {

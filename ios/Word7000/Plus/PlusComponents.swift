@@ -135,7 +135,7 @@ struct PlusLockedOverlay: View {
             .accessibilityIdentifier("locked-unlock")
         }
         .padding(22)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
+        .background { PremiumSurface(radius: 26) }
         .shadow(color: .black.opacity(0.12), radius: 24, y: 10)
         .padding(.horizontal, 28)
         .entrance(0, distance: 24)

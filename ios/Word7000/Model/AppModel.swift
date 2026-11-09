@@ -57,6 +57,21 @@ final class AppModel {
 
     // Study session state survives switching tabs.
     private(set) var studySession: StudySession?
+    /// The day the current set was built: a set left half done last night is
+    /// replaced by today's (with today's reviews and checks), not carried on.
+    private(set) var studySessionDay: String?
+    /// WordCat Next: whether the current set is the day's own (built from the
+    /// schedule), not a chosen list such as the missed words.
+    private var studySessionIsDaySet = false
+    /// Today's set, put aside unfinished while a round of missed words (or
+    /// another chosen list) runs, and taken back when Today starts the
+    /// cards again: a detour does not throw away the day's place or checks.
+    private var parkedDaySet: (session: StudySession, routine: WordRoutine?, day: String)?
+    /// WordCat Next: the flip cards of a "today's words" session followed by
+    /// spot checks. See `activeRoutine` for the one that belongs to the
+    /// current session.
+    private(set) var wordRoutine: WordRoutine?
+    @ObservationIgnored private var examPoolCache: (key: String, pool: ExamPool)?
     private(set) var storageFailed = false
     private(set) var libraryRevision = 0
     private(set) var deletedSetUndo: CustomVocabSet?
@@ -149,6 +164,10 @@ final class AppModel {
         }
         if arguments.contains("-uiTestingSampleProgress") {
             progress = SampleData.progress(words: words, today: DayMath.today())
+            // The routine's exam questions need older words that are due.
+            if arguments.contains("-uiTestingRoutine") {
+                progress = SampleData.olderWordsDue(progress, words: words, today: DayMath.today())
+            }
         }
         if arguments.contains("-uiTestingHistoryData") {
             var analytics = LearningAnalyticsState()
@@ -191,11 +210,16 @@ final class AppModel {
 
         let model = AppModel(coreWords: words, chineseWords: loadBundledWords(named: "words-zh"), progress: progress, customSets: sets,
                              settings: settings, persistence: persistence)
-        if snapshot?.sessionDay == model.today, let saved = snapshot?.studySession {
-            model.restoreStudySession(saved)
-        }
+        // The official banks first: a set of their words can only be restored once they are there.
         if let cached = persistence.load(RemoteContent.self, from: "remote-content.json"), !AppRuntime.uiTesting {
             model.applyRemoteContent(cached)
+        }
+        if snapshot?.sessionDay == model.today, let saved = snapshot?.studySession {
+            model.restoreStudySession(saved)
+            model.wordRoutine = snapshot?.wordRoutine
+            model.studySessionDay = model.today
+            // Saved since WordCat Next; before it, a set with a routine was the day's.
+            model.studySessionIsDaySet = snapshot?.sessionIsDaySet ?? (snapshot?.wordRoutine != nil)
         }
         #if DEBUG
         if arguments.contains("-uiTestingOfficialBank") { model.applyRemoteContent(SampleData.officialContent) }
@@ -277,13 +301,10 @@ final class AppModel {
         AppIconSwitcher.apply(settings.appStyle ?? .standard)
     }
 
-    /// The one-time style chooser is due: once, on a day after the first
-    /// practice, so the first day is only about learning.
-    var styleChoiceDue: Bool {
-        guard settings.stylePicked != true, settings.onboardingComplete == true, !progress.words.isEmpty else { return false }
-        if AppRuntime.uiTesting { return true }
-        return progress.analytics?.days.keys.contains { $0 < today } ?? false
-    }
+    /// The one-time style chooser (master asks once, on a day after the
+    /// first practice). WordCat Next: never; nothing gets in the way of a
+    /// day's learning, and the style is changed in Settings › App style.
+    var styleChoiceDue: Bool { false }
 
     var reminderEnabled: Bool { settings.streakReminder ?? true }
 
@@ -545,10 +566,22 @@ final class AppModel {
     }
     var newWordsLeftToday: Int { studyPlan.fresh }
 
+    /// WordCat Next: the chapter the level test placed the learner at, for
+    /// the built-in words of the mode it was taken in; new words start there.
+    var placementStart: Int? {
+        guard settings.activeBankId == WordBanks.coreBankId, let profile = settings.learnerProfile,
+              profile.startMode == nil || profile.startMode == studyMode.rawValue else { return nil }
+        return profile.startChapter
+    }
+
     var studyPlan: (fresh: Int, review: Int, total: Int) {
-        guard let session = studySession, session.sourceKey == studySourceKey, !session.isComplete else {
+        // Today's set, also while it is put aside for a round of missed words.
+        let parked = parkedDaySet.flatMap { $0.day == today ? $0.session : nil }
+        guard let session = parked ?? (studySessionDay == today ? studySession : nil),
+              session.sourceKey == studySourceKey, !session.isComplete else {
             // Only the counts are shown, so skip building and shuffling the queue.
-            return LearningEngine.studyQueueCounts(words: studyCandidates, state: progress, today: today, limit: nextSessionLimit)
+            return LearningEngine.studyQueueCounts(words: studyCandidates, state: progress, today: today, limit: nextSessionLimit,
+                                                   startLevel: placementStart)
         }
         var seen = Set<String>()
         let words = session.cardIds.dropFirst(session.index).filter { seen.insert($0).inserted }.compactMap { word(id: $0) }
@@ -566,7 +599,10 @@ final class AppModel {
     }
 
     var primaryActionTitle: String {
-        goalDone ? L.extraAction : progress.studiedToday > 0 ? L.continueAction : L.primaryAction
+        if routinePending, let routine = activeRoutine {
+            return routine.step == .exam ? L.t("繼續考考看", "Continue the quiz") : L.t("繼續拼字", "Continue spelling")
+        }
+        return goalDone ? L.extraAction : progress.studiedToday > 0 ? L.continueAction : L.primaryAction
     }
 
     func refreshToday() {
@@ -580,10 +616,11 @@ final class AppModel {
 
     /// The words the learner said they know on the first launch count as
     /// known on sight, so new words start near their level.
-    func applyPlacement(knownIds: [String]) {
-        guard !knownIds.isEmpty else { return }
+    /// WordCat Next: words recognised but not spelled start as words being learned.
+    func applyPlacement(knownIds: [String], learningIds: [String] = []) {
+        guard !knownIds.isEmpty || !learningIds.isEmpty else { return }
         refreshToday()
-        progress = Placement.apply(knownIds: knownIds, to: progress, today: today)
+        progress = Placement.apply(knownIds: knownIds, learningIds: learningIds, to: progress, today: today)
         scheduleSave()
         Usage.log("placement", studyMode.rawValue)
     }
@@ -606,9 +643,30 @@ final class AppModel {
     // MARK: Study
 
     /// The current session, or a fresh one when there is none or the bank or
-    /// filters changed since it was built.
-    func ensureStudySession() {
-        if let session = studySession, session.sourceKey == studySourceKey, !session.isComplete { return }
+    /// filters changed since it was built. `daySet`: today's set is asked for
+    /// (Today's button), so it comes back from beside a round of chosen words.
+    func ensureStudySession(daySet: Bool = false) {
+        refreshToday()
+        let current = studySession.flatMap { session in
+            studySessionDay == today && session.sourceKey == studySourceKey ? session : nil
+        }
+        // A round of chosen words (the missed words) just begun plays first:
+        // the study screen opening must not swap today's set back over it.
+        if !daySet, let current, !studySessionIsDaySet, !current.isComplete { return }
+        // Back from a detour: today's set carries on where it was left.
+        if let parked = parkedDaySet {
+            parkedDaySet = nil
+            if parked.day == today, parked.session.sourceKey == studySourceKey {
+                studySession = parked.session
+                wordRoutine = parked.routine
+                studySessionDay = parked.day
+                studySessionIsDaySet = true
+                studyUndoStack = []
+                scheduleSave()
+                return
+            }
+        }
+        if let session = current, !daySet || studySessionIsDaySet, !session.isComplete || routinePending { return }
         startStudySession()
     }
 
@@ -628,6 +686,13 @@ final class AppModel {
 
     func startStudySession(onlyIds: [String]? = nil, limit: Int? = nil) {
         refreshToday()
+        // A chosen list over an unfinished day set: keep the day set aside.
+        if onlyIds != nil, studySessionIsDaySet, let session = studySession, studySessionDay == today,
+           !session.isComplete || routinePending {
+            parkedDaySet = (session, wordRoutine, today)
+        } else if onlyIds == nil {
+            parkedDaySet = nil
+        }
         let candidates: [WordEntry]
         if let onlyIds {
             let wanted = Set(onlyIds)
@@ -636,8 +701,20 @@ final class AppModel {
             candidates = studyCandidates
         }
         let queue = LearningEngine.buildStudyQueue(words: candidates, state: progress, today: today,
-                                                  limit: limit ?? (onlyIds == nil ? nextSessionLimit : max(1, candidates.count)))
+                                                  limit: limit ?? (onlyIds == nil ? nextSessionLimit : max(1, candidates.count)),
+                                                  startLevel: onlyIds == nil ? placementStart : nil)
         studySession = StudySession(cardIds: queue.map(\.id), sourceKey: studySourceKey)
+        studySessionDay = today
+        studySessionIsDaySet = onlyIds == nil
+        // Both languages: a learner of Chinese is checked in Chinese.
+        wordRoutine = onlyIds == nil && AppRuntime.wordRoutine
+            ? WordRoutine(cardIds: queue.map(\.id),
+                          stagesBefore: Dictionary(queue.compactMap { word -> (String, Int)? in
+                              guard let saved = progress.words[word.id], saved.status != .new else { return nil }
+                              return (word.id, LearningEngine.reviewStage(saved))
+                          }, uniquingKeysWith: { first, _ in first }),
+                          sourceKey: studySourceKey, day: today)
+            : nil
         studyUndoStack = []
         scheduleSave()
         Usage.log("study_session", usageScope)
@@ -718,13 +795,14 @@ final class AppModel {
         let filter = settings.quizFilter
         let candidates = bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)
             .filter { !ChineseSpelling.targets($0.meaningZh).isEmpty }
-        return QuizBuilder.seenFirstSession(words: candidates, state: progress, count: Spelling.sessionLength, seed: seed)
+        return QuizBuilder.seenFirstSession(words: candidates, state: progress, count: Spelling.sessionLength, seed: seed,
+                                            startLevel: placementStart)
     }
 
     private func seenWordsFirst(count: Int, seed: String) -> [WordEntry] {
         let filter = settings.quizFilter
         let candidates = bank.filter(state: progress, query: "", filter: filter.status, options: filter.options)
-        return QuizBuilder.seenFirstSession(words: candidates, state: progress, count: count, seed: seed)
+        return QuizBuilder.seenFirstSession(words: candidates, state: progress, count: count, seed: seed, startLevel: placementStart)
     }
 
     /// The numbers the AI learning analysis reads: totals, the last 14 days
@@ -741,7 +819,7 @@ final class AppModel {
             }
             .sorted { ($0.1.lapses ?? 0, $0.1.reviewCount) > ($1.1.lapses ?? 0, $1.1.reviewCount) }
             .prefix(12)
-        return [
+        var input: [String: JSONValue] = [
             "mode": .string(studyMode.rawValue),
             "streak": .number(Double(max(0, progress.streak))),
             "mastered": .number(Double(stats.mastered)),
@@ -767,6 +845,10 @@ final class AppModel {
                 ])
             }),
         ]
+        // WordCat Next: where the level test placed them, so a new learner
+        // with few words marked known is not read as a beginner.
+        if let placementStart { input["placementChapter"] = .number(Double(placementStart)) }
+        return input
     }
 
     /// Bank words shown with these prompts in the current study mode, such as
@@ -778,6 +860,16 @@ final class AppModel {
 
     var reviewWordIds: [String] {
         bank.words.filter { progress.words[$0.id]?.status == .review }.map(\.id)
+    }
+
+    /// WordCat Next: one round of the missed words, the most often forgotten
+    /// first, at most fifteen, so a month's misses are not one long sitting.
+    var missedRoundIds: [String] {
+        let ranked = reviewWordIds.enumerated().sorted { a, b in
+            let la = progress.words[a.element]?.lapses ?? 0, lb = progress.words[b.element]?.lapses ?? 0
+            return la != lb ? la > lb : a.offset < b.offset
+        }
+        return ranked.prefix(15).map(\.element)
     }
 
     func recordQuizAnswer(wordId: String, correct: Bool) {
@@ -810,7 +902,202 @@ final class AppModel {
         scheduleSave()
     }
 
-    /// Speaking practice counts as activity but does not change word progress.
+    // MARK: Fill in the blank
+
+    /// A round of fill-in-the-blank questions, from the words a study session
+    /// would pick (due reviews and new words at the learner's level), keeping
+    /// those whose example sentence has the word in it. Learners of English
+    /// only: the sentences are English.
+    func clozeRound(seed: String) -> (round: ClozeRound, words: [WordEntry]) {
+        refreshToday()
+        guard studyMode == .english else { return (ClozeRound(entries: []), []) }
+        let candidates = studyCandidates.filter { Cloze.sentence(for: $0) != nil }
+        let queue = LearningEngine.buildStudyQueue(words: candidates, state: progress, today: today,
+                                                  limit: nextSessionLimit, seed: seed, startLevel: placementStart)
+        let entries = queue.map { word in
+            let saved = progress.words[word.id]
+            return ClozeRound.Entry(wordId: word.id, isNew: (saved?.status ?? .new) == .new,
+                                    stage: LearningEngine.reviewStage(saved))
+        }
+        Usage.log("cloze_round", usageScope)
+        return (ClozeRound(entries: entries), queue)
+    }
+
+    /// How a fill-in-the-blank word went. Right straight away counts as
+    /// known, so a new word the learner already had skips the short waits;
+    /// right with a little help counts as a right quiz answer; a miss sends
+    /// the word back to review.
+    func recordClozeAnswer(wordId: String, outcome: ClozeRound.Outcome) {
+        refreshToday()
+        let changed: ProgressState
+        switch outcome {
+        case .knew: changed = LearningEngine.markKnown(progress, wordId: wordId, today: today)
+        case .gotIt: changed = LearningEngine.markQuizCorrect(progress, wordId: wordId, today: today)
+        case .missed: changed = LearningEngine.markReview(progress, wordId: wordId, today: today)
+        }
+        progress = recordActivity(in: changed) { counters in
+            if outcome == .missed { counters.quizWrong += 1 } else { counters.quizCorrect += 1 }
+            if studyMode == .english { counters.englishActions += 1 } else { counters.chineseActions += 1 }
+        }
+        scheduleSave()
+        Usage.log("cloze_answer", "\(studyMode.rawValue).\(outcome.rawValue)")
+    }
+
+    /// Whether the study range has words with an example to blank out.
+    var clozeAvailable: Bool {
+        studyMode == .english && studyCandidates.contains { Cloze.sentence(for: $0) != nil }
+    }
+
+    // MARK: Words routine (WordCat Next)
+
+    /// The routine of the current flip cards: same day, same source and the
+    /// same cards. Anything that replaces the session leaves the routine behind.
+    var activeRoutine: WordRoutine? {
+        guard let routine = wordRoutine, let session = studySession, routine.day == today,
+              routine.sourceKey == session.sourceKey else { return nil }
+        var seen = Set<String>()
+        guard routine.cardIds == session.cardIds.filter({ seen.insert($0).inserted }) else { return nil }
+        return routine
+    }
+
+    /// The flip cards are done and their checks are still to come.
+    var routinePending: Bool {
+        guard let routine = activeRoutine, studySession?.isComplete == true else { return false }
+        return routine.step != .done
+    }
+
+    /// What the Today card says while checks wait.
+    var routineHeroLine: String? {
+        guard routinePending, let routine = activeRoutine else { return nil }
+        if routine.step == .exam {
+            let done = routine.examIds.count - routine.examLeft.count
+            return L.t("翻卡完成 · 考考看 \(done)/\(routine.examIds.count)", "Cards done · quiz \(done)/\(routine.examIds.count)")
+        }
+        return L.t("翻卡完成 · 接下來拼字", "Cards done · spelling next")
+    }
+
+    /// After the flip cards: picks today's checks from the cards marked known.
+    func planRoutineChecks() {
+        guard var routine = activeRoutine, routine.step == .flip, let session = studySession, session.isComplete else { return }
+        let profile = settings.learnerProfile ?? LearnerProfile()
+        routine.planChecks(knownIds: session.knownIds, unsureIds: session.reviewIds,
+                           maxSpell: profile.spellChecks, maxExam: profile.examChecks,
+                           canSpell: { [self] id in word(id: id).flatMap { Cloze.sentence(for: $0, chinese: learnsChinese) } != nil },
+                           canExam: { [self] id in
+                               guard let word = word(id: id), Cloze.sentence(for: word, chinese: learnsChinese) != nil else { return false }
+                               if learnsChinese { return true }
+                               let text = Spelling.normalized(word.word)
+                               return text.count >= 2 && text.allSatisfy(\.isLetter)
+                           })
+        wordRoutine = routine
+        scheduleSave()
+    }
+
+    /// One spot check: a spelling (`exam` false) or an exam question.
+    func recordRoutineCheck(wordId: String, outcome: ClozeRound.Outcome, exam: Bool) {
+        guard var routine = activeRoutine else { return }
+        refreshToday()
+        let changed = LearningEngine.applyCheck(progress, wordId: wordId, today: today,
+                                                wasNew: routine.wasNew(wordId), outcome: outcome)
+        progress = recordActivity(in: changed) { counters in
+            if outcome == .missed { counters.quizWrong += 1 } else { counters.quizCorrect += 1 }
+            if studyMode == .english { counters.englishActions += 1 } else { counters.chineseActions += 1 }
+        }
+        if exam { routine.recordExam(wordId, correct: outcome != .missed) } else { routine.recordSpell(wordId, outcome: outcome) }
+        wordRoutine = routine
+        scheduleSave()
+        Usage.log("routine_check", "\(exam ? "exam" : "spell").\(outcome.rawValue)")
+    }
+
+    /// A check that cannot be asked after all: the next word marked known
+    /// takes its place rather than the check being waved through.
+    func replaceUnaskableCheck(_ wordId: String) {
+        guard var routine = activeRoutine else { return }
+        routine.replaceUnaskable(wordId)
+        wordRoutine = routine
+        scheduleSave()
+        Usage.log("routine_check_replaced", studyMode.rawValue)
+    }
+
+    /// Checks and questions are in the language being learned.
+    var learnsChinese: Bool { studyMode == .chinese }
+
+    /// The shape of exam questions, from the exam in the learner's plan.
+    var examStyle: ExamStyle { ExamStyle(exam: settings.learnerProfile?.exam) }
+
+    /// Ends the current check step (spelling, then the exam questions).
+    func advanceRoutine() {
+        guard var routine = activeRoutine else { return }
+        switch routine.step {
+        case .spell:
+            routine.finishSpell()
+            // The spelling score follows every routine, so tomorrow's checks
+            // grow when spelling slips and shrink when it is solid.
+            var profile = settings.learnerProfile ?? LearnerProfile()
+            profile.recordSpelling(Array(routine.spellResults.values))
+            settings.learnerProfile = profile
+        case .exam: routine.finishExam()
+        case .flip, .done: return
+        }
+        wordRoutine = routine
+        scheduleSave()
+        if routine.step == .done { Usage.log("routine_done", studyMode.rawValue) }
+    }
+
+    /// Leaves the rest of today's checks.
+    func skipRoutineChecks() {
+        guard var routine = activeRoutine else { return }
+        routine.skipChecks()
+        wordRoutine = routine
+        scheduleSave()
+    }
+
+    /// The built-in words prepared for picking exam options, built once off
+    /// the main thread.
+    func examPool() async -> ExamPool {
+        let key = "\(studyMode.rawValue)|\(contentRevision)|\(coreWords.count)"
+        if let cached = examPoolCache, cached.key == key { return cached.pool }
+        let words = coreWords
+        let chinese = studyMode == .chinese
+        let pool = await Task.detached(priority: .userInitiated) { ExamPool(words, chinese: chinese) }.value
+        examPoolCache = (key, pool)
+        return pool
+    }
+
+    /// Whether saying the word now would count (see LearningEngine.creditUse),
+    /// so the screen says so only when it does.
+    func wordUseCounts(_ wordId: String) -> Bool {
+        LearningEngine.creditUse(progress, wordId: wordId, today: today) != progress
+    }
+
+    /// A word said in a sentence of the learner's own while speaking: it
+    /// counts as a right answer where one would (see LearningEngine.creditUse).
+    func creditWordUse(_ wordId: String) {
+        refreshToday()
+        let changed = LearningEngine.creditUse(progress, wordId: wordId, today: today)
+        guard changed != progress else { return }
+        progress = changed
+        scheduleSave()
+        Usage.log("speaking_word_credit", studyMode.rawValue)
+    }
+
+    /// New words a learner meets by `days` from now studying every day, by
+    /// the same rules sessions are built with, from the reviews already due.
+    func projectedNewWords(days: Int) -> Int {
+        refreshToday()
+        // New words left to meet, the easier chapters skipped as sessions skip them.
+        let unseen = studyCandidates.filter { (progress.words[$0.id]?.status ?? .new) == .new }
+        var fresh = unseen.count
+        if let start = placementStart, start > 1 {
+            let fromStart = unseen.filter { LearningEngine.coreLevel($0.group).map { $0 >= start } ?? true }.count
+            if fromStart > 0 { fresh = fromStart }
+        }
+        return LearningEngine.projectedNewWords(state: progress, today: today, dailyTarget: progress.dailyTarget,
+                                                days: days, freshAvailable: fresh)
+    }
+
+    /// Speaking practice counts as activity; a word used in it is credited
+    /// separately (creditWordUse).
     func recordSpeaking(completed: Bool) {
         refreshToday()
         let changed = completed ? LearningEngine.recordPracticeDay(progress, today: today) : progress
@@ -934,7 +1221,8 @@ final class AppModel {
         if keep { savedLearning = (syncedProgress, customSets) }
         let snapshot = AppSnapshot(progress: keep ? syncedProgress : savedLearning.progress,
                                    customSets: keep ? customSets : savedLearning.customSets,
-                                   settings: settings, studySession: keep ? studySession : nil, sessionDay: today)
+                                   settings: settings, studySession: keep ? studySession : nil, sessionDay: studySessionDay ?? today,
+                                   wordRoutine: keep ? wordRoutine : nil, sessionIsDaySet: studySessionIsDaySet)
         persistence.store.enqueue(snapshot, to: "snapshot.json") { [weak self] saved in
             Task { @MainActor in self?.storageFailed = !saved }
         }
@@ -957,6 +1245,29 @@ enum SampleData {
         }
         state = LearningEngine.toggleFavorite(state, wordId: words[2].id)
         return state
+    }
+
+    /// Six of the sample's known words, learned a while ago and due now.
+    static func olderWordsDue(_ state: ProgressState, words: [WordEntry], today: String) -> ProgressState {
+        var next = state
+        // Other reviews wait till tomorrow, so these six make today's reviews.
+        let tomorrow = DayMath.addDays(today, 1) ?? today
+        for (id, progress) in next.words where progress.status != .new {
+            var later = progress
+            later.dueDate = tomorrow
+            next.words[id] = later
+        }
+        for word in words.prefix(6) {
+            var progress = next.progress(for: word.id)
+            // Known for a while: met two weeks ago, at the 14-day stage.
+            progress.status = .mastered
+            progress.reviewCount = max(2, progress.reviewCount)
+            progress.stage = 4
+            progress.lastStudied = DayMath.addDays(today, -15) ?? today
+            progress.dueDate = DayMath.addDays(today, -1) ?? today
+            next.words[word.id] = progress
+        }
+        return next
     }
 
     /// A published official bank and a correction to the first built-in

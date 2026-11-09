@@ -478,8 +478,9 @@ final class AccountModel {
             var metadata: [String: JSONValue] = [:]
             if let given = fullName?.givenName, !given.isEmpty { metadata["given_name"] = .string(given) }
             if let family = fullName?.familyName, !family.isEmpty { metadata["family_name"] = .string(family) }
-            let full = [fullName?.givenName, fullName?.familyName].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " ")
-            if !full.isEmpty { metadata["full_name"] = .string(full) }
+            if let full = PersonName.compose(given: fullName?.givenName, family: fullName?.familyName) {
+                metadata["full_name"] = .string(full)
+            }
             if let email, !email.isEmpty { metadata["email"] = .string(email) }
             if !metadata.isEmpty { try? await client.updateUserMetadata(metadata, session: newSession) }
             await activate(newSession, fallbackEmail: email)

@@ -39,15 +39,14 @@ describe('broadcast-push', () => {
     expect(failed.error).toEqual({ message: 'down' });
   });
 
-  it('refuses callers without the secret before doing anything, and the workflow sends it', () => {
+  it('refuses callers without the service key before doing anything, and the workflow sends it', () => {
     const source = fs.readFileSync(path.join(process.cwd(), 'supabase/functions/broadcast-push/index.ts'), 'utf8');
-    const guard = source.indexOf("sameSecret(request.headers.get('x-broadcast-secret')");
+    const guard = source.indexOf("request.headers.get('x-broadcast-secret')");
     expect(guard).toBeGreaterThan(0);
-    expect(guard).toBeLessThan(source.indexOf("from('announcements')"));
+    expect(source).toContain("Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')");
+    expect(source.indexOf("error: 'unauthorized'")).toBeLessThan(source.indexOf("from('announcements')"));
     expect(source).not.toContain('.limit(100_000)');
     const script = fs.readFileSync(path.join(process.cwd(), 'scripts/remote-control.sh'), 'utf8');
-    expect(script).toContain('-H "x-broadcast-secret: $BROADCAST_PUSH_SECRET"');
-    const workflow = fs.readFileSync(path.join(process.cwd(), '.github/workflows/remote-announce.yml'), 'utf8');
-    expect(workflow).toContain('BROADCAST_PUSH_SECRET: ${{ secrets.BROADCAST_PUSH_SECRET }}');
+    expect(script).toContain('-H "x-broadcast-secret: ${BROADCAST_PUSH_SECRET:-$service}"');
   });
 });

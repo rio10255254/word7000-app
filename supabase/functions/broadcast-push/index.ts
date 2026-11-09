@@ -6,9 +6,9 @@ import { readAllPages, sameSecret } from './helpers.ts';
 // announcement must ask for a push and not have been pushed yet; it is
 // marked pushed before anything is sent, so a second call sends nothing.
 // Called by the "Broadcast a message" workflow (scripts/remote-control.sh),
-// which sends the BROADCAST_PUSH_SECRET function secret in the
-// x-broadcast-secret header; announcements are public, so without it anyone
-// could push one that asked for a push but had not been pushed yet.
+// which sends the project's service key in the x-broadcast-secret header;
+// announcements are public, so without that check anyone could push one that
+// asked for a push but had not been pushed yet.
 
 type Device = { token: string; language: 'zh' | 'en'; app_version: string | null; app_build: number | null };
 
@@ -31,13 +31,15 @@ const requiredEnvironment = ['SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY', 'APNS_
 
 Deno.serve(async (request) => {
   if (request.method !== 'POST') return Response.json({ error: 'method_not_allowed' }, { status: 405 });
-  const secret = Deno.env.get('BROADCAST_PUSH_SECRET');
-  if (!secret) {
-    return Response.json({ error: 'Missing secret: BROADCAST_PUSH_SECRET (set it in Supabase and in GitHub)' }, { status: 503 });
-  }
-  if (!(await sameSecret(request.headers.get('x-broadcast-secret'), secret))) {
-    return Response.json({ error: 'unauthorized' }, { status: 401 });
-  }
+  // The caller proves itself with the project's service key (the
+  // announcement workflow reads it with its Supabase access token), or with
+  // BROADCAST_PUSH_SECRET where one is set: nothing to set up by hand.
+  const given = request.headers.get('x-broadcast-secret');
+  const accepted = [Deno.env.get('SUPABASE_SERVICE_ROLE_KEY'), Deno.env.get('BROADCAST_PUSH_SECRET')]
+    .filter((value): value is string => !!value);
+  let allowed = false;
+  for (const expected of accepted) allowed = (await sameSecret(given, expected)) || allowed;
+  if (!allowed) return Response.json({ error: 'unauthorized' }, { status: 401 });
   const missing = requiredEnvironment.filter((name) => !Deno.env.get(name));
   if (missing.length > 0) return Response.json({ error: `Missing secrets: ${missing.join(', ')}` }, { status: 500 });
 

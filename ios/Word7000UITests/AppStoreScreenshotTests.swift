@@ -135,6 +135,9 @@ final class AppStoreScreenshotTests: XCTestCase {
         // Check sits under the answer while typing; on a shorter screen the
         // chat may need a nudge to bring it up.
         let check = app.buttons["coach-submit"]
+        // A Zhuyin keyboard (the Chinese interface on some simulators) holds
+        // the letter as input still being composed; Return puts it in the answer.
+        if !check.waitForExistence(timeout: 3) { answer.typeText("\n") }
         if !check.waitForExistence(timeout: 5) { check.scrollIntoView(in: app, swipes: 3) }
         XCTAssertTrue(check.waitForExistence(timeout: 5), app.debugDescription)
         check.tap()

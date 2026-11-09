@@ -5,7 +5,7 @@
 //
 //   ASC_KEY_ID=… ASC_ISSUER_ID=… ASC_PRIVATE_KEY=… \
 //   node scripts/testflight-distribute.mjs --bundle com.rio.word7000 \
-//     --version 2.0.1 --build 83 --group "Wordcat Public Testing 1" \
+//     --version 2.0.1 --build 83 --group "Wordcat Public Testing 1" [--create-group yes] \
 //     [--notes-zh "…"] [--notes-en "…"] [--wait-minutes 45]
 import crypto from 'node:crypto';
 
@@ -79,13 +79,27 @@ if (Object.values(notes).some(Boolean)) {
   }
 }
 
-// 3. Into the group.
-const group = (await api('GET', `/v1/betaGroups?filter[app]=${app.id}&filter[name]=${q(args.group)}&limit=1`)).data[0];
+// 3. Into the group. With --create-group yes, a missing group is made as an
+// external group (testers are added, or its public link is turned on, in
+// App Store Connect).
+let group = (await api('GET', `/v1/betaGroups?filter[app]=${app.id}&filter[name]=${q(args.group)}&limit=1`)).data[0];
+if (!group && args['create-group'] === 'yes') {
+  group = (await api('POST', '/v1/betaGroups', { data: { type: 'betaGroups', attributes: { name: args.group },
+    relationships: { app: { data: { type: 'apps', id: app.id } } } } })).data;
+  console.log(`Created the TestFlight group "${args.group}".`);
+  if (process.env.GITHUB_ACTIONS) console.log(`::notice::Created the TestFlight group "${args.group}". Add testers, or turn on its public link, in App Store Connect.`);
+}
 if (!group) throw new Error(`No TestFlight group named "${args.group}"`);
-// Adding a build the group already has is fine.
-await api('POST', `/v1/betaGroups/${group.id}/relationships/builds`, { data: [{ type: 'builds', id: build.id }] })
-  .catch((error) => { if (error.status !== 409) throw error; });
-console.log(`Added to "${args.group}".`);
+if (group.attributes.isInternalGroup && group.attributes.hasAccessToAllBuilds) {
+  // An internal group with access to all builds already has it; Apple refuses
+  // to add a build to one by hand (422 "Cannot add internal group to a build").
+  console.log(`"${args.group}" is an internal group with access to all builds: it has this build already.`);
+} else {
+  // Adding a build the group already has is fine.
+  await api('POST', `/v1/betaGroups/${group.id}/relationships/builds`, { data: [{ type: 'builds', id: build.id }] })
+    .catch((error) => { if (error.status !== 409) throw error; });
+  console.log(`Added to "${args.group}".`);
+}
 
 // 4. External groups need Beta App Review; later builds of an approved
 // version usually pass at once. Already submitted is fine.

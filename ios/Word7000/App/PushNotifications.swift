@@ -134,7 +134,7 @@ struct PushStatusRow: View {
         HStack {
             SettingsLabel(L.t("公告推播", "Announcement pushes"), icon: icon, tint: tint)
             Spacer(minLength: 8)
-            Text(summary + (push.isTester ? L.t("・測試機", " · test phone") : ""))
+            Text(summary + (push.isTester ? L.t(" · 測試機", " · test phone") : ""))
                 .font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.trailing).lineLimit(3)
         }
         .contentShape(Rectangle())

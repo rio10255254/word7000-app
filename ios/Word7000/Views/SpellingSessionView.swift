@@ -78,8 +78,12 @@ struct SpellingSessionView: View {
             guard let new, model.settings.hapticsEnabled ?? true else { return nil }
             return new == .correct ? .success : .error
         }
+        .soundEffect(trigger: result) { _, new -> SoundEffect? in
+            guard let new else { return nil }
+            return new == .correct ? SoundEffect.correct : SoundEffect.wrong
+        }
         .sensoryFeedback(.selection, trigger: hints) { _, new in new > 0 && (model.settings.hapticsEnabled ?? true) }
-        .catTip(.spelling, at: .top)
+        .catTip(.spelling)
     }
 
     // MARK: Question
@@ -240,27 +244,27 @@ struct SpellingSessionView: View {
                             .contentTransition(.symbolEffect(.replace))
                             .symbolEffect(.bounce, value: reduceMotion ? 0 : hints)
                     }
-                    .font(.headline).frame(maxWidth: .infinity)
+                    .font(.title3.weight(.bold)).frame(maxWidth: .infinity)
                 }
                 .secondaryAction()
                 .disabled(hints >= maxHints(word))
                 .accessibilityIdentifier("spelling-hint")
                 Button(action: check) {
-                    Text(L.t("檢查", "Check")).font(.headline).frame(maxWidth: .infinity)
+                    Text(L.t("檢查", "Check")).font(.title3.weight(.bold)).frame(maxWidth: .infinity)
                 }
                 .prominentAction()
                 .disabled(input.trimmed.isEmpty)
                 .accessibilityIdentifier("spelling-check")
             } else {
                 Button(action: next) {
-                    Text(index + 1 >= words.count ? L.seeResults : L.nextQuestion).font(.headline).frame(maxWidth: .infinity)
+                    Text(index + 1 >= words.count ? L.seeResults : L.nextQuestion).font(.title3.weight(.bold)).frame(maxWidth: .infinity)
                 }
                 .prominentAction(tint: result == .correct ? Palette.known : Palette.accent)
                 .accessibilityIdentifier("spelling-next")
             }
         }
         .padding(.vertical, 8)
-        .background { Palette.background.overlay { PaperGrain() } }
+        .background { PaperBarBackground() }
     }
 
     private func title(_ result: Spelling.Result) -> String {
@@ -357,24 +361,9 @@ struct SpellingSessionView: View {
                            kind: "spelling", total: words.count, correct: correctCount, missedIds: missedIds)
                 .entrance(3)
             Spacer()
-            VStack(spacing: 12) {
-                if missedIds.isEmpty {
-                    Button { dismiss() } label: {
-                        Text(L.done).font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .prominentAction()
-                } else {
-                    Button { studyMissed(missedIds) } label: {
-                        Text(L.practiceMissed(missedIds.count)).font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .prominentAction(tint: Palette.review)
-                }
-                Button { start() } label: {
-                    Text(L.nextSession).font(.headline).frame(maxWidth: .infinity)
-                }
-                .secondaryAction()
-                .accessibilityIdentifier("spelling-again")
-            }
+            RoundEndActions(missed: missedIds.count, reviewMissed: { studyMissed(missedIds) }, reviewId: "spelling-review-missed",
+                            done: { dismiss() }, doneId: "spelling-done",
+                            again: { start() }, againId: "spelling-again")
         }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("spelling-results")

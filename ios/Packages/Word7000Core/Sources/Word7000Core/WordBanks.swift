@@ -119,7 +119,11 @@ public enum WordBanks {
 
     public static func defaultScanBankName(date: Date = Date(), chineseMode: Bool = false, calendar: Calendar = .current) -> String {
         let parts = calendar.dateComponents([.month, .day], from: date)
-        return chineseMode ? "Scan \(parts.month!)/\(parts.day!)" : "掃描 \(parts.month!)/\(parts.day!)"
+        guard chineseMode else { return "掃描 \(parts.month!)/\(parts.day!)" }
+        // The English interface spells the month out: 11/8 reads as 11 August
+        // to much of the world.
+        let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        return "Scan \(months[parts.month! - 1]) \(parts.day!)"
     }
 
     /// Words of a set, in the set's order, skipping ids that no longer exist.

@@ -123,9 +123,9 @@ struct CatContext {
 
 extension AppModel {
     @MainActor var catContext: CatContext {
-        let estimate = LearningEngine.abilityEstimate(words: vocabularyWords, state: progress)
+        let estimate = LearningEngine.abilityEstimate(words: vocabularyWords, state: progress, startLevel: placementStart)
         return CatContext(
-            level: estimate.seen >= CatLevel.wordsNeeded ? CatLevel.name(estimate.ability) : nil,
+            level: estimate.seen >= CatLevel.wordsNeeded || placementStart != nil ? CatLevel.name(estimate.ability) : nil,
             streak: max(0, progress.streak), studiedToday: progress.studiedToday, dailyGoal: progress.dailyTarget,
             daysToExam: CatMemory.shared.daysToExam, nickname: CatMemory.shared.nickname?.trimmed.nilIfEmpty,
             hour: Calendar.current.component(.hour, from: Date()))
@@ -225,6 +225,7 @@ struct CatMemoryView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var memory = CatMemory.shared
     @State private var confirmForget = false
+    @State private var examDateOpen = false
 
     var body: some View {
         Form {
@@ -248,10 +249,17 @@ struct CatMemoryView: View {
                     ))
                     .accessibilityIdentifier("cat-memory-exam-toggle")
                     if memory.examDate != nil {
-                        DatePicker(L.t("哪一天", "Date"), selection: Binding(
-                            get: { date(memory.examDate) ?? Date() },
-                            set: { memory.examDate = string($0) }
-                        ), in: Date()..., displayedComponents: .date)
+                        // The day as a clay chip, opening WordCat's own calendar.
+                        Button { examDateOpen = true } label: {
+                            HStack {
+                                Text(L.t("哪一天", "Date")).foregroundStyle(Palette.ink)
+                                Spacer(minLength: 8)
+                                ValueChip(text: examDateLabel, icon: "calendar")
+                            }
+                            .contentShape(Rectangle())
+                        }
+                        .accessibilityValue(examDateLabel)
+                        .accessibilityIdentifier("cat-memory-exam-date")
                     }
                 } footer: {
                     if let days = memory.daysToExam { Text(L.t("還有 \(days) 天", "\(days) days to go")) }
@@ -286,12 +294,23 @@ struct CatMemoryView: View {
         .warmList()
         .navigationTitle(L.t("傻貓記得的事", "What Silly Cat remembers"))
         .navigationBarTitleDisplayMode(.inline)
-        .confirmationDialog(L.t("要傻貓全部忘掉？", "Make Silly Cat forget everything?"), isPresented: $confirmForget, titleVisibility: .visible) {
-            Button(L.t("全部忘掉", "Forget everything"), role: .destructive) { memory.forgetAll() }
-            Button(L.cancel, role: .cancel) {}
-        } message: {
-            Text(L.t("好啦，你都不要我記得你。", "Fine. You don't want me to remember you."))
+        .sheet(isPresented: $examDateOpen) {
+            WarmDateSheet(title: L.t("考試日期", "Exam date"), date: Binding(
+                get: { date(memory.examDate) ?? Date() },
+                set: { memory.examDate = string($0) }
+            ))
         }
+        .warmConfirm(isPresented: $confirmForget, title: L.t("要傻貓全部忘掉？", "Make Silly Cat forget everything?"),
+                     message: L.t("好啦，你都不要我記得你。", "Fine. You don't want me to remember you."),
+                     confirmTitle: L.t("全部忘掉", "Forget everything"), destructive: true,
+                     confirmIdentifier: "cat-memory-forget-confirm", mood: .annoyed) {
+            memory.forgetAll()
+        }
+    }
+
+    private var examDateLabel: String {
+        guard let day = date(memory.examDate) else { return L.t("選日期", "Pick a day") }
+        return day.formatted(Date.FormatStyle(date: .long, time: .omitted).locale(Locale(identifier: L.zh ? "zh_TW" : "en_US")))
     }
 
     /// The next mid-January, roughly when the GSAT is held.

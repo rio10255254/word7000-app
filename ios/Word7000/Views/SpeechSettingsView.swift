@@ -31,6 +31,19 @@ struct SpeechSettingsView: View {
                         }
                         .accessibilityElement(children: .combine)
                         .accessibilityIdentifier("speech-better-voice")
+                        // The way there, step by step, as Settings draws it.
+                        DisclosureGroup(L.t("一步一步教我", "Show me step by step")) {
+                            VoiceDownloadGuide(learningChinese: model.studyMode == .chinese, chinese: L.zh)
+                                .padding(.vertical, 8)
+                            Button {
+                                if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
+                            } label: {
+                                Label(L.t("打開設定", "Open Settings"), systemImage: "gear")
+                            }
+                            .accessibilityIdentifier("speech-open-settings")
+                        }
+                        .tint(Palette.accent)
+                        .accessibilityIdentifier("speech-voice-steps")
                     }
                 }
                 Section {
@@ -40,17 +53,15 @@ struct SpeechSettingsView: View {
                     Text(L.t("更多聲音可在 iPhone「設定 → 輔助使用」下載。", "Download more voices in iPhone Settings → Accessibility."))
                 }
                 Section(L.t("語速", "Reading speed")) {
-                    Picker(L.t("語速", "Reading speed"), selection: Binding(get: { preferences.speed }, set: { value in
+                    ChoiceChips(options: [ChoiceOption(value: SpeechSpeed.slow, title: L.t("慢速", "Slow"), icon: "tortoise.fill"),
+                                          ChoiceOption(value: SpeechSpeed.natural, title: L.t("自然", "Natural"), icon: "person.wave.2.fill"),
+                                          ChoiceOption(value: SpeechSpeed.brisk, title: L.t("稍快", "Brisk"), icon: "hare.fill")],
+                                selection: preferences.speed, identifier: "speech-speed") { value in
                         var next = preferences
                         next.speed = value
                         model.settings.speech = next
-                    })) {
-                        Text(L.t("慢速", "Slow")).tag(SpeechSpeed.slow)
-                        Text(L.t("自然", "Natural")).tag(SpeechSpeed.natural)
-                        Text(L.t("稍快", "Brisk")).tag(SpeechSpeed.brisk)
                     }
-                    .pickerStyle(.segmented)
-                    .accessibilityIdentifier("speech-speed")
+                    .padding(.vertical, 4)
                 }
                 Section(L.t("試聽", "Preview")) {
                     preview(language: "en-US", title: L.t("試聽英文", "Preview English"), text: "Take your time. A little practice each day makes a real difference.")

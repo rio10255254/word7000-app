@@ -85,7 +85,7 @@ struct IntelligenceSettingsView: View {
             // The online AI is a Plus feature; without it the app uses what
             // the iPhone itself can do.
             PlanRow(title: "Premium",
-                    model: L.t("Claude・口說、解說與分析深度思考", "Claude · Deeper reasoning for coaching, explanations and insights"),
+                    model: L.t("Claude · 口說、解說與分析深度思考", "Claude · Deeper reasoning for coaching, explanations and insights"),
                     daily: PlusAI.plusDaily, current: known && tier != .free)
             if let remaining = CloudAssistant.shared.remainingText {
                 LabeledContent(L.t("今天", "Today"), value: remaining)
@@ -93,7 +93,7 @@ struct IntelligenceSettingsView: View {
             }
             if tier != .plus {
                 Button { paywall = .locked(.smartAI) } label: {
-                    Label(L.t("訂閱 Premium，打開傻貓的 AI 老師", "Subscribe to Premium for Silly Cat's AI tutor"), systemImage: "sparkles")
+                    Label(L.t("訂閱 Premium，解鎖傻貓 AI 老師", "Subscribe to Premium for Silly Cat's AI tutor"), systemImage: "sparkles")
                 }
                 .accessibilityIdentifier("settings-ai-upgrade")
             }

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 
-// Checks 20261108120000_launch_fixes.sql on PGlite, on top of the baseline and
+// Checks 20261109130000_launch_fixes.sql on PGlite, on top of the baseline and
 // every earlier migration (no network, no production data):
 // node scripts/test-launch-fixes-migration.mjs path/to/@electric-sql/pglite/dist/index.js (tested: 0.5.10)
 const runtime = process.argv[2];
@@ -10,7 +10,7 @@ if (!runtime) throw new Error('Pass the path to @electric-sql/pglite/dist/index.
 const { PGlite } = await import(pathToFileURL(runtime).href);
 const db = new PGlite();
 const root = new URL('../', import.meta.url);
-const migrationName = '20261108120000_launch_fixes.sql';
+const migrationName = '20261109130000_launch_fixes.sql';
 const passed = [];
 const uid = (n) => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`;
 const rows = async (sql, params = []) => (await db.query(sql, params)).rows;

@@ -1,127 +1,120 @@
 import SwiftUI
 import Word7000Core
 
-/// How much room Today has on the phone it runs on, and the sizes that follow.
-/// Three heights cover every iPhone: SE-sized (about 600 points between the
-/// status bar and the tab bar), the usual 6.1" to 6.3" phones, and the big Plus
-/// and Pro Max ones (about 750 and up).
-private struct TodayMetrics {
-    enum Tier { case compact, regular, tall }
-    var tier: Tier
-    /// Accessibility text sizes: one column, nothing peeking over the card.
-    var large: Bool
+/// One stop on today's path.
+enum TodayNode: String, Identifiable, Hashable {
+    case cards, spell, quiz, speaking, weekly, mockExam, chest
+    var id: String { rawValue }
 
-    /// The room between the status bar and the tab bar.
-    var height: CGFloat
-
-    init(height: CGFloat, large: Bool) {
-        self.large = large
-        self.height = height
-        tier = height < 630 ? .compact : height < 750 ? .regular : .tall
+    var icon: String {
+        switch self {
+        case .cards: "rectangle.on.rectangle.angled"
+        case .spell: "pencil.line"
+        case .quiz: "checklist"
+        case .speaking: "mic.fill"
+        case .weekly: "trophy.fill"
+        case .mockExam: "timer"
+        case .chest: "gift.fill"
+        }
     }
 
-    var compact: Bool { tier == .compact }
-    var tall: Bool { tier == .tall }
-    var spacing: CGFloat { compact ? 12 : tall ? 20 : 16 }
-    var ring: CGFloat { compact ? 84 : tall ? 116 : 100 }
-    var heroPadding: CGFloat { compact ? 16 : tall ? 22 : 20 }
-    var mascot: CGFloat { compact ? 58 : tall ? 80 : 70 }
-    /// Where there is room, the companion stands on the hero card's top edge
-    /// (its feet in the card's top padding) and can stroll along it; on the
-    /// SE-sized phones it peeks over the corner and stays put.
-    var standsOnCard: Bool { !compact && !large }
-    /// How far the companion rises above the hero card's top edge.
-    var peek: CGFloat { standsOnCard ? (mascot * 0.94 - 12).rounded() : (mascot * 0.42).rounded() }
-    /// Room above the card so the companion stays clear of the header.
-    var heroTop: CGFloat { large ? 0 : max(0, peek + (standsOnCard ? 10 : 6) - spacing) }
-    /// Practice tiles: tall cards (icon up top, words along the bottom) on the
-    /// big phones, short rows elsewhere. Both carry a faint, tilted watermark
-    /// of their icon, which fills the open side of the tile.
-    /// (The iPhone Air, a little shorter than a Pro Max, keeps the short rows:
-    /// two rows of tall cards would run under its tab bar.)
-    var tallCards: Bool { tall && !large && height >= 785 }
-    var tileSpacing: CGFloat { compact ? 8 : tall ? 12 : 10 }
-    /// Type and icon sizes, which grow with the room the tiles have.
-    func tileStyle(tallCard: Bool) -> PracticeTileStyle {
-        if compact { return PracticeTileStyle(icon: 36, title: .subheadline, detail: .caption) }
-        if tallCard { return PracticeTileStyle(icon: 52, title: .title2, detail: .subheadline) }
-        // Small enough beside the icon that a four-character title stays on one line.
-        return PracticeTileStyle(icon: tall ? 48 : 44, title: .title3, detail: .subheadline)
+    /// The UI tests' name for it.
+    var identifier: String {
+        switch self {
+        case .cards: "today-node-cards"
+        case .spell: "today-spelling"
+        case .quiz: "today-quiz"
+        case .speaking: "today-speaking"
+        case .weekly: "today-weekly-quiz"
+        case .mockExam: "today-exam"
+        case .chest: "today-chest"
+        }
     }
 
-    /// The shortest and tallest a tile may be. When everything fits, the tiles
-    /// grow from the shortest toward the tallest to use the room left over.
-    func tileHeight(tallCard: Bool) -> (min: CGFloat, max: CGFloat) {
-        if tallCard { return (112, 172) }
-        return compact ? (54, 92) : tall ? (70, 112) : (62, 122)
-    }
+    var isWords: Bool { self == .cards || self == .spell || self == .quiz }
 }
 
-/// One goal, one button, and the little companion cheering you on. The page
-/// is fitted to the phone: when it all fits, it does not scroll and the
-/// practice tiles grow into whatever room is left (tall cards on the big
-/// phones, short rows on the rest); only when it does not fit, as with very
-/// large text, does it scroll. The companion peeks over the hero card, always
-/// clear of the buttons, and its speech bubble never takes a touch.
+/// The sheets that open from the top of Today.
+private enum TodaySheet: String, Identifiable {
+    case week, shelf
+    var id: String { rawValue }
+}
+
+/// WordCat Next: today as one path and one button, the way Duolingo and Epop
+/// keep their home to the next step. Along the top, only the language, the
+/// streak and the words mastered (each opens a sheet with the rest); under
+/// it the chapter and today's count; then the path: cards, spelling, quiz,
+/// speaking and today's chest, done ones gold, the one to do now big with
+/// the cat beside it. The button at the bottom always does the next thing;
+/// any stop on the path can also be tapped to go there.
 struct TodayView: View {
     @Environment(AppModel.self) private var model
     @Environment(PlusModel.self) private var plus
+    @Environment(AccountModel.self) private var account
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var studySettingsOpen = false
-    /// The quiz's few settings, in a half-height sheet before it starts.
+    @State private var signInOpen = false
+    /// The meaning quiz's few settings, in a half-height sheet before it starts.
     @State private var quizSetupOpen = false
     @State private var quizQueued = false
-    /// Bumped to bounce the streak flame: on arrival and when the streak grows.
     @State private var flameBounce = 0
     @State private var greetingHops = 0
-    /// What the cat knows and today's AI lines, gathered on arrival.
     @State private var catLines = CatLineSource.none
-    /// The screenshot tests open the cat's chat once, on first arrival.
     @MainActor private static var showcasedChat = false
-    /// Taps on each practice tile, to bounce its icon.
-    @State private var tileTaps: [String: Int] = [:]
-    /// The hero card's width: how far the companion can stroll.
-    @State private var heroWidth: CGFloat = 0
-    /// Today's AI insight headline, once worked out; the companion says it.
     @State private var insightHeadline: String?
     @State private var mascotChatOpen = false
-    /// Focus words to practise once the companion's chat has closed.
     @State private var focusPractice: [String]?
+    @State private var memory = CatMemory.shared
+    @State private var sheet: TodaySheet?
+    /// What to open once a sheet has closed.
+    @State private var afterSheet: (() -> Void)?
+    @State private var taps = 0
+    /// The card's width: how far the cat can stroll.
+    @State private var cardWidth: CGFloat = 0
 
     var start: (Activity) -> Void
+    /// Opens the Words tab.
+    var showWords: () -> Void = {}
 
     var body: some View {
-        let progress = model.progress
-
         GeometryReader { proxy in
-            let metrics = TodayMetrics(height: proxy.size.height, large: dynamicTypeSize.isAccessibilitySize)
+            let fits = proxy.size.height > 640 && !dynamicTypeSize.isAccessibilitySize
             ViewThatFits(in: .vertical) {
-                // It all fits: no scrolling, and the tiles take up the slack.
-                page(metrics, fill: true)
+                page(roomy: fits)
                     .frame(maxHeight: .infinity, alignment: .top)
-                // It doesn't (very large text, or several notices on a small phone).
-                ScrollView {
-                    page(metrics, fill: false)
-                }
-                .scrollIndicators(.hidden)
-                .scrollBounceBehavior(.basedOnSize)
+                ScrollView { page(roomy: false) }
+                    .scrollIndicators(.hidden)
             }
         }
-        .background { AmbientBackground(tint: model.goalDone ? Palette.known : Palette.accent) }
+        .background { AmbientBackground(tint: currentNode == .speaking ? Self.speakingTint : model.goalDone ? Palette.known : Palette.accent) }
         .animation(reduceMotion ? nil : Motion.reveal, value: plus.nudge)
+        .animation(reduceMotion ? nil : Motion.reveal, value: currentNode)
         .task {
-            // A little hello from the flame and the mascot each time Today comes into view.
             try? await Task.sleep(for: .milliseconds(500))
             guard !reduceMotion else { return }
             if model.progress.streak > 0 { flameBounce += 1 }
             greetingHops += 1
         }
-        .onChange(of: progress.streak) { old, new in
+        .onChange(of: model.progress.streak) { old, new in
             if new > old, !reduceMotion { flameBounce += 1 }
         }
-        .sensoryFeedback(.impact(weight: .light), trigger: tileTaps) { _, _ in model.settings.hapticsEnabled ?? true }
+        .sensoryFeedback(.impact(weight: .light), trigger: taps) { _, _ in model.settings.hapticsEnabled ?? true }
+        .sheet(item: $sheet, onDismiss: {
+            let next = afterSheet
+            afterSheet = nil
+            next?()
+        }) { which in
+            Group {
+                switch which {
+                case .week: weekSheet
+                case .shelf: shelfSheet
+                }
+            }
+            .fittedSheet()
+        }
         .sheet(isPresented: $studySettingsOpen) { StudySettingsSheet().compactSheet() }
+        .sheet(isPresented: $signInOpen) { SignInSheet(reason: .general) }
         .sheet(isPresented: $mascotChatOpen, onDismiss: {
             insightHeadline = InsightsStore.today(mode: model.studyMode)?.headline
             guard let ids = focusPractice else { return }
@@ -142,11 +135,10 @@ struct TodayView: View {
                 try? await Task.sleep(for: .milliseconds(600))
                 mascotChatOpen = true
             }
-            // Today's lines, written for this learner, once a day in the background.
             await CatLinePackStore.refreshIfNeeded(model)
             catLines = model.catLines
         }
-        .onChange(of: progress.studiedToday) { _, _ in catLines = model.catLines }
+        .onChange(of: model.progress.studiedToday) { _, _ in catLines = model.catLines }
         .onChange(of: mascotChatOpen) { _, open in if open { model.noteTried(.chat) } }
         .task(id: model.guideStep) { if let step = model.guideStep { model.noteGuideShown(step) } }
         .sheet(isPresented: $quizSetupOpen, onDismiss: {
@@ -170,298 +162,576 @@ struct TodayView: View {
         }
     }
 
-    private func page(_ m: TodayMetrics, fill: Bool) -> some View {
-        VStack(alignment: .leading, spacing: m.spacing) {
-            header(m)
-                // Drawn above the card, so its buttons always win the tap.
-                .zIndex(1)
-            hero(m)
-                .entrance(0, distance: 10)
-            notices
-            checklist
-            practice(m, fill: fill)
+    // MARK: The page
+
+    /// Epop keeps the home to one thing: the greeting, one big card for the
+    /// step to do now, and at most one note. Everything else is a tap away.
+    private func page(roomy: Bool) -> some View {
+        // Roomier now the language switch has left the header: the card sits a
+        // little lower instead of leaving the bottom of a tall phone empty.
+        VStack(alignment: .leading, spacing: roomy ? 24 : 12) {
+            header
+            focusCard(roomy: roomy)
+            if let nudge = plus.nudge {
+                PlusNudgeBanner(nudge: nudge)
+                    .card(padding: 10)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+            }
+            note
         }
         .padding(.horizontal, Metrics.gutter)
-        .padding(.top, m.compact ? 6 : 12)
-        .padding(.bottom, m.compact ? 12 : 20)
+        .padding(.top, 8)
+        .padding(.bottom, 16)
     }
 
     // MARK: Header
 
-    /// The greeting and date, with the language switch and the bank being
-    /// studied (a chip that opens the study scope).
-    private func header(_ m: TodayMetrics) -> some View {
-        // At accessibility text sizes the controls drop below the greeting.
-        let layout = m.large ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10))
-                             : AnyLayout(HStackLayout(alignment: .center, spacing: 10))
-        return layout {
-            VStack(alignment: .leading, spacing: 1) {
-                Text(greeting)
-                    .font(.display(m.tall ? .title : .title2, weight: .bold))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
-                // Formatted in the interface language, which follows the study mode.
+    /// The greeting and the days to the exam (or the date); the streak and
+    /// the words mastered as two small pills.
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            // The language is chosen in Settings: it is not an everyday switch.
+            Text(greeting)
+                .font(.display(.title, weight: .bold))
+                .lineLimit(1)
+            HStack(spacing: 8) {
                 HStack(spacing: 4) {
-                    Image(systemName: daySymbol)
+                    Image(systemName: memory.daysToExam == nil ? daySymbol : "graduationcap.fill")
                         .symbolRenderingMode(.multicolor)
                         .symbolEffect(.bounce, value: greetingHops)
-                    Text(Date.now, format: .dateTime.month(.abbreviated).day().weekday(.abbreviated))
+                    if let days = memory.daysToExam {
+                        Text(L.t("離考試 \(days) 天", "\(days) days to the exam"))
+                            .accessibilityIdentifier("today-exam-countdown")
+                    } else {
+                        Text(Date.now, format: .dateTime.month(.abbreviated).day().weekday(.abbreviated))
+                    }
                 }
-                .font(.footnote)
-                .foregroundStyle(.secondary)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(memory.daysToExam == nil ? Palette.secondaryLabel : Palette.accent)
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
+                Spacer(minLength: 4)
+                chip(id: "today-streak", label: L.t("連續 \(model.progress.streak) 天", "\(model.progress.streak)-day streak"), action: { open(.week) }) {
+                    Image(systemName: "flame.fill")
+                        .foregroundStyle(LinearGradient(colors: [Color(red: 1, green: 0.75, blue: 0.3), Color(red: 0.93, green: 0.42, blue: 0.2)],
+                                                        startPoint: .top, endPoint: .bottom))
+                        .symbolEffect(.bounce, value: flameBounce)
+                    Text("\(model.progress.streak)")
+                }
+                chip(id: "today-shelf", label: L.t("已會 \(model.stats.mastered) 個字", "\(model.stats.mastered) words known"), action: { open(.shelf) }) {
+                    Image(systemName: "books.vertical.fill").foregroundStyle(Palette.known)
+                    Text(model.stats.mastered.formatted()).monospacedDigit()
+                }
             }
-            if !m.large { Spacer(minLength: 4) }
-            HStack(spacing: 8) {
-                languageSwitch
-                scopeChip
-            }
-            .layoutPriority(1)
         }
+        .zIndex(1)
     }
 
-    private var scopeChip: some View {
-        Button { studySettingsOpen = true } label: {
-            HStack(spacing: 6) {
-                Image(systemName: model.settings.studyFilter.isActive ? "line.3.horizontal.decrease.circle.fill" : "books.vertical.fill")
-                    .contentTransition(.symbolEffect(.replace))
-                    .foregroundStyle(Palette.accent)
-                Text(model.bankName)
-                    .lineLimit(1)
-                    .truncationMode(.tail)
-                Image(systemName: "chevron.down")
-                    .font(.caption2.weight(.bold))
-                    .foregroundStyle(.secondary)
-            }
-            .font(.footnote.weight(.semibold))
-            .foregroundStyle(.primary)
-            .padding(.horizontal, 12)
-            .frame(minHeight: 36)
-            .background { PremiumSurface(radius: 18) }
-            .contentShape(Capsule())
+    private func chip<Content: View>(id: String, label: String, action: @escaping () -> Void, @ViewBuilder content: () -> Content) -> some View {
+        Button(action: action) {
+            HStack(spacing: 4) { content() }
+                .font(.display(.headline, weight: .heavy))
+                .foregroundStyle(Palette.ink)
+                // A count stays on one line ("47", not "4" over "7") at large text.
+                .lineLimit(1)
+                .fixedSize()
+                .padding(.horizontal, 12)
+                .frame(minHeight: 38)
+                .background {
+                    // A pill in either style: square boxes looked stiff in the collage.
+                    Capsule().fill(Palette.surface)
+                        .overlay { PaperGrain(opacity: 0.4).clipShape(Capsule()) }
+                        .overlay { Capsule().strokeBorder(Collage.ink.opacity(0.14), lineWidth: 1) }
+                        .shadow(color: .black.opacity(0.06), radius: 3, y: 1)
+                }
+                .contentShape(Capsule())
         }
         .buttonStyle(SoftPressStyle())
-        .accessibilityLabel(L.t("學習範圍：\(model.bankName)", "Study scope: \(model.bankName)"))
-        .accessibilityIdentifier("today-study-filter")
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(label)
+        .accessibilityAddTraits(.isButton)
+        .accessibilityIdentifier(id)
     }
 
-    /// Which language is being learned, switched in one tap: EN for English
-    /// (with a Chinese interface), 中 for Chinese (with an English one).
-    private var languageSwitch: some View {
-        HStack(spacing: 2) {
-            ForEach([StudyMode.english, StudyMode.chinese], id: \.self) { mode in
-                let selected = model.studyMode == mode
-                Button {
-                    guard !selected else { return }
-                    withAnimation(reduceMotion ? nil : Motion.reveal) { model.setStudyMode(mode) }
-                } label: {
-                    Text(mode == .english ? "EN" : "中")
-                        .font(.footnote.weight(.bold))
-                        .foregroundStyle(selected ? Color.white : Color.secondary)
-                        .frame(minWidth: 34, minHeight: 30)
-                        .background(selected ? Palette.accent : Color.clear, in: Capsule())
-                        .contentShape(Capsule())
-                }
-                .buttonStyle(SoftPressStyle())
-                .accessibilityLabel(mode == .english ? L.t("學英文", "Learn English") : L.t("學中文", "Learn Chinese"))
-                .accessibilityAddTraits(selected ? .isSelected : [])
-                .accessibilityIdentifier(mode == .english ? "today-language-en" : "today-language-zh")
-            }
-        }
-        .padding(3)
-        .background { PremiumSurface(radius: 18) }
-        // A small control: with the largest text it would be squeezed and
-        // cut "EN" in half, so it keeps its size and stops growing at a point.
-        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
-        .fixedSize()
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel(L.t("學習語言", "Learning language"))
-        .accessibilityIdentifier("today-language")
+    // MARK: Today's steps
+
+    /// The steps of the day, as stamps on the card.
+    private var nodes: [TodayNode] {
+        let words: [TodayNode] = [.cards, .spell, .quiz]
+        guard model.homeShowsSpeaking else { return words }
+        return model.settings.homeLead == .speaking ? [.speaking] + words : words + [.speaking]
     }
 
-    // MARK: Hero
-
-    private func hero(_ m: TodayMetrics) -> some View {
-        let progress = model.progress
-        let plan = model.studyPlan
-        let left = max(0, progress.dailyTarget - progress.studiedToday)
-        let summary = VStack(alignment: .leading, spacing: m.compact ? 6 : 8) {
-            Text(model.goalDone ? L.goalDoneTitle : L.goalTitle)
-                .font(.display(m.compact ? .title3 : .title2, weight: .bold))
-                .lineLimit(1)
-                .minimumScaleFactor(0.75)
-                .foregroundStyle(Self.cream)
-                .contentTransition(.opacity)
-            Text(L.todayPlan(due: plan.review, fresh: plan.fresh))
-                .font(m.tall ? .subheadline : .footnote)
-                .foregroundStyle(Self.cream.opacity(0.85))
-            HStack(spacing: 6) {
-                heroChip {
-                    Label {
-                        Text(L.t("\(progress.streak) 天", "\(progress.streak)d"))
-                            .contentTransition(.numericText(value: Double(progress.streak)))
-                    } icon: {
-                        Image(systemName: "flame.fill")
-                            .foregroundStyle(LinearGradient(colors: [Color(red: 1, green: 0.85, blue: 0.35), Color(red: 1, green: 0.55, blue: 0.25)],
-                                                            startPoint: .top, endPoint: .bottom))
-                            .symbolEffect(.bounce, value: flameBounce)
-                    }
-                }
-                .accessibilityLabel(L.t("連續 \(progress.streak) 天", "\(progress.streak)-day streak"))
-                heroChip {
-                    if model.goalDone {
-                        Label(L.t("達成", "Done"), systemImage: "checkmark.seal.fill")
-                    } else {
-                        Label(L.t("差 \(left) 個", "\(left) to go"), systemImage: "target")
-                            .contentTransition(.numericText(value: Double(left)))
-                    }
-                }
-                .accessibilityLabel(model.goalDone ? L.t("目標達成", "Goal reached") : L.t("還差 \(left) 個", "\(left) to go"))
-            }
+    private func isDone(_ node: TodayNode) -> Bool {
+        let routine = model.activeRoutine
+        let routineDone = routine?.step == .done
+        // A set shorter than the goal (the first after the welcome) leaves
+        // today's words to do until the goal is met; a bank smaller than the
+        // goal is done with one set.
+        let enough = model.goalDone || (routineDone && model.wordsLeftForGoal == 0)
+        let wordsDone = enough && (routine == nil || routineDone)
+        switch node {
+        case .cards: return wordsDone || routine?.step == .spell || routine?.step == .exam
+        case .spell: return wordsDone || routine?.step == .exam
+        case .quiz: return wordsDone
+        case .speaking: return model.speakingDoneToday
+        case .weekly, .mockExam, .chest: return false
         }
-        let ring = ProgressRing(fraction: model.dailyFraction, color: Self.cream, lineWidth: m.compact ? 9 : m.tall ? 12 : 11, track: Self.cream.opacity(0.22)) {
-            VStack(spacing: 0) {
-                Text("\(progress.studiedToday)")
-                    .font(.display(m.compact ? .title2 : m.tall ? .largeTitle : .title, weight: .bold))
-                    .monospacedDigit()
-                    .contentTransition(.numericText(value: Double(progress.studiedToday)))
-                Text(L.ofTarget(progress.dailyTarget))
-                    .font(.display(.caption2, weight: .semibold))
-                    .opacity(0.8)
+    }
+
+    /// The step to do now; nil once all are done.
+    private var currentNode: TodayNode? {
+        nodes.first { !isDone($0) }
+    }
+
+    // MARK: The focus card
+
+    /// One big card for the step to do now, on master's leather: what it
+    /// is, today's count, the day's steps as stamps (gold once done) and
+    /// the button. The cat stands on its top edge.
+    private func focusCard(roomy: Bool) -> some View {
+        let node = currentNode
+        let tone: HeroTone = node == .speaking ? .speaking : node == nil ? .done : .words
+        let card = VStack(spacing: roomy ? 18 : 12) {
+            Text(focusKicker(node))
+                .font(.display(.subheadline, weight: .bold))
+                .foregroundStyle(Self.cream.opacity(0.8))
+                .frame(maxWidth: .infinity, alignment: .leading)
+            focusEmblem(node, size: roomy ? 132 : 104)
+            VStack(spacing: 6) {
+                Text(focusTitle(node))
+                    .font(.display(roomy ? .largeTitle : .title, weight: .heavy))
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.7)
+                Text(focusDetail(node))
+                    .font(.headline)
+                    .opacity(0.85)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
             }
             .foregroundStyle(Self.cream)
-            .lineLimit(1)
-            .minimumScaleFactor(0.4)
-            .padding(.horizontal, 12)
+            stamps
+            mainButton(roomy: roomy)
         }
-        .frame(width: m.ring, height: m.ring)
-
-        return VStack(alignment: .leading, spacing: m.compact ? 14 : 18) {
-            if m.large {
-                // With very large text the way in comes first, before it scrolls out of reach.
-                summary
-                startButton(m)
-                ring
-            } else {
-                HStack(alignment: .center, spacing: m.compact ? 14 : 18) {
-                    ring
-                    summary
-                    Spacer(minLength: 0)
-                }
-                startButton(m)
-            }
-        }
-        .padding(m.heroPadding)
-        .background { HeroBackground(done: model.goalDone) }
-        .background {
-            GeometryReader { proxy in
-                Color.clear
-                    .onAppear { heroWidth = proxy.size.width }
-                    .onChange(of: proxy.size.width) { _, width in heroWidth = width }
-            }
-        }
-        // The companion stands on (or peeks over) the card's top edge, at home
-        // in the right corner, and now and then strolls along it.
-        .overlay(alignment: .topTrailing) {
-            if !m.large {
-                StrollingCompanion(mood: mascotMood, size: m.mascot, lines: mascotLines,
-                                   greeting: guideTip?.text ?? insightHeadline ?? mascotGreeting, tip: guideTip ?? mascotTip,
-                                   hop: greetingHops + tileTaps.values.reduce(0, +),
-                                   range: m.standsOnCard ? max(0, heroWidth - m.mascot - 28) : 0,
-                                   pause: tileTaps.values.reduce(0, +), onOpen: { mascotChatOpen = true })
-                    .offset(x: -12, y: -m.peek)
-                    .accessibilityIdentifier("today-mascot")
-            }
-        }
-        .padding(.top, m.heroTop)
-        .animation(reduceMotion ? nil : Motion.reveal, value: model.goalDone)
+        .padding(.horizontal, 20)
+        .padding(.top, 18)
+        .padding(.bottom, 22)
+        .frame(maxWidth: .infinity)
+        .background { HeroBackground(tone: tone) }
+        return standing(card)
+            .animation(reduceMotion ? nil : Motion.reveal, value: node)
     }
 
-    private func startButton(_ m: TodayMetrics) -> some View {
-        Button {
-            model.ensureStudySession()
-            start(.study)
-        } label: {
-            HStack(spacing: 8) {
-                Text(model.primaryActionTitle)
-                Image(systemName: "arrow.right")
-                    .symbolEffect(.bounce, value: greetingHops)
+    private func focusKicker(_ node: TodayNode?) -> String {
+        switch node {
+        case .speaking: return L.t("今天的口說", "Today's speaking")
+        case nil: return L.t("今天的份", "Today")
+        default:
+            let chapter = model.readingChapter.map { $0 + 1 }
+            return chapter.map { L.t("今天的單字 · 第 \($0) 章", "Today's words · chapter \($0)") } ?? L.t("今天的單字", "Today's words")
+        }
+    }
+
+    private func focusTitle(_ node: TodayNode?) -> String {
+        switch node {
+        case .cards: return L.t("翻卡", "Flip the cards")
+        case .spell: return model.studyMode == .english ? L.t("拼字", "Spell them") : L.t("寫字", "Write them")
+        case .quiz: return L.t("考考看", "Quiz time")
+        case .speaking: return speakingStage.number.map { L.t("第 \($0) 關 · \(speakingStage.title)", "Stage \($0) · \(speakingStage.title)") } ?? speakingStage.title
+        case nil: return L.t("今天的份完成！", "All done today!")
+        default: return ""
+        }
+    }
+
+    private func focusDetail(_ node: TodayNode?) -> String {
+        let plan = model.studyPlan
+        let routine = model.activeRoutine
+        switch node {
+        case .cards: return model.routineHeroLine ?? L.todayPlan(due: plan.review, fresh: plan.fresh)
+        case .spell:
+            let left = routine?.spellLeft.count ?? 0
+            return left > 0 ? L.t("剛學的 \(left) 個字，寫給貓看", "\(left) new words. Spell them for the cat") : L.t("剛學的字，寫給貓看", "Spell the new words for the cat")
+        case .quiz:
+            let left = routine?.examLeft.count ?? 0
+            return left > 0 ? L.t("\(model.examStyleName) \(left) 題", "\(left) exam-style questions") : model.examStyleName
+        case .speaking: return L.t("聽、跟讀、回答、用今天的字", "Listen, repeat, answer, use a word")
+        case nil: return L.t("\(model.progress.studiedToday) 個字 · 想加碼就再一組", "\(model.progress.studiedToday) words. One more set?")
+        default: return ""
+        }
+    }
+
+    /// The step's sign in an embossed disc, with today's count as a ring.
+    private func focusEmblem(_ node: TodayNode?, size: CGFloat) -> some View {
+        let fraction = node == .speaking ? (model.speakingDoneToday ? 1 : 0) : model.dailyFraction
+        return ZStack {
+            Circle().fill(Color.black.opacity(0.14)).offset(y: 4)
+            Circle().fill(Self.cream.opacity(0.14))
+            Circle().strokeBorder(Self.cream.opacity(0.35), lineWidth: 1.5).padding(10)
+            ProgressRing(fraction: fraction, color: Self.cream, lineWidth: size * 0.075, track: Self.cream.opacity(0.18)) { EmptyView() }
+            Image(systemName: node?.icon ?? "checkmark.seal.fill")
+                .font(.system(size: size * 0.34, weight: .bold))
+                .foregroundStyle(Self.cream)
+                .symbolEffect(.bounce, value: greetingHops)
+            if node?.isWords == true {
+                Text("\(model.progress.studiedToday)/\(model.progress.dailyTarget)")
+                    .font(.display(.caption, weight: .heavy))
+                    .monospacedDigit()
+                    .foregroundStyle(Self.cream)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Color.black.opacity(0.22), in: Capsule())
+                    .offset(y: size * 0.36)
             }
-            .font(.headline)
-            .foregroundStyle(model.goalDone ? Self.doneDeep : Self.deep)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, m.compact ? 13 : m.tall ? 17 : 15)
-            .background(Self.cream, in: Capsule())
-            .shadow(color: PremiumSurface.umber.opacity(0.3), radius: 10, y: 5)
+        }
+        .frame(width: size, height: size)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(L.t("今天 \(model.progress.studiedToday) / \(model.progress.dailyTarget) 個字", "\(model.progress.studiedToday) of \(model.progress.dailyTarget) words today"))
+    }
+
+    /// The day's steps pressed into the leather; done ones get a gold stamp.
+    private var stamps: some View {
+        let current = currentNode
+        return HStack(alignment: .top, spacing: 6) {
+            ForEach(nodes) { node in
+                let done = isDone(node)
+                let now = node == current
+                Button {
+                    taps += 1
+                    now ? goNext() : open(node)
+                } label: {
+                    VStack(spacing: 5) {
+                        ZStack {
+                            if done {
+                                Circle().fill(LinearGradient(colors: [Color(red: 0.98, green: 0.84, blue: 0.5), Color(red: 0.82, green: 0.6, blue: 0.24)],
+                                                             startPoint: .topLeading, endPoint: .bottomTrailing))
+                                Circle().strokeBorder(Color.white.opacity(0.45), lineWidth: 1.5).padding(3)
+                                Image(systemName: "checkmark").font(.system(size: 17, weight: .heavy)).foregroundStyle(Color(red: 0.42, green: 0.27, blue: 0.1))
+                            } else if now {
+                                Circle().fill(Self.cream)
+                                Image(systemName: node.icon).font(.system(size: 17, weight: .bold)).foregroundStyle(Self.deep)
+                            } else {
+                                // Pressed into the leather.
+                                Circle().fill(Color.black.opacity(0.16))
+                                Circle().strokeBorder(Color.white.opacity(0.18), lineWidth: 1).offset(y: 1)
+                                Image(systemName: node.icon).font(.system(size: 16, weight: .bold)).foregroundStyle(Self.cream.opacity(0.6))
+                            }
+                        }
+                        .frame(width: 44, height: 44)
+                        .rotationEffect(.degrees(done ? -10 : 0))
+                        .scaleEffect(now && !reduceMotion ? 1.08 : 1)
+                        Text(title(node))
+                            .font(.caption.weight(.heavy))
+                            .foregroundStyle(Self.cream.opacity(now ? 1 : 0.75))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(SoftPressStyle())
+                .overlay {
+                    if model.guideStep?.tileId == node.identifier { GuideRing().transition(.opacity) }
+                }
+                .accessibilityLabel(done ? L.t("\(title(node))，完成", "\(title(node)), done") : title(node))
+                .accessibilityValue(model.guideStep?.tileId == node.identifier ? L.t("傻貓推薦", "Silly Cat suggests") : "")
+                .accessibilityIdentifier(node.identifier)
+            }
+        }
+    }
+
+    /// The card with the cat on its top edge, strolling along it now and then.
+    private func standing<Card: View>(_ card: Card) -> some View {
+        card
+            .background {
+                GeometryReader { proxy in
+                    Color.clear
+                        .onAppear { cardWidth = proxy.size.width }
+                        .onChange(of: proxy.size.width) { _, width in cardWidth = width }
+                }
+            }
+            .overlay(alignment: .topTrailing) {
+                if !dynamicTypeSize.isAccessibilitySize {
+                    StrollingCompanion(mood: mascotMood, size: 70, lines: mascotLines,
+                                       greeting: guideTip?.text ?? insightHeadline ?? mascotGreeting,
+                                       tip: guideTip ?? mascotTip ?? MascotTip(text: L.t("有問題就問我。", "Ask me anything.")) { mascotChatOpen = true },
+                                       hop: greetingHops + taps, range: max(0, cardWidth - 100), pause: taps,
+                                       onTap: { mascotChatOpen = true })
+                        .offset(x: -14, y: -54)
+                        .accessibilityIdentifier("today-mascot")
+                }
+            }
+            .padding(.top, dynamicTypeSize.isAccessibilitySize ? 0 : 44)
+    }
+
+    // MARK: The note
+
+    /// At most one note under the card, only when it applies: Sunday's quiz,
+    /// the mock exam in the month before the exam, or words still shaky.
+    @ViewBuilder
+    private var note: some View {
+        // A guest's words today are lost when the app closes: say so first.
+        if account.configured, !account.isPermanent, model.progress.studiedToday > 0 {
+            noteSlip(id: "today-guest", icon: "exclamationmark.icloud.fill", tint: Palette.miss, paper: .peach,
+                     title: L.t("今天的 \(model.progress.studiedToday) 個字還沒存", "Today's \(model.progress.studiedToday) words aren't saved"),
+                     detail: L.t("訪客模式，關掉 App 就沒了。登入才保得住。", "As a guest, closing the app loses them. Sign in to keep them.")) {
+                signInOpen = true
+            }
+        } else if model.weeklyQuizDue {
+            noteSlip(id: "today-weekly-quiz", icon: "trophy.fill", tint: Palette.chinese, paper: .mustard,
+                     title: L.t("週日週考", "Sunday quiz"), detail: L.t("這週學過的字，最多 \(ExamRound.weeklyCount) 題", "This week's words, up to \(ExamRound.weeklyCount)")) {
+                start(.weeklyExam)
+            }
+        } else if let days = memory.daysToExam, days <= 30, days >= 0, plus.decide(.examPractice) == .allowed {
+            // The mock exam is Premium: a free learner keeps the missed words
+            // here. The days to the exam are already at the top of Today.
+            noteSlip(id: "today-exam", icon: "timer", tint: Palette.review, paper: .peach,
+                     title: L.t("完整模擬考", "Full mock exam"),
+                     detail: L.t("\(ExamView.questionCount) 題，限時 \(ExamView.minutes) 分鐘", "\(ExamView.questionCount) questions, \(ExamView.minutes) minutes")) {
+                start(.exam)
+            }
+        } else if model.stats.review > 0 {
+            noteSlip(id: "today-review", icon: "arrow.counterclockwise", tint: Palette.miss, paper: .ruled,
+                     title: L.t("錯題本", "Missed words"), detail: L.t("\(model.stats.review) 個還不熟的字", "\(model.stats.review) still shaky")) {
+                model.startStudySession(onlyIds: model.missedRoundIds)
+                start(.study)
+            }
+        }
+    }
+
+    private func noteSlip(id: String, icon: String, tint: Color, paper: PaperKind, title: String, detail: String,
+                          action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 14) {
+                Image(systemName: icon)
+                    .font(.system(size: 20, weight: .bold))
+                    // Ivory by day, dark at night on the lighter night tints.
+                    .foregroundStyle(Palette.surface)
+                    .frame(width: 48, height: 48)
+                    .background(tint, in: Circle())
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title).font(.display(.title3, weight: .bold)).foregroundStyle(Palette.ink)
+                    Text(detail).font(.subheadline).foregroundStyle(Palette.secondaryLabel).lineLimit(2)
+                }
+                Spacer(minLength: 4)
+                Image(systemName: "chevron.right").font(.headline).foregroundStyle(tint)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .background { NoteSlipBackground(paper: paper) }
+            .contentShape(Rectangle())
         }
         .buttonStyle(SoftPressStyle())
-        .disabled(model.studyPlan.total == 0)
-        .opacity(model.studyPlan.total == 0 ? 0.55 : 1)
-        // A new learner who hasn't finished a round yet: this is where to start.
+        .accessibilityIdentifier(id)
+    }
+
+    // MARK: The button
+
+    private var mainTitle: String {
+        guard let node = currentNode else { return L.extraAction }
+        let routine = model.activeRoutine
+        switch node {
+        case .cards: return model.progress.studiedToday > 0 || (model.studySession?.index ?? 0) > 0 ? L.t("繼續翻卡", "Keep flipping") : L.t("開始翻卡", "Start the cards")
+        case .spell: return routine?.step == .spell ? L.t("繼續拼字", "Continue spelling") : L.t("開始拼字", "Start spelling")
+        case .quiz: return L.t("繼續考考看", "Continue the quiz")
+        case .speaking: return speakingStage.number.map { L.t("開始第 \($0) 關", "Start stage \($0)") } ?? L.t("開始口說", "Start speaking")
+        case .weekly: return L.t("開始週考", "Start the Sunday quiz")
+        case .mockExam: return L.t("開始模擬考", "Start the mock exam")
+        case .chest: return L.extraAction
+        }
+    }
+
+    private func mainButton(roomy: Bool) -> some View {
+        let node = currentNode
+        // Nothing left in the range studied (a filter, a small bank): the key
+        // says so and opens the range, rather than greying out unexplained.
+        let empty = node?.isWords == true && model.studyPlan.total == 0 && !model.routinePending
+        return Button {
+            if empty { studySettingsOpen = true } else { goNext() }
+        } label: {
+            HStack(spacing: 8) {
+                Text(empty ? L.t("換個學習範圍", "Change what to study") : mainTitle)
+                Image(systemName: "arrow.right").symbolEffect(.bounce, value: greetingHops)
+            }
+            .font(.title3.weight(.heavy))
+            .foregroundStyle(node == .speaking ? Self.speakingDeep : node == nil ? Self.doneDeep : Self.deep)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, roomy ? 17 : 14)
+            .background(Self.cream, in: Capsule())
+            .shadow(color: .black.opacity(0.25), radius: 10, y: 5)
+        }
+        .buttonStyle(SoftPressStyle())
         .overlay(alignment: .topTrailing) {
             if model.settings.guideActive == true, model.progress.lastStudyDate == nil, !AppRuntime.catShowcase {
-                StartHereSticker()
-                    .offset(x: -8, y: -16)
+                StartHereSticker().offset(x: -8, y: -16)
             }
         }
         .accessibilityIdentifier("today-start")
     }
 
-    private func heroChip<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
-        content()
-            .font(.display(.footnote, weight: .semibold))
-            .foregroundStyle(Self.cream)
-            .lineLimit(1)
-            .minimumScaleFactor(0.75)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 5)
-            .background(Self.cream.opacity(0.16), in: Capsule())
-            .overlay(Capsule().strokeBorder(Self.cream.opacity(0.28), lineWidth: 1))
-    }
-
-    /// For a new learner: every stop the cat will show them, and the next one.
-    @ViewBuilder
-    private var checklist: some View {
-        if let stops = model.guideStops {
-            let firstRound = model.progress.lastStudyDate == nil
-            let current = firstRound ? stops.first : stops.first { $0.step == model.guideStep && $0.step != nil }
-            GuideChecklist(stops: stops, current: current,
-                           line: firstRound
-                               ? L.t("先背第一組，背完我再帶你玩別的。", "Learn your first set; then I'll show you the rest.")
-                               : model.guideStep.map { $0.line(plus: plus.subscribed || AppRuntime.uiTesting) },
-                           go: {
-                               if firstRound {
-                                   model.ensureStudySession()
-                                   start(.study)
-                               } else if let step = model.guideStep {
-                                   openGuide(step)
-                               }
-                           },
-                           hide: { withAnimation(reduceMotion ? nil : Motion.reveal) { model.hideGuideChecklist() } })
-                .transition(.move(edge: .top).combined(with: .opacity))
+    /// The button: the next stop, or another set once all are done.
+    private func goNext() {
+        guard let node = currentNode else {
+            model.ensureStudySession(daySet: true)
+            start(.study)
+            return
+        }
+        switch node {
+        case .cards, .spell, .quiz:
+            model.ensureStudySession(daySet: true)
+            start(.study)
+        case .speaking: startSpeakingPath()
+        case .weekly: start(.weeklyExam)
+        case .mockExam: start(.exam)
+        case .chest: break
         }
     }
 
-    /// The rare one-off notes: streak protection used, or a Plus reminder.
-    @ViewBuilder
-    private var notices: some View {
-        if model.streakProtectionJustUsed {
-            Label {
-                Text(L.t("連續天數保護幫你保住了 \(model.progress.streak) 天，今天學 1 個字就能延續。",
-                         "Streak protection kept your \(model.progress.streak)-day streak. One word today keeps it going."))
-                    .font(.footnote)
-            } icon: {
-                Image(systemName: "shield.lefthalf.filled").foregroundStyle(Palette.review)
+    /// Today's speaking is always the next scenario stage, whichever track
+    /// the Practice tab opened last time.
+    private func startSpeakingPath() {
+        model.settings.speakingWordsTab = false
+        start(.speaking)
+    }
+
+    /// A stop tapped out of turn: a round of its own.
+    private func open(_ node: TodayNode) {
+        switch node {
+        case .cards:
+            model.ensureStudySession(daySet: true)
+            start(.study)
+        case .spell: start(model.studyMode == .english && model.clozeAvailable ? .cloze : .spelling)
+        case .quiz:
+            start(.quickExam)
+        case .speaking: startSpeakingPath()
+        case .weekly: start(.weeklyExam)
+        case .mockExam: start(.exam)
+        case .chest: if isDone(.chest) { open(.week) }
+        }
+    }
+
+    private func open(_ which: TodaySheet) {
+        taps += 1
+        sheet = which
+    }
+
+    /// Closes the sheet, then does `action`.
+    private func afterClosing(_ action: @escaping () -> Void) {
+        afterSheet = action
+        sheet = nil
+    }
+
+    // MARK: Speaking
+
+    private var speakingStage: (number: Int?, title: String) {
+        guard let next = SpeakingScenarios.next(after: model.speakingPath), let scenario = SpeakingScenarios.scenario(next) else {
+            return (nil, L.t("開口說說看", "Say it out loud"))
+        }
+        return (SpeakingScenarios.number(next), L.t(scenario.title.zh, scenario.title.en))
+    }
+
+    private var speakingStageLine: String {
+        let stage = speakingStage
+        guard let number = stage.number else { return L.t("口說 · \(stage.title)", "Speaking · \(stage.title)") }
+        return L.t("口說 · 第 \(number) 關 \(stage.title)", "Speaking · stage \(number) \(stage.title)")
+    }
+
+    // MARK: Sheets
+
+    private var weekSheet: some View {
+        VStack(spacing: 18) {
+            Text(L.t("🔥 連續 \(model.progress.streak) 天", "🔥 \(model.progress.streak)-day streak"))
+                .font(.display(.title2, weight: .heavy))
+                .padding(.top, 24)
+            HStack(spacing: 8) {
+                ForEach(Array(model.weekStamps.enumerated()), id: \.offset) { index, stamp in
+                    DayStamp(mark: stamp.mark, weekday: WeekStamps.label(index), size: 40)
+                }
             }
-            .card(padding: 12)
-            .accessibilityIdentifier("today-streak-protected")
+            .accessibilityIdentifier("today-week")
+            HStack(spacing: 10) {
+                CatCan(full: model.catCanReady, size: 34)
+                Text(canLine)
+                    .font(.headline)
+                    .foregroundStyle(Palette.secondaryLabel)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(.horizontal, 8)
+            Button { sheet = nil } label: {
+                Text(L.t("知道了", "Got it")).font(.title3.weight(.bold)).frame(maxWidth: .infinity)
+            }
+            .prominentAction()
+            .padding(.bottom, 12)
         }
-        if let nudge = plus.nudge {
-            PlusNudgeBanner(nudge: nudge)
-                .card(padding: 10)
-                .transition(.move(edge: .top).combined(with: .opacity))
+        .padding(.horizontal, Metrics.gutter)
+        .background { Palette.background.ignoresSafeArea() }
+    }
+
+    private var canLine: String {
+        if model.streakProtectionJustUsed {
+            return L.t("貓罐頭剛幫你保住連續天數，今天學 1 個字就能接下去。", "A Cat Can just saved your streak. One word today keeps it going.")
         }
+        if model.catCanReady {
+            return L.t("貓罐頭在你這：漏學 1 天也不會斷。", "You have a Cat Can: miss a day and your streak is safe.")
+        }
+        guard let ready = model.streakProtectionReadyOn else { return "" }
+        let parts = ready.split(separator: "-").compactMap { Int($0) }
+        let date = parts.count == 3 ? "\(parts[1])/\(parts[2])" : ready
+        return L.t("貓罐頭 \(date) 回來，這幾天別漏掉喔。", "Your Cat Can is back on \(date). Don't miss a day till then.")
+    }
+
+    private var shelfSheet: some View {
+        let chapters = model.shelfChapters
+        let mastered = chapters.reduce(0) { $0 + $1.mastered }
+        let total = chapters.reduce(0) { $0 + $1.total }
+        let current = MasteryShelf.current(chapters, from: model.placementStart)
+        return VStack(spacing: 16) {
+                Text(L.t("已會 \(mastered.formatted()) / \(total.formatted())", "\(mastered.formatted()) of \(total.formatted()) known"))
+                    .font(.display(.title2, weight: .heavy))
+                    .padding(.top, 24)
+                    .accessibilityIdentifier("today-shelf-total")
+                Shelf(chapters: chapters, current: current, height: 64, bookWidth: 16)
+                if let current {
+                    Text(L.t("正在讀第 \(current + 1) 章", "Reading chapter \(current + 1)"))
+                        .font(.headline)
+                        .foregroundStyle(Palette.secondaryLabel)
+                }
+                VStack(spacing: 10) {
+                    // The daily goal is picked right here, not from a menu over the sheet.
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text(L.dailyTargetTitle).font(.headline).foregroundStyle(Palette.ink)
+                        ChoiceChips(options: [10, 20, 30, 50].map { ChoiceOption(value: $0, title: L.t("\($0) 個", "\($0)")) },
+                                    selection: model.progress.dailyTarget, identifier: "today-goal") { model.setDailyTarget($0) }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Palette.surface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    Button { afterClosing { studySettingsOpen = true } } label: {
+                        sheetRow(L.t("字庫", "Word bank"), value: model.bankName)
+                    }
+                    .accessibilityIdentifier("today-study-filter")
+                    Button { afterClosing { showWords() } } label: {
+                        sheetRow(L.t("單字本", "All words"), value: L.t("搜尋、收藏、拍講義", "Search, saved, scan"))
+                    }
+                    .accessibilityIdentifier("today-words")
+                }
+            }
+            .padding(.horizontal, Metrics.gutter)
+            .padding(.bottom, 24)
+            .background { Palette.background.ignoresSafeArea() }
+    }
+
+    private func sheetRow(_ title: String, value: String) -> some View {
+        HStack {
+            Text(title).font(.headline).foregroundStyle(Palette.ink)
+            Spacer(minLength: 8)
+            Text(value).font(.headline).foregroundStyle(Palette.accent).lineLimit(1).minimumScaleFactor(0.8)
+            Image(systemName: "chevron.right").font(.subheadline.weight(.bold)).foregroundStyle(Palette.accent)
+        }
+        .padding(.horizontal, 16)
+        .frame(minHeight: 52)
+        .background(Palette.surface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .contentShape(Rectangle())
     }
 
     // MARK: Companion
@@ -482,7 +752,12 @@ struct TodayView: View {
         let hour = Calendar.current.component(.hour, from: Date())
         let call = catLines.context?.callout ?? ""
         let day = Calendar.current.ordinality(of: .day, in: .year, for: Date()) ?? 0
-        if model.goalDone { return L.t("\(call)嗯，勉強及格。不要得意。", "\(call)fine. You passed. Don't get cocky.") }
+        if model.goalDone { return L.t("\(call)嗯，勉強及格。不要得意。", L.named(call, "fine. You passed. Don't get cocky.")) }
+        // Back after a missed day the cat's can covered: say so, once it matters.
+        if model.streakProtectionJustUsed, progress.studiedToday == 0, progress.streak > 0 {
+            return L.t("哼，貓罐頭幫你保住了連續 \(progress.streak) 天。今天學 1 個字就續上。",
+                       "Hmph. A Cat Can saved your \(progress.streak)-day streak. One word today keeps it going.")
+        }
         // Every other day, a line written for today; the exam countdown when there is one.
         if day % 2 == 0, let line = (progress.studiedToday == 0 ? catLines.pack?.nudge : catLines.pack?.greeting)?.first {
             return line
@@ -540,7 +815,7 @@ struct TodayView: View {
     private var mascotLines: [String] {
         model.goalDone
             ? [L.t("好啦，你很棒。滿意了吧？", "Fine, you're great. Happy now?"),
-               L.t("要不要順便測驗？還是怕了？", "Quick quiz? Or are you scared?"),
+               L.t("要不要順便考考看？還是怕了？", "A quick quiz? Or are you scared?"),
                L.t("明天同一時間，我會來找你。", "Same time tomorrow. I'll find you."),
                L.t("今天表現……還可以啦。不要跟別人說我誇你。", "Today was… okay. Don't tell anyone I said that.")]
             : catLines.contextLines + (catLines.pack?.nudge ?? []) + [L.t("我阿嬤背得都比你快。", "My grandma learns faster than you."),
@@ -570,98 +845,25 @@ struct TodayView: View {
         }
     }
 
-    // MARK: Practice
-
-    /// The words still shaky, as a full-width tile above the others.
-    private var reviewTile: PracticeTileItem? {
-        guard model.stats.review > 0 else { return nil }
-        return PracticeTileItem(id: "today-review", icon: "arrow.counterclockwise", tint: Palette.miss,
-                                title: L.practiceStruggling, detail: L.t("練到熟為止", "Until they stick"),
-                                badge: "\(model.stats.review)") {
-            model.startStudySession(onlyIds: model.reviewWordIds)
-            start(.study)
+    private func title(_ node: TodayNode) -> String {
+        switch node {
+        case .cards: L.t("翻卡", "Cards")
+        case .spell: model.studyMode == .english ? L.t("拼字", "Spell") : L.t("寫字", "Write")
+        case .quiz: L.t("考考看", "Quiz")
+        case .speaking: L.t("口說", "Speak")
+        case .weekly: L.t("週考", "Sunday quiz")
+        case .mockExam: L.t("模擬考", "Mock exam")
+        case .chest: L.t("今天的份", "Today")
         }
     }
 
-    /// The speaking path: the stage to play today, or that today's is done.
-    private var speakingDetail: String {
-        let path = model.speakingPath
-        if model.settings.speakingWordsTab == true, !path.clearedToday(model.today) {
-            return L.t("單字口說", "Word practice")
-        }
-        if path.clearedToday(model.today) {
-            return L.t("今日已過關 ✓ 連續 \(path.currentStreak(today: model.today)) 天", "Done today ✓ \(path.currentStreak(today: model.today))-day streak")
-        }
-        guard let next = SpeakingScenarios.next(after: path), let scenario = SpeakingScenarios.scenario(next) else {
-            return L.t("開口說說看", "Say it out loud")
-        }
-        let number = SpeakingScenarios.number(next)
-        return L.t("第 \(number) 關 · \(scenario.title.zh)", "Stage \(number) · \(scenario.title.en)")
-    }
-
-    private var tiles: [PracticeTileItem] {
-        var items: [PracticeTileItem] = []
-        items.append(PracticeTileItem(id: "today-quiz", icon: "checklist", tint: Palette.chinese, title: L.quickQuiz,
-                                      detail: L.t("\(model.settings.quizQuestionCount) 題", "\(model.settings.quizQuestionCount) questions")) { quizSetupOpen = true })
-        items.append(PracticeTileItem(id: "today-speaking", icon: "bubble.left.and.text.bubble.right.fill", tint: Palette.known, title: L.speaking,
-                                      detail: speakingDetail) { start(.speaking) })
-        // Learners of English spell the word; learners of Chinese write it
-        // in characters or pinyin.
-        items.append(PracticeTileItem(id: "today-spelling", icon: model.studyMode == .english ? "character.cursor.ibeam" : "pencil.and.scribble",
-                                      tint: Palette.accent, title: L.spelling,
-                                      detail: L.t("\(Spelling.sessionLength) 題", "\(Spelling.sessionLength) words")) { start(.spelling) })
-        items.append(PracticeTileItem(id: "today-exam", icon: "timer", tint: Palette.review, title: L.t("模擬考", "Exam"),
-                                      detail: L.t("限時 \(ExamView.minutes) 分鐘", "\(ExamView.minutes) min timed"),
-                                      locked: plus.decide(.examPractice) != .allowed) { start(.exam) })
-        return items
-    }
-
-    private func practice(_ m: TodayMetrics, fill: Bool) -> some View {
-        let items = tiles
-        let columns = m.large ? 1 : 2
-        let rows = stride(from: 0, to: items.count, by: columns).map { Array(items[$0..<min($0 + columns, items.count)]) }
-        return VStack(alignment: .leading, spacing: m.tileSpacing) {
-            Text(L.practice)
-                .font(.display(m.compact ? .headline : .title3, weight: .bold))
-                .padding(.leading, 4)
-            if let review = reviewTile {
-                tile(review, tallCard: false, m, fill: fill, order: 1)
-            }
-            ForEach(rows.indices, id: \.self) { row in
-                HStack(spacing: m.tileSpacing) {
-                    ForEach(Array(rows[row].enumerated()), id: \.element.id) { offset, item in
-                        // A tile alone on its row spans it as a short row.
-                        tile(item, tallCard: m.tallCards && rows[row].count == columns, m, fill: fill,
-                             order: 2 + row * columns + offset)
-                    }
-                }
-            }
-        }
-    }
-
-    private func tile(_ item: PracticeTileItem, tallCard: Bool, _ m: TodayMetrics, fill: Bool, order: Int) -> some View {
-        let height = m.tileHeight(tallCard: tallCard)
-        return Button {
-            tileTaps[item.id, default: 0] += 1
-            item.action()
-        } label: {
-            PracticeTile(item: item, tallCard: tallCard, style: m.tileStyle(tallCard: tallCard),
-                         minHeight: height.min, maxHeight: fill ? height.max : nil,
-                         bounce: tileTaps[item.id, default: 0])
-        }
-        .buttonStyle(TilePressStyle())
-        .overlay {
-            if model.guideStep?.tileId == item.id { GuideRing().transition(.opacity) }
-        }
-        .entrance(order, distance: 12)
-        .accessibilityIdentifier(item.id)
-        .accessibilityValue(model.guideStep?.tileId == item.id ? L.t("傻貓推薦", "Silly Cat suggests") : "")
-    }
-
+    /// Speaking's colour, on the card and in its screens.
+    static let speakingTint = Color(red: 0.27, green: 0.47, blue: 0.41)
     private static let deep = Color(red: 0.45, green: 0.27, blue: 0.16)
     private static let doneDeep = Color(red: 0.3, green: 0.38, blue: 0.22)
+    private static let speakingDeep = Color(red: 0.16, green: 0.3, blue: 0.27)
     /// Text and the button on the leather card.
-    private static let cream = Color(red: 1.0, green: 0.97, blue: 0.91)
+    static let cream = Color(red: 1.0, green: 0.97, blue: 0.91)
 }
 
 /// The companion on Today, free to wander. Every so often it waddles (or
@@ -685,8 +887,8 @@ private struct StrollingCompanion: View {
     var range: CGFloat
     /// Bumped by the page (a tile tapped) to keep it still for a while.
     var pause: Int
-    /// A tap opens its chat.
-    var onOpen: (() -> Void)? = nil
+    /// A tap opens the chat with the cat.
+    var onTap: (() -> Void)? = nil
 
     @State private var x: CGFloat = 0
     @State private var walking = false
@@ -707,7 +909,7 @@ private struct StrollingCompanion: View {
                     // The bubble opens toward the room: left of it at home, right of it out on the left.
                     bubbleSide: x < -range / 2 ? .trailing : .leading,
                     hop: hop, walking: walking, facing: facing, tip: tip, onInteract: rest,
-                    pace: pace, cue: cue, onFling: fling, onBeatenUp: stormOff, onOpen: onOpen)
+                    pace: pace, cue: cue, onFling: fling, onBeatenUp: stormOff, onTap: onTap)
             .offset(x: x)
             .task(id: roams) { await wander() }
             .onChange(of: pause) { _, _ in rest() }
@@ -837,313 +1039,19 @@ private struct StrollingCompanion: View {
     }
 }
 
-/// One way to practise, as a tile.
-struct PracticeTileItem: Identifiable {
-    var id: String
-    var icon: String
-    var tint: Color
-    var title: String
-    var detail: String
-    var locked = false
-    var badge: String? = nil
-    var action: () -> Void
-}
-
-/// Pressing a tile sinks it a little and tips it toward the finger's side,
-/// like pressing into soft leather.
-private struct TilePressStyle: ButtonStyle {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
-    func makeBody(configuration: Configuration) -> some View {
-        let pressed = configuration.isPressed && !reduceMotion
-        configuration.label
-            .scaleEffect(pressed ? 0.96 : 1)
-            .brightness(configuration.isPressed ? -0.03 : 0)
-            .rotation3DEffect(.degrees(pressed ? 4 : 0), axis: (x: 1, y: 0, z: 0), perspective: 0.6)
-            .animation(reduceMotion ? nil : configuration.isPressed ? Motion.press : Motion.pop, value: configuration.isPressed)
-    }
-}
-
-/// The icon and type sizes of a practice tile.
-struct PracticeTileStyle {
-    var icon: CGFloat
-    var title: Font.TextStyle
-    var detail: Font
-}
-
-/// A practice tile, in one of two compositions.
-///
-/// A tall card puts the icon at the top and the title and detail along the
-/// bottom, with a small arrow (or the Plus mark) opposite the icon and a big,
-/// faint copy of the icon tilted into the corner as a watermark; however tall
-/// the card grows, the space between reads as intended.
-///
-/// A short row sets the icon, title and detail side by side, with the
-/// watermark peeking in at the far end. When the tile carries a count (the
-/// words to review), the count is set large in the serif face at the end of
-/// the row, where it balances the title, instead of in a small pill.
-private struct PracticeTile: View {
-    @Environment(\.appStyle) private var appStyle
-    var item: PracticeTileItem
-    var tallCard = false
-    var style: PracticeTileStyle
-    var minHeight: CGFloat
-    var maxHeight: CGFloat?
-    var bounce = 0
-
-    private var radius: CGFloat { appStyle == .collage ? 0 : tallCard ? 22 : 18 }
-
-    /// In the collage each way of practising is cut from its own paper.
-    private var paper: PaperKind {
-        switch item.id {
-        case "today-review": .ruled
-        case "today-quiz": .graph
-        case "today-speaking": .peach
-        case "today-spelling": .sage
-        default: .mustard
-        }
-    }
-
-    /// A slight, fixed tilt per tile, so the papers look laid down by hand.
-    private var tilt: Double {
-        switch item.id {
-        case "today-review": -0.5
-        case "today-quiz": 0.6
-        case "today-speaking": -0.7
-        case "today-spelling": 0.5
-        default: -0.3
-        }
-    }
-    private var roomy: Bool { style.icon > 40 }
-
-    var body: some View {
-        let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)
-        Group {
-            if tallCard {
-                VStack(alignment: .leading, spacing: 0) {
-                    HStack(alignment: .top) {
-                        icon(size: style.icon)
-                        Spacer(minLength: 4)
-                        corner
-                    }
-                    Spacer(minLength: 10)
-                    Text(item.title)
-                        .font(.display(style.title, weight: .bold))
-                        .foregroundStyle(.primary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.75)
-                    Text(item.detail)
-                        .font(style.detail)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.8)
-                        .padding(.top, 2)
-                }
-                .padding(14)
-            } else {
-                HStack(spacing: roomy ? 12 : 10) {
-                    icon(size: style.icon)
-                    VStack(alignment: .leading, spacing: 2) {
-                        // A Chinese title stays on one line (shrinking a little if it
-                        // must); an English one may take two ("Speaking practice").
-                        Text(item.title)
-                            .font(.display(style.title, weight: .bold))
-                            .foregroundStyle(.primary)
-                            .lineLimit(item.title.contains(" ") ? 2 : 1)
-                            .minimumScaleFactor(0.7)
-                        Text(item.detail)
-                            .font(style.detail)
-                            .foregroundStyle(.secondary)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.8)
-                    }
-                    // The words come before the badge: a narrow tile keeps
-                    // "Exam" whole and shows only the lock.
-                    .layoutPriority(1)
-                    Spacer(minLength: 2)
-                    rowEnd
-                }
-                .padding(.horizontal, roomy ? 14 : 12)
-                .padding(.vertical, roomy ? 10 : 8)
-            }
-        }
-        .multilineTextAlignment(.leading)
-        .frame(maxWidth: .infinity, minHeight: minHeight, maxHeight: maxHeight, alignment: tallCard ? .topLeading : .leading)
-        .background {
-            if appStyle == .collage {
-                PaperSurface(kind: paper)
-                    .overlay(alignment: .topTrailing) {
-                        // A little halftone in a corner of the plainer papers.
-                        if paper == .mustard || paper == .peach { Halftone().frame(width: 70, height: 50) }
-                    }
-                    .clipShape(TornEdgeShape(edges: paper == .peach ? [.bottom] : [], depth: 4, seed: item.id.count))
-            } else {
-                PremiumSurface(radius: radius)
-                    .overlay { watermark }
-                    .clipShape(shape)
-            }
-        }
-        .overlay(alignment: .top) {
-            if appStyle == .collage, item.id == "today-review" { TapeStrip(width: 58, angle: -4).offset(y: -9) }
-        }
-        .overlay {
-            // A soft ring of the tile's colour spreads from the icon when it is tapped.
-            if bounce > 0 {
-                TileRipple(color: item.tint, tallCard: tallCard, iconSize: style.icon)
-                    .id(bounce)
-                    .clipShape(shape)
-            }
-        }
-        .contentShape(shape)
-        .rotationEffect(.degrees(appStyle == .collage ? tilt : 0))
-    }
-
-    /// A big, faint copy of the icon, tilted and cropped by the tile's edge.
-    /// It scales with the tile, so a taller tile carries a bigger mark.
-    private var watermark: some View {
-        GeometryReader { proxy in
-            let h = proxy.size.height
-            let size = tallCard ? h * 0.62 : h * 0.9
-            Image(systemName: item.icon)
-                .font(.system(size: size, weight: .bold))
-                .foregroundStyle(item.tint.opacity(0.09))
-                .rotationEffect(.degrees(-12))
-                // Cropped by the tile's right (and, for tall cards, bottom) edge.
-                .position(x: proxy.size.width - size * (tallCard ? 0.32 : 0.3),
-                          y: tallCard ? h - size * 0.3 : h * 0.6)
-        }
-        .allowsHitTesting(false)
-        .accessibilityHidden(true)
-    }
-
-    @ViewBuilder
-    private func icon(size: CGFloat) -> some View {
-        if appStyle == .collage {
-            // A plain cut-paper disc.
-            Image(systemName: item.icon)
-                .font(.system(size: size * 0.42, weight: .semibold))
-                .foregroundStyle(.white)
-                .symbolEffect(.bounce, value: bounce)
-                .frame(width: size, height: size)
-                .background(item.tint, in: Circle())
-        } else {
-            leatherIcon(size: size)
-        }
-    }
-
-    private func leatherIcon(size: CGFloat) -> some View {
-        Image(systemName: item.icon)
-            .font(.system(size: size * 0.42, weight: .semibold))
-            .foregroundStyle(.white)
-            .symbolEffect(.bounce, value: bounce)
-            .frame(width: size, height: size)
-            .background(LinearGradient(colors: [item.tint.opacity(0.7), item.tint], startPoint: .topLeading, endPoint: .bottomTrailing),
-                        in: RoundedRectangle(cornerRadius: size * 0.3, style: .continuous))
-            .overlay {
-                RoundedRectangle(cornerRadius: size * 0.3, style: .continuous)
-                    .strokeBorder(LinearGradient(colors: [.white.opacity(0.5), .clear], startPoint: .top, endPoint: .center), lineWidth: 1)
-            }
-            .shadow(color: item.tint.opacity(0.3), radius: 5, y: 2)
-    }
-
-    /// The tall card's top corner: the Plus mark when locked, else a small arrow.
-    @ViewBuilder
-    private var corner: some View {
-        if item.locked {
-            PlusBadgeFitting()
-        } else if let badge = item.badge {
-            pill(badge)
-        } else {
-            Image(systemName: "arrow.up.right")
-                .font(.caption.weight(.bold))
-                .foregroundStyle(item.tint)
-                .frame(width: 26, height: 26)
-                .background(item.tint.opacity(0.12), in: Circle())
-                .accessibilityHidden(true)
-        }
-    }
-
-    /// The short row's far end: the Plus mark, a count, or nothing.
-    @ViewBuilder
-    private var rowEnd: some View {
-        if item.locked {
-            PlusBadgeFitting()
-        } else if let badge = item.badge {
-            if roomy {
-                // The count, set large: it carries the row's right side.
-                VStack(alignment: .trailing, spacing: 0) {
-                    Text(badge)
-                        .font(.displaySize(style.icon * 0.7, weight: .bold))
-                        .monospacedDigit()
-                        .foregroundStyle(item.tint)
-                        .contentTransition(.numericText())
-                    Text(L.t("個字", "words"))
-                        .font(.caption2.weight(.semibold))
-                        .foregroundStyle(.secondary)
-                }
-                .lineLimit(1)
-                .minimumScaleFactor(0.6)
-            } else {
-                pill(badge)
-            }
-        }
-    }
-
-    private func pill(_ text: String) -> some View {
-        Text(text)
-            .font(.display(.caption, weight: .bold))
-            .monospacedDigit()
-            .foregroundStyle(.white)
-            .padding(.horizontal, 7)
-            .padding(.vertical, 3)
-            .background(item.tint, in: Capsule())
-    }
-}
-
-/// One ripple from a tile's icon: a ring of its colour growing and fading.
-private struct TileRipple: View {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    var color: Color
-    var tallCard: Bool
-    var iconSize: CGFloat
-    @State private var spread = false
-
-    var body: some View {
-        GeometryReader { proxy in
-            let origin = tallCard ? CGPoint(x: 14 + iconSize / 2, y: 14 + iconSize / 2)
-                                  : CGPoint(x: 14 + iconSize / 2, y: proxy.size.height / 2)
-            Circle()
-                .fill(RadialGradient(colors: [color.opacity(0.28), color.opacity(0)], center: .center, startRadius: 0, endRadius: iconSize / 2))
-                .overlay(Circle().strokeBorder(color.opacity(0.35), lineWidth: 1.5))
-                .frame(width: iconSize, height: iconSize)
-                .scaleEffect(spread ? proxy.size.width * 2.2 / iconSize : 1)
-                .opacity(spread ? 0 : 1)
-                .position(origin)
-        }
-        .allowsHitTesting(false)
-        .accessibilityHidden(true)
-        .onAppear {
-            guard !reduceMotion else { return }
-            withAnimation(.easeOut(duration: 0.55)) { spread = true }
-        }
-    }
-}
-
-/// The hero card's face: caramel leather darkening to brown, with a fine
-/// grain, light pooling in one corner, a glint that sweeps across now and
-/// then, and a hairline catching the light. It turns olive once today's goal
-/// is met.
 /// The hero card as a collage: a cut of leather (sage once the goal is met)
 /// torn along its bottom, a strip of graph paper peeking out behind its right
 /// edge, a piece of tape, a patch of halftone and a loose charcoal loop.
 /// No shadow: the overlapping papers give the depth.
 private struct CollageHeroBackground: View {
-    var done: Bool
+    var tone: HeroTone
 
     var body: some View {
-        let colors = done
-            ? [Color(red: 0.6, green: 0.65, blue: 0.4), Color(red: 0.36, green: 0.45, blue: 0.27)]
-            : [Color(red: 0.79, green: 0.55, blue: 0.37), Color(red: 0.6, green: 0.37, blue: 0.23)]
+        let colors: [Color] = switch tone {
+        case .done: [Color(red: 0.6, green: 0.65, blue: 0.4), Color(red: 0.36, green: 0.45, blue: 0.27)]
+        case .words: [Color(red: 0.79, green: 0.55, blue: 0.37), Color(red: 0.6, green: 0.37, blue: 0.23)]
+        case .speaking: [Color(red: 0.43, green: 0.6, blue: 0.52), Color(red: 0.24, green: 0.4, blue: 0.35)]
+        }
         ZStack {
             PaperSurface(kind: .graph)
                 .frame(width: 96)
@@ -1166,19 +1074,27 @@ private struct CollageHeroBackground: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 .offset(x: 18, y: -10)
         }
-        .animation(Motion.reveal, value: done)
+        .animation(Motion.reveal, value: tone)
     }
 }
 
-private struct HeroBackground: View {
+/// The big card's colour: caramel for words, olive once today's words are
+/// done, moss for speaking.
+enum HeroTone { case words, done, speaking }
+
+/// The big card's face: caramel leather darkening to brown (moss for
+/// speaking), with a fine grain, light pooling in one corner, a glint that
+/// sweeps across now and then, and a hairline catching the light. It turns
+/// olive once today's goal is met.
+struct HeroBackground: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.appStyle) private var appStyle
-    var done: Bool
+    var tone: HeroTone
 
     @ViewBuilder
     var body: some View {
         if appStyle == .collage {
-            CollageHeroBackground(done: done)
+            CollageHeroBackground(tone: tone)
         } else {
             leather
         }
@@ -1187,9 +1103,11 @@ private struct HeroBackground: View {
     @ViewBuilder
     private var leather: some View {
         let shape = RoundedRectangle(cornerRadius: 30, style: .continuous)
-        let colors = done
-            ? [Color(red: 0.6, green: 0.65, blue: 0.4), Color(red: 0.33, green: 0.42, blue: 0.25)]
-            : [Color(red: 0.77, green: 0.55, blue: 0.36), Color(red: 0.45, green: 0.29, blue: 0.19)]
+        let colors: [Color] = switch tone {
+        case .done: [Color(red: 0.6, green: 0.65, blue: 0.4), Color(red: 0.33, green: 0.42, blue: 0.25)]
+        case .words: [Color(red: 0.77, green: 0.55, blue: 0.36), Color(red: 0.45, green: 0.29, blue: 0.19)]
+        case .speaking: [Color(red: 0.42, green: 0.58, blue: 0.5), Color(red: 0.19, green: 0.33, blue: 0.29)]
+        }
         shape
             .fill(LinearGradient(colors: colors, startPoint: .topLeading, endPoint: .bottomTrailing))
             .overlay {
@@ -1238,6 +1156,24 @@ private struct HeroGlint: View {
                 }
         }
         .allowsHitTesting(false)
+    }
+}
+
+/// A note under the focus card: a strip of paper torn along its bottom,
+/// taped on, in the collage; a soft card otherwise.
+private struct NoteSlipBackground: View {
+    @Environment(\.appStyle) private var appStyle
+    var paper: PaperKind
+
+    var body: some View {
+        if appStyle == .collage {
+            PaperSurface(kind: paper)
+                .clipShape(TornEdgeShape(edges: [.bottom], depth: 4, seed: 7))
+                .overlay(alignment: .top) { TapeStrip(width: 54, angle: -4).offset(y: -9) }
+                .rotationEffect(.degrees(-0.6))
+        } else {
+            PremiumSurface(radius: 20)
+        }
     }
 }
 

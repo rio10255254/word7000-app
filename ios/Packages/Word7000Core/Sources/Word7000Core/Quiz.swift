@@ -29,11 +29,16 @@ public enum QuizBuilder {
     /// Questions on words the learner has met, topped up with new words only
     /// when there are too few of them. Every answer is graded, so asking about
     /// words never studied fills the review queue with guesses.
-    public static func seenFirstSession(words: [WordEntry], state: ProgressState, count requested: Int, seed: String = SeededRandom.runtimeSeed()) -> [WordEntry] {
+    /// `startLevel`: the chapter the level test placed the learner at; new
+    /// words that top the quiz up then come from it on, as in a study session,
+    /// not from chapters far too easy.
+    public static func seenFirstSession(words: [WordEntry], state: ProgressState, count requested: Int,
+                                        seed: String = SeededRandom.runtimeSeed(), startLevel: Int? = nil) -> [WordEntry] {
         let isSeen = { (word: WordEntry) in (state.words[word.id]?.status ?? .new) != .new }
         let seen = words.filter(isSeen)
         guard seen.count < requested else { return session(words: seen, count: requested, seed: seed) }
-        let topUp = session(words: words.filter { !isSeen($0) }, count: requested - seen.count, seed: "\(seed):new")
+        let fresh = LearningEngine.skippingEasyChapters(words.filter { !isSeen($0) }, startLevel: startLevel)
+        let topUp = session(words: fresh, count: requested - seen.count, seed: "\(seed):new")
         return SeededRandom.shuffle(seen + topUp, seed: "\(seed):mix")
     }
 

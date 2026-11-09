@@ -94,9 +94,9 @@ final class CloudAssistant {
 
     var planLabel: String {
         switch tier {
-        case .plus: L.t("Premium・深度思考", "Premium · Deeper reasoning")
-        case .trial: L.t("試用・深度思考", "Trial · Deeper reasoning")
-        case .free: L.t("免費版・快速回答", "Free · Quick answers")
+        case .plus: L.t("Premium · 深度思考", "Premium · Deeper reasoning")
+        case .trial: L.t("試用 · 深度思考", "Trial · Deeper reasoning")
+        case .free: L.t("免費版 · 快速回答", "Free · Quick answers")
         }
     }
 

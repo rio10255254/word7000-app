@@ -34,7 +34,14 @@ struct Word7000App: App {
 
     var body: some Scene {
         WindowGroup {
-            RootView()
+            Group {
+                // UI tests of the App Store art: the cat alone (see MascotPosterView).
+                if let poster = AppRuntime.mascotPoster {
+                    MascotPosterView(mood: poster.mood, white: poster.white)
+                } else {
+                    RootView()
+                }
+            }
                 .environment(model)
                 .environment(account)
                 .environment(plus)

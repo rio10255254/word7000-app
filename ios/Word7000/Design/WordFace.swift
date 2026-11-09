@@ -20,11 +20,19 @@ struct WordFace {
     var speakText: String
     var speakLanguage: String
 
+    /// The word's IPA, or nothing where the list only has a placeholder
+    /// ("/-/" on 64 words such as "including"), which read as a glitch.
+    static func pronunciation(_ word: WordEntry) -> String {
+        let trimmed = word.pronunciation.trimmingCharacters(in: .whitespaces)
+        let inner = trimmed.trimmingCharacters(in: CharacterSet(charactersIn: "/-– "))
+        return inner.isEmpty ? "" : trimmed
+    }
+
     init(_ word: WordEntry, mode: StudyMode) {
         switch mode {
         case .english:
             prompt = word.word
-            promptDetail = word.pronunciation
+            promptDetail = Self.pronunciation(word)
             answer = ChineseDisplay.conciseMeaning(word.meaningZh)
             answerLabel = word.partOfSpeech
             answerDetail = ""
@@ -41,7 +49,7 @@ struct WordFace {
             answerLabel = L.englishWord
             // The Taiwan Mandarin bank keeps the pinyin in `pronunciation`,
             // already shown with the prompt; the English bank keeps IPA there.
-            answerDetail = [word.partOfSpeech, word.pronunciation.hasPrefix("/") ? word.pronunciation : ""]
+            answerDetail = [word.partOfSpeech, Self.pronunciation(word).hasPrefix("/") ? Self.pronunciation(word) : ""]
                 .filter { !$0.isEmpty }.joined(separator: "  ")
             supplemental = Self.supplementalParts(word)
                 .map { part in

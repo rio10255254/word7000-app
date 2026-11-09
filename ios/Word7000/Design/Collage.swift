@@ -479,6 +479,7 @@ struct StyleSettingsView: View {
                 )) {
                     SettingsLabel(L.t("圖示跟著換", "Icon follows the style"), icon: "app.badge.fill", tint: Palette.accent)
                 }
+                .toggleStyle(WarmToggleStyle())
                 .padding(.horizontal, 14)
                 .padding(.vertical, 10)
                 .background(Palette.surface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))

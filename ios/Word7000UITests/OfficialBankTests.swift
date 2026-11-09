@@ -10,7 +10,7 @@ final class OfficialBankTests: XCTestCase {
         app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingOfficialBank"]
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
-        app.tabBars.buttons.element(boundBy: 1).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["單字", "Words"])).firstMatch.tap()
 
         let bank = app.buttons["bank-official:medical"]
         XCTAssertTrue(bank.waitForExistence(timeout: 5))
@@ -32,7 +32,7 @@ final class OfficialBankTests: XCTestCase {
         // The built-in "adapt" carries the published correction (checked last:
         // search keeps the keyboard over the tab bar).
         XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 5))
-        app.tabBars.buttons.element(boundBy: 1).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["單字", "Words"])).firstMatch.tap()
         app.buttons["bank-core"].tap()
         let search = app.searchFields.firstMatch
         XCTAssertTrue(search.waitForExistence(timeout: 5))

@@ -215,6 +215,21 @@ npm run render:reels   # 輸出 out/reel-ep01.mp4 …
 - **聲音**：App 的真人錄音跟傻貓的配音一樣經過清理和音量對齊，錄音出現時音樂再多退約 8 dB；整支片調到 −14 LUFS（IG、TikTok 播放的響度），峰值壓在 −1 dBFS 以下。
 - **兩個版本**：`npm run reels` 之後再跑 `python3 scripts/make-reels.py teaser --no-voice` 會多一個只有字幕（沒有傻貓配音）的混音 `teaser-novoice.mp3`，影片相同、只換聲音。
 
+## 上架倒數（`Reel-cd6` … ）
+
+上架前每天一支、一天講一個功能，跟前導片同一個質感（`src/reels/Countdown.tsx`）。
+
+- **封面**：奶油色紙卡用膠帶貼著，上面蓋著「還有 N 天／11.16 App Store 上架」的印章，傻貓從右邊探頭。
+- **中段**：手機升上來停在當天那個畫面，鏡頭在畫面上移動，傻貓說到哪就標到哪：紅筆圈起選項、螢光筆畫過那一行、點一下的漣漪。
+- **結尾**：傻貓從左邊探頭吐舌頭，接著片尾：圖示和名字、倒數印章在聲音 logo 的和弦那一拍蓋下、「追蹤我們，上架當天通知你」。
+- 每天要換的東西（截圖、鏡頭停點、圈與螢光筆的位置、點擊、台詞）都寫在 `episodes.json` 那一集裡；字幕裡的 `\n` 是換行。
+
+| 日期 | 集 | 主題 | 台詞（中文／英文） |
+| --- | --- | --- | --- |
+| 11/10 | `cd6`／`cd6-en` | 學習計畫 | 考試哪天，你記得嗎？／跟我說哪天考，我幫你排計畫。／每天背幾個、讀到哪，我算好了。／你負責背，我負責唸。（片尾：還有六天。別忘了追蹤。）<br>How many words today? Be honest.／Pick a daily goal. I'll plan the path.／Cards. Writing. A quick quiz. All mapped out.／You study. I nag.（Six days. Don't forget to follow.） |
+
+英文版是給學中文的人看的，App 的英文計畫頁沒有考試，所以改講每日目標。
+
 ## 授權
 
 小笨貓的配音由 Kokoro-82M（Apache-2.0）合成，不需標示。

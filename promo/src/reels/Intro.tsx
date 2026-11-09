@@ -109,7 +109,7 @@ const parse = (text: string) => {
   text.split(/(\*\*[^*]+\*\*)/).forEach((part) => {
     const strong = part.startsWith('**');
     const body = strong ? part.slice(2, -2) : part;
-    for (const piece of body.match(/[A-Za-z0-9'’.,!?:;-]+|\s+|./gu) ?? []) {
+    for (const piece of body.match(/\n|[A-Za-z0-9'’.,!?:;-]+|[^\S\n]+|./gu) ?? []) {
       words.push(Array.from(piece).map((c) => ({ c, strong })));
     }
   });
@@ -199,7 +199,10 @@ export const Caption = ({
           <Mascot mood="smug" size={38} />
           {label}
         </div>
-        {words.map((word, w) => (
+        {words.map((word, w) =>
+          word[0]?.c === '\n' ? (
+            <br key={w} />
+          ) : (
           <span key={w} style={{ display: 'inline-block', whiteSpace: 'pre' }}>
             {word.map(({ c, strong }, k) => {
               const i = starts[w] + k;
@@ -221,7 +224,8 @@ export const Caption = ({
               );
             })}
           </span>
-        ))}
+          ),
+        )}
       </div>
     </div>
   );

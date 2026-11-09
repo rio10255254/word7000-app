@@ -39,8 +39,8 @@ const STAMP: Cam = { x: 603, y: 1050, z: 0.6 };
  * phone fades out just above it, so a line never sits on top of the app's
  * own text.
  */
-const CAPTION_TOP = 1452;
-const ABOVE_CAPTIONS = {
+export const CAPTION_TOP = 1452;
+export const ABOVE_CAPTIONS = {
   WebkitMaskImage: 'linear-gradient(to bottom, #000 0, #000 1330px, transparent 1420px)',
   maskImage: 'linear-gradient(to bottom, #000 0, #000 1330px, transparent 1420px)',
 };
@@ -59,7 +59,7 @@ const SCREENS = {
 type Slot = { start: number; length: number; voiceStart: number; voiceLength: number };
 
 /** A phone at camera `cam`, showing `children` (screens) inside its glass. */
-const Phone = ({ cam, children, lift = 0, t }: { cam: Cam; children: ReactNode; lift?: number; t: number }) => {
+export const Phone = ({ cam, children, lift = 0, t }: { cam: Cam; children: ReactNode; lift?: number; t: number }) => {
   const left = STAGE.x - cam.x * cam.z;
   const top = STAGE.y - cam.y * cam.z + lift;
   return (
@@ -102,7 +102,7 @@ const Patch = ({ shot, from, to, height, z, opacity }: { shot: string; from: num
   );
 
 /** 傻貓 poking its head in from one side of the frame, as CatPeek does in the app. */
-const Peek = ({ t, at, until, side, mood, y, outAt }: { t: number; at: number; until: number; side: 1 | -1; mood: Mood; y: number; outAt?: number }) => {
+export const Peek = ({ t, at, until, side, mood, y, outAt }: { t: number; at: number; until: number; side: 1 | -1; mood: Mood; y: number; outAt?: number }) => {
   if (t < at - 0.05 || t > until) return null;
   const inP = at <= 0 ? interpolate(t, [0, 0.5], [0.88, 1], { ...clamp, easing: out }) : interpolate(t, [at, at + 0.35], [0, 1], { ...clamp, easing: Easing.out(Easing.back(1.6)) });
   const ducked = outAt === undefined ? 0 : interpolate(t, [outAt, outAt + 0.3], [0, 1], { ...clamp, easing: Easing.in(Easing.cubic) });

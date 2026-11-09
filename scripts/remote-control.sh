@@ -96,7 +96,13 @@ usage)
   [[ "$days" =~ ^[0-9]+$ ]] || { echo "::error::days must be a whole number"; exit 1; }
   reply=$(call -X POST "$rest/rpc/usage_report" -d "{\"p_days\":$days}")
   [ "$(code_of "$reply")" = "200" ] || { echo "::error::$(body_of "$reply")"; exit 1; }
-  body_of "$reply" | node scripts/usage-report.mjs
+  report=$(body_of "$reply")
+  # Per build, when the backend has it (usage_by_build); the rest of the report stands without it.
+  builds=$(call -X POST "$rest/rpc/usage_by_build" -d "{\"p_days\":$days}")
+  if [ "$(code_of "$builds")" = "200" ]; then
+    report=$(jq -n --argjson r "$report" --argjson b "$(body_of "$builds")" '$r + {by_build: $b}')
+  fi
+  printf '%s' "$report" | node scripts/usage-report.mjs
   ;;
 take-down)
   reply=$(call -X PATCH "$rest/announcements?active=eq.true" -d '{"active":false}')

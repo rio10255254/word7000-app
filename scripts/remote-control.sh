@@ -9,6 +9,11 @@ keys=$(supabase projects api-keys --project-ref "$PROJECT_REF" -o json --reveal 
 service=$(echo "$keys" | jq -r '([.[] | select(.name == "service_role")] + [.[] | select(.type == "secret")])[0].api_key')
 [ -n "$service" ] && [ "$service" != "null" ] || { echo "::error::Could not read the project's service key"; exit 1; }
 echo "::add-mask::$service"
+# broadcast-push compares the caller's key with the SUPABASE_SERVICE_ROLE_KEY
+# its runtime is given, which is the project's secret key (sb_secret_…) where
+# one exists, not the legacy service_role JWT: send that one first.
+push_key=$(echo "$keys" | jq -r '([.[] | select(.type == "secret")] + [.[] | select(.name == "service_role")])[0].api_key')
+echo "::add-mask::$push_key"
 rest="https://$PROJECT_REF.supabase.co/rest/v1"
 headers=(-H "apikey: $service" -H 'Content-Type: application/json' -H 'Prefer: return=representation')
 case "$service" in eyJ*) headers+=(-H "Authorization: Bearer $service") ;; esac
@@ -160,16 +165,33 @@ post)
       link: (if $link == "" then null else $link end), link_label_zh: $lz, link_label_en: $le,
       below_version: (if $bv == "" then null else $bv end),
       below_build: (if $bb == "" then null else ($bb | tonumber) end)}')
-  reply=$(call -X POST "$rest/announcements" -d "$body")
-  body_of "$reply" | jq -c '.[0] | {id, audience, below_version, title_zh, ends_at, push}' || true
-  [ "$(code_of "$reply")" = "201" ] || { echo "::error::Posting failed with HTTP $(code_of "$reply")"; exit 1; }
-  say "📣 公告已發出：每個人下次打開或回到 App 時，會全螢幕看到一次。"
+  # Running the same announcement again after its push failed sends only the
+  # push: the message that is already up is not posted a second time.
+  waiting=""
   if [ "$PUSH" = "true" ]; then
+    title=$(jq -rn --arg t "$TITLE_ZH" '$t | @uri')
+    reply=$(call "$rest/announcements?select=id&active=eq.true&push=eq.true&pushed_at=is.null&title_zh=eq.$title&order=created_at.desc&limit=1")
+    waiting=$(body_of "$reply" | jq -r '.[0].id // empty' 2>/dev/null || true)
+  fi
+  if [ -n "$waiting" ]; then
+    id=$waiting
+    say "📣 這則公告已經在線上，推播還沒送出：這次只補送推播。"
+  else
+    reply=$(call -X POST "$rest/announcements" -d "$body")
+    body_of "$reply" | jq -c '.[0] | {id, audience, below_version, title_zh, ends_at, push}' || true
+    [ "$(code_of "$reply")" = "201" ] || { echo "::error::Posting failed with HTTP $(code_of "$reply")"; exit 1; }
+    say "📣 公告已發出：每個人下次打開或回到 App 時，會全螢幕看到一次。"
     id=$(body_of "$reply" | jq -r '.[0].id')
+  fi
+  if [ "$PUSH" = "true" ]; then
     pushed=$(curl -sS -w '\n%{http_code}' -X POST "https://$PROJECT_REF.supabase.co/functions/v1/broadcast-push" \
-      -H 'Content-Type: application/json' -H "x-broadcast-secret: ${BROADCAST_PUSH_SECRET:-$service}" -d "{\"id\":\"$id\"}")
-    say "🔔 推播結果：$(body_of "$pushed" | jq -r '"送出 \(.sent // 0) 台，失敗 \(.failed // 0) 台"' 2>/dev/null || body_of "$pushed")"
-    [ "$(code_of "$pushed")" = "200" ] || { echo "::error::The push was not sent; the in-app message is posted"; exit 1; }
+      -H 'Content-Type: application/json' -H "x-broadcast-secret: ${BROADCAST_PUSH_SECRET:-$push_key}" -d "{\"id\":\"$id\"}")
+    if [ "$(code_of "$pushed")" = "200" ]; then
+      say "🔔 推播結果：$(body_of "$pushed" | jq -r '"送出 \(.sent // 0) 台，失敗 \(.failed // 0) 台"')"
+    else
+      say "🔔 推播沒有送出（HTTP $(code_of "$pushed")：$(body_of "$pushed")）。公告已經在線上；修好後用同樣的內容再發一次，只會補送推播。"
+      echo "::error::The push was not sent (HTTP $(code_of "$pushed")); the in-app message is posted"; exit 1
+    fi
   fi
   ;;
 esac

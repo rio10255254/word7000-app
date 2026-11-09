@@ -6,6 +6,7 @@ import '@fontsource/noto-serif/700.css';
 import '@fontsource/noto-serif/800.css';
 import '@fontsource/caveat/400.css';
 import '@fontsource/caveat/600.css';
+import '@fontsource/noto-serif-tc/900.css';
 import { continueRender, delayRender } from 'remotion';
 import reels from './reels/episodes.json';
 
@@ -13,6 +14,8 @@ import reels from './reels/episodes.json';
 export const FONT = '"Noto Sans TC", "PingFang TC", sans-serif';
 /** English words and numbers: stands in for the app's serif display face (New York). */
 export const SERIF = '"Noto Serif", "New York", Georgia, serif';
+/** Chinese set in serif, beside SERIF: the app's name on the teaser's end card. */
+export const SERIF_TC = '"Noto Serif TC", "Songti TC", serif';
 /** Handwriting on a scanned word list. */
 export const HAND = '"Caveat", cursive';
 
@@ -29,6 +32,7 @@ Promise.all([
   ...['500', '700', '900'].map((weight) => document.fonts.load(`${weight} 64px "Noto Sans TC"`, CJK + LATIN + REELS)),
   ...['400', '700', '800'].map((weight) => document.fonts.load(`${weight} 64px "Noto Serif"`, LATIN + 'əˈ\'')),
   ...['400', '600'].map((weight) => document.fonts.load(`${weight} 64px "Caveat"`, LATIN)),
+  document.fonts.load('900 64px "Noto Serif TC"', REELS),
 ])
   .then(() => continueRender(handle))
   .catch((error) => {

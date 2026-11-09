@@ -135,7 +135,8 @@
       "outroAt": 1.6,
       "endBeats": 9,
       "endStamp": true,
-      "grooveFrom": 1
+      "grooveFrom": 1,
+      "endStampAt": 0.75
     },
     {
       "id": "teaser-en",
@@ -296,7 +297,8 @@
           450
         ]
       ],
-      "ringY": 1080
+      "ringY": 1080,
+      "endStampAt": 0.75
     },
     {
       "id": "ep01",

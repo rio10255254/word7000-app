@@ -58,13 +58,13 @@ export const Backdrop = ({ t, frame, drift = 0 }: { t: number; frame: number; dr
   const p = drift * 0.06;
   return (
     <AbsoluteFill style={{ overflow: 'hidden' }}>
-      <AbsoluteFill style={{ background: `radial-gradient(130% 85% at 50% 36%, ${OLIVE_LIGHT} 0%, ${OLIVE} 52%, ${OLIVE_DARK} 100%)` }} />
+      <AbsoluteFill style={{ background: `radial-gradient(135% 95% at 50% 34%, ${OLIVE_LIGHT} 0%, ${OLIVE} 56%, ${OLIVE_DARK} 115%)` }} />
       <Sheet kind="graph" style={{ left: -160 - p, top: 120 + Math.sin(t * 0.4) * 8, width: 560, height: 720, transform: `rotate(${-14 + Math.sin(t * 0.3)}deg)` }} />
       <Sheet kind="ruled" style={{ right: -200 + p * 0.6, top: 1080 + Math.cos(t * 0.33) * 10, width: 620, height: 560, transform: `rotate(${11 + Math.cos(t * 0.25)}deg)` }} />
       {/* A slow, warm light moving across the desk. */}
       <AbsoluteFill style={{ background: `radial-gradient(55% 38% at ${lightX}% ${lightY}%, rgba(255,246,214,0.38), rgba(255,246,214,0) 70%)`, mixBlendMode: 'soft-light' }} />
       <Grain frame={frame} opacity={0.14} />
-      <AbsoluteFill style={{ background: 'radial-gradient(120% 95% at 50% 45%, rgba(0,0,0,0) 55%, rgba(30,34,14,0.38) 100%)' }} />
+      <AbsoluteFill style={{ background: 'radial-gradient(125% 100% at 50% 40%, rgba(0,0,0,0) 58%, rgba(30,34,14,0.24) 100%)' }} />
     </AbsoluteFill>
   );
 };
@@ -73,7 +73,7 @@ export const Backdrop = ({ t, frame, drift = 0 }: { t: number; frame: number; dr
 export const Grade = ({ frame }: { frame: number }) => (
   <>
     <Grain frame={frame + 31} opacity={0.06} />
-    <AbsoluteFill style={{ background: 'radial-gradient(140% 100% at 50% 42%, rgba(0,0,0,0) 62%, rgba(24,26,12,0.22) 100%)', pointerEvents: 'none' }} />
+    <AbsoluteFill style={{ background: 'radial-gradient(150% 110% at 50% 40%, rgba(0,0,0,0) 66%, rgba(24,26,12,0.12) 100%)', pointerEvents: 'none' }} />
   </>
 );
 
@@ -216,5 +216,41 @@ export const Burst = ({ t, at, x, y, scale = 1, count = 16 }: { t: number; at: n
         );
       })}
     </>
+  );
+};
+
+/**
+ * Dust in the light: small soft specks drifting slowly up and across.
+ * `front` draws the few, larger, out-of-focus ones nearer the lens.
+ */
+export const Motes = ({ t, front = false }: { t: number; front?: boolean }) => {
+  const count = front ? 7 : 26;
+  return (
+    <AbsoluteFill style={{ pointerEvents: 'none' }}>
+      {Array.from({ length: count }, (_, i) => {
+        const k = i + (front ? 100 : 0);
+        const size = front ? 14 + hash(k) * 16 : 3 + hash(k) * 6;
+        const speed = 10 + hash(k + 1) * 22;
+        const x = ((hash(k + 2) * 1180 + Math.sin(t * 0.4 + k) * 40 + t * (hash(k + 3) - 0.5) * 30) % 1180) - 50;
+        const y = 1900 - ((hash(k + 4) * 2000 + t * speed) % 2000);
+        const twinkle = 0.5 + 0.5 * Math.sin(t * (0.8 + hash(k + 5)) + k);
+        return (
+          <div
+            key={i}
+            style={{
+              position: 'absolute',
+              left: x,
+              top: y,
+              width: size,
+              height: size,
+              borderRadius: '50%',
+              background: 'rgba(255,248,224,0.9)',
+              filter: `blur(${front ? 5 + hash(k + 6) * 4 : 1 + hash(k + 6) * 1.5}px)`,
+              opacity: (front ? 0.16 : 0.22 + 0.25 * hash(k + 7)) * twinkle,
+            }}
+          />
+        );
+      })}
+    </AbsoluteFill>
   );
 };

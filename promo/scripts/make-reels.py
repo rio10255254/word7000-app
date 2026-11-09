@@ -227,8 +227,8 @@ def mix(episode):
     outro = voice_file(episode, "outro")
     if outro and not SILENT:
         m.place(voice, load_voice(outro), body + episode.get("outroAt", 1.0))
-    if episode.get("endStamp"):
-        m.place(sfx, m.stamp(), body, 0.6)
+    if episode.get("endStamp"):  # lands with the sound logo's B♭ chord, 0.75 s in
+        m.place(sfx, m.stamp(), body + episode.get("endStampAt", 0.0), 0.6)
 
     # Duck the music under the voice (about −10 dB while the cat talks).
     if np.abs(voice).max() > 0:

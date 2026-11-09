@@ -197,7 +197,7 @@ npm run render:reels   # 輸出 out/reel-ep01.mp4 …
 | 12–17s | 餐廳情境：App 裡真人錄音的「Hi, welcome! How many in your party?」，學生的「Just two, thanks.」和 100% 隨聲音出現 | 開口說，真人陪你練。 |
 | 17–20s | 「今天的份完成！」印章重重蓋下、畫面一閃一震 | 蓋章那一下，會上癮。 |
 | 20–22s | 傻貓從左邊探頭吐舌頭，後面的考題糊掉 | 背不起來？我會笑你。 |
-| 22–27.5s | 新圖示、WordCat 單字貓、蓋上「11.16」、App Store 上架、聲音 logo | 追蹤我們，上架當天通知你。 |
+| 23–27.5s | 手機失焦退場，片尾在同一張桌上一樣一樣出現：新圖示、「WordCat 單字貓」由左而右顯露、一張奶油色紙卡貼上，「11.16／App Store 上架」的印章在聲音 logo 的 B♭ 和弦那一拍蓋下（畫面輕震） | 追蹤我們，上架當天通知你。 |
 
 - **畫面**：`src/reels/Teaser.tsx`；截圖是 `lab-native-store-screenshots` 分支裡 WordCat Next 的 App Store 截圖（`public/next/`），圖示是新版的橄欖綠圖示（`public/icon-next.png`）。
 - **配音**：傻貓用 ElevenLabs 的「Yu 小宇」（年輕、有活力的台灣口音男聲）和 eleven_v4 模型，`say` 裡的 `[smug]` 之類的標籤只控制語氣、不會念出來。`scripts/make-voice-elevenlabs.py teaser` 產生 `public/reels/voice/teaser-*.mp3`；金鑰從 `ELEVENLABS_API_KEY` 或雲端環境的代理帶入。
@@ -209,6 +209,8 @@ npm run render:reels   # 輸出 out/reel-ep01.mp4 …
   - 背景：橄欖綠的漸層，加上一道緩慢移動的暖光、兩張用視差慢慢漂移的拼貼紙（方格紙和橫線紙）、每格都會變的膠片顆粒，以及暗角。
   - 畫面換頁時有動態模糊；蓋章那一下有金色光圈和火花；傻貓落進手機時會被壓扁再彈回；探頭的傻貓有柔和的影子。
   - 日期印章和封面的「11.16」用 SVG 濾鏡做出油墨的粗糙邊緣和斑駁；片尾的圖示會閃過一道光。
+  - 手機帶一點立體角度（透視的 rotateX／rotateY 緩慢變化），光裡有浮動的微塵（遠處小而清楚、近處大而模糊）。
+  - 片尾的「單字貓」用 Noto Serif TC，跟 WordCat 的襯線字搭在一起。
   - 字幕是霧面深色玻璃，邊緣有一道細光，字從模糊對焦進來（`Caption` 的 `glass`）。
 - **聲音**：App 的真人錄音跟傻貓的配音一樣經過清理和音量對齊，錄音出現時音樂再多退約 8 dB；整支片調到 −14 LUFS（IG、TikTok 播放的響度），峰值壓在 −1 dBFS 以下。
 - **兩個版本**：`npm run reels` 之後再跑 `python3 scripts/make-reels.py teaser --no-voice` 會多一個只有字幕（沒有傻貓配音）的混音 `teaser-novoice.mp3`，影片相同、只換聲音。

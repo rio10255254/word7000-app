@@ -63,11 +63,66 @@ public struct LearnerProfile: Codable, Equatable, Sendable {
     /// The exam the learner prepares for (`WelcomeExam`'s raw value: gsat,
     /// tvee, cap, proficiency or none), which names the exam-style questions.
     public var exam: String?
+    /// Added later: the start chapter and the spelling score for each study
+    /// mode ("english", "chinese"), so a test or spelling in one mode leaves
+    /// the other's alone. A profile from before has one of each
+    /// (`startChapter` for `startMode`, `spelling`); `forMode` reads those
+    /// until `update(mode:with:)` first keeps a mode's own.
+    public var startChapters: [String: Int]?
+    public var spellingScores: [String: Double]?
+
+    /// The study modes a profile keeps a start and a spelling score for.
+    public static let modes = ["english", "chinese"]
 
     public init(stage: Stage? = nil, focus: [Focus] = [], spelling: Double? = nil) {
         self.stage = stage
         self.focus = focus
         self.spelling = spelling
+    }
+
+    /// This mode's own start chapter and spelling score, in `startChapter`
+    /// and `spelling` (with `startMode` set to the mode); everything else is
+    /// shared by both modes.
+    public func forMode(_ mode: String) -> LearnerProfile {
+        var copy = self
+        copy.startChapter = startChapters.map { $0[mode] } ?? legacyStart(for: mode)
+        copy.spelling = spellingScores.map { $0[mode] } ?? legacySpelling(for: mode)
+        copy.startMode = mode
+        return copy
+    }
+
+    /// Keeps `changed` (a `forMode(mode)` copy, then changed): its start
+    /// chapter and spelling score for this mode only, the rest for both. The
+    /// single fields keep the latest too, for builds that know only those.
+    public mutating func update(mode: String, with changed: LearnerProfile) {
+        var starts = startChapters ?? [:]
+        var scores = spellingScores ?? [:]
+        // The first time: what the profile had goes to the mode it was for.
+        for other in Self.modes where other != mode {
+            if startChapters == nil { starts[other] = legacyStart(for: other) }
+            if spellingScores == nil { scores[other] = legacySpelling(for: other) }
+        }
+        starts[mode] = changed.startChapter
+        scores[mode] = changed.spelling
+        stage = changed.stage
+        focus = changed.focus
+        exam = changed.exam
+        startChapters = starts
+        spellingScores = scores
+        startChapter = changed.startChapter
+        startMode = mode
+        spelling = changed.spelling
+    }
+
+    /// Before per-mode values: the one start, for the mode its test was in
+    /// (any mode when that was not kept).
+    private func legacyStart(for mode: String) -> Int? {
+        startMode == nil || startMode == mode ? startChapter : nil
+    }
+
+    /// Before per-mode values: the one score, measured in the start's mode.
+    private func legacySpelling(for mode: String) -> Double? {
+        startMode == nil || startMode == mode ? spelling : nil
     }
 
     /// Picks or unpicks a focus; a third pick replaces the oldest.
@@ -138,9 +193,10 @@ public struct PersonalPlan: Equatable, Sendable {
     /// The level test sets the chapter; words recognised but not spelled
     /// start one chapter lower, so new words are not all too hard to write.
     /// `levelSizes`: words in each chapter of the list studied (see
-    /// `PlacementTest.levelSizes(of:)`).
+    /// `PlacementTest.levelSizes(of:)`). `studiedFrom`: words from a chapter
+    /// on that are studied already (a retest), covered before the new ones.
     public init(test: PlacementTest, profile: LearnerProfile, target: Int, daysToExam: Int?,
-                levelSizes: [Int] = PlacementTest.englishLevelSizes) {
+                levelSizes: [Int] = PlacementTest.englishLevelSizes, studiedFrom: (Int) -> Int = { _ in 0 }) {
         var chapter = test.answers.isEmpty ? 1 : test.startChapter
         if let spelling = profile.spelling, spelling < 0.34, chapter > 1 { chapter -= 1 }
         startChapter = chapter
@@ -152,7 +208,7 @@ public struct PersonalPlan: Equatable, Sendable {
         examChecks = profile.examChecks
         lead = profile.lead
         reachChapter = daysToExam.map { days in
-            PlacementTest.chaptersReached(from: chapter, newWords: LearningEngine.projectedNewWords(
+            PlacementTest.chaptersReached(from: chapter, newWords: studiedFrom(chapter) + LearningEngine.projectedNewWords(
                 state: ProgressState(), today: "2026-01-01", dailyTarget: target, days: days, freshAvailable: Int.max / 2),
                 levelSizes: levelSizes)
         }

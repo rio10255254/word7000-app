@@ -25,7 +25,7 @@ struct LearningPlanView: View {
 
     private let dailyTargetOptions = [10, 20, 30, 50]
 
-    private var profile: LearnerProfile { model.settings.learnerProfile ?? LearnerProfile() }
+    private var profile: LearnerProfile { model.learnerProfile }
     private var english: Bool { model.studyMode == .english }
     private var exam: WelcomeExam? { profile.exam.flatMap(WelcomeExam.init(rawValue:)) }
     private var usesBuiltInWords: Bool { model.settings.activeBankId == WordBanks.coreBankId }
@@ -38,13 +38,14 @@ struct LearningPlanView: View {
     /// Counts the pace again: after a change to the goal or the start.
     private func project() {
         monthNew = model.projectedNewWords(days: 30)
-        examNew = memory.daysToExam.map { model.projectedNewWords(days: $0) }
+        // From the start chapter on: the words studied already, then the new ones to come.
+        examNew = memory.daysToExam.map { model.projectedNewWords(days: $0) + model.wordsStudied(fromChapter: startChapter) }
     }
 
     private func update(_ change: (inout LearnerProfile) -> Void) {
         var changed = profile
         change(&changed)
-        withAnimation(reduceMotion ? nil : Motion.reveal) { model.settings.learnerProfile = changed }
+        withAnimation(reduceMotion ? nil : Motion.reveal) { model.saveLearnerProfile(changed) }
         model.scheduleSave()
     }
 
@@ -306,7 +307,6 @@ struct LearningPlanView: View {
                     WarmStepper(value: startChapter, range: 1...PlacementTest.topLevel) { chapter in
                         update {
                             $0.startChapter = min(PlacementTest.topLevel, max(1, chapter))
-                            $0.startMode = model.studyMode.rawValue
                         }
                     }
                 }
@@ -317,7 +317,6 @@ struct LearningPlanView: View {
                     let next = direction == .increment ? startChapter + 1 : startChapter - 1
                     update {
                         $0.startChapter = min(PlacementTest.topLevel, max(1, next))
-                        $0.startMode = model.studyMode.rawValue
                     }
                 }
                 .accessibilityIdentifier("plan-start-chapter")

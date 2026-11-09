@@ -100,7 +100,9 @@ struct ScanView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(L.closeSheet) { dismiss() }
+                    // A full screen closes with ✕, as every round does.
+                    Button { dismiss() } label: { Image(systemName: "xmark") }
+                        .accessibilityLabel(L.close)
                         .accessibilityIdentifier("scan-close")
                 }
                 if phase == .review {
@@ -152,7 +154,7 @@ struct ScanView: View {
         .onChange(of: model.customSets.sets.map(\.id)) { _, ids in
             if case let .existing(id) = target, !ids.contains(id) { target = .new }
         }
-        .catTip(.scan, at: .top, inset: 60)
+        .catTip(.scan)
     }
 
     // MARK: Choose a source
@@ -344,6 +346,9 @@ struct ScanView: View {
 
     // MARK: Review
 
+    /// Rows with a word in them: a blank row added by hand is not a word found.
+    private var foundCount: Int { rows.filter { !$0.word.trimmed.isEmpty }.count }
+
     private var review: some View {
         let plan = importPlan
         let count = plan.additions.count
@@ -442,21 +447,18 @@ struct ScanView: View {
                     Label(S.addRow, systemImage: "plus")
                 }
             } header: {
-                Text(S.found(rows.count))
-                    .contentTransition(.numericText(value: Double(rows.count)))
+                Text(S.found(foundCount))
+                    .contentTransition(.numericText(value: Double(foundCount)))
             } footer: {
                 Text(S.reviewHint)
             }
 
             Section(S.saveTo) {
-                Picker(S.saveTo, selection: $target) {
-                    Text(S.newBank).tag(Target.new)
-                    ForEach(destinationBanks) { set in
-                        Text(set.name).tag(Target.existing(set.id))
-                    }
-                }
-                .pickerStyle(.menu)
-                .accessibilityIdentifier("scan-destination")
+                // WordCat's own chips, as in Settings: no floating system menu.
+                ChoiceChips(options: [ChoiceOption(value: Target.new, title: S.newBank, icon: "plus")]
+                                + destinationBanks.map { ChoiceOption(value: Target.existing($0.id), title: $0.name, icon: "books.vertical") },
+                            selection: target, equalWidths: false, identifier: "scan-destination") { target = $0 }
+                    .padding(.vertical, 4)
                 if target == .new {
                     TextField(S.bankName, text: $newBankName)
                         .accessibilityIdentifier("scan-bank-name")
@@ -645,7 +647,7 @@ private enum S {
     static var photoLoadFailed: String { L.t("無法載入這張照片。若照片在 iCloud，請確認網路連線後再試一次，或改選另一張照片。", "Could not load this photo. If it is in iCloud, check your connection and try again, or choose another photo.") }
     static var readingSmart: String { L.t("正在手機上辨識並整理…", "Reading and organizing on your iPhone…") }
     static var readFailed: String { L.t("辨識失敗，請換一張更清楚的照片再試一次。", "Could not read that photo. Try a clearer one.") }
-    static func found(_ count: Int) -> String { L.t("找到 \(count) 個單字", "\(count) words found") }
+    static func found(_ count: Int) -> String { L.t("找到 \(count) 個單字", count == 1 ? "1 word found" : "\(count) words found") }
     static var reviewHint: String { L.t("儲存前可以直接修改英文或中文；取消勾選的不會存入。左滑可以刪除。", "Fix any word or meaning before saving. Unchecked rows are skipped; swipe left to delete.") }
     static var noneFound: String { L.t("沒有找到成對的英文和中文意思。可以換一張更清楚的照片，或用「新增一列」手動加入。", "No word and meaning pairs were found. Try a clearer photo, or add rows by hand.") }
     static var word: String { L.t("英文", "English") }
@@ -655,7 +657,7 @@ private enum S {
     static var saveTo: String { L.t("存到", "Save to") }
     static var newBank: String { L.t("新字庫", "New bank") }
     static var bankName: String { L.t("字庫名稱", "Bank name") }
-    static func save(_ count: Int) -> String { L.t("存入字庫（\(count) 個）", "Save \(count) words") }
+    static func save(_ count: Int) -> String { L.t("存入字庫（\(count) 個）", count == 1 ? "Save 1 word" : "Save \(count) words") }
     static var rescan: String { L.t("重新掃描", "Scan again") }
     static var savedTitle: String { L.t("已存入字庫", "Saved") }
     static func savedText(_ count: Int, _ name: String) -> String { L.t("\(count) 個單字已加入「\(name)」，學習、測驗和字庫都已切換到這個字庫。", "\(count) words added to \u{201C}\(name)\u{201D}. Study, quizzes and Words now use this bank.") }

@@ -9,14 +9,19 @@ import Word7000Core
 enum GuideStep: String, CaseIterable, Sendable {
     case quiz, speaking, spelling, exam, scan, chat
 
-    /// The Today tile to circle, when it has one.
+    /// WordCat Next: spelling and the quizzes are steps of today's words, so
+    /// the cat introduces only what lives outside them.
+    static let guided: [GuideStep] = [.speaking, .scan, .chat]
+
+    /// The control on Today to circle.
     var tileId: String? {
         switch self {
         case .quiz: "today-quiz"
         case .speaking: "today-speaking"
         case .spelling: "today-spelling"
-        case .exam: "today-exam"
-        case .scan, .chat: nil
+        case .exam: nil
+        case .scan: "today-scan"
+        case .chat: "today-chat"
         }
     }
 
@@ -29,14 +34,14 @@ enum GuideStep: String, CaseIterable, Sendable {
         case .speaking: L.t("光認得不夠，開口說說看。點這裡，我聽著。", "Recognizing isn't enough. Say it out loud; tap here, I'm listening.")
         case .spelling: L.t("拼得出來才算真的會。來拼拼看？", "Write it in Chinese and you really know it. Characters or pinyin, give it a go?")
         case .exam: plus
-            ? L.t("來場 15 分鐘模擬考，看看哪一級還不熟。", "Try a 15-minute mock exam and see which words still need work.")
-            : L.t("Premium 有 15 分鐘模擬考，交卷就知道哪一級還不熟。點這裡看看。", "Premium has a 15-minute mock exam that shows which words need work. Tap to see.")
+            ? L.t("來場 15 分鐘模擬考，看看哪一章還不熟。", "Try a 15-minute mock exam and see which chapters need work.")
+            : L.t("Premium 有 15 分鐘模擬考，交卷就知道哪一章還不熟。", "Premium has a 15-minute mock exam that shows which chapters need work.")
         case .scan: plus
-            ? L.t("有自己的單字表？拍下來，手寫的也行，我幫你變成卡片。點這裡。", "Got your own word list? Snap it, handwriting too, and I'll make cards. Tap here.")
-            : L.t("課本、講義的單字表拍一下就變成字庫，手寫也讀得懂。這是 Premium 的。點這裡看看。", "Snap a word list from a textbook or handout and it becomes a bank, handwriting too. That's Premium. Tap to see.")
+            ? L.t("有自己的單字表？拍下來，我幫你變成卡片。", "Got your own word list? Snap it and I'll make cards.")
+            : L.t("單字表拍一下就變字庫，手寫也行（Premium）。", "Snap a word list and it becomes a bank, handwriting too (Premium).")
         case .chat: plus
-            ? L.t("哪個字搞不懂就問我：用法、例句、跟別的字差在哪。點這裡跟我聊。", "Stuck on a word? Ask me: usage, examples, how it differs. Tap here to chat.")
-            : L.t("我還會講解單字、改你的口說、陪你聊天，那是 Premium 的我。點這裡認識一下。", "I can also explain words, fix your speaking and chat with you: that's the Premium me. Tap to meet it.")
+            ? L.t("哪個字搞不懂？點我問就好。", "Stuck on a word? Tap me and ask.")
+            : L.t("我還會講解單字、改口說，那是 Premium 的我。點我看看。", "I can also explain words and fix your speaking: that's the Premium me. Tap to see.")
         }
     }
 
@@ -48,7 +53,7 @@ enum GuideStep: String, CaseIterable, Sendable {
         case .spelling: self = .spelling
         case .scan: self = .scan
         case .exam: self = .exam
-        case .study: return nil
+        case .study, .cloze, .quickExam, .weeklyExam: return nil
         }
     }
 
@@ -57,7 +62,7 @@ enum GuideStep: String, CaseIterable, Sendable {
 
     var title: String {
         switch self {
-        case .quiz: L.t("小測驗", "Quiz")
+        case .quiz: L.t("看字選意思", "Pick the meaning")
         case .speaking: L.t("開口說", "Speak")
         case .spelling: L.t("拼字", "Write")
         case .exam: L.t("模擬考", "Mock exam")
@@ -95,19 +100,19 @@ enum CatTip: String, CaseIterable, Sendable {
 
     var text: String {
         switch self {
-        case .study: L.t("點卡片看答案。認得往右滑、不熟往左滑；右上角能復原上一張，眼睛可以直接顯示答案。",
-                         "Tap the card for the answer. Swipe right if you knew it, left if not; undo is top right, and the eye shows answers straight away.")
-        case .words: L.t("中文、英文、例句都能搜。上面可以換字庫和篩選，長按字庫可以改名、管理單字。",
-                         "Search Chinese, English or examples. Switch banks and filter up top; press and hold a bank to rename or manage it.")
-        case .wordDetail: L.t("點喇叭聽發音，星星收藏。Premium 可以請我講解用法、例句和常見陷阱。",
-                              "Tap the speaker to hear it, the star to save it. With Premium I explain usage, examples and common traps.")
-        case .speaking: L.t("看題目開口說，說完按「我說完了」。Premium 的 AI 口說教練會幫你改句子、再追問一題。",
-                            "Read the prompt and answer out loud, then tap when you're done. Premium's AI coach rewrites your answer and asks a follow-up.")
-        case .quiz: L.t("選錯也沒關係，我會告訴你選到的那個是什麼意思。", "Wrong is fine: I'll tell you what the option you picked really means.")
-        case .spelling: L.t("聽發音、看意思，把單字拼出來。卡住就按提示，一次多給一個字母。",
-                            "Write the Chinese for the English word, in characters or pinyin; tones are optional, but if you add them they must be right. Each hint shows one more syllable.")
-        case .me: L.t("這裡有我估的程度、每週紀錄和設定，紙張或皮革風格也在設定裡換。",
-                      "Here is the level I estimate, your week and Settings, where you can switch between paper and leather.")
+        case .study: L.t("點卡片看答案。認得往右滑，不熟往左滑。騙我的話，三天後我會再考你。",
+                         "Tap for the answer. Swipe right if you knew it, left if not.")
+        case .words: L.t("中文、英文、例句都能搜；長按字庫可以管理。",
+                         "Search Chinese, English or examples. Hold a bank to manage it.")
+        case .wordDetail: L.t("點喇叭聽發音，點星星收藏。",
+                              "Tap the speaker to hear it, the star to save it.")
+        case .speaking: L.t("按麥克風開口說，說完會自動停。小聲講我也聽得到，別害羞。",
+                            "Tap the mic and speak; it stops when you're done.")
+        case .quiz: L.t("選錯沒關係，我會說你選的那個是什麼意思。", "Wrong is fine: I'll say what the one you picked means.")
+        case .spelling: L.t("把單字拼出來；卡住就按提示，一次多給一個字母。",
+                            "Write the Chinese for the word; each hint shows one more syllable.")
+        case .me: L.t("我估的程度、每週紀錄和設定都在這裡。",
+                      "Your level, your weeks and Settings are here.")
         case .scan: L.t("拍單字表，或在筆記本上一行寫一個字，只寫英文或中文我都會幫你補。",
                         "Snap a word list, or write one word a line on the notepad: English or Chinese alone, and I'll fill in the rest.")
         }
@@ -120,7 +125,7 @@ extension AppModel {
         guard settings.guideActive == true, progress.lastStudyDate != nil, !AppRuntime.catShowcase else { return nil }
         let tried = Set(settings.guideTried ?? [])
         let offered = settings.guideOffered ?? [:]
-        return GuideStep.allCases.first { step in
+        return GuideStep.guided.first { step in
             guard !tried.contains(step.rawValue) else { return false }
             if let first = offered[step.rawValue], let end = DayMath.addDays(first, GuideStep.patienceDays), today >= end { return false }
             return true
@@ -137,7 +142,7 @@ extension AppModel {
         let tried = Set(settings.guideTried ?? [])
         var stops = [GuideStop(id: "study", title: L.t("背一組", "Learn a set"), icon: "rectangle.on.rectangle.angled",
                                done: progress.lastStudyDate != nil, step: nil)]
-        for step in GuideStep.allCases {
+        for step in GuideStep.guided {
             stops.append(GuideStop(id: step.rawValue, title: step.title, icon: step.icon, done: tried.contains(step.rawValue), step: step))
         }
         return stops.allSatisfy(\.done) ? nil : stops
@@ -244,10 +249,12 @@ private struct HandLoop: Shape {
 }
 
 extension View {
-    /// The cat's one-time tip for this screen, floating at its top or bottom.
-    /// `inset` keeps it clear of a navigation bar or a row of buttons.
-    func catTip(_ tip: CatTip, at edge: VerticalEdge = .bottom, inset: CGFloat = 12) -> some View {
-        modifier(CatTipModifier(tip: tip, edge: edge, inset: inset))
+    /// The cat's one-time tip for a screen: the screen dims and the cat pops
+    /// up from the bottom to say it, until "Got it" or a tap anywhere. Over
+    /// everything on purpose and only once, so nothing is half covered and
+    /// it cannot be missed.
+    func catTip(_ tip: CatTip) -> some View {
+        modifier(CatTipModifier(tip: tip))
     }
 }
 
@@ -255,76 +262,111 @@ private struct CatTipModifier: ViewModifier {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let tip: CatTip
-    let edge: VerticalEdge
-    let inset: CGFloat
     @State private var shown = false
 
     func body(content: Content) -> some View {
         content
-            .overlay(alignment: edge == .top ? .top : .bottom) {
+            .overlay {
                 if shown {
-                    CatTipCard(text: tip.text) {
-                        withAnimation(reduceMotion ? nil : Motion.reveal) { shown = false }
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(edge == .top ? .top : .bottom, inset)
-                    .transition(.move(edge: edge == .top ? .top : .bottom).combined(with: .opacity))
-                    .accessibilityIdentifier("cat-tip-\(tip.rawValue)")
+                    CatCoachMark(text: tip.text) { hide() }
+                        .accessibilityIdentifier("cat-tip-\(tip.rawValue)")
+                        .transition(.opacity)
                 }
             }
             .task {
                 guard model.tipDue(tip) else { return }
-                try? await Task.sleep(for: .milliseconds(900))
-                guard !Task.isCancelled else { return }
-                // Seen once shown: it never comes back, even if left open.
+                try? await Task.sleep(for: .milliseconds(700))
+                // Asked again: the screen may have taught it another way meanwhile
+                // (the first card's swipe demo marks the study tip seen).
+                guard !Task.isCancelled, model.tipDue(tip) else { return }
+                // Seen once shown: it never comes back.
                 model.noteTipSeen(tip)
-                withAnimation(reduceMotion ? nil : Motion.pop) { shown = true }
+                withAnimation(reduceMotion ? nil : .easeOut(duration: 0.25)) { shown = true }
             }
+    }
+
+    private func hide() {
+        guard shown else { return }
+        withAnimation(reduceMotion ? nil : .easeIn(duration: 0.2)) { shown = false }
     }
 }
 
-/// The cat with a short note on a scrap of paper, and a close button.
-private struct CatTipCard: View {
-    @Environment(\.appStyle) private var appStyle
+/// The screen dimmed, and the cat at the bottom with its note in a big
+/// bubble and a Got it key.
+private struct CatCoachMark: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var text: String
     var close: () -> Void
+    @State private var up = false
+    @State private var hop = 0
 
     var body: some View {
-        HStack(alignment: .top, spacing: 10) {
-            Mascot(mood: .smug, size: 38)
+        ZStack(alignment: .bottom) {
+            Color.black.opacity(0.4)
+                .ignoresSafeArea()
+                .contentShape(Rectangle())
+                .onTapGesture(perform: close)
                 .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 0) {
+                card
+                Mascot(mood: .smug, size: 92, hop: hop)
+                    .padding(.leading, 18)
+                    .padding(.top, -4)
+                    .accessibilityHidden(true)
+            }
+            .padding(.horizontal, 18)
+            .padding(.bottom, 8)
+            .frame(maxWidth: 520)
+            .offset(y: up || reduceMotion ? 0 : 320)
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityAddTraits(.isModal)
+        .sensoryFeedback(.impact(weight: .light), trigger: up)
+        .onAppear {
+            withAnimation(reduceMotion ? nil : .spring(response: 0.45, dampingFraction: 0.72)) { up = true }
+            if !reduceMotion { hop += 1 }
+        }
+    }
+
+    private var card: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Label(L.t("傻貓小提醒", "A tip from Silly Cat"), systemImage: "lightbulb.max.fill")
+                .font(.caption.weight(.heavy))
+                .foregroundStyle(Palette.accent)
             Text(text)
-                .font(.subheadline)
+                .font(.title3.weight(.semibold))
                 .foregroundStyle(Palette.ink)
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Button(action: close) {
-                Image(systemName: "xmark")
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(.secondary)
-                    .frame(width: 30, height: 30)
-                    .background(Palette.fill, in: Circle())
+                Text(L.t("知道了", "Got it")).font(.headline).frame(maxWidth: .infinity)
             }
-            .buttonStyle(.plain)
-            .accessibilityLabel(L.close)
+            .prominentAction()
             .accessibilityIdentifier("cat-tip-close")
         }
-        .padding(12)
-        .background { surface }
-        .accessibilityElement(children: .contain)
-    }
-
-    @ViewBuilder
-    private var surface: some View {
-        if appStyle == .collage {
-            PaperSurface(kind: .peach)
-                .clipShape(TornEdgeShape(edges: [.bottom], depth: 3, seed: 9))
-                .overlay(alignment: .top) { TapeStrip(width: 48, angle: -4).offset(y: -10) }
-                .shadow(color: .black.opacity(0.12), radius: 6, y: 3)
-        } else {
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
+        .padding(18)
+        .background {
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
                 .fill(Palette.surface)
-                .shadow(color: .black.opacity(0.12), radius: 12, y: 4)
+                .overlay(alignment: .bottomLeading) {
+                    // The bubble's tail, down to the cat.
+                    CoachTail()
+                        .fill(Palette.surface)
+                        .frame(width: 26, height: 16)
+                        .offset(x: 52, y: 14)
+                }
+                .shadow(color: .black.opacity(0.18), radius: 16, y: 6)
         }
+    }
+}
+
+private struct CoachTail: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.minX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.minX + rect.width * 0.3, y: rect.maxY))
+        path.closeSubpath()
+        return path
     }
 }

@@ -46,13 +46,16 @@ final class ScanPickerTests: XCTestCase {
             // photo; after ScanPhotoLoader.transferTimeout the app says so and
             // offers the photo picker again. Pick it once more, as a learner would.
             let loadFailed = app.descendants(matching: .any)["scan-message"]
+            // The review is open once its first word row is there (the save
+            // key, far down the list, may not be built yet on a small phone).
+            let reviewed = app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-word-'")).firstMatch
             let deadline = Date().addingTimeInterval(80)
-            while !save.exists, !loadFailed.exists, Date() < deadline { _ = save.waitForExistence(timeout: 2) }
-            if !save.exists, loadFailed.exists {
+            while !reviewed.exists, !loadFailed.exists, Date() < deadline { _ = reviewed.waitForExistence(timeout: 2) }
+            if !reviewed.exists, loadFailed.exists {
                 snapshot(app, name: "scan-photo-\(index)-load-failed")
                 pickPhoto()
             }
-            XCTAssertTrue(save.waitForExistence(timeout: 80), app.debugDescription)
+            XCTAssertTrue(reviewed.waitForExistence(timeout: 80), app.debugDescription)
             let words = app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-word-'"))
                 .allElementsBoundByIndex.compactMap { ($0.value as? String)?.lowercased() }
             let meanings = app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-meaning-'"))
@@ -138,11 +141,11 @@ final class ScanPickerTests: XCTestCase {
 
         app = openScanner(pastedText: "BANK n. 銀行\nbank n. 河岸\nobjectively adv. 客觀地\nobjective n. 目標", reset: false)
         readPasted(app)
-        let destination = app.buttons["scan-destination"]
+        // The banks are chips under "Save to".
+        let destination = app.buttons[bankName]
         destination.scrollIntoView(in: app, swipes: 6)
         XCTAssertTrue(destination.isHittable)
         destination.tap()
-        app.buttons[bankName].tap()
         let save = app.buttons["scan-save"]
         save.scrollIntoView(in: app, swipes: 5)
         XCTAssertEqual(save.label, "存入字庫（3 個）")
@@ -163,9 +166,9 @@ final class ScanPickerTests: XCTestCase {
         app.tabBars.buttons.element(boundBy: 0).tap()
         app.buttons["today-speaking"].tap()
         // Speaking opens on the scenario path; the word list is a tab beside it.
-        let track = app.segmentedControls["speaking-track"]
+        let track = app.buttons["speaking-track-0"]
         XCTAssertTrue(track.waitForExistence(timeout: 10))
-        track.buttons["單字口說"].tap()
+        app.buttons["speaking-track-1"].tap()
         // A word with an example opens on saying it; one without goes straight to the question.
         if app.buttons["shadow-skip"].waitForExistence(timeout: 5) { app.buttons["shadow-skip"].tap() }
         XCTAssertTrue(app.staticTexts["speaking-question"].waitForExistence(timeout: 10), app.debugDescription)
@@ -213,17 +216,15 @@ final class ScanPickerTests: XCTestCase {
         app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingFakePlans"]
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
-        app.tabBars.buttons.element(boundBy: 1).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["單字", "Words"])).firstMatch.tap()
         app.buttons["words-add"].tap()
         app.buttons["words-new-bank"].tap()
-        let alert = app.alerts.firstMatch
-        XCTAssertTrue(alert.waitForExistence(timeout: 5), app.debugDescription)
-        let name = alert.textFields.firstMatch
+        let name = app.textFields["bank-name-input"]
         XCTAssertTrue(name.waitForExistence(timeout: 5), app.debugDescription)
         name.tap()
         name.typeText("Lesson")
         XCTAssertEqual(name.value as? String, "Lesson")
-        app.alerts.buttons["儲存"].tap()
+        app.buttons["bank-name-save"].tap()
         let created = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'bank-set-' AND label CONTAINS 'Lesson'")).firstMatch
         XCTAssertTrue(created.waitForExistence(timeout: 5), app.debugDescription)
         snapshot(app, name: "empty-manual-bank-created")
@@ -232,13 +233,11 @@ final class ScanPickerTests: XCTestCase {
         app.terminate()
         app = openScanner(pastedText: "objectively adv. 客觀地", reset: false)
         readPasted(app)
-        let destination = app.buttons["scan-destination"]
-        destination.scrollIntoView(in: app, swipes: 5)
-        destination.tap()
-        // A menu can miss the first tap while the screen is still settling.
-        if !app.buttons["Lesson"].waitForExistence(timeout: 3) { destination.tap() }
-        XCTAssertTrue(app.buttons["Lesson"].waitForExistence(timeout: 5), app.debugDescription)
-        app.buttons["Lesson"].tap()
+        // The banks are chips under "Save to".
+        let lesson = app.buttons["Lesson"]
+        lesson.scrollIntoView(in: app, swipes: 5)
+        XCTAssertTrue(lesson.waitForExistence(timeout: 5), app.debugDescription)
+        lesson.tap()
         let save = app.buttons["scan-save"]
         save.scrollIntoView(in: app, swipes: 5)
         saveScan(save, in: app)
@@ -248,7 +247,10 @@ final class ScanPickerTests: XCTestCase {
         let read = app.buttons["scan-read-pasted"]
         read.scrollIntoView(in: app, swipes: 5)
         read.tap()
-        XCTAssertTrue(app.buttons["scan-save"].waitForExistence(timeout: 5))
+        // The review is a list: on a small phone the save key, far down, is
+        // only built once it is near; the first word row shows it is open.
+        let firstWord = app.textFields.matching(NSPredicate(format: "identifier BEGINSWITH 'scan-word-'")).firstMatch
+        XCTAssertTrue(firstWord.waitForExistence(timeout: 5), app.debugDescription)
     }
 
     private func savePastedBank(_ app: XCUIApplication) -> String {
@@ -270,7 +272,7 @@ final class ScanPickerTests: XCTestCase {
         app.launchEnvironment["WORD7000_SCAN_TEST_TEXT"] = pastedText
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
-        app.tabBars.buttons.element(boundBy: 1).tap()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["單字", "Words"])).firstMatch.tap()
         XCTAssertTrue(app.buttons["words-scan"].waitForExistence(timeout: 5))
         app.buttons["words-scan"].tap()
         XCTAssertTrue(app.buttons["scan-choose-photo"].waitForExistence(timeout: 5))

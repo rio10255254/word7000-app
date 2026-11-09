@@ -79,11 +79,13 @@ const en = section('English');
 const listing = {
   'zh-Hant': {
     name: field(zh, '名稱'), subtitle: field(zh, '副標題'), promotionalText: field(zh, '宣傳文字'),
-    keywords: field(zh, '關鍵字'), description: field(zh, '描述'), screenshots: 'exports/app-store/zh-Hant',
+    keywords: field(zh, '關鍵字'), description: field(zh, '描述'), whatsNew: field(zh, '這個版本的新功能'),
+    screenshots: 'exports/app-store/zh-Hant',
   },
   'en-US': {
     name: field(en, 'Name'), subtitle: field(en, 'Subtitle'), promotionalText: field(en, 'Promotional text'),
-    keywords: field(en, 'Keywords'), description: field(en, 'Description'), screenshots: 'exports/app-store/en-US',
+    keywords: field(en, 'Keywords'), description: field(en, 'Description'), whatsNew: field(en, "What's New"),
+    screenshots: 'exports/app-store/en-US',
   },
 };
 // Canada's store shows English (Canada); it gets the U.S. English listing.
@@ -99,7 +101,7 @@ for (const [locale, l] of Object.entries(listing)) {
 if (process.argv.includes('--check-copy')) {
   for (const [locale, l] of Object.entries(listing)) {
     const shots = fs.readdirSync(l.screenshots).filter((f) => /\.(jpe?g|png)$/i.test(f)).length;
-    console.log(`${locale}: ${l.name} | ${l.subtitle} | keywords ${[...l.keywords].length}/100 | promo ${[...l.promotionalText].length}/170 | description ${l.description.length} chars, starts "${l.description.slice(0, 30)}", ends "${l.description.slice(-30)}" | ${shots} screenshots`);
+    console.log(`${locale}: ${l.name} | ${l.subtitle} | what's new ${[...l.whatsNew].length}/4000 | keywords ${[...l.keywords].length}/100 | promo ${[...l.promotionalText].length}/170 | description ${l.description.length} chars, starts "${l.description.slice(0, 30)}", ends "${l.description.slice(-30)}" | ${shots} screenshots`);
   }
   console.log(`review notes:\n${reviewNotes}`);
   process.exit(0);
@@ -208,7 +210,8 @@ say('\n## 各語言的描述、關鍵字、截圖');
 const versionLocalizations = (await get(`/v1/appStoreVersions/${version.id}/appStoreVersionLocalizations?limit=50`)).data;
 for (const [locale, l] of Object.entries(listing)) {
   await step(`版本文案（${locale}）`, async () => {
-    const attributes = { description: l.description, keywords: l.keywords, promotionalText: l.promotionalText, supportUrl: SUPPORT_URL };
+    const attributes = { description: l.description, keywords: l.keywords, promotionalText: l.promotionalText, supportUrl: SUPPORT_URL,
+      whatsNew: l.whatsNew };
     let row = versionLocalizations.find((x) => x.attributes.locale === locale);
     if (row && Object.entries(attributes).every(([k, v]) => row.attributes[k] === v)) skip(`${locale}：描述、關鍵字、宣傳文字、支援網址已是最新`);
     else if (row) {

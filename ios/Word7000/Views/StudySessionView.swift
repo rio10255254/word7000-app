@@ -10,6 +10,7 @@ struct StudySessionView: View {
     @Environment(\.appStyle) private var appStyle
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @ScaledMetric(relativeTo: .largeTitle) private var promptSize = 42.0
     var startQuiz: () -> Void
@@ -27,7 +28,7 @@ struct StudySessionView: View {
     @State private var visible = true
     /// The daily goal was reached during this visit, not before it.
     @State private var reachedGoalHere = false
-    @State private var goalBanner = false
+    @State private var goalNotice: NoticeContent?
     /// How the companion on the progress bar feels about the last card.
     @State private var buddyMood: Mascot.Mood = .thinking
     @State private var buddyHop = 0
@@ -36,6 +37,10 @@ struct StudySessionView: View {
     @State private var catLines = CatLineSource.none
     /// A word that has now slipped three times or more, with how to remember it.
     @State private var stuck: (word: WordEntry, misses: Int)?
+    /// When the card just swiped comes back (明天見, 3 天後見), shown for a
+    /// moment so the spacing of reviews can be seen; `comeBackTick` restarts it.
+    @State private var comeBack: (text: String, known: Bool)?
+    @State private var comeBackTick = 0
 
     private enum CardPhase { case idle, dragging, leaving, arriving }
     private var committing: Bool { phase == .leaving || phase == .arriving }
@@ -53,11 +58,26 @@ struct StudySessionView: View {
                     if session.total == 0 {
                         MascotMessage(mood: .cheer, title: L.nothingToStudy, text: L.nothingToStudyText)
                     } else if session.isComplete {
-                        SessionSummary(session: session, reachedGoal: reachedGoalHere, done: { dismiss() },
-                                       again: { model.startStudySession() }, startQuiz: startQuiz)
+                        // WordCat Next: today's words go on to spot checks
+                        // before the summary.
+                        if let routine = model.activeRoutine, routine.step != .done {
+                            RoutineChecksView(routine: routine)
+                        } else if let routine = model.activeRoutine {
+                            RoutineSummaryView(routine: routine, reachedGoal: reachedGoalHere, done: { dismiss() },
+                                               again: { model.startStudySession() })
+                        } else {
+                            SessionSummary(session: session, reachedGoal: reachedGoalHere, done: { dismiss() },
+                                           again: { model.startStudySession() }, startQuiz: startQuiz)
+                        }
                     } else if let cardId = session.currentCardId, let word = model.word(id: cardId) {
-                        BuddyProgressBar(fraction: Double(session.done) / Double(max(1, session.total)),
-                                         mood: buddyMood, hop: buddyHop, remark: buddyRemark)
+                        if let routine = model.activeRoutine {
+                            // One bar: the routine's steps, the cat riding the cards' part.
+                            RoutineStepStrip(routine: routine, flipped: (session.done, session.total),
+                                             rider: .init(mood: buddyMood, hop: buddyHop, remark: buddyRemark))
+                        } else {
+                            BuddyProgressBar(fraction: Double(session.done) / Double(max(1, session.total)),
+                                             mood: buddyMood, hop: buddyHop, remark: buddyRemark)
+                        }
                         GeometryReader { proxy in
                             ZStack {
                                 // The next card peeking out underneath, while there is one.
@@ -81,9 +101,31 @@ struct StudySessionView: View {
                                         cardWidth = proxy.size.width
                                         enterCard()
                                         speakIfAutomatic(word)
+                                        if session.done == 0 { showHowToSwipe() }
                                     }
                                     .onChange(of: proxy.size.width) { _, value in cardWidth = value }
                                     .id("\(word.id)-\(session.index)")
+                            }
+                            .overlay(alignment: .bottom) {
+                                if let comeBack {
+                                    Label(comeBack.text, systemImage: comeBack.known ? "calendar" : "arrow.counterclockwise")
+                                        .font(.subheadline.weight(.bold))
+                                        .foregroundStyle(comeBack.known ? Palette.known : Palette.review)
+                                        .padding(.horizontal, 14)
+                                        .padding(.vertical, 7)
+                                        .background(Palette.surface, in: Capsule())
+                                        .overlay(Capsule().strokeBorder((comeBack.known ? Palette.known : Palette.review).opacity(0.45), lineWidth: 1.5))
+                                        .padding(.bottom, 12)
+                                        .transition(reduceMotion ? .opacity : .scale(scale: 0.7).combined(with: .opacity))
+                                        .allowsHitTesting(false)
+                                        .accessibilityIdentifier("study-comes-back")
+                                }
+                            }
+                            .task(id: comeBackTick) {
+                                guard comeBackTick > 0 else { return }
+                                try? await Task.sleep(for: .seconds(1.4))
+                                guard !Task.isCancelled else { return }
+                                withAnimation(reduceMotion ? nil : Motion.reveal) { comeBack = nil }
                             }
                         }
                         if let stuck {
@@ -108,25 +150,7 @@ struct StudySessionView: View {
                 try? await Task.sleep(for: .milliseconds(400))
                 if model.studySession == nil { dismiss() }
             }
-            .overlay(alignment: .top) {
-                if goalBanner {
-                    Label {
-                        Text(L.goalReachedBanner)
-                    } icon: {
-                        Image(systemName: "checkmark.seal.fill")
-                            .symbolEffect(.bounce, value: goalBanner)
-                    }
-                        .font(.headline)
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 18)
-                        .padding(.vertical, 10)
-                        .background(Palette.known, in: Capsule())
-                        .padding(.top, 8)
-                        .shadow(color: Palette.known.opacity(0.35), radius: 10, y: 4)
-                        .transition(reduceMotion ? .opacity : .move(edge: .top).combined(with: .scale(scale: 0.8)).combined(with: .opacity))
-                        .accessibilityIdentifier("study-goal-banner")
-                }
-            }
+            .notice($goalNotice)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -137,13 +161,16 @@ struct StudySessionView: View {
                 ToolbarItem(placement: .principal) {
                     if let session = model.studySession, !session.isComplete, session.total > 0 {
                         VStack(spacing: 0) {
-                            Text(L.cardCount(done: session.done, total: session.total))
-                                .font(.display(.subheadline, weight: .semibold))
-                                .monospacedDigit()
-                                .accessibilityIdentifier("study-position")
+                            // Today's words count their cards on the step strip instead.
+                            if model.activeRoutine == nil {
+                                Text(L.cardCount(done: session.done, total: session.total))
+                                    .font(.display(.subheadline, weight: .semibold))
+                                    .monospacedDigit()
+                                    .accessibilityIdentifier("study-position")
+                            }
                             // A guest is reminded, quietly, that none of this is kept.
                             if account.configured, !account.isPermanent {
-                                Text(L.t("訪客・不會保存", "Guest · not kept"))
+                                Text(L.t("訪客 · 不會保存", "Guest · not kept"))
                                     .font(.caption2.weight(.semibold))
                                     .foregroundStyle(Palette.review)
                                     .accessibilityIdentifier("study-guest")
@@ -152,6 +179,8 @@ struct StudySessionView: View {
                     }
                 }
                 ToolbarItemGroup(placement: .topBarTrailing) {
+                  // The spot checks and their summary have no cards to show or undo.
+                  if !(model.studySession?.isComplete == true && model.activeRoutine != nil) {
                     if model.studyMode == .chinese {
                         // Three small icons fit beside the count on every
                         // iPhone; the labels stay for VoiceOver.
@@ -178,6 +207,7 @@ struct StudySessionView: View {
                         .disabled(!model.canUndoStudy || committing)
                         .accessibilityLabel(L.undo)
                         .accessibilityIdentifier("study-undo")
+                  }
                 }
             }
         }
@@ -201,17 +231,14 @@ struct StudySessionView: View {
             reachedGoalHere = true
             // The summary celebrates on its own when the set ends here.
             guard model.studySession?.isComplete == false else { return }
-            withAnimation(reduceMotion ? nil : Motion.pop) { goalBanner = true }
-            Task {
-                try? await Task.sleep(for: .seconds(2.4))
-                withAnimation(reduceMotion ? nil : Motion.reveal) { goalBanner = false }
-            }
+            goalNotice = NoticeContent(title: L.goalReachedBanner, icon: "checkmark.seal.fill",
+                                       tint: Palette.known, identifier: "study-goal-banner")
         }
         .sensoryFeedback(.success, trigger: reachedGoalHere) { _, new in new && (model.settings.hapticsEnabled ?? true) }
         .sensoryFeedback(.impact(weight: .medium), trigger: feedback) { _, _ in model.settings.hapticsEnabled ?? true }
         .sensoryFeedback(.impact(weight: .light), trigger: armed) { _, new in new && (model.settings.hapticsEnabled ?? true) }
         .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.55), trigger: revealed) { _, new in new && (model.settings.hapticsEnabled ?? true) }
-        .catTip(.study, at: .top, inset: 60)
+        .catTip(.study)
     }
 
     /// How far the card has been dragged toward a verdict, 0 to 1.
@@ -444,8 +471,23 @@ struct StudySessionView: View {
                 armed = false
                 model.gradeCurrentCard(grade, expectedWordId: wordId)
             }
+            // When it comes back: the schedule made visible, as Anki prints it on its keys.
+            if let text = comeBackText(wordId), model.studySession?.isComplete != true {
+                withAnimation(reduceMotion ? nil : Motion.pop) { comeBack = (text, grade == .known) }
+                comeBackTick += 1
+            }
             if model.studySession?.isComplete == true { phase = .idle; cardOpacity = 1; cardScale = 1; dragOffset = 0 }
         }
+    }
+
+    /// When a card just graded comes back: later in this set, or in so many days.
+    private func comeBackText(_ wordId: String) -> String? {
+        if let session = model.studySession, session.cardIds.dropFirst(session.index).contains(wordId) {
+            return L.t("這組等一下再翻一次", "Again later in this set")
+        }
+        guard let due = model.progress(for: wordId).dueDate, let dueDay = DayMath.dayNumber(due),
+              let today = DayMath.dayNumber(model.today) else { return nil }
+        return ClozeCard.comeBackLabel(days: max(0, dueDay - today), inThisRound: false)
     }
 
     /// Reads the front of each new card aloud when the learner turned that on.
@@ -455,6 +497,23 @@ struct StudySessionView: View {
         let face = model.face(word)
         guard Speaker.shared.activeText != face.speakText else { return }
         Speaker.shared.speak(face.speakText, language: face.speakLanguage, preferences: preferences)
+    }
+
+    /// The first card ever shows how it goes instead of saying it: it
+    /// leans right until 認得 shows, then left to 不熟, and settles. With
+    /// Reduce Motion or VoiceOver the cat says it in words instead.
+    private func showHowToSwipe() {
+        guard model.tipDue(.study), !reduceMotion, !voiceOver, !AppRuntime.uiTesting else { return }
+        model.noteTipSeen(.study)
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(900))
+            for offset in [72.0, 0, -72, 0] as [CGFloat] {
+                // A learner who has started on the card takes over.
+                guard visible, phase == .idle, !revealed else { return }
+                withAnimation(.spring(response: 0.5, dampingFraction: 0.72)) { dragOffset = offset }
+                try? await Task.sleep(for: .milliseconds(offset == 0 ? 300 : 750))
+            }
+        }
     }
 
     private func enterCard() {
@@ -543,7 +602,7 @@ struct CardStatusChip: View {
         switch status {
         case .new: (L.t("新字", "New"), Palette.accent)
         case .review: (L.t("還不熟", "Still learning"), Palette.review)
-        case .mastered: (L.t("複習", "Review"), Palette.known)
+        case .mastered: (L.t("已會", "Known"), Palette.known)
         }
     }
 
@@ -571,6 +630,12 @@ struct SessionSummary: View {
     var again: () -> Void
     var startQuiz: () -> Void
 
+    /// Today's words in a quiz, while they are fresh.
+    private func quizTodaysWords() {
+        model.requestQuizOnTodaysWords()
+        startQuiz()
+    }
+
     var body: some View {
         let left = max(0, model.progress.dailyTarget - model.progress.studiedToday)
         ScrollView {
@@ -585,9 +650,6 @@ struct SessionSummary: View {
             Text(reachedGoal ? L.goalReachedTitle : L.sessionCompleteTitle)
                 .font(.display(.title, weight: .bold))
                 .entrance(1)
-            Text(L.sessionCompleteText(known: session.knownIds.count, review: session.reviewIds.count))
-                .foregroundStyle(.secondary)
-                .entrance(2)
             SessionVerdict(fallback: CatQuips.studyDone(reachedGoal: reachedGoal || model.goalDone, source: model.catLines),
                            mood: reachedGoal || model.goalDone ? .happy : .smug, kind: "study",
                            total: session.knownIds.count + session.reviewIds.count, correct: session.knownIds.count,
@@ -599,7 +661,8 @@ struct SessionSummary: View {
             }
             if !session.reviewIds.isEmpty, !AppRuntime.uiTesting {
                 PlusUpsellCard(feature: .smartAI,
-                               title: L.t("這 \(session.reviewIds.count) 個字，讓傻貓講給你聽", "Let Silly Cat explain these \(session.reviewIds.count) words"),
+                               title: session.reviewIds.count == 1 ? L.t("這個字，讓傻貓講給你聽", "Let Silly Cat explain this word")
+                                   : L.t("這 \(session.reviewIds.count) 個字，讓傻貓講給你聽", "Let Silly Cat explain these \(session.reviewIds.count) words"),
                                detail: L.t("用法、例句、跟哪個字容易搞混，一個一個說清楚，下次就記得。", "Usage, examples and what they get mixed up with, one by one, so they stick."))
                     .entrance(4)
             }
@@ -615,37 +678,11 @@ struct SessionSummary: View {
             Text(reachedGoal ? L.quizTodaysWordsHint : left == 0 ? L.sessionGoalDone : L.sessionGoalLeft(left))
                 .font(.subheadline.weight(.semibold))
                 .entrance(6)
-            VStack(spacing: 12) {
-                if reachedGoal {
-                    Button {
-                        model.requestQuizOnTodaysWords()
-                        startQuiz()
-                    } label: {
-                        Text(L.quizTodaysWords).font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .prominentAction(tint: Palette.known)
-                    .accessibilityIdentifier("study-quiz-today")
-                }
-                let doneButton = Button(action: done) {
-                    Text(L.done).font(.headline).frame(maxWidth: .infinity)
-                }
-                if reachedGoal {
-                    doneButton.secondaryAction().accessibilityIdentifier("study-done")
-                } else {
-                    doneButton.prominentAction().accessibilityIdentifier("study-done")
-                }
-                ButtonRow {
-                    Button(action: again) {
-                        Text(L.nextSession).font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .secondaryAction()
-                    Button(action: startQuiz) {
-                        Text(L.quickQuiz).font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .secondaryAction()
-                }
-            }
-            .padding(.top, 16)
+            RoundEndActions(done: done, doneId: "study-done",
+                            extra: reachedGoal ? quizTodaysWords : nil,
+                            extraTitle: L.quizTodaysWords, extraId: "study-quiz-today",
+                            again: again, againId: "study-again")
+                .padding(.top, 16)
           }
           .padding(.vertical, 24)
         }
@@ -702,26 +739,50 @@ private struct SummaryChip: View {
     }
 }
 
-/// A short shower of paper when the daily goal is reached. Purely decorative.
+/// A party popper's worth of paper: a burst flung up from near the top,
+/// then a shower falling from above, each piece fluttering as it turns.
+/// Purely decorative.
 struct ConfettiBurst: View {
+    private enum Shape { case strip, square, dot }
     private struct Piece {
-        var x: Double, delay: Double, speed: Double, spin: Double, drift: Double, size: CGSize, color: Color
+        var x: Double, y: Double, vx: Double, vy: Double, delay: Double
+        var spin: Double, flutter: Double, drift: Double, size: CGSize, color: Color, shape: Shape
     }
 
-    private static let colors: [Color] = [Palette.accent, Palette.known, Palette.review, Palette.chinese, Palette.miss]
+    static let paper: [Color] = [Palette.accent, Palette.known, Palette.review, Palette.chinese, Palette.miss]
+    /// Gold leaf and cream, for the dark leather of a finished day.
+    static let gold: [Color] = [Color(red: 0.95, green: 0.78, blue: 0.45), Color(red: 0.82, green: 0.6, blue: 0.24),
+                                Color(red: 1.0, green: 0.96, blue: 0.88), Color(red: 0.98, green: 0.86, blue: 0.6)]
     @State private var start = Date()
     @State private var finished = false
-    private let pieces: [Piece] = (0..<48).map { index in
+    private let pieces: [Piece]
+    private let duration = 3.2
+
+    init(colors: [Color] = ConfettiBurst.paper) {
         var random = SystemRandomNumberGenerator()
-        return Piece(x: .random(in: 0...1, using: &random),
-                     delay: .random(in: 0...0.5, using: &random),
-                     speed: .random(in: 260...420, using: &random),
-                     spin: .random(in: -4...4, using: &random),
-                     drift: .random(in: -40...40, using: &random),
-                     size: CGSize(width: .random(in: 6...10, using: &random), height: .random(in: 10...16, using: &random)),
-                     color: colors[index % colors.count])
+        let shapes: [Shape] = [.strip, .strip, .square, .dot]
+        // The burst: flung up and out from just below the top, then falling.
+        let burst = (0..<54).map { index in
+            Piece(x: .random(in: 0.42...0.58, using: &random), y: 150,
+                  vx: .random(in: -330...330, using: &random), vy: .random(in: -620 ... -260, using: &random),
+                  delay: .random(in: 0...0.08, using: &random),
+                  spin: .random(in: -6...6, using: &random), flutter: .random(in: 5...11, using: &random),
+                  drift: .random(in: -20...20, using: &random),
+                  size: CGSize(width: .random(in: 6...9, using: &random), height: .random(in: 10...16, using: &random)),
+                  color: colors[index % colors.count], shape: shapes[index % shapes.count])
+        }
+        // The shower: falling from above the top, a beat later.
+        let shower = (0..<46).map { index in
+            Piece(x: .random(in: 0...1, using: &random), y: -20,
+                  vx: 0, vy: .random(in: 140...300, using: &random),
+                  delay: .random(in: 0.25...1.0, using: &random),
+                  spin: .random(in: -4...4, using: &random), flutter: .random(in: 4...9, using: &random),
+                  drift: .random(in: -40...40, using: &random),
+                  size: CGSize(width: .random(in: 6...10, using: &random), height: .random(in: 10...16, using: &random)),
+                  color: colors[(index + 2) % colors.count], shape: shapes[(index + 1) % shapes.count])
+        }
+        pieces = burst + shower
     }
-    private let duration = 2.6
 
     var body: some View {
         TimelineView(.animation(minimumInterval: nil, paused: finished)) { timeline in
@@ -731,33 +792,78 @@ struct ConfettiBurst: View {
                 for piece in pieces {
                     let t = elapsed - piece.delay
                     guard t > 0 else { continue }
-                    let y = -20 + piece.speed * t + 60 * t * t
-                    guard y < size.height + 20 else { continue }
-                    let x = piece.x * size.width + piece.drift * sin(t * 3)
-                    let fade = max(0, min(1, (duration - t) / 0.6))
+                    // Air slows the flung pieces; gravity, kept gentle, brings them down.
+                    let drag = 1 - exp(-2.2 * t)
+                    let x = piece.x * size.width + piece.vx / 2.2 * drag + piece.drift * sin(t * 3)
+                    let y = piece.y + piece.vy / 2.2 * drag + 170 * t * t
+                    guard y < size.height + 20, y > -60 else { continue }
+                    let fade = max(0, min(1, (duration - t) / 0.7))
                     var pieceContext = context
                     pieceContext.opacity = fade
                     pieceContext.translateBy(x: x, y: y)
                     pieceContext.rotate(by: .radians(piece.spin * t))
+                    // Turning over as it falls: narrower, then wide again.
+                    pieceContext.scaleBy(x: max(0.15, abs(cos(piece.flutter * t))), y: 1)
                     let rect = CGRect(x: -piece.size.width / 2, y: -piece.size.height / 2,
                                       width: piece.size.width, height: piece.size.height)
-                    pieceContext.fill(Path(roundedRect: rect, cornerRadius: 2), with: .color(piece.color))
+                    let path: Path
+                    switch piece.shape {
+                    case .strip: path = Path(roundedRect: rect, cornerRadius: 2)
+                    case .square: path = Path(CGRect(x: -4, y: -4, width: 8, height: 8))
+                    case .dot: path = Path(ellipseIn: CGRect(x: -4, y: -4, width: 8, height: 8))
+                    }
+                    pieceContext.fill(path, with: .color(piece.color))
                 }
             }
         }
-        .frame(maxWidth: .infinity, minHeight: 600)
+        .frame(maxWidth: .infinity, minHeight: 700)
         .onAppear { start = Date() }
         .task {
             // Stop redrawing once the last piece has gone.
-            try? await Task.sleep(for: .seconds(duration + 0.6))
+            try? await Task.sleep(for: .seconds(duration + 1.2))
             finished = true
         }
         .accessibilityHidden(true)
     }
 }
 
+/// Rays turning slowly behind something won: a stamp, a title. Fades out
+/// toward its edge; still when Reduce Motion is on.
+struct Sunburst: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var color: Color
+    var rays = 14
+    var size: CGFloat = 320
+    @State private var turned = false
+
+    var body: some View {
+        Canvas { context, canvas in
+            let center = CGPoint(x: canvas.width / 2, y: canvas.height / 2)
+            let radius = min(canvas.width, canvas.height) / 2
+            let half = Double.pi / Double(rays) / 2
+            for ray in 0..<rays {
+                let angle = Double(ray) * 2 * .pi / Double(rays)
+                var path = Path()
+                path.move(to: center)
+                path.addArc(center: center, radius: radius, startAngle: .radians(angle - half), endAngle: .radians(angle + half), clockwise: false)
+                path.closeSubpath()
+                context.fill(path, with: .color(color))
+            }
+        }
+        .frame(width: size, height: size)
+        .mask(RadialGradient(colors: [.white, .white.opacity(0.5), .clear], center: .center, startRadius: size * 0.08, endRadius: size / 2))
+        .rotationEffect(.degrees(turned ? 360 : 0))
+        .onAppear {
+            guard !reduceMotion else { return }
+            withAnimation(.linear(duration: 24).repeatForever(autoreverses: false)) { turned = true }
+        }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+    }
+}
+
 /// After a guest's round: what they just did is not kept unless they sign in.
-private struct GuestKeepCard: View {
+struct GuestKeepCard: View {
     var count: Int
     var signIn: () -> Void
 

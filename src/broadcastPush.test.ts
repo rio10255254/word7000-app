@@ -47,6 +47,6 @@ describe('broadcast-push', () => {
     expect(source.indexOf("error: 'unauthorized'")).toBeLessThan(source.indexOf("from('announcements')"));
     expect(source).not.toContain('.limit(100_000)');
     const script = fs.readFileSync(path.join(process.cwd(), 'scripts/remote-control.sh'), 'utf8');
-    expect(script).toContain('-H "x-broadcast-secret: ${BROADCAST_PUSH_SECRET:-$service}"');
+    expect(script).toContain('-H "x-broadcast-secret: ${BROADCAST_PUSH_SECRET:-$push_key}"');
   });
 });

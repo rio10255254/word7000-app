@@ -28,6 +28,12 @@ say() { echo "$*"; echo "$*" >> "$summary"; }
 
 case "$ACTION" in
 status)
+  for label in service secret; do
+    if [ $label = service ]; then k="$service"; else k=$(echo "$keys" | jq -r '[.[] | select(.type == "secret")][0].api_key'); fi
+    r=$(curl -sS -w '\n%{http_code}' -X POST "https://$PROJECT_REF.supabase.co/functions/v1/broadcast-push" \
+      -H 'Content-Type: application/json' -H "x-broadcast-secret: $k" -d '{"id":"00000000-0000-0000-0000-000000000000"}')
+    echo "PROBE $label (${k:0:6}…) -> $(code_of "$r") $(body_of "$r")"
+  done
   reply=$(call -X POST "$rest/rpc/app_version_summary" -d '{}')
   [ "$(code_of "$reply")" = "200" ] || { echo "::error::$(body_of "$reply")"; exit 1; }
   say "## 📱 大家裝的版本"

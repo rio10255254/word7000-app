@@ -111,6 +111,30 @@ const eu = report.event_users;
 say(`付費漏斗（人數）：看到付費頁 ${eu.paywall_view ?? 0} → 按下購買 ${events.filter((e) => e.event === 'purchase' && e.detail.endsWith(':started')).reduce((n, e) => n + e.users, 0)} → 購買成功 ${events.filter((e) => e.event === 'purchase' && e.detail.endsWith(':purchased')).reduce((n, e) => n + e.users, 0)}`);
 say('');
 section('🙋 帳號', ['sign_in', 'sign_in_failed', 'account_deleted']);
+// Per build: each account counted under the build it runs now.
+const byBuild = report.by_build;
+if (byBuild?.builds?.length) {
+  const key = ['app_open', 'study_card', 'quiz_answer', 'spelling_answer', 'speaking', 'coach_check', 'placement', 'scan_saved', 'paywall_view'];
+  const name = (b) => b.app_version === '?' ? '沒回報版本' : `${b.app_version}${b.app_build ? ` (${b.app_build})` : ''}`;
+  const same = (b, e) => e.app_version === b.app_version && (e.app_build ?? null) === (b.app_build ?? null);
+  say('## 🧩 各版本的使用（依每個帳號現在裝的版本）');
+  say('');
+  say('一個帳號整段期間的使用都算在它「現在」的版本底下；格子是「人數／次數」。');
+  say('');
+  say(`| 版本 | 活躍帳號 | ${key.map((k) => labels[k] ?? k).join(' | ')} |`);
+  say(`|---|---|${key.map(() => '---').join('|')}|`);
+  for (const b of byBuild.builds) {
+    const cells = key.map((k) => {
+      const rows = byBuild.events.filter((e) => same(b, e) && e.event === k);
+      if (!rows.length) return '-';
+      const people = Math.max(...rows.map((e) => e.people));
+      const times = rows.reduce((n, e) => n + e.times, 0);
+      return `${people}／${times}`;
+    });
+    say(`| ${name(b)} | ${b.accounts} | ${cells.join(' | ')} |`);
+  }
+  say('');
+}
 say('> 只統計 2.0.2 (6) 以後的 App。訂閱收入、試用轉換、下載量請看 App Store Connect 的「分析」與「銷售和趨勢」。');
 
 const text = out.join('\n') + '\n';

@@ -216,61 +216,61 @@
     ]
   },
   "cd6": {
-    "total": 16.0,
-    "end": 12.5,
+    "total": 17.0,
+    "end": 13.5,
     "slots": [
       {
         "start": 0.0,
-        "length": 2.0,
+        "length": 3.0,
         "voiceStart": 0.12,
         "voiceLength": 1.968
       },
       {
-        "start": 2.0,
+        "start": 3.0,
         "length": 4.0,
-        "voiceStart": 2.12,
+        "voiceStart": 3.12,
         "voiceLength": 2.884
       },
       {
-        "start": 6.0,
+        "start": 7.0,
         "length": 4.0,
-        "voiceStart": 6.12,
+        "voiceStart": 7.12,
         "voiceLength": 3.458
       },
       {
-        "start": 10.0,
+        "start": 11.0,
         "length": 2.5,
-        "voiceStart": 10.12,
+        "voiceStart": 11.12,
         "voiceLength": 2.109
       }
     ]
   },
   "cd6-en": {
-    "total": 19.0,
-    "end": 15.5,
+    "total": 19.5,
+    "end": 16.0,
     "slots": [
       {
         "start": 0.0,
-        "length": 3.5,
+        "length": 4.0,
         "voiceStart": 0.12,
         "voiceLength": 3.276
       },
       {
-        "start": 3.5,
+        "start": 4.0,
         "length": 4.0,
-        "voiceStart": 3.62,
+        "voiceStart": 4.12,
         "voiceLength": 2.771
       },
       {
-        "start": 7.5,
+        "start": 8.0,
         "length": 5.0,
-        "voiceStart": 7.62,
+        "voiceStart": 8.12,
         "voiceLength": 4.489
       },
       {
-        "start": 12.5,
+        "start": 13.0,
         "length": 3.0,
-        "voiceStart": 12.62,
+        "voiceStart": 13.12,
         "voiceLength": 2.604
       }
     ]

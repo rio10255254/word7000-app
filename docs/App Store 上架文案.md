@@ -15,10 +15,10 @@ WordCat 單字貓：你的英文單字口說家教
 背單字、練口說，有隻嘴賤的貓
 
 **宣傳文字**（170 字內，隨時可改、不用送審）
-全新改版！每天一條路：翻卡、拼字、考題一次走完；口說 20 關生活情境，真人語音先聽一遍再開口。背單字永遠免費，不用登入就能開始。
+全新改版！每天一條路：翻卡、拼字、考題一次走完；口說 20 關生活情境，真人語音先聽一遍再開口。還有一隻嘴賤的貓，陪你背到考完。
 
 **關鍵字**（100 字內，逗號分隔、不加空格；名稱和副標題裡的字不用重複）
-7000單字,學測,會考,統測,英檢,分科測驗,高中英文,單字卡,英文會話,AI英文,詞彙,拼字,記憶法,背英文
+7000單字,學測,會考,統測,英檢,分科測驗,高中英文,單字卡,英文會話,AI英文,詞彙,拼字,記憶法,背英文,多益,國中英文,英文口說,英文聽力,發音
 
 **描述**
 
@@ -54,9 +54,8 @@ WordCat 單字貓：你的英文單字口說家教
 ・印刷的、手寫的單字表都認得出來
 ・照片只在你的 iPhone 上處理
 
-【免費就能用】
-單字卡、測驗、拼字、口說練習、學習紀錄通通免費，不用登入就能開始。
-用 Apple 登入可以保存進度，換手機也找得回來。
+【打開就能開始】
+不用先註冊，打開就能背。用 Apple 登入可以保存進度，換手機也找得回來。
 
 【Premium】
 AI 老師（口說批改、單字解說、學習分析）、掃描講義、限時模擬考和完整學習紀錄。
@@ -64,6 +63,14 @@ AI 老師（口說批改、單字解說、學習分析）、掃描講義、限�
 
 隱私權政策：https://word7000-app.rio10255254.workers.dev/privacy.html
 使用條款：https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+
+**這個版本的新功能**（4000 字內）
+全新的單字貓！
+・先測兩分鐘程度，照你的考試和日期排好每天的量
+・每天一條路：翻卡、拼字、考題一次走完，走完蓋個章
+・口說 20 關生活情境，每個角色都是真人語音，跟讀時念對的字會亮起來
+・傻貓變得更嘴賤了，會從畫面邊邊探頭出來嗆你
+・介面、選單和提示全面重新設計
 
 ## English (U.S.)
 
@@ -76,7 +83,7 @@ WordCat: Your Chinese Tutor
 Learn Mandarin the Taiwan way
 
 **Promotional text** (170)
-All new: one short path a day (cards, writing, quick checks) and 20 role-play stages with real recorded voices. Flashcards are always free, no sign-in needed.
+All new: one short path a day (cards, writing, quick checks) and 20 role-play stages with real recorded voices, plus a cat with opinions.
 
 **Keywords** (100)
 traditional,pinyin,flashcards,vocab,tocfl,speaking,characters,hanzi,conversation,words,study
@@ -114,8 +121,8 @@ SNAP A WORD LIST
 • Turn printed or handwritten lists into flashcards
 • Photos are processed on your iPhone
 
-FREE TO USE
-Flashcards, quizzes, writing and speaking practice are free, and you can start without signing in. Sign in with Apple to keep your progress across devices.
+START RIGHT AWAY
+No account needed to start. Sign in with Apple to keep your progress across devices.
 
 PREMIUM
 The AI tutor (speaking feedback, word explanations, learning insights), scanning, timed mock exams and your full history. Subscriptions renew automatically; cancel anytime in Settings → Apple Account → Subscriptions.
@@ -123,9 +130,17 @@ The AI tutor (speaking feedback, word explanations, learning insights), scanning
 Privacy Policy: https://word7000-app.rio10255254.workers.dev/privacy.html
 Terms of Use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 
+**What's New** (4000)
+A whole new WordCat!
+• A two-minute level check and a plan made for your goal
+• One short path a day: cards, writing and quick checks, then stamp the day
+• 20 speaking stages in real Taiwanese Mandarin voices; each character lights up as you say it, tones included
+• Silly Cat now pops in from the edge of the screen, with opinions
+• A redesigned look, from the menus to the notices
+
 ## 給審查人員的說明（App Review Notes）
 
-- 不用登入就能使用所有免費功能（訪客）。
+- 不用登入就能開始使用（訪客）。
 - 用 Apple 登入後可同步進度；「我 → 帳號 → 刪除帳號與資料」可永久刪除帳號，刪除前會請使用者用 Apple 確認一次，並向 Apple 撤銷登入授權。
 - Premium 是自動續訂訂閱（月訂、年訂），付費頁有恢復購買、隱私權政策和使用條款連結。
 - 線上 AI 功能（口說批改等）第一次使用前會請使用者同意傳送文字；不傳錄音、照片、姓名或 Email。

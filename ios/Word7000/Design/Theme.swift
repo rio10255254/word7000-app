@@ -674,7 +674,8 @@ enum AppRuntime {
     }()
 }
 
-/// The cat alone, large and holding still, on plain black or white: the
+/// The cat alone, large and holding still (Mascot stays still while
+/// `mascotPoster` is set), on plain black or white: the
 /// store art cuts it out by comparing the two (see
 /// scripts/generate-app-store-screenshots.mjs).
 struct MascotPosterView: View {
@@ -690,7 +691,6 @@ struct MascotPosterView: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("WordCat")
         .accessibilityIdentifier("mascot-poster")
-        .environment(\.accessibilityReduceMotion, true)
         .environment(\.colorScheme, .light)
         .statusBarHidden(true)
     }

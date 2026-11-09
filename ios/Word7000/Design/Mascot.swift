@@ -43,7 +43,9 @@ struct Mascot: View {
     var antic: MascotAntic? = nil
     var anticStart: Double = 0
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
+    /// Still under Reduce Motion, and for the store art's cut-outs.
+    private var reduceMotion: Bool { systemReduceMotion || AppRuntime.mascotPoster != nil }
     @Environment(\.colorScheme) private var colorScheme
     /// Hops of its own, when it turns happy or starts cheering.
     @State private var moodHops = 0

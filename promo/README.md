@@ -228,8 +228,11 @@ npm run render:reels   # 輸出 out/reel-ep01.mp4 …
 | 日期 | 集 | 主題 | 台詞（中文／英文） |
 | --- | --- | --- | --- |
 | 11/10 | `cd6`／`cd6-en` | 學習計畫 | 考試哪天，你記得嗎？／跟我說哪天考，我幫你排計畫。／每天背幾個、讀到哪，我算好了。／你負責背，我負責唸。（片尾：還有六天。別忘了追蹤。）<br>How many words today? Be honest.／Pick a daily goal. I'll plan the path.／Cards. Writing. A quick quiz. All mapped out.／You study. I nag.（Six days. Don't forget to follow.） |
+| 11/11 | `cd5`／`cd5-en` | 每天一條路（`src/reels/PathDay.tsx`，俯拍桌面） | 每次打開，都不知道要背什麼？／我幫你排好一條路：先翻卡，再拼字，／然後考考看，最後開口說。／走完蓋章，今天就收工。（片尾：還有五天。別忘了追蹤。）<br>Open the app and no idea what to study?／I lay out the path: cards, then writing,／a quick quiz, then speaking.／Finish it, stamp it. Done for today.（Five days. Don't forget to follow.） |
 
 英文版是給學中文的人看的，App 的英文計畫頁沒有考試，所以改講每日目標。
+
+11/11 不用手機，改成俯拍桌面：一條虛線小路自己畫出來，傻貓沿路一站一站跳，說到哪一站，那一站的 App 畫面就像拍立得一樣先放大讓人看清楚、再貼到路邊；走到終點，「今天的份完成！」印章蓋下去。跳躍的時間點用 Whisper 的逐字時間對到傻貓說出「翻卡」「拼字」「考考看」「開口說」的那一刻。
 
 ## 授權
 

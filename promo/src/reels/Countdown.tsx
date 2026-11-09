@@ -50,7 +50,7 @@ type Episode = {
 };
 
 /** The days left, as a rubber stamp on cream paper: "還有 6 天" / "6 days to go", and the date under a rule. */
-const DaysStamp = ({ days, words, note, scale = 1 }: { days: number; words: [string, string]; note: string; scale?: number }) => (
+export const DaysStamp = ({ days, words, note, scale = 1 }: { days: number; words: [string, string]; note: string; scale?: number }) => (
   <div
     style={{
       filter: 'url(#ink)',
@@ -74,7 +74,7 @@ const DaysStamp = ({ days, words, note, scale = 1 }: { days: number; words: [str
 );
 
 /** The card the stamp sits on, slapped down at `at`, stamped at `stampAt`. */
-const StampCard = ({ t, at, stampAt, top, children }: { t: number; at: number; stampAt: number; top: number; children: ReactNode }) => {
+export const StampCard = ({ t, at, stampAt, top, children }: { t: number; at: number; stampAt: number; top: number; children: ReactNode }) => {
   const p = at <= 0 ? 1 : interpolate(t, [at, at + 0.16], [0, 1], { ...clamp, easing: Easing.in(Easing.quad) });
   const press = stampAt <= 0 ? 1 : interpolate(t, [stampAt - 0.13, stampAt], [0, 1], { ...clamp, easing: Easing.in(Easing.cubic) });
   const settle = interpolate(t, [stampAt, stampAt + 0.2], [0.95, 1], { ...clamp, easing: out });
@@ -151,6 +151,77 @@ const Marker = ({ t, at, x0, y0, x1, y1, z }: { t: number; at: number; x0: numbe
   );
 };
 
+/** The countdown's end card: the icon and the name, the days-left stamp landing on the sound logo's chord, the ask. */
+export const CountdownEnd = ({ t, end, episode, stamp }: { t: number; end: number; episode: { app: string; outro: string }; stamp: ReactNode }) => {
+  const iconPop = spring({ frame: (t - end - 0.05) * REEL_FPS, fps: REEL_FPS, config: { damping: 14, stiffness: 150, mass: 0.9 } });
+  const knock = end + 0.75;
+  const endShake = t > knock && t < knock + 0.25 ? Math.sin((t - knock) * 80) * 5 * (1 - (t - knock) / 0.25) : 0;
+  return (
+    <>
+      {/* The end card: the icon and the name, the days-left stamp landing on the sound logo's chord, the ask. */}
+      {t >= end - 0.05 ? (
+        <AbsoluteFill style={{ transform: `translate(${endShake}px, ${endShake * 0.4}px)` }}>
+          <div
+            style={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              top: 330,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 30,
+              opacity: Math.min(1, iconPop * 1.5),
+              transform: `translateY(${(1 - iconPop) * 50}px)`,
+            }}
+          >
+            <div style={{ position: 'relative', transform: 'rotate(-3deg)' }}>
+              <Img src={staticFile('icon-next.png')} style={{ width: 170, height: 170, borderRadius: 38, display: 'block', boxShadow: '0 22px 44px rgba(30,34,18,0.36)' }} />
+              <Sheen t={t} at={end + 1.0} radius={38} />
+            </div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, color: '#FFF8EC', textShadow: '0 4px 20px rgba(30,34,18,0.3)' }}>
+              <span style={{ fontFamily: SERIF, fontWeight: 800, fontSize: 78 }}>{episode.app.split(' ')[0]}</span>
+              {episode.app.includes(' ') ? <span style={{ fontFamily: SERIF_TC, fontWeight: 900, fontSize: 68, letterSpacing: '0.06em' }}>{episode.app.split(' ').slice(1).join(' ')}</span> : null}
+            </div>
+          </div>
+          <StampCard t={t} at={end + 0.35} stampAt={knock} top={660}>
+            {stamp}
+          </StampCard>
+          <div
+            style={{
+              position: 'absolute',
+              left: 110,
+              right: 110,
+              top: 1150,
+              display: 'flex',
+              justifyContent: 'center',
+              opacity: interpolate(t, [end + 1.3, end + 1.6], [0, 1], clamp),
+              transform: `translateY(${interpolate(t, [end + 1.3, end + 1.6], [16, 0], { ...clamp, easing: out })}px)`,
+            }}
+          >
+            <div
+              style={{
+                background: 'linear-gradient(180deg, rgba(46,42,34,0.88), rgba(30,28,22,0.92))',
+                border: '1.5px solid rgba(255,250,235,0.14)',
+                color: '#FFF8EE',
+                fontWeight: 900,
+                fontSize: 46,
+                padding: '18px 38px',
+                borderRadius: 26,
+                textAlign: 'center',
+                textWrap: 'balance',
+                boxShadow: 'inset 0 1.5px 0 rgba(255,250,235,0.12), 0 20px 46px rgba(20,24,10,0.3)',
+              }}
+            >
+              {episode.outro}
+            </div>
+          </div>
+        </AbsoluteFill>
+      ) : null}
+    </>
+  );
+};
+
 export const Countdown = ({ id }: { id: string }) => {
   const t = useCurrentFrame() / REEL_FPS;
   const frame = useCurrentFrame();
@@ -182,9 +253,6 @@ export const Countdown = ({ id }: { id: string }) => {
   const ry = -3 + Math.sin(t * 0.3 + 0.5) * 4;
   const hold = `perspective(2600px) rotateX(${rx}deg) rotateY(${ry}deg) translate(${fx}px, ${fy}px) rotate(${Math.sin(t * 0.47) * 0.35}deg)`;
 
-  const iconPop = spring({ frame: (t - end - 0.05) * REEL_FPS, fps: REEL_FPS, config: { damping: 14, stiffness: 150, mass: 0.9 } });
-  const knock = end + 0.75;
-  const endShake = t > knock && t < knock + 0.25 ? Math.sin((t - knock) * 80) * 5 * (1 - (t - knock) / 0.25) : 0;
   const coverOut = interpolate(t, [show - 0.1, show + 0.25], [0, 1], { ...clamp, easing: inOut });
   // While the calendar is out, the phone sinks back a little.
   const calendar = (episode.props ?? []).find((pr) => pr.kind === 'calendar');
@@ -265,66 +333,7 @@ export const Countdown = ({ id }: { id: string }) => {
         <Caption key={i} text={line.text} start={timing.slots[i].start} length={timing.slots[i].length} t={t} first={i === 0} label={episode.label} top={CAPTION_TOP} size={62} glass />
       ))}
 
-      {/* The end card: the icon and the name, the days-left stamp landing on the sound logo's chord, the ask. */}
-      {t >= end - 0.05 ? (
-        <AbsoluteFill style={{ transform: `translate(${endShake}px, ${endShake * 0.4}px)` }}>
-          <div
-            style={{
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              top: 330,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: 30,
-              opacity: Math.min(1, iconPop * 1.5),
-              transform: `translateY(${(1 - iconPop) * 50}px)`,
-            }}
-          >
-            <div style={{ position: 'relative', transform: 'rotate(-3deg)' }}>
-              <Img src={staticFile('icon-next.png')} style={{ width: 170, height: 170, borderRadius: 38, display: 'block', boxShadow: '0 22px 44px rgba(30,34,18,0.36)' }} />
-              <Sheen t={t} at={end + 1.0} radius={38} />
-            </div>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, color: '#FFF8EC', textShadow: '0 4px 20px rgba(30,34,18,0.3)' }}>
-              <span style={{ fontFamily: SERIF, fontWeight: 800, fontSize: 78 }}>{episode.app.split(' ')[0]}</span>
-              {episode.app.includes(' ') ? <span style={{ fontFamily: SERIF_TC, fontWeight: 900, fontSize: 68, letterSpacing: '0.06em' }}>{episode.app.split(' ').slice(1).join(' ')}</span> : null}
-            </div>
-          </div>
-          <StampCard t={t} at={end + 0.35} stampAt={knock} top={660}>
-            {stamp}
-          </StampCard>
-          <div
-            style={{
-              position: 'absolute',
-              left: 110,
-              right: 110,
-              top: 1150,
-              display: 'flex',
-              justifyContent: 'center',
-              opacity: interpolate(t, [end + 1.3, end + 1.6], [0, 1], clamp),
-              transform: `translateY(${interpolate(t, [end + 1.3, end + 1.6], [16, 0], { ...clamp, easing: out })}px)`,
-            }}
-          >
-            <div
-              style={{
-                background: 'linear-gradient(180deg, rgba(46,42,34,0.88), rgba(30,28,22,0.92))',
-                border: '1.5px solid rgba(255,250,235,0.14)',
-                color: '#FFF8EE',
-                fontWeight: 900,
-                fontSize: 46,
-                padding: '18px 38px',
-                borderRadius: 26,
-                textAlign: 'center',
-                textWrap: 'balance',
-                boxShadow: 'inset 0 1.5px 0 rgba(255,250,235,0.12), 0 20px 46px rgba(20,24,10,0.3)',
-              }}
-            >
-              {episode.outro}
-            </div>
-          </div>
-        </AbsoluteFill>
-      ) : null}
+      <CountdownEnd t={t} end={end} episode={episode} stamp={stamp} />
       <Grade frame={frame} />
     </AbsoluteFill>
   );

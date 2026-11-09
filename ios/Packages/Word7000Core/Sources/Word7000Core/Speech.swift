@@ -91,9 +91,19 @@ public enum SpeechVoiceSelection {
         }.first
     }
 
-    /// True when only standard (compact) voices are installed for a language,
-    /// so a far more natural one is a free download away.
+    /// True when the voice chosen by itself for a language is only standard
+    /// (compact), so a far more natural one is a free download away. It goes
+    /// by the voice that would really speak: an enhanced British voice does
+    /// not count while an American one is installed and speaks for en-US.
     public static func canSoundBetter(_ voices: [SpeechVoiceOption], language: String, enhancedQuality: Int) -> Bool {
-        !matching(voices, language: language).contains { $0.quality >= enhancedQuality && !isRobotic($0) }
+        guard let chosen = preferred(voices, language: language, selectedID: nil, systemDefaultID: nil) else { return true }
+        return chosen.quality < enhancedQuality || isRobotic(chosen)
+    }
+
+    /// The voice to download for a language, as Settings names it: the most
+    /// natural one iOS offers apps (Premium for English; Taiwan Mandarin has
+    /// Meijia, Enhanced at best).
+    public static func recommendedVoice(language: String) -> (name: String, nameZh: String) {
+        language.lowercased().hasPrefix("zh") ? ("Meijia", "美佳") : ("Ava", "Ava")
     }
 }

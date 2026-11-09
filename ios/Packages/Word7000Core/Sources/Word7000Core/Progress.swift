@@ -69,6 +69,9 @@ public struct ProgressState: Codable, Equatable, Sendable {
     public var words: [String: WordProgress]
     /// The last missed day covered by the shared seven-day streak protection.
     public var streakFreezeDate: String?
+    /// When the daily goal was last changed, so the newest change wins a
+    /// sync instead of whichever device studied more that day.
+    public var dailyTargetUpdatedAt: String?
 
     public init(
         analytics: LearningAnalyticsState? = nil,
@@ -78,7 +81,8 @@ public struct ProgressState: Codable, Equatable, Sendable {
         dailyProgressDate: String? = nil,
         lastStudyDate: String? = nil,
         words: [String: WordProgress] = [:],
-        streakFreezeDate: String? = nil
+        streakFreezeDate: String? = nil,
+        dailyTargetUpdatedAt: String? = nil
     ) {
         self.analytics = analytics
         self.dailyTarget = dailyTarget
@@ -88,6 +92,7 @@ public struct ProgressState: Codable, Equatable, Sendable {
         self.lastStudyDate = lastStudyDate
         self.words = words
         self.streakFreezeDate = streakFreezeDate
+        self.dailyTargetUpdatedAt = dailyTargetUpdatedAt
     }
 
     public static let empty = ProgressState()
@@ -106,7 +111,7 @@ public struct ProgressStats: Equatable, Sendable {
     public var studiedToday: Int
 }
 
-/// The spaced-repetition rules, ported one-to-one from `src/lib/progress.ts`.
+/// The spaced-repetition rules (first ported from the web app's progress.ts).
 public enum LearningEngine {
     /// Days to wait before a word comes back, indexed by stage. A word marked
     /// "still learning" drops to stage 0 and is due again the same day; every
@@ -195,6 +200,72 @@ public enum LearningEngine {
             next.statusUpdatedAt = changedAt
             return next
         }
+    }
+
+    /// WordCat Next: a word said in a sentence of the learner's own while
+    /// speaking. Using a word is recall at its strongest, so it counts as a
+    /// right answer where one would count: a word marked "not yet" (or
+    /// caught) moves on to tomorrow, and a word due for review climbs a box.
+    /// A word that is not due yet keeps its wait: saying it early is no
+    /// reason to put its review off. A word never studied is left alone.
+    public static func creditUse(_ state: ProgressState, wordId: String, today: String,
+                                 changedAt: String = DayMath.timestamp()) -> ProgressState {
+        let progress = state.progress(for: wordId)
+        switch progress.status {
+        case .new:
+            return state
+        case .mastered where !isDue(progress, today: today):
+            return state
+        case .mastered, .review:
+            return markQuizCorrect(state, wordId: wordId, today: today, changedAt: changedAt)
+        }
+    }
+
+    /// How many new words a learner who studies every day would meet in the
+    /// next `days`, by the same rules a session is built with: each day
+    /// holds `dailyTarget` cards, the reviews due come first, new words get
+    /// what is left but never less than `newWordShare`, and reviews that do
+    /// not fit wait for the next day. The reviews already scheduled in
+    /// `state` count from the start. A new word is assumed back the next day
+    /// and then climbs a box at each review (no lapses), so the estimate
+    /// neither assumes every word is known on sight nor that none is.
+    public static func projectedNewWords(state: ProgressState, today: String, dailyTarget: Int, days: Int,
+                                         freshAvailable: Int) -> Int {
+        let size = max(0, dailyTarget)
+        // Ten years at most: an exam date picked far off must not hang the plan.
+        let days = min(days, 3650)
+        guard size > 0, days > 0, freshAvailable > 0, let start = DayMath.dayNumber(today) else { return 0 }
+        let stages = reviewIntervalDays.count
+        // Reviews by day, counted per stage.
+        var scheduled = Array(repeating: Array(repeating: 0, count: stages), count: days)
+        for progress in state.words.values where progress.status != .new {
+            guard let due = reviewDueDate(progress).flatMap(DayMath.dayNumber) else { continue }
+            let day = max(0, due - start)
+            if day < days { scheduled[day][reviewStage(progress)] += 1 }
+        }
+        var waiting = Array(repeating: 0, count: stages)
+        var fresh = freshAvailable
+        var met = 0
+        for day in 0..<days {
+            for stage in 0..<stages { waiting[stage] += scheduled[day][stage] }
+            let due = waiting.reduce(0, +)
+            let newCount = newWordSlots(size: size, due: due, fresh: fresh)
+            var room = size - newCount
+            // Lowest boxes first, as a session puts struggling words first.
+            for stage in 0..<stages where room > 0 && waiting[stage] > 0 {
+                let done = min(room, waiting[stage])
+                waiting[stage] -= done
+                room -= done
+                let next = min(maxReviewStage, max(1, stage + 1))
+                let back = day + reviewIntervalDays[next]
+                if back < days { scheduled[back][next] += done }
+            }
+            met += newCount
+            fresh -= newCount
+            let back = day + reviewIntervalDays[1]
+            if back < days { scheduled[back][1] += newCount }
+        }
+        return met
     }
 
     public static func toggleFavorite(_ state: ProgressState, wordId: String, changedAt: String = DayMath.timestamp()) -> ProgressState {
@@ -295,16 +366,21 @@ public enum LearningEngine {
         }
 
         let streak = StreakProtection.reconcile(available, fallback: dailySource)
+        // The goal last changed on purpose wins; a goal never changed since
+        // this field came in follows the day's source, as before.
+        let goalSource = available.filter { $0.dailyTargetUpdatedAt != nil }
+            .max { ($0.dailyTargetUpdatedAt ?? "") < ($1.dailyTargetUpdatedAt ?? "") }
         return ProgressState(
             analytics: LearningAnalyticsState.merge(available.map(\.analytics)),
-            dailyTarget: dailySource.dailyTarget,
+            dailyTarget: goalSource?.dailyTarget ?? dailySource.dailyTarget,
             streak: streak.streak,
             studiedToday: studiedToday,
             dailyProgressDate: dailySource.dailyProgressDate,
             lastStudyDate: streak.lastStudyDate,
             words: words,
             // The latest use on any device, so protection is never used twice in a week.
-            streakFreezeDate: streak.streakFreezeDate
+            streakFreezeDate: streak.streakFreezeDate,
+            dailyTargetUpdatedAt: goalSource?.dailyTargetUpdatedAt
         )
     }
 
@@ -399,13 +475,13 @@ public enum LearningEngine {
     /// sight and which they did not, pulled gently towards Core 4 while there
     /// is little to go on. It moves with every answer, so it follows the
     /// learner as they grow.
-    public static func estimateAbility(_ levels: [(level: Int, seen: Int, knew: Int)]) -> Int {
+    public static func estimateAbility(_ levels: [(level: Int, seen: Int, knew: Int)], prior: Int = abilityPrior) -> Int {
         let top = levels.map { $0.level }.max() ?? 0
-        guard top > 0 else { return abilityPrior }
-        var best = abilityPrior
+        guard top > 0 else { return prior }
+        var best = prior
         var bestScore = Int.min
-        for ability in 0...max(2 * top + 2, 2 * abilityPrior) {
-            var score = -30 * (ability - abilityPrior) * (ability - abilityPrior)
+        for ability in 0...max(2 * top + 2, 2 * prior) {
+            var score = -30 * (ability - prior) * (ability - prior)
             for entry in levels where entry.seen > 0 {
                 let index = min(6, max(-6, 2 * entry.level - ability)) + 6
                 score += entry.knew * knownLog[index] + (entry.seen - entry.knew) * missedLog[index]
@@ -421,7 +497,7 @@ public enum LearningEngine {
     /// The learner's estimated level over a word list (see `estimateAbility`),
     /// and how many of its Core words they have met, which says how much the
     /// estimate rests on.
-    public static func abilityEstimate(words: [WordEntry], state: ProgressState) -> (ability: Int, seen: Int) {
+    public static func abilityEstimate(words: [WordEntry], state: ProgressState, startLevel: Int? = nil) -> (ability: Int, seen: Int) {
         var counts: [Int: (seen: Int, knew: Int)] = [:]
         for word in words {
             guard let level = coreLevel(word.group) else { continue }
@@ -433,7 +509,24 @@ public enum LearningEngine {
             counts[level] = count
         }
         let levels = counts.keys.sorted().map { (level: $0, seen: counts[$0]!.seen, knew: counts[$0]!.knew) }
-        return (estimateAbility(levels), levels.reduce(0) { $0 + $1.seen })
+        return (estimateAbility(levels, prior: abilityPrior(startLevel: startLevel)), levels.reduce(0) { $0 + $1.seen })
+    }
+
+    /// Where the estimate starts before any answers: the level test's start
+    /// chapter when there was one (new words then come mostly from it and
+    /// the one above), otherwise `abilityPrior`.
+    public static func abilityPrior(startLevel: Int?) -> Int {
+        guard let startLevel, startLevel >= 1 else { return abilityPrior }
+        return 2 * startLevel - 2
+    }
+
+    /// New words to draw from: with a start chapter from the level test,
+    /// the Core words below it are skipped while any from it on are left.
+    /// Words outside the Core levels are never skipped.
+    static func skippingEasyChapters(_ fresh: [WordEntry], startLevel: Int?) -> [WordEntry] {
+        guard let startLevel, startLevel > 1 else { return fresh }
+        let kept = fresh.filter { word in coreLevel(word.group).map { $0 >= startLevel } ?? true }
+        return kept.isEmpty ? fresh : kept
     }
 
     /// The Core levels new words are drawn from most for this ability.
@@ -468,14 +561,14 @@ public enum LearningEngine {
     /// the levels with new words left, then that level's next word in a seeded
     /// random order. With a single level this is simply the shuffled order.
     static func pickNewWords(_ fresh: [WordEntry], count: Int, levelOrder: [String],
-                             levels: [String: (seen: Int, knew: Int)], seed: String) -> [WordEntry] {
+                             levels: [String: (seen: Int, knew: Int)], seed: String, prior: Int = abilityPrior) -> [WordEntry] {
         guard count > 0, !fresh.isEmpty else { return [] }
         var buckets: [String: [WordEntry]] = [:]
         for word in SeededRandom.shuffle(fresh, seed: "\(seed):fresh") { buckets[word.group, default: []].append(word) }
         let ability = estimateAbility(levelOrder.compactMap { group -> (level: Int, seen: Int, knew: Int)? in
             guard let level = coreLevel(group), let counts = levels[group] else { return nil }
             return (level, counts.seen, counts.knew)
-        })
+        }, prior: prior)
         let order = levelOrder.filter { buckets[$0] != nil }
         let weights = order.map { newWordLevelWeight(level: coreLevel($0), ability: ability) }
         var taken = Array(repeating: 0, count: order.count)
@@ -509,7 +602,8 @@ public enum LearningEngine {
         return min(fresh, max(size - due, share))
     }
 
-    public static func buildStudyQueue(words: [WordEntry], state: ProgressState, today: String, limit: Int, seed: String = SeededRandom.runtimeSeed()) -> [WordEntry] {
+    public static func buildStudyQueue(words: [WordEntry], state: ProgressState, today: String, limit: Int,
+                                       seed: String = SeededRandom.runtimeSeed(), startLevel: Int? = nil) -> [WordEntry] {
         let size = max(0, limit)
         guard size > 0, !words.isEmpty else { return [] }
 
@@ -557,27 +651,33 @@ public enum LearningEngine {
         seenToday.sort(by: byDue)
         ahead.sort { $0.date != $1.date ? $0.date < $1.date : $0.order < $1.order }
 
+        fresh = skippingEasyChapters(fresh, startLevel: startLevel)
         let newCount = newWordSlots(size: size, due: due.count, fresh: fresh.count)
         let chosen = Array((due.prefix(size - newCount).map(\.word)
-            + pickNewWords(fresh, count: newCount, levelOrder: levelOrder, levels: levels, seed: seed)
+            + pickNewWords(fresh, count: newCount, levelOrder: levelOrder, levels: levels, seed: seed,
+                           prior: abilityPrior(startLevel: startLevel))
             + seenToday.map(\.word) + ahead.map(\.word)).prefix(size))
         return SeededRandom.shuffle(chosen, seed: "\(seed):queue")
     }
 
     /// How many new and review cards `buildStudyQueue` would pick, counted
     /// without sorting, copying or shuffling the words.
-    public static func studyQueueCounts(words: [WordEntry], state: ProgressState, today: String, limit: Int) -> (fresh: Int, review: Int, total: Int) {
+    public static func studyQueueCounts(words: [WordEntry], state: ProgressState, today: String, limit: Int,
+                                        startLevel: Int? = nil) -> (fresh: Int, review: Int, total: Int) {
         let size = max(0, limit)
         guard size > 0 else { return (0, 0, 0) }
-        var due = 0, fresh = 0, later = 0
+        var due = 0, fresh = 0, later = 0, freshFromStart = 0
         for word in words {
             let progress = state.words[word.id]
             guard let dueDate = reviewDueDate(progress) else {
                 fresh += 1
+                if let startLevel, coreLevel(word.group).map({ $0 >= startLevel }) ?? true { freshFromStart += 1 }
                 continue
             }
             if dueDate <= today, progress?.lastStudied != today { due += 1 } else { later += 1 }
         }
+        // The easier chapters skipped (see skippingEasyChapters).
+        if let startLevel, startLevel > 1, freshFromStart > 0 { fresh = freshFromStart }
         // Due words and new ones (at least their share) fill the queue first,
         // then due words already studied today and words ahead of schedule.
         let total = min(size, due + fresh + later)

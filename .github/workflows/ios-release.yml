@@ -14,16 +14,16 @@ on:
       operation:
         description: 'native-testflight: native SwiftUI build to TestFlight. The React Native operations (build-testflight, ota-update) were removed with the React Native app.'
         type: choice
-        options: ['native-testflight', 'testflight-submit', 'subscriptions-status', 'beta-status', 'store-readiness', 'store-prepare']
+        options: ['native-testflight', 'testflight-submit', 'subscriptions-status', 'beta-status', 'store-readiness', 'store-prepare', 'move-internal-group']
         default: 'native-testflight'
       full_validation:
         description: 'native-testflight only: wait for a passed full Native iOS run of this source before uploading. Off by default; turn it on when a full test is wanted.'
         type: boolean
         default: false
       testflight_group:
-        description: 'native-testflight only: TestFlight group the build is added to once Apple has processed it (empty: none)'
+        description: 'native-testflight only: TestFlight group the build is added to once Apple has processed it (empty: none). New builds go to Rio Testing first; the owner adds them to other groups by hand after trying them.'
         type: string
-        default: 'Wordcat Public Testing 1'
+        default: 'Rio Testing'
       what_to_test:
         description: 'native-testflight only: "What to Test" for testers (Traditional Chinese; optional)'
         type: string
@@ -33,9 +33,13 @@ on:
         type: string
         default: ''
       submit_build:
-        description: 'testflight-submit: build number already uploaded to add to the group and submit for Beta App Review. store-prepare: build to put on the App Store version (empty: newest processed)'
+        description: 'testflight-submit: build number already uploaded to add to the group and submit for Beta App Review. store-prepare: build to put on the App Store version (empty: newest processed). move-internal-group: build numbers people still run, comma-separated, to add to the new group'
         type: string
         default: ''
+      delete_old_group:
+        description: 'move-internal-group only: also delete "Word7000 Private Beta" once "WordCat Internal" is checked to hold its testers and a build'
+        type: boolean
+        default: false
       native_validation_run:
         description: 'With full_validation: optional full Native iOS run ID (push, or manual with all checks) for identical source; otherwise a passed run of identical source, then this commit'
         type: string
@@ -54,7 +58,7 @@ jobs:
   # An uploaded build into the TestFlight group and Beta App Review, for a
   # release run that could not submit it while another build was in review.
   testflight-submit:
-    if: inputs.operation == 'testflight-submit' || inputs.operation == 'subscriptions-status' || inputs.operation == 'beta-status' || inputs.operation == 'store-readiness' || inputs.operation == 'store-prepare'
+    if: inputs.operation == 'testflight-submit' || inputs.operation == 'subscriptions-status' || inputs.operation == 'beta-status' || inputs.operation == 'store-readiness' || inputs.operation == 'store-prepare' || inputs.operation == 'move-internal-group'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -62,6 +66,26 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      # This branch is the research line. Its builds go to an internal testing
+      # group only; the public testers get master's builds, which are the only
+      # ones submitted for review.
+      # Tied to the branch, so the guard goes away by itself once the research
+      # line is merged into master (CLAUDE.md, 換線).
+      - name: Keep the research line out of the public testers' group and the App Store
+        if: github.ref_name == 'claude/wizardly-thompson-s0lgzj' && (inputs.operation == 'native-testflight' || inputs.operation == 'testflight-submit' || inputs.operation == 'store-prepare')
+        env:
+          GROUP: ${{ inputs.testflight_group }}
+          OPERATION: ${{ inputs.operation }}
+        run: |
+          set -euo pipefail
+          if [ "$OPERATION" = "store-prepare" ]; then
+            echo "::error::This is the research line. Its builds are never put on the App Store version; that is master's."
+            exit 1
+          fi
+          if [ "$GROUP" = "Wordcat Public Testing 1" ]; then
+            echo "::error::This is the research line. Send it to an internal testing group; the public testers get master's builds."
+            exit 1
+          fi
       - name: Subscriptions and free trial in App Store Connect (read-only)
         if: inputs.operation == 'subscriptions-status'
         env:
@@ -69,6 +93,22 @@ jobs:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
         run: node scripts/asc-subscriptions-status.mjs --bundle com.rio.word7000
+      # One-off, asked for by the owner: the internal group that got every
+      # build (research builds too) becomes one that gets only builds added
+      # to it. The old group is deleted only on a second run with
+      # delete_old_group, and only when the new one checks out.
+      - name: Move the internal testers to a group without automatic builds
+        if: inputs.operation == 'move-internal-group'
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          DELETE_OLD: ${{ inputs.delete_old_group && 'yes' || 'no' }}
+          ADD_BUILDS: ${{ inputs.submit_build }}
+        run: |
+          node scripts/testflight-move-group.mjs --bundle com.rio.word7000 \
+            --from "Word7000 Private Beta" --to "WordCat Internal" \
+            --public "Wordcat Public Testing 1" --delete-old "$DELETE_OLD" --add-builds "$ADD_BUILDS"
       - name: TestFlight builds and Beta App Review (read-only)
         if: inputs.operation == 'beta-status'
         env:
@@ -108,10 +148,10 @@ jobs:
           test -n "$BUILD" || { echo "::error::submit_build is required"; exit 1; }
           VERSION="$(node -p 'require("./ios/Release/app.json").expo.version')"
           node scripts/testflight-distribute.mjs --bundle com.rio.word7000 --version "$VERSION" --build "$BUILD" \
-            --group "${GROUP:-Wordcat Public Testing 1}" --wait-minutes 2
+            --group "$GROUP" --wait-minutes 2
 
   release:
-    if: inputs.operation != 'testflight-submit' && inputs.operation != 'subscriptions-status' && inputs.operation != 'beta-status' && inputs.operation != 'store-readiness' && inputs.operation != 'store-prepare'
+    if: inputs.operation != 'testflight-submit' && inputs.operation != 'subscriptions-status' && inputs.operation != 'beta-status' && inputs.operation != 'store-readiness' && inputs.operation != 'store-prepare' && inputs.operation != 'move-internal-group'
     runs-on: ${{ inputs.operation == 'native-testflight' && 'macos-15' || 'ubuntu-latest' }}
     timeout-minutes: 120
     env:
@@ -143,6 +183,27 @@ jobs:
           pod --version
 
       - run: npm ci
+
+      # This branch is the research line. Its builds go to an internal testing
+      # group only; the public testers get master's builds, which are the only
+      # ones submitted for review.
+      # Tied to the branch, so the guard goes away by itself once the research
+      # line is merged into master (CLAUDE.md, 換線).
+      - name: Keep the research line out of the public testers' group and the App Store
+        if: github.ref_name == 'claude/wizardly-thompson-s0lgzj' && (inputs.operation == 'native-testflight' || inputs.operation == 'testflight-submit' || inputs.operation == 'store-prepare')
+        env:
+          GROUP: ${{ inputs.testflight_group }}
+          OPERATION: ${{ inputs.operation }}
+        run: |
+          set -euo pipefail
+          if [ "$OPERATION" = "store-prepare" ]; then
+            echo "::error::This is the research line. Its builds are never put on the App Store version; that is master's."
+            exit 1
+          fi
+          if [ "$GROUP" = "Wordcat Public Testing 1" ]; then
+            echo "::error::This is the research line. Send it to an internal testing group; the public testers get master's builds."
+            exit 1
+          fi
 
       # A release should never carry a change that breaks the tests.
       - run: npm run typecheck
@@ -312,6 +373,10 @@ jobs:
           NOTES_ZH: ${{ inputs.what_to_test }}
           NOTES_EN: ${{ inputs.what_to_test_en }}
         run: |
+          # Research builds say so at the top of What to Test, the sign that
+          # keeps them out of review; master's builds carry no prefix.
+          PREFIX_ZH=""; PREFIX_EN=""
+          if [ "$GITHUB_REF_NAME" = "claude/wizardly-thompson-s0lgzj" ]; then PREFIX_ZH="研發版。"; PREFIX_EN="Research build. "; fi
           set -euo pipefail
           if [ -z "$ASC_KEY_ID" ] || [ -z "$ASC_ISSUER_ID" ] || [ -z "$ASC_PRIVATE_KEY" ]; then
             echo "::warning::No App Store Connect API key; add the build to \"$GROUP\" by hand."
@@ -320,7 +385,7 @@ jobs:
           VERSION=$(node -p 'require("./ios/Release/app.json").expo.version')
           BUILD=$(node -p 'require(process.argv[1])[0].appBuildVersion' "$RUNNER_TEMP/native-build.json")
           node scripts/testflight-distribute.mjs --bundle com.rio.word7000 --version "$VERSION" --build "$BUILD" \
-            --group "$GROUP" --notes-zh "$NOTES_ZH" --notes-en "$NOTES_EN" --wait-minutes 45
+            --group "$GROUP" --notes-zh "$PREFIX_ZH$NOTES_ZH" --notes-en "$PREFIX_EN$NOTES_EN" --wait-minutes 45
 
       - name: Save the native release verification receipt
         if: always() && inputs.operation == 'native-testflight'

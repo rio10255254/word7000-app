@@ -35,6 +35,10 @@ public struct ShadowingCheck: Equatable, Sendable {
     public var passed: Bool { score >= Self.passMark }
     /// Every word (character) came across as written, tones included.
     public var perfect: Bool { scoredCount > 0 && heardCount == scoredCount }
+    /// Every word (character) was recognized, whatever the pitch measured:
+    /// enough to move on. Tones measured from pitch are a note to work on,
+    /// not a wall, since the measuring is far less sure than recognition.
+    public var allRecognized: Bool { scoredCount > 0 && heardCount + toneCount == scoredCount }
     public var heardCount: Int { units.filter { $0.mark == .heard }.count }
     public var toneCount: Int { units.filter { if case .tone = $0.mark { true } else { false } }.count }
     public var scoredCount: Int { units.filter(\.scored).count }

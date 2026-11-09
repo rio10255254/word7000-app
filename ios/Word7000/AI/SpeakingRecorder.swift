@@ -9,7 +9,14 @@ import Word7000Core
 final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDelegate {
     enum State { case idle, requesting, recording, ready, playing, transcribing }
     enum TranscriptionSupport { case checking, modern, download, legacy, unavailable }
-    private(set) var state: State = .idle
+    private(set) var state: State = .idle {
+        // The microphone is open from the tap until the take ends; .requesting
+        // also comes before playing a take back, which leaves it as it was.
+        didSet {
+            if state == .recording { Speaker.shared.microphone(self, open: true) }
+            else if state != .requesting { Speaker.shared.microphone(self, open: false) }
+        }
+    }
     private(set) var support: TranscriptionSupport = .checking
     private(set) var seconds: TimeInterval = 0
     private(set) var level: Float = 0
@@ -105,6 +112,7 @@ final class SpeakingRecorder: NSObject, AVAudioRecorderDelegate, AVAudioPlayerDe
         #if DEBUG
         if simulated { state = .recording; seconds = 3; level = 0.4; return }
         #endif
+        Speaker.shared.microphone(self, open: true)
         state = .requesting
         let id = generation
         operation = Task { [weak self] in

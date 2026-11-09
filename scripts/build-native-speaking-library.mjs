@@ -5,8 +5,6 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const destination = 'ios/Packages/Word7000Core/Sources/Word7000Core/Resources/speaking-prompts.json';
-// The web app reads the same reviewed cards, without the provenance fields.
-const webDestination = 'src/data/speaking-cards.json';
 const fields = ['id', 'word', 'keywordZh', 'question', 'answerEn', 'answerZh'];
 const tokens = text => text.toLowerCase().match(/[a-z]+/g) ?? [];
 
@@ -106,7 +104,6 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   const document = buildLibrary();
   const outputs = [
     [destination, JSON.stringify(document, null, 2) + '\n'],
-    [webDestination, JSON.stringify(document.records) + '\n'],
   ];
   for (const [file, output] of outputs) {
     if (process.argv.includes('--check')) {

@@ -28,7 +28,7 @@ final class SpellingTests: XCTestCase {
     }
 
     func testEveryWordCanBeTyped() {
-        for word in ParityTests.words {
+        for word in BundledWords.words {
             XCTAssertEqual(Spelling.check(word.word.uppercased(), word: word.word), .correct, word.word)
             XCTAssertFalse(word.word.contains("/"), word.word)
         }

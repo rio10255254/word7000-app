@@ -33,10 +33,16 @@ enum L {
     static var primaryAction: String { t("開始學習", "Start") }
     static var continueAction: String { t("繼續學習", "Continue") }
     static var extraAction: String { t("再學一組", "One more set") }
-    static func todayPlan(due: Int, fresh: Int) -> String { t("\(due) 個待複習 · \(fresh) 個新字", "\(due) to review · \(fresh) new") }
+    static func todayPlan(due: Int, fresh: Int) -> String {
+        // A half that is zero is left out ("20 個新字", not "0 個待複習 · 20 個新字").
+        if due == 0, fresh == 0 { return t("這個範圍沒有要學的字", "Nothing to study in this range") }
+        if due == 0 { return t("\(fresh) 個新字", "\(fresh) new") }
+        if fresh == 0 { return t("\(due) 個待複習", "\(due) to review") }
+        return t("\(due) 個待複習 · \(fresh) 個新字", "\(due) to review · \(fresh) new")
+    }
     static func streakDays(_ days: Int) -> String { "\(days)" }
     static var practice: String { t("練習", "Practice") }
-    static var quickQuiz: String { t("小測驗", "Quick quiz") }
+    static var quickQuiz: String { t("看字選意思", "Pick the meaning") }
     static var quizLength: String { t("10 題", "10 questions") }
     static var practiceStruggling: String { t("複習不熟的字", "Review tricky words") }
     static var speaking: String { t("口說練習", "Speaking practice") }
@@ -56,15 +62,23 @@ enum L {
     static var dontKnow: String { t("不熟", "Not yet") }
     static var knowIt: String { t("認識", "Know it") }
     static var undo: String { t("復原上一張", "Undo") }
+    /// Undoes something other than a card (a deleted bank).
+    static var undoPlain: String { t("復原", "Undo") }
     static var sessionCompleteTitle: String { t("這一組完成了", "Set complete") }
     static func sessionCompleteText(known: Int, review: Int) -> String { t("認識 \(known) 個 · 不熟 \(review) 個", "Knew \(known) · Not yet \(review)") }
     static var sessionGoalDone: String { t("今天的目標已達成", "Today's goal reached") }
     static var goalReachedTitle: String { t("今天的目標達成了！", "You reached today's goal!") }
     static var goalReachedBanner: String { t("今天的目標達成了", "Today's goal reached") }
-    static var quizTodaysWordsHint: String { t("趁記憶還新鮮，用小測驗複習今天學的字。", "While they are fresh, quiz yourself on today's words.") }
-    static var quizTodaysWords: String { t("小測驗複習今天的字", "Quiz today's words") }
+    static var quizTodaysWordsHint: String { t("趁記憶還新鮮，選選看今天這些字的意思。", "While they are fresh, pick the meanings of today's words.") }
+    static var quizTodaysWords: String { t("複習今天的字", "Review today's words") }
     static func sessionGoalLeft(_ left: Int) -> String { t("今天還差 \(left) 個", "\(left) more for today") }
     static var done: String { t("完成", "Done") }
+    /// An English line after the learner's name ("Alex, not bad."), or
+    /// capitalised when there is no name ("Not bad.").
+    static func named(_ call: String, _ line: String) -> String {
+        guard call.isEmpty, let first = line.first else { return call + line }
+        return first.uppercased() + line.dropFirst()
+    }
     static var nextSession: String { t("再一組", "Another set") }
     static var nothingToStudy: String { t("目前沒有要學的字", "Nothing to study") }
     static var nothingToStudyText: String { t("這個字庫都學完了，可以換一個字庫。", "You have finished this bank. Pick another one.") }
@@ -76,8 +90,12 @@ enum L {
     static var seeResults: String { t("看結果", "See results") }
     static var quizFinished: String { t("測驗完成", "Quiz complete") }
     static var quizPerfect: String { t("全部答對！", "All correct!") }
-    static func quizMissedHint(_ count: Int) -> String { t("答錯的 \(count) 個字已經放進複習。", "The \(count) missed words were added to review.") }
-    static func practiceMissed(_ count: Int) -> String { t("複習答錯的 \(count) 個字", "Review the \(count) missed words") }
+    static func quizMissedHint(_ count: Int) -> String {
+        t("答錯的 \(count) 個字已經放進複習。", count == 1 ? "The missed word was added to review." : "The \(count) missed words were added to review.")
+    }
+    static func practiceMissed(_ count: Int) -> String {
+        t("複習答錯的 \(count) 個字", count == 1 ? "Review the missed word" : "Review the \(count) missed words")
+    }
     static var anotherQuiz: String { t("再測一次", "Quiz again") }
 
     // Speaking
@@ -94,8 +112,9 @@ enum L {
     /// Chinese study their own bank of everyday Taiwan Mandarin.
     static var coreBankName: String { t("7000 單字", "Taiwan Mandarin") }
     /// The word list files its levels as "Core 1"…"Core 14"; on screen they
-    /// are 第 N 級 or Level N. Other groups (a scanned bank's) show as they are.
-    static func level(_ number: Int) -> String { t("第 \(number) 級", "Level \(number) · \(tocflBand(number))") }
+    /// are 第 N 章 or Level N (WordCat Next: chapters, as on Today and in the
+    /// level test). Other groups (a scanned bank's) show as they are.
+    static func level(_ number: Int) -> String { t("第 \(number) 章", "Chapter \(number) · \(tocflBand(number))") }
     /// Learners of Chinese study the Taiwan Mandarin bank, whose fourteen
     /// levels spread over TOCFL's bands (see scripts/build-taiwan-words.py).
     static func tocflBand(_ level: Int) -> String {
@@ -107,7 +126,7 @@ enum L {
         }
     }
     static func levelRange(_ low: Int, _ high: Int) -> String {
-        low == high ? level(low) : t("第 \(low)–\(high) 級", "Levels \(low)–\(high)")
+        low == high ? level(low) : t("第 \(low)–\(high) 章", "Chapters \(low)–\(high)")
     }
     /// The level filter in a few words: all, one level, a run, or a short list.
     static func levelSummary(_ groups: [String]) -> String {
@@ -118,9 +137,9 @@ enum L {
             return levelRange(low, high)
         }
         if numbers.count == groups.count, numbers.count <= 4 {
-            return t("第 \(numbers.map(String.init).joined(separator: "、")) 級", "Levels \(numbers.map(String.init).joined(separator: ", "))")
+            return t("第 \(numbers.map(String.init).joined(separator: "、")) 章", "Chapters \(numbers.map(String.init).joined(separator: ", "))")
         }
-        return t("\(groups.count) 個分級", "\(groups.count) levels")
+        return t("\(groups.count) 個章節", "\(groups.count) chapters")
     }
     static func levelName(_ group: String) -> String {
         guard group.hasPrefix("Core "), let number = Int(group.dropFirst(5)) else { return group }
@@ -142,11 +161,11 @@ enum L {
     static var noLibraryWords: String { t("沒有符合的單字", "No matching words") }
     static var filters: String { t("篩選", "Filter") }
     static var filterStatus: String { t("狀態", "Status") }
-    static var filterLevel: String { t("分級", "Level") }
+    static var filterLevel: String { t("章節", "Chapter") }
     static var filterSort: String { t("排序", "Sort") }
     static var sortDefault: String { t("原本順序", "Original order") }
     static var sortAlphabetical: String { t("A 到 Z", "A to Z") }
-    static var allLevels: String { t("全部分級", "All levels") }
+    static var allLevels: String { t("全部章節", "All chapters") }
     static var favoriteWord: String { t("收藏", "Save") }
     static var unfavoriteWord: String { t("取消收藏", "Unsave") }
     static var pronounce: String { t("發音", "Pronounce") }
@@ -154,15 +173,15 @@ enum L {
     static var example: String { t("例句", "Example") }
     static var status: String { t("狀態", "Status") }
     static var nextReviewTitle: String { t("下次複習", "Next review") }
-    static var level: String { t("分級", "Level") }
+    static var level: String { t("章節", "Chapter") }
 
     // Me
     static var streak: String { t("連續天數", "Day streak") }
     static var mastered: String { t("已會", "Known") }
-    static var reviewing: String { t("複習中", "Reviewing") }
+    static var reviewing: String { t("還不熟", "Still learning") }
     static var thisWeek: String { t("這 7 天", "Last 7 days") }
     static func quizAccuracy(_ percent: Int, correct: Int, total: Int) -> String {
-        t("測驗答對率 \(percent)%（\(correct)/\(total) 題）", "Quiz accuracy \(percent)% (\(correct) of \(total))")
+        t("近 7 天答對率 \(percent)%（\(correct)/\(total) 題）", "Last 7 days: \(percent)% right (\(correct) of \(total))")
     }
     static var settings: String { t("設定", "Settings") }
     static var studyModeTitle: String { t("學習內容", "Learning") }
@@ -173,10 +192,10 @@ enum L {
         }
     }
     static var dailyTargetTitle: String { t("每日目標", "Daily goal") }
-    static var dailyTargetText: String { t("也是每組學習卡的張數。", "Also the size of each set.") }
+    static var dailyTargetText: String { t("每日目標也是每組卡片的張數。", "The daily goal is also the size of each set.") }
     static func wordsPerDay(_ count: Int) -> String { t("\(count) 個", "\(count) words") }
     static var reminder: String { t("學習提醒", "Study reminder") }
-    static var reminderText: String { t("中午提醒；連勝快斷時鎖定畫面倒數。", "Noon reminder; lock screen countdown before a streak ends.") }
+    static var reminderText: String { t("每天提醒一次；連續天數快斷時，鎖定畫面會倒數。", "One reminder a day; the lock screen counts down before your streak ends.") }
     static var appearance: String { t("外觀", "Appearance") }
     static var themeSystem: String { t("自動", "Automatic") }
     static var themeLight: String { t("淺色", "Light") }
@@ -190,16 +209,16 @@ enum L {
         switch filter {
         case .all: t("全部", "All")
         case .favorites: t("收藏", "Saved")
-        case .review: t("複習中", "Reviewing")
+        case .review: t("還不熟", "Still learning")
         case .mastered: t("已會", "Known")
-        case .new: t("未學", "New")
+        case .new: t("新字", "New")
         }
     }
 
     static func statusLabel(_ status: WordStatus) -> String {
         switch status {
-        case .new: t("未學", "New")
-        case .review: t("複習中", "Reviewing")
+        case .new: t("新字", "New")
+        case .review: t("還不熟", "Still learning")
         case .mastered: t("已會", "Known")
         }
     }

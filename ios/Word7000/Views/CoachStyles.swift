@@ -115,9 +115,11 @@ private struct CoachDisc: View {
 /// in the collage, a soft-shadowed disc in leather. It pushes in when held.
 struct MicKeyStyle: ButtonStyle {
     var live: Bool
+    /// Smaller where it sits in a chat's bottom bar.
+    var size: CGFloat = 112
 
     func makeBody(configuration: Configuration) -> some View {
-        MicKey(configuration: configuration, live: live)
+        MicKey(configuration: configuration, live: live, size: size)
     }
 }
 
@@ -126,6 +128,7 @@ private struct MicKey: View {
     @Environment(\.isEnabled) private var isEnabled
     let configuration: ButtonStyleConfiguration
     var live: Bool
+    var size: CGFloat = 112
 
     var body: some View {
         let pressed = configuration.isPressed
@@ -133,7 +136,7 @@ private struct MicKey: View {
         let collage = appStyle == .collage
         configuration.label
             .foregroundStyle(.white)
-            .frame(width: 112, height: 112)
+            .frame(width: size, height: size)
             .background { Circle().fill(tint) }
             .overlay { if collage { Circle().strokeBorder(Collage.ink.opacity(0.85), lineWidth: 2) } }
             .background {

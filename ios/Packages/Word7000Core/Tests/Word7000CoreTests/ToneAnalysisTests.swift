@@ -74,6 +74,27 @@ final class ToneAnalysisTests: XCTestCase {
         XCTAssertEqual(ToneAnalysis.judge([4.5, 4.5, 4.4, 4.5, 4.5], expected: 4), 1)
     }
 
+    func testOnlyClearSlipsCountAndGuessedSpansAreNotJudged() {
+        // A little off the asked-for shape is still that tone.
+        XCTAssertEqual(ToneAnalysis.judge([4.2, 4.4, 4.6, 4.3, 3.9], expected: 1), 1)
+        let parts: [[Double]] = [[235, 235], [250, 215, 160]]
+        var samples: [Float] = []
+        var spans: [ClosedRange<Double>?] = []
+        for part in parts {
+            samples += silence()
+            let start = Double(samples.count) / 16_000
+            samples += syllable(part)
+            spans.append(start...(Double(samples.count) / 16_000))
+        }
+        let guessed = ToneAnalysis.analyze(samples: samples, rate: 16_000, spans: spans, expected: [4, 1], judges: false)
+        XCTAssertEqual(guessed.map { $0?.heard ?? nil }, [nil, nil], "drawn, not judged")
+        XCTAssertNotNil(guessed[0]?.contour)
+        // Too short to judge.
+        let short = syllable([250, 160], seconds: 0.06)
+        let result = ToneAnalysis.analyze(samples: silence() + short + silence(), rate: 16_000, spans: [0.08...0.14], expected: [1])
+        XCTAssertNil(result[0]?.heard)
+    }
+
     func testSilenceIsNotJudged() {
         let result = ToneAnalysis.analyze(samples: silence(1), rate: 16_000, spans: [0...0.5], expected: [1])
         XCTAssertNil(result[0] ?? nil)
@@ -119,6 +140,10 @@ final class ToneSlipTests: XCTestCase {
         XCTAssertTrue(slipped.passed)
         XCTAssertTrue(check.perfect)
         XCTAssertFalse(slipped.perfect, "A tone slip keeps it from being perfect")
+        XCTAssertTrue(slipped.allRecognized, "but every character came across, so it moves on")
+        let missed = check.withToneSlips([:])
+        XCTAssertTrue(missed.allRecognized)
+        XCTAssertFalse(ShadowingCheck(target: "我騎馬。", heard: "我騎", chinese: true).allRecognized)
         XCTAssertEqual(check.withToneSlips([:]), check)
     }
 

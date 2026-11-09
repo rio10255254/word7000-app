@@ -312,6 +312,8 @@ struct PlusPlan: Identifiable {
     /// For the yearly plan: what it comes to per month, and the whole months
     /// it saves against paying monthly.
     let perMonth: String?
+    /// For the yearly plan: what it comes to a day ("NT$2.16").
+    var perDay: String? = nil
     let monthsSaved: Int
     /// The App Store's free trial on this plan, in days, when this Apple ID
     /// can still have it (set up in App Store Connect as an introductory offer).
@@ -334,22 +336,24 @@ struct PlusPlan: Identifiable {
         yearly = product.subscription?.subscriptionPeriod.unit == .year
         displayPrice = product.displayPrice
         perMonth = yearly ? (product.price / 12).formatted(product.priceFormatStyle) : nil
+        perDay = yearly ? (product.price / 365).formatted(product.priceFormatStyle) : nil
         monthsSaved = yearly ? monthlyPrice.map { PlusPolicy.monthsSaved(monthly: $0, yearly: product.price) } ?? 0 : 0
         self.product = product
     }
 
-    private init(id: String, yearly: Bool, displayPrice: String, perMonth: String?, monthsSaved: Int) {
+    private init(id: String, yearly: Bool, displayPrice: String, perMonth: String?, perDay: String? = nil, monthsSaved: Int) {
         self.id = id
         self.yearly = yearly
         self.displayPrice = displayPrice
         self.perMonth = perMonth
+        self.perDay = perDay
         self.monthsSaved = monthsSaved
         product = nil
     }
 
     /// Display-only plans for screenshots, where the App Store has no products.
     static let samples = [
-        PlusPlan(id: PlusModel.productIDs[1], yearly: true, displayPrice: "NT$790", perMonth: "NT$65.83", monthsSaved: 2),
+        PlusPlan(id: PlusModel.productIDs[1], yearly: true, displayPrice: "NT$790", perMonth: "NT$65.83", perDay: "NT$2.16", monthsSaved: 2),
         PlusPlan(id: PlusModel.productIDs[0], yearly: false, displayPrice: "NT$79", perMonth: nil, monthsSaved: 0),
     ]
 }

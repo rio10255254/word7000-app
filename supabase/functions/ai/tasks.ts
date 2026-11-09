@@ -544,6 +544,8 @@ function insights(input: Record<string, unknown>): TaskPlan {
       dailyGoal: count(input, 'dailyTarget', 500),
       quizCorrect: count(input, 'quizCorrect'),
       quizTotal: count(input, 'quizTotal'),
+      // The chapter (of 14) a level test placed a new learner at; 0 if none.
+      levelTestChapter: optionalCount(input, 'placementChapter', 14),
     },
     lastDays: list(input, 'days', 14).map((day) => ({
       date: text(day, 'date', 10),
@@ -588,7 +590,9 @@ function insights(input: Record<string, unknown>): TaskPlan {
       'summary: two or three sentences on consistency, the review backlog and quiz accuracy (max 260 characters).',
       'strengths: one to three concrete things going well.',
       'focusWords: up to five words copied exactly from hardestWords (the most forgotten first), each with a one-line memory tip (tip, max 80 characters). Empty if there are none.',
-      'plan: two to four short, doable steps for the next few days, using the real numbers (for example how many reviews a day).',
+      'plan: two to four short, doable steps for the next few days, using the real numbers (for example how many reviews a day). The steps must agree with each other and with the numbers: dailyGoal counts every card studied in a day, reviews included, so when dueForReviewToday is already at or above dailyGoal the reviews alone meet it; never ask for more on top. dueForReviewToday includes words missed earlier today.',
+      'When quizTotal is 0 no quiz has been answered yet: do not mention accuracy or "0 correct"; at most suggest trying a quiz.',
+      'When levelTestChapter is above 0, a level test placed the learner at that chapter of 14: the few wordsKnown are only what they have marked so far, not their level, so never call them a beginner.',
       'If there is almost no activity yet, guilt-trip them gently about it and suggest exactly how to start.',
     ].join(' '),
     user: JSON.stringify(data),

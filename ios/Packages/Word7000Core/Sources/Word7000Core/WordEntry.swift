@@ -11,6 +11,10 @@ public struct WordEntry: Codable, Hashable, Identifiable, Sendable {
     public var supplementalMeaningZh: String?
     public var example: String
     public var exampleZh: String
+    /// The part of `exampleZh` that translates the word, highlighted above a
+    /// fill-in-the-blank question. "context|cue" pins one that appears more
+    /// than once. Only the bundled list has it; see `Cloze.cue(for:)`.
+    public var exampleZhCue: String?
     public var group: String
     public var updatedAt: String?
 
@@ -23,6 +27,7 @@ public struct WordEntry: Codable, Hashable, Identifiable, Sendable {
         supplementalMeaningZh: String? = nil,
         example: String,
         exampleZh: String,
+        exampleZhCue: String? = nil,
         group: String,
         updatedAt: String? = nil
     ) {
@@ -34,6 +39,7 @@ public struct WordEntry: Codable, Hashable, Identifiable, Sendable {
         self.supplementalMeaningZh = supplementalMeaningZh
         self.example = example
         self.exampleZh = exampleZh
+        self.exampleZhCue = exampleZhCue
         self.group = group
         self.updatedAt = updatedAt
     }

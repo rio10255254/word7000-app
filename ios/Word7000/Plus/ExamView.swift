@@ -15,6 +15,9 @@ struct ExamView: View {
     @State private var questions: [WordEntry] = []
     @State private var options: [[QuizOption]] = []
     @State private var answers: [Int: QuizOption] = [:]
+    /// A tap on ✕ with answers given, or Submit with some left: asked once.
+    @State private var confirmingLeave = false
+    @State private var confirmingSubmit = false
     @State private var index = 0
     @State private var startedAt = Date()
     @State private var finished = false
@@ -46,7 +49,9 @@ struct ExamView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button { dismiss() } label: { Image(systemName: "xmark") }
+                    Button {
+                        if !finished, !answers.isEmpty { confirmingLeave = true } else { dismiss() }
+                    } label: { Image(systemName: "xmark") }
                         .accessibilityLabel(L.close)
                         .accessibilityIdentifier("exam-close")
                 }
@@ -70,11 +75,26 @@ struct ExamView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     if !finished, !questions.isEmpty {
-                        Button(L.t("交卷", "Submit")) { submit() }
-                            .accessibilityIdentifier("exam-submit")
+                        Button(L.t("交卷", "Submit")) {
+                            if answers.count < questions.count { confirmingSubmit = true } else { submit() }
+                        }
+                        .accessibilityIdentifier("exam-submit")
                     }
                 }
             }
+        }
+        .warmConfirm(isPresented: $confirmingLeave, title: L.t("要離開模擬考嗎？", "Leave the mock exam?"),
+                     message: L.t("已經答的 \(answers.count) 題不會記錄。", answers.count == 1 ? "The answer given won't be kept." : "The \(answers.count) answers given won't be kept."),
+                     confirmTitle: L.t("離開", "Leave"), destructive: true, confirmIdentifier: "exam-leave-confirm",
+                     cancelTitle: L.t("繼續作答", "Keep going"), mood: .thinking) {
+            dismiss()
+        }
+        .warmConfirm(isPresented: $confirmingSubmit,
+                     title: L.t("還有 \(questions.count - answers.count) 題沒答", "\(questions.count - answers.count) left unanswered"),
+                     message: L.t("沒答的會算錯。", "Unanswered questions count as wrong."),
+                     confirmTitle: L.t("交卷", "Submit"), confirmIdentifier: "exam-submit-confirm",
+                     cancelTitle: L.t("繼續作答", "Keep going")) {
+            submit()
         }
         .onAppear { if questions.isEmpty { start() } }
         .task(id: startedAt) {
@@ -151,7 +171,13 @@ struct ExamView: View {
                                 withAnimation(reduceMotion ? nil : .snappy) { index += 1 }
                             }
                         } label: {
-                            HStack {
+                            HStack(spacing: 14) {
+                                // A to D, as in the exam-style questions elsewhere.
+                                Text(["A", "B", "C", "D"][min(offset, 3)])
+                                    .font(.headline)
+                                    .foregroundStyle(chosen ? Palette.surface : Palette.accent)
+                                    .frame(width: 34, height: 34)
+                                    .background(chosen ? Palette.accent : Palette.accent.opacity(0.12), in: Circle())
                                 Text(option.text).font(.body.weight(.medium)).multilineTextAlignment(.leading)
                                 Spacer(minLength: 8)
                                 if chosen {
@@ -288,7 +314,7 @@ struct ExamView: View {
                 .entrance(0)
                 Label(badge.text, systemImage: badge.icon)
                     .font(.display(.subheadline, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Palette.surface)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 7)
                     .background(scoreColor(score).gradient, in: Capsule())
@@ -312,16 +338,9 @@ struct ExamView: View {
                 }
                 .card(padding: 16)
                 .entrance(2)
-                if !missedIds.isEmpty {
-                    Button { studyMissed(missedIds) } label: {
-                        Text(L.t("複習答錯的 \(missedIds.count) 個字", "Review the \(missedIds.count) missed words")).font(.headline).frame(maxWidth: .infinity)
-                    }
-                    .prominentAction(tint: Palette.review)
-                }
-                Button { start() } label: {
-                    Text(L.t("再考一次", "Take another")).font(.headline).frame(maxWidth: .infinity)
-                }
-                .secondaryAction()
+                RoundEndActions(missed: missedIds.count, reviewMissed: { studyMissed(missedIds) }, reviewId: "exam-review-missed",
+                                done: { dismiss() }, doneId: "exam-done",
+                                again: { start() }, againTitle: L.t("再考一次", "Take another"), againId: "exam-again")
             }
         }
         .scrollIndicators(.hidden)

@@ -1,6 +1,5 @@
 # Builds and checks the native SwiftUI app (ios/) on a Mac:
-#   1. the learning engine's tests, including the golden results shared with
-#      the React Native app (parity.json),
+#   1. the learning engine's tests,
 #   2. a simulator build plus a UI walk-through that screenshots every main
 #      screen in light and dark mode on iOS 18, 26, and 27.
 # Screenshots are uploaded as an artifact and pushed to the
@@ -20,10 +19,6 @@ on:
     paths:
       - 'ios/**'
       - 'src/data/words.ts'
-      - 'src/lib/progress.ts'
-      - 'src/lib/studySession.ts'
-      - 'src/lib/scanParser.ts'
-      - 'src/nativeParity.test.ts'
       - 'scripts/export-native-words.mjs'
       - 'scripts/verify-native-release.py'
       - 'scripts/test_verify_native_release.py'
@@ -38,7 +33,7 @@ on:
       checks:
         description: 'Full regression, bilingual screenshots, or focused coach input/compatibility checks'
         type: choice
-        options: ['all', 'copy', 'coach', 'compile', 'polish', 'layout', 'store']
+        options: ['all', 'copy', 'coach', 'compile', 'polish', 'layout', 'store', 'routine']
         default: 'all'
       ios:
         description: 'Which iOS versions: all (18, 26, 27, before a release) or 27 only (small fixes, about half the time)'
@@ -199,6 +194,9 @@ jobs:
             TEST_SELECTION=(-only-testing:Word7000UITests/ScreenshotTests/testAnnouncementAndUpdateRequiredScreens -only-testing:Word7000UITests/ScreenshotTests/testChineseModeScreens -only-testing:Word7000UITests/ScreenshotTests/testLightScreens -only-testing:Word7000UITests/ScreenshotTests/testCollageScreens -only-testing:Word7000UITests/ScreenshotTests/testCollageDarkScreens -only-testing:Word7000UITests/ScreenshotTests/testStyleChooserAppearsOnceAndApplies -only-testing:Word7000UITests/ScreenshotTests/testCatShowcase -only-testing:Word7000UITests/ScreenshotTests/testCatShowcaseCollage -only-testing:Word7000UITests/ScreenshotTests/testBankMenuDeletesInCollage -only-testing:Word7000UITests/ScanPickerTests/testNotepadFillsInHalfWrittenLines)
           elif [ "$CHECKS" = "coach" ]; then
             TEST_SELECTION=(-only-testing:Word7000UITests/SpeakingCoachTests -only-testing:Word7000UITests/ScanPickerTests/testSpeakingChoicesRemainVisibleAfterScanningAnUnsupportedWord -only-testing:Word7000UITests/ScreenshotTests/testChineseModeScreens)
+          elif [ "$CHECKS" = "routine" ]; then
+            # WordCat Next: today's words with their spot checks, with screenshots.
+            TEST_SELECTION=(-only-testing:Word7000UITests/RoutineTests)
           elif [ "$CHECKS" = "store" ]; then
             TEST_SELECTION=(-only-testing:Word7000UITests/AppStoreScreenshotTests)
           elif [ "$CHECKS" = "polish" ]; then
@@ -319,12 +317,12 @@ jobs:
           cd "$GITHUB_WORKSPACE/screenshots"
           echo "${{ github.sha }} run ${{ github.run_number }}" > SOURCE.txt
           git init -q
-          git checkout -q -b native-screenshots
+          git checkout -q -b "${{ github.ref_name == 'claude/wizardly-thompson-s0lgzj' && 'lab-native-screenshots' || 'native-screenshots' }}"
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
           git add -A
           git commit -q -m "Screenshots for ${{ github.sha }}"
-          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" native-screenshots
+          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" "${{ github.ref_name == 'claude/wizardly-thompson-s0lgzj' && 'lab-native-screenshots' || 'native-screenshots' }}"
 
   # App Store screens (checks: store) go to their own branch, for
   # scripts/generate-app-store-screenshots.mjs.
@@ -346,12 +344,12 @@ jobs:
           cd "$GITHUB_WORKSPACE/screenshots"
           echo "${{ github.sha }} run ${{ github.run_number }}" > SOURCE.txt
           git init -q
-          git checkout -q -b native-store-screenshots
+          git checkout -q -b "${{ github.ref_name == 'claude/wizardly-thompson-s0lgzj' && 'lab-native-store-screenshots' || 'native-store-screenshots' }}"
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
           git add -A
           git commit -q -m "App Store screenshots for ${{ github.sha }}"
-          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" native-store-screenshots
+          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" "${{ github.ref_name == 'claude/wizardly-thompson-s0lgzj' && 'lab-native-store-screenshots' || 'native-store-screenshots' }}"
 
   # Today must fit every iPhone. Runs the layout checks on phones of each
   # size (standard, Pro Max, SE, mini, Air) and pushes the screenshots to
@@ -459,9 +457,9 @@ jobs:
           cd "$RUNNER_TEMP/screenshots"
           echo "${{ github.sha }} run ${{ github.run_number }}" > SOURCE.txt
           git init -q
-          git checkout -q -b native-layout-screenshots
+          git checkout -q -b "${{ github.ref_name == 'claude/wizardly-thompson-s0lgzj' && 'lab-native-layout-screenshots' || 'native-layout-screenshots' }}"
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
           git add -A
           git commit -q -m "Layout screenshots for ${{ github.sha }}"
-          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" native-layout-screenshots
+          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" "${{ github.ref_name == 'claude/wizardly-thompson-s0lgzj' && 'lab-native-layout-screenshots' || 'native-layout-screenshots' }}"

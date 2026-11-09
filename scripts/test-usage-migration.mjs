@@ -86,6 +86,24 @@ assert.equal(speaking.total, 8);
 assert.equal(report.event_users.speaking, 2);
 assert.equal(report.ai_per_day['11-20'], 1);
 
+// Per build: each account under the build it runs now; one that never
+// reported a version under "?". Only the service role may read it.
+await db.exec(`
+  create table word7000_private.app_installs (user_id uuid primary key references auth.users(id) on delete cascade,
+    app_version text not null, app_build integer, os_version text, language text not null default 'zh', last_seen timestamptz not null default now());
+  insert into word7000_private.app_installs (user_id, app_version, app_build) values ('${me}', '2.0.2', 23);
+`);
+await db.exec(await fs.readFile('supabase/migrations/20261109120000_usage_by_build.sql', 'utf8'));
+const perBuild = (await one(`select public.usage_by_build(7) as r`)).r;
+const mine = perBuild.builds.find((b) => b.app_build === 23);
+assert.equal(mine.accounts, 1);
+assert.equal(perBuild.builds.find((b) => b.app_version === '?').accounts, 1, 'the guest never reported a version');
+const mySpeaking = perBuild.events.find((e) => e.app_build === 23 && e.event === 'speaking' && e.detail === 'completed');
+assert.ok(mySpeaking && mySpeaking.people === 1, 'my speaking is under my build');
+assert.equal(perBuild.events.filter((e) => e.event === 'speaking' && e.detail === 'completed').reduce((n, e) => n + e.times, 0), 8,
+  'every count lands under some build');
+assert.equal((await one(`select has_function_privilege('authenticated', 'public.usage_by_build(integer)', 'execute') as ok`)).ok, false);
+
 // Deleting the account deletes its counts.
 await db.query(`delete from auth.users where id = $1`, [guest]);
 assert.equal((await one(`select count(*)::int as n from word7000_private.usage_events where user_id = $1`, [guest])).n, 0);

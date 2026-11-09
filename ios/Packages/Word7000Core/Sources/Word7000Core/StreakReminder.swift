@@ -53,13 +53,13 @@ public struct StreakActivityProps: Codable, Equatable, Hashable, Sendable {
             activityKind: "streak",
             countdownLabel: chineseInterface ? "剩餘時間" : "Time left",
             expiresAt: expiresAt.timeIntervalSince1970 * 1000,
-            keepStreakLabel: chineseInterface ? "完成 1 個單字即可保住連勝" : "Study 1 word to keep it",
+            keepStreakLabel: chineseInterface ? "學 1 個字就能保住連續天數" : "Study 1 word to keep it",
             progressCurrent: 0,
             progressTarget: 1,
             startedAt: startsAt.timeIntervalSince1970 * 1000,
             streak: plan.streak,
-            streakLabel: chineseInterface ? "連勝 \(plan.streak) 天" : "\(plan.streak)-day streak",
-            title: chineseInterface ? "連勝要斷了，我就看著" : "Your streak is slipping. I'm watching."
+            streakLabel: chineseInterface ? "連續 \(plan.streak) 天" : "\(plan.streak)-day streak",
+            title: chineseInterface ? "連續天數要斷了，我就看著" : "Your streak is slipping. I'm watching."
         )
     }
 }

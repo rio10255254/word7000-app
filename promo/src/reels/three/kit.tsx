@@ -2,11 +2,13 @@ import { type ReactNode, useEffect, useLayoutEffect, useMemo, useRef, useState }
 import { useThree } from '@react-three/fiber';
 import { Easing, continueRender, delayRender, interpolate, staticFile } from 'remotion';
 import * as THREE from 'three';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 
 /**
- * The 3D kit the launch countdown is built from: an iPhone made of plain
- * geometry around a real screenshot, a photo studio to light it, and
+ * The 3D kit the launch countdown is built from: an iPhone model around
+ * a real screenshot, a photo studio to light it, and
  * pieces of the interface that lift off its glass.
  *
  * Nothing here keeps time: every value comes from the frame the scene is
@@ -146,7 +148,7 @@ export const Glass = ({ opacity = 0.16 }: { opacity?: number }) => <meshPhysical
 export const SCREEN_W = 1206;
 export const SCREEN_H = 2622;
 /** The screen is 1 unit wide. */
-export const PHONE = { w: 1, h: SCREEN_H / SCREEN_W, depth: 0.105, rim: 0.04, radius: 0.137 };
+export const PHONE = { w: 1, h: SCREEN_H / SCREEN_W, depth: 0.105, radius: 0.137 };
 /** A point on the screenshot, in the phone's own space. */
 export const onScreen = (x: number, y: number, lift = 0.004): [number, number, number] => [(x / SCREEN_W - 0.5) * PHONE.w, (0.5 - y / SCREEN_H) * PHONE.h, PHONE.depth / 2 + lift];
 
@@ -166,71 +168,79 @@ const glareTexture = (p: number) => {
   return glareMap;
 };
 
+/** Parts of the model that keep their own colour: glass, lenses, the screen. */
+const KEEP = ['zFdeDaGNRwzccye', 'ujsvqBWRMnqdwPx', 'hUlRcbieVuIiOXG', 'jlzuBkUzuJqgiAK', 'xNrofRCqOXXHVZt'];
+/** The model's own display, which the real screenshot replaces. */
+const DISPLAY = 'xXDHkMplTIDAXLN';
+
 /**
- * An iPhone 16 in white, modelled: a matte aluminium band with rounded
- * edges, the glass over a real screenshot, the Dynamic Island, the keys,
- * the port and speaker holes, and on the back a white glass panel with
- * the upright camera pill and its two lenses.
+ * The phone itself: "Apple iPhone 15 Pro Max" by polyman (Sketchfab,
+ * CC BY 4.0), tinted white titanium, turned to face +z and sized so its
+ * display is exactly the screenshot's rectangle on z = depth / 2.
  */
-export const Phone3D = ({ screen, glare = -1, children }: { screen: THREE.Texture; glare?: number; children?: ReactNode }) => {
-  const { w, h, depth, rim, radius } = PHONE;
-  const geo = useMemo(() => {
-    const body = roundedRect(w + rim * 2, h + rim * 2, radius + rim);
-    const glass = roundedRect(w, h, radius);
-    const bezel = roundedRect(w + rim * 1.2, h + rim * 1.2, radius + rim * 0.6);
-    const back = roundedRect(w + rim * 1.5, h + rim * 1.5, radius + rim * 0.75);
-    return {
-      body: slabGeometry(body, depth, 0.028),
-      bezel: new THREE.ShapeGeometry(bezel, 12),
-      glass: faceGeometry(glass, w, h),
-      back: new THREE.ShapeGeometry(back, 12),
+export const loadPhone = async () => {
+  const draco = new DRACOLoader().setDecoderPath(staticFile('draco/'));
+  const gltf = await new GLTFLoader().setDRACOLoader(draco).loadAsync(staticFile('models/iphone-15-pro-max.glb'));
+  draco.dispose();
+  const model = gltf.scene;
+  model.rotation.y = Math.PI;
+  model.updateMatrixWorld(true);
+  let display: THREE.Object3D | null = null;
+  const tint = new THREE.Color('#D6D4CD');
+  model.traverse((o) => {
+    const mesh = o as THREE.Mesh;
+    if (!mesh.isMesh) return;
+    if (mesh.name === DISPLAY) display = mesh;
+    const m = mesh.material as THREE.MeshStandardMaterial;
+    if (!KEEP.includes(m.name) && mesh.name !== DISPLAY) {
+      m.color.copy(tint);
+      // White titanium, not chrome: mirror-like metal only reflects the dark side of the studio.
+      m.metalness = Math.min(m.metalness, 0.55);
+      m.roughness = Math.max(m.roughness, 0.4);
+      m.envMapIntensity = 1.1;
+      // The band's own textures are the black model's: plain brushed metal instead.
+      if (m.name === 'eShKpuMNVJTRrgg') {
+        m.map = null;
+        m.metalnessMap = null;
+        m.roughnessMap = null;
+        m.metalness = 0.6;
+        m.roughness = 0.42;
+        m.needsUpdate = true;
+      }
+    }
+  });
+  if (!display) throw new Error('the phone model has no display');
+  const box = new THREE.Box3().setFromObject(display);
+  const all = new THREE.Box3().setFromObject(model);
+  const size = box.getSize(new THREE.Vector3());
+  const mid = box.getCenter(new THREE.Vector3());
+  (display as THREE.Object3D).visible = false;
+  const sx = PHONE.w / size.x;
+  const sy = PHONE.h / size.y;
+  const holder = new THREE.Group();
+  model.scale.set(sx, sy, sx);
+  model.position.set(-mid.x * sx, -mid.y * sy, PHONE.depth / 2 + 0.0003 - all.max.z * sx);
+  holder.add(model);
+  return holder;
+};
+
+/**
+ * The phone: the model, with a real screenshot where its display was,
+ * the Dynamic Island, whatever lifts off the glass, and a softbox's glare.
+ */
+export const Phone3D = ({ model, screen, glare = -1, children }: { model: THREE.Object3D; screen: THREE.Texture; glare?: number; children?: ReactNode }) => {
+  const { w, h, depth, radius } = PHONE;
+  const geo = useMemo(
+    () => ({
+      glass: faceGeometry(roundedRect(w, h, radius), w, h),
       island: new THREE.ShapeGeometry(roundedRect(0.312, 0.091, 0.0455), 10),
-      pill: slabGeometry(roundedRect(0.25, 0.52, 0.125), 0.034, 0.012),
-    };
-  }, [w, h, depth, rim, radius]);
+    }),
+    [w, h, radius],
+  );
   const z = depth / 2;
-  const band = <meshStandardMaterial color="#CFCCC4" metalness={0.9} roughness={0.4} envMapIntensity={1.0} />;
-  const key = (side: 1 | -1, y: number, length: number) => (
-    <mesh position={[side * (w / 2 + rim + 0.006), y, 0]}>
-      <capsuleGeometry args={[0.011, length, 4, 10]} />
-      {band}
-    </mesh>
-  );
-  // Seen from behind, the pill is at the top left: that is +x here.
-  const pillX = w / 2 - 0.215;
-  const pillY = h / 2 - 0.36;
-  const lens = (y: number) => (
-    <group position={[pillX, y, -z - 0.036]} rotation={[Math.PI / 2, 0, 0]}>
-      <mesh>
-        <cylinderGeometry args={[0.092, 0.096, 0.03, 40]} />
-        <meshStandardMaterial color="#CFCBC2" metalness={0.95} roughness={0.25} envMapIntensity={1.4} />
-      </mesh>
-      <mesh position={[0, -0.016, 0]}>
-        <cylinderGeometry args={[0.078, 0.078, 0.004, 40]} />
-        <meshPhysicalMaterial color="#07090d" roughness={0.08} clearcoat={1} envMapIntensity={0.9} />
-      </mesh>
-      <mesh position={[0, -0.019, 0]}>
-        <torusGeometry args={[0.044, 0.005, 8, 32]} />
-        <meshStandardMaterial color="#1b2333" metalness={0.8} roughness={0.2} />
-      </mesh>
-      <mesh position={[0, -0.0195, 0]}>
-        <cylinderGeometry args={[0.024, 0.024, 0.002, 24]} />
-        <meshPhysicalMaterial color="#141d33" roughness={0.05} clearcoat={1} envMapIntensity={1.2} />
-      </mesh>
-    </group>
-  );
   return (
     <group>
-      <mesh geometry={geo.body}>{band}</mesh>
-      {key(-1, 0.56, 0.07)}
-      {key(-1, 0.36, 0.14)}
-      {key(-1, 0.16, 0.14)}
-      {key(1, 0.3, 0.24)}
-      {key(1, -0.28, 0.13)}
-      {/* The front: bezel, the screen itself, the island, and the glass over it. */}
-      <mesh geometry={geo.bezel} position={[0, 0, z + 0.0005]}>
-        <meshStandardMaterial color="#070707" roughness={0.25} />
-      </mesh>
+      <primitive object={model} />
       <mesh geometry={geo.glass} position={[0, 0, z + 0.0015]}>
         <meshBasicMaterial map={screen} toneMapped={false} />
       </mesh>
@@ -238,7 +248,7 @@ export const Phone3D = ({ screen, glare = -1, children }: { screen: THREE.Textur
         <meshBasicMaterial color="#030303" />
       </mesh>
       {children}
-      <mesh geometry={geo.bezel} position={[0, 0, z + 0.006]} renderOrder={7}>
+      <mesh geometry={geo.glass} position={[0, 0, z + 0.006]} renderOrder={7}>
         <Glass opacity={0.1} />
       </mesh>
       {/* A softbox passing over the glass: `glare` runs 0 → 1 across it. */}
@@ -247,30 +257,6 @@ export const Phone3D = ({ screen, glare = -1, children }: { screen: THREE.Textur
           <meshBasicMaterial map={glareTexture(glare)} transparent blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
         </mesh>
       ) : null}
-      {/* The bottom edge: the port and the speaker holes. */}
-      <mesh position={[0, -h / 2 - rim - 0.001, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <capsuleGeometry args={[0.014, 0.085, 4, 10]} />
-        <meshStandardMaterial color="#2a2622" roughness={0.6} />
-      </mesh>
-      {[-0.3, -0.25, -0.2, 0.2, 0.25, 0.3].map((x) => (
-        <mesh key={x} position={[x, -h / 2 - rim - 0.001, 0]}>
-          <sphereGeometry args={[0.0095, 10, 8]} />
-          <meshStandardMaterial color="#2a2622" roughness={0.6} />
-        </mesh>
-      ))}
-      {/* The back: white glass, the camera pill, two lenses, the flash. */}
-      <mesh geometry={geo.back} position={[0, 0, -z - 0.0005]} rotation={[0, Math.PI, 0]}>
-        <meshPhysicalMaterial color="#D2CFC7" roughness={0.6} metalness={0.1} clearcoat={0.3} clearcoatRoughness={0.5} envMapIntensity={0.55} />
-      </mesh>
-      <mesh geometry={geo.pill} position={[pillX, pillY, -z - 0.013]}>
-        <meshPhysicalMaterial color="#D8D5CD" roughness={0.3} metalness={0.1} clearcoat={0.8} clearcoatRoughness={0.25} envMapIntensity={0.7} />
-      </mesh>
-      {lens(pillY + 0.125)}
-      {lens(pillY - 0.125)}
-      <mesh position={[pillX - 0.27, pillY, -z - 0.004]} rotation={[Math.PI / 2, 0, 0]}>
-        <cylinderGeometry args={[0.04, 0.04, 0.008, 24]} />
-        <meshStandardMaterial color="#fff6dc" emissive="#ffe9b0" emissiveIntensity={0.2} roughness={0.3} />
-      </mesh>
     </group>
   );
 };

@@ -11,7 +11,7 @@ import { ABOVE_CAPTIONS, CAPTION_TOP, Peek } from './Teaser';
 import { CountdownEnd, DaysStamp, StampCard } from './Countdown';
 import { Calendar, Counter, Route, Track } from './props';
 import { Backdrop, Grade, InkFilters, Motes } from './finish';
-import { Lift, PHONE, colorAt, Phone3D, ScreenLayer, StudioLight, Tap3D, imageTexture, inOut, loadStudio, onScreen, out, ramp, usePrepared } from './three/kit';
+import { Lift, PHONE, colorAt, Phone3D, ScreenLayer, StudioLight, Tap3D, imageTexture, inOut, loadPhone, loadStudio, onScreen, out, ramp, usePrepared } from './three/kit';
 
 /**
  * 11/10, six days to go: the study plan, on a real phone in 3D.
@@ -168,10 +168,10 @@ const Stage = ({ id }: { id: string }) => {
   const film = useFilm(id);
   const { t, s, pose } = film;
   const maps = usePrepared(async () => {
-    const [quiz, done, plan, env] = await Promise.all([imageTexture(`${s.quiz[0]}.jpg`), imageTexture(`${s.quiz[1]}.jpg`), imageTexture(`${s.plan}.jpg`), loadStudio(gl)]);
+    const [quiz, done, plan, env, phone] = await Promise.all([imageTexture(`${s.quiz[0]}.jpg`), imageTexture(`${s.quiz[1]}.jpg`), imageTexture(`${s.plan}.jpg`), loadStudio(gl), loadPhone()]);
     // What is left where a piece lifts off: the page just outside its top-left corner.
     const ground = (map: THREE.Texture, crops: Crop[]) => crops.map(([x0, y0]) => colorAt(map, x0 + 60, y0 - 14));
-    return { quiz, done, plan, env, quizGround: ground(done, s.quizLifts), planGround: ground(plan, s.planLifts) };
+    return { quiz, done, plan, env, phone, quizGround: ground(done, s.quizLifts), planGround: ground(plan, s.planLifts) };
   });
   if (!maps || t < film.rise - 0.05) return null;
   const top = film.onPlan ? maps.plan : film.answered > 0.5 ? maps.done : maps.quiz;
@@ -179,7 +179,7 @@ const Stage = ({ id }: { id: string }) => {
     <>
       <StudioLight env={maps.env} turn={t * 0.12 + pose.ry * 0.25} />
       <group position={[pose.x, pose.y + Math.sin(t * 1.3) * 0.012, pose.z]} rotation={[pose.rx + Math.sin(t * 0.9) * 0.008, pose.ry, pose.rz, 'YXZ']}>
-        <Phone3D screen={film.onPlan ? maps.plan : maps.quiz} glare={film.glare}>
+        <Phone3D model={maps.phone} screen={film.onPlan ? maps.plan : maps.quiz} glare={film.glare}>
           {!film.onPlan ? <ScreenLayer map={maps.done} opacity={film.answered} /> : null}
           <ScreenLayer color="#2a2418" opacity={Math.max(film.dim * 0.16, film.propOut * 0.3)} over />
           {film.lifts.map((l, i) => (

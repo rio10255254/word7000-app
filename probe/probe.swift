@@ -16,7 +16,12 @@ func run(_ image: CGImage, _ langs: [String], _ label: String) throws {
     request.usesLanguageCorrection = false
     request.minimumTextHeight = 0.004
     request.recognitionLanguages = langs
-    try VNImageRequestHandler(cgImage: image, orientation: .up, options: [:]).perform([request])
+    if let cpu = try? request.supportedComputeStageDevices[.main]?.first(where: { "\($0)".contains("CPU") }) {
+        request.setComputeDevice(cpu, for: .main)
+    }
+    print("devices", (try? request.supportedComputeStageDevices) ?? [:])
+    do { try VNImageRequestHandler(cgImage: image, orientation: .up, options: [:]).perform([request]) }
+    catch { print("FAILED \(label): \(error)"); return }
     print("=== \(label) \(langs)")
     for o in request.results ?? [] {
         let b = o.boundingBox

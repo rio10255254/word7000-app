@@ -13,6 +13,7 @@ struct MeView: View {
     @Environment(AccountModel.self) private var account
     @State private var historyOpen = false
     @State private var signInOpen = false
+    @State private var reportOpen = false
     private let dailyTargetOptions = [10, 20, 30, 50]
 
     var body: some View {
@@ -84,12 +85,29 @@ struct MeView: View {
                         Label(L.settings, systemImage: "gearshape")
                     }
                     .accessibilityIdentifier("me-settings")
+                    Button { reportOpen = true } label: {
+                        Label(L.t("回報問題", "Report a problem"), systemImage: "ladybug")
+                    }
+                    .tint(.primary)
+                    .accessibilityIdentifier("me-report-row")
                 }
             }
             .listRowBackground(StyledRowBackground())
         }
         .warmList()
         .navigationTitle(L.tabMe)
+        // Reporting a problem is meant to be easy to find: up top, every visit.
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button { reportOpen = true } label: {
+                    Label(L.t("回報問題", "Report a problem"), systemImage: "ladybug.fill")
+                        .labelStyle(.titleAndIcon)
+                        .font(.subheadline.weight(.semibold))
+                }
+                .accessibilityIdentifier("me-report")
+            }
+        }
+        .sheet(isPresented: $reportOpen) { ReportProblemView() }
         .navigationDestination(isPresented: $historyOpen) { HistoryView() }
         .navigationDestination(for: MeRoute.self) { route in
             switch route {
@@ -206,6 +224,7 @@ struct SettingsView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var manageOpen = false
     @State private var timeOpen = false
+    @State private var reportOpen = false
     private let dailyTargetOptions = [10, 20, 30, 50]
 
     /// "第 3 章 · 每天 20 個", or the goal alone outside the built-in words.
@@ -378,6 +397,10 @@ struct SettingsView: View {
                 AccountSection(includeDeletion: true)
     
                 Section {
+                    Button { reportOpen = true } label: {
+                        SettingsLabel(L.t("回報問題", "Report a problem"), icon: "ladybug.fill", tint: Palette.miss)
+                    }
+                    .accessibilityIdentifier("settings-report")
                     Link(destination: URL(string: "https://word7000-app.rio10255254.workers.dev/privacy.html")!) {
                         SettingsLabel(L.privacyPolicy, icon: "hand.raised.fill", tint: Palette.secondaryLabel, external: true)
                     }
@@ -405,6 +428,7 @@ struct SettingsView: View {
             ))
         }
         .modifier(PlusManageSheet(isPresented: $manageOpen, groupID: plus.subscriptionGroupID))
+        .sheet(isPresented: $reportOpen) { ReportProblemView() }
         .navigationBarTitleDisplayMode(.inline)
         .task { await account.checkReminderSupport() }
         .animation(reduceMotion ? nil : Motion.reveal, value: model.reminderEnabled)

@@ -1,0 +1,156 @@
+Attributes: Application, 0x103d6f050, pid: 89437, label: 'WordCat'
+Element subtree:
+ →Application, 0x103d6f050, pid: 89437, label: 'WordCat'
+    Window (Main), 0x103df00d0, {{0.0, 0.0}, {375.0, 812.0}}
+      Other, 0x103de59d0, {{0.0, 0.0}, {375.0, 812.0}}
+        Other, 0x103de55d0, {{0.0, 0.0}, {375.0, 812.0}}
+          Other, 0x103de7300, {{0.0, 0.0}, {375.0, 812.0}}
+            Other, 0x103de4570, {{0.0, 0.0}, {375.0, 812.0}}
+              Other, 0x103de03b0, {{0.0, 0.0}, {375.0, 812.0}}
+                Other, 0x103de38f0, {{0.0, 0.0}, {375.0, 812.0}}
+                  Other, 0x103ddf730, {{0.0, 0.0}, {375.0, 812.0}}
+                    Other, 0x103d765d0, {{0.0, 0.0}, {375.0, 812.0}}
+                      Other, 0x103dee0b0, {{0.0, 0.0}, {375.0, 812.0}}
+                        Other, 0x103d90e20, {{0.0, 0.0}, {380.6, 812.0}}
+                          Image, 0x103d90a00, {{0.0, 0.0}, {375.0, 812.0}}, label: 'PaperGrain'
+                          Image, 0x103d91240, {{265.4, 239.4}, {115.3, 375.5}}, label: 'PaperGrain'
+                          Image, 0x103d8f140, {{16.0, 233.7}, {343.0, 371.0}}, label: 'PaperGrain'
+                          Other, 0x103deed10, {{16.0, 544.7}, {110.0, 60.0}}
+                          Other, 0x103d901c0, {{33.0, 220.0}, {64.0, 27.4}}
+                          StaticText, 0x103deb130, {{36.0, 251.7}, {130.3, 18.0}}, label: '今天的單字 · 第 1 章'
+                          Other, 0x103d8fda0, {{115.0, 261.0}, {145.3, 145.3}}, label: '今天 8 / 20 個字'
+                            Other, 0x103d8f980, {{115.0, 261.0}, {145.3, 145.3}}, value: 40%
+                            Image, 0x103d8f560, {{164.0, 314.0}, {46.7, 39.3}}, identifier: 'rectangle.on.rectangle.angled', label: '學習字卡'
+                            StaticText, 0x103d776a0, {{173.3, 363.9}, {28.3, 14.3}}, label: '8/20'
+                          StaticText, 0x103d8ed20, {{168.2, 397.7}, {38.7, 23.3}}, label: '翻卡'
+                          StaticText, 0x103d8e900, {{107.3, 427.0}, {160.3, 20.3}}, label: '7 個待複習 · 6 個新字'
+                          Button, 0x103d8e4e0, {{47.9, 457.6}, {47.5, 61.1}}, identifier: 'today-node-cards', label: '翻卡'
+                            Image, 0x103d885e0, {{59.4, 471.3}, {24.5, 20.5}}, identifier: 'rectangle.on.rectangle.angled', label: '學習字卡'
+                            StaticText, 0x103d91660, {{63.2, 508.3}, {17.0, 10.3}}, label: '翻卡'
+                          Button, 0x103d7dc90, {{127.0, 459.3}, {44.0, 59.3}}, identifier: 'today-spelling', label: '拼字'
+                            Image, 0x103d8e0c0, {{139.0, 472.7}, {18.7, 17.3}}, identifier: 'pencil.line', label: 'pencil.line'
+                            StaticText, 0x103d8dca0, {{140.5, 508.3}, {17.0, 10.3}}, label: '拼字'
+                          Button, 0x103d91ea0, {{204.3, 459.3}, {44.0, 59.3}}, identifier: 'today-quiz', label: '考考看'
+                            Image, 0x103da85b0, {{217.0, 473.3}, {18.7, 16.3}}, identifier: 'checklist', label: 'checklist'
+                            StaticText, 0x103da89d0, {{213.3, 508.3}, {25.7, 10.3}}, label: '考考看'
+                          Button, 0x103da8df0, {{281.3, 459.3}, {44.0, 59.3}}, identifier: 'today-speaking', label: '口說'
+                            Image, 0x103da9210, {{296.7, 472.3}, {13.3, 18.0}}, identifier: 'mic.fill', label: '麥克風'
+                            StaticText, 0x103da7d70, {{294.8, 508.3}, {17.0, 10.3}}, label: '口說'
+                          Button, 0x103da8190, {{36.0, 530.7}, {303.0, 52.0}}, identifier: 'today-start', label: '繼續翻卡'
+                            StaticText, 0x103de7c00, {{133.0, 544.7}, {76.7, 24.0}}, label: '繼續翻卡'
+                            Image, 0x103de6210, {{220.0, 548.7}, {19.7, 16.3}}, identifier: 'arrow.right', label: '向右'
+                          Button, 0x103d77270, {{272.2, 176.9}, {75.6, 75.6}}, identifier: 'today-mascot', label: '傻貓'
+                            Other, 0x103d93b50, {{272.2, 176.9}, {75.6, 75.6}}
+                          Button, 0x103d94c40, {{16.0, 616.7}, {343.0, 76.0}}, identifier: 'today-review', label: '錯題本、7 個還不熟的字'
+                            Image, 0x103d94d60, {{15.6, 614.9}, {343.8, 79.6}}, label: 'PaperGrain'
+                            Other, 0x103d94e80, {{159.6, 605.5}, {55.4, 24.3}}
+                            Image, 0x103d94fa0, {{47.0, 644.0}, {18.0, 21.7}}, identifier: 'arrow.counterclockwise', label: 'arrow.counterclockwise'
+                            StaticText, 0x103d950c0, {{94.0, 632.7}, {57.7, 24.0}}, label: '錯題本'
+                            StaticText, 0x103d951e0, {{94.0, 658.7}, {101.7, 18.0}}, label: '7 個還不熟的字'
+                            Image, 0x103d95300, {{333.0, 647.3}, {9.0, 15.0}}, identifier: 'chevron.right', label: '往前'
+                          StaticText, 0x103d95420, {{16.0, 58.0}, {80.0, 33.7}}, label: '早安！'
+                          Image, 0x103d95540, {{17.3, 110.3}, {16.7, 16.7}}, identifier: 'sun.max.fill', label: '調高亮度'
+                          StaticText, 0x103d95660, {{39.3, 109.7}, {94.7, 18.0}}, label: '11月10日 週二'
+                          Button, 0x103d95780, {{218.3, 99.7}, {55.3, 38.0}}, identifier: 'today-streak', label: '連續 2 天'
+                            Button, 0x103d958a0, {{218.3, 99.7}, {55.3, 38.0}}, label: '2'
+                              Image, 0x103d959c0, {{218.3, 99.7}, {55.3, 38.0}}, label: 'PaperGrain'
+                              Image, 0x103d95ae0, {{231.7, 109.3}, {15.0, 19.0}}, identifier: 'flame.fill', label: '火焰'
+                              StaticText, 0x103d95c00, {{252.0, 108.5}, {9.7, 20.3}}, label: '2'
+                          Button, 0x103d95d20, {{281.7, 99.7}, {77.3, 38.0}}, identifier: 'today-shelf', label: '已會 48 個字'
+                            Button, 0x103d95e40, {{281.7, 99.7}, {77.3, 38.0}}, label: '48'
+                              Image, 0x103d95f60, {{281.7, 99.7}, {77.3, 38.0}}, label: 'PaperGrain'
+                              Image, 0x103d96080, {{295.7, 109.3}, {23.3, 19.0}}, identifier: 'books.vertical.fill', label: '書架'
+                              StaticText, 0x103d961a0, {{325.0, 108.5}, {22.0, 20.3}}, label: '48'
+                Other, 0x103d962c0, {{0.0, 729.0}, {375.0, 83.0}}
+                  Other, 0x103d963e0, {{0.0, 0.0}, {375.0, 812.0}}
+                    TabBar, 0x103d96500, {{0.0, 729.0}, {375.0, 83.0}}, label: 'Tab Bar'
+                      Other, 0x103d96620, {{21.0, 729.0}, {333.0, 62.0}}
+                        Other, 0x103d96740, {{21.0, 729.0}, {94.0, 54.0}}
+                        Other, 0x103d96860, {{21.0, 729.0}, {333.0, 62.0}}
+                          Button, 0x103d96980, {{25.0, 733.0}, {94.0, 54.0}}, identifier: 'sun.max.fill', label: '今天', Selected
+                            Image, 0x103d96aa0, {{58.0, 738.0}, {29.0, 29.3}}, identifier: 'sun.max.fill', label: 'brightness higher'
+                          Button, 0x103d96bc0, {{102.0, 733.0}, {94.0, 54.0}}, identifier: 'dumbbell.fill', label: '練習'
+                            Image, 0x103d96ce0, {{132.0, 742.3}, {35.0, 21.0}}, identifier: 'dumbbell.fill', label: 'dumbbell.fill'
+                          Button, 0x103d96e00, {{179.0, 733.0}, {94.0, 54.0}}, identifier: 'books.vertical.fill', label: '單字'
+                            Image, 0x103d96f20, {{209.0, 738.0}, {33.3, 29.3}}, identifier: 'books.vertical.fill', label: 'Bookshelf'
+                          Button, 0x103d97040, {{256.0, 733.0}, {94.0, 54.0}}, identifier: 'person.crop.circle.fill', label: '我'
+                            Image, 0x103d97160, {{289.0, 739.3}, {27.3, 27.3}}, identifier: 'person.crop.circle.fill', label: 'account'
+                        Other, 0x103d97280, {{25.0, 733.0}, {94.0, 54.0}}
+                          Other, 0x103d973a0, {{25.0, 733.0}, {94.0, 54.0}}
+                            Other, 0x103d974c0, {{25.0, 733.0}, {94.0, 54.0}}
+                            Other, 0x103d975e0, {{25.0, 733.0}, {94.0, 54.0}}
+                              Other, 0x103d97700, {{25.0, 733.0}, {94.0, 54.0}}
+                                Other, 0x103d97820, {{25.0, 733.0}, {94.0, 54.0}}
+                                  Other, 0x103d97940, {{25.0, 733.0}, {94.0, 54.0}}
+                                Other, 0x103d97a60, {{25.0, 733.0}, {94.0, 54.0}}
+                              Other, 0x103d97b80, {{25.0, 733.0}, {94.0, 54.0}}
+                  Other, 0x103d97ca0, {{0.0, 729.0}, {375.0, 83.0}}
+                    Other, 0x103d97dc0, {{0.0, 729.0}, {375.0, 83.0}}
+                      Other, 0x103d97ee0, {{0.0, 729.0}, {375.0, 83.0}}
+                        Other, 0x103d98000, {{0.0, 729.0}, {375.0, 83.0}}
+                          Other, 0x103d98120, {{0.0, 729.0}, {375.0, 83.0}}
+                            Other, 0x103d98240, {{0.0, 729.0}, {375.0, 83.0}}
+                        Other, 0x103d98360, {{0.0, 729.0}, {375.0, 83.0}}
+                          Other, 0x103d98480, {{0.0, 729.0}, {375.0, 83.0}}
+              Other, 0x103d985a0, {{0.0, 50.0}, {375.0, 728.0}}
+      Other, 0x103d986c0, {{0.0, 0.0}, {375.0, 812.0}}
+        Other, 0x103d987e0, {{0.0, 0.0}, {375.0, 812.0}}
+          Other, 0x103d98900, {{0.0, 0.0}, {375.0, 812.0}}
+            Other, 0x1093a3df0, {{0.0, 0.0}, {375.0, 812.0}}
+              NavigationBar, 0x1093ad670, {{0.0, 50.0}, {375.0, 54.0}}, identifier: '_TtGC7SwiftUI32NavigationStackHosting'
+                Other, 0x1093b0de0, {{20.0, 54.0}, {36.0, 36.0}}, identifier: 'exam-round-close', label: '關閉'
+                  Other, 0x1042d9010, {{20.0, 54.0}, {36.0, 36.0}}
+                    Button, 0x1042d4b00, {{24.7, 54.0}, {26.7, 36.0}}, identifier: 'exam-round-close', label: '關閉'
+                Other, 0x1042d5c60, {{167.3, 63.0}, {40.0, 18.0}}
+                  Other, 0x1042d4400, {{167.3, 63.0}, {40.0, 18.0}}
+                    StaticText, 0x1042d6670, {{167.3, 63.0}, {40.0, 18.0}}, identifier: 'exam-round-position', label: '1 / 10'
+              Other, 0x1042da150, {{0.0, 0.0}, {375.0, 812.0}}
+                Other, 0x1042d58e0, {{0.0, 0.0}, {375.0, 812.0}}
+                  Other, 0x1042d8910, {{0.0, 0.0}, {375.0, 812.0}}
+                    Other, 0x1042db950, {{0.0, 0.0}, {375.0, 812.0}}
+                      Image, 0x1042b6c30, {{0.0, 0.0}, {375.0, 812.0}}, label: 'PaperGrain'
+                      ScrollView, 0x103d98a20, {{16.0, 0.0}, {343.0, 812.0}}
+                        Other, 0x103d98b40, {{16.0, 0.0}, {343.0, 812.0}}
+                          Other, 0x1042d8c90, {{16.0, 0.0}, {343.0, 158.8}}
+                        Other, 0x1042d81e0, {{16.0, 0.0}, {343.0, 812.0}}
+                        Other, 0x1042d5fb0, {{16.0, 104.0}, {343.0, 616.3}}
+                          StaticText, 0x1042d6310, {{15.2, 134.6}, {272.5, 46.4}}, label: '對！這種題目考試最愛。'
+                            Image, 0x1042d70c0, {{15.2, 141.6}, {3.7, 3.8}}, identifier: 'sparkle', label: 'sparkle'
+                            Image, 0x10424e2a0, {{58.1, 134.6}, {7.6, 7.7}}, identifier: 'sparkle', label: 'sparkle'
+                            Image, 0x1042d7420, {{58.1, 159.1}, {5.6, 5.6}}, identifier: 'sparkle', label: 'sparkle'
+                            StaticText, 0x1042d69e0, {{88.0, 147.8}, {185.7, 20.3}}, label: '對！這種題目考試最愛。'
+                          StaticText, 0x1042d5580, {{52.0, 218.0}, {277.7, 54.3}}, identifier: 'routine-exam-sentence', label: 'Tourists can  see  the old city gate from here.'
+                          StaticText, 0x1042d6d50, {{52.0, 286.3}, {249.3, 24.0}}, label: '遊客從這裡可以看到舊城門。'
+                          Button, 0x1042d4780, {{15.0, 345.3}, {345.0, 66.0}}, identifier: 'routine-option-0', label: 'A. see', Selected, Disabled
+                            StaticText, 0x1042dce10, {{44.2, 368.2}, {11.7, 20.3}}, label: 'A', Disabled
+                            StaticText, 0x1042dd860, {{82.0, 365.2}, {35.7, 26.3}}, label: 'see', Disabled
+                            Image, 0x1042dc730, {{319.0, 367.3}, {22.0, 22.0}}, identifier: 'checkmark.circle.fill', label: 'Selected', Selected, Disabled
+                          Button, 0x1042ddbd0, {{15.0, 419.3}, {345.0, 66.0}}, identifier: 'routine-option-1', label: 'B. sew', Disabled
+                            StaticText, 0x1042dabd0, {{44.3, 442.2}, {11.3, 20.3}}, label: 'B', Disabled
+                            StaticText, 0x1042d9720, {{82.0, 439.2}, {40.7, 26.3}}, label: 'sew', Disabled
+                          Button, 0x1042dd4d0, {{15.0, 493.3}, {345.0, 66.0}}, identifier: 'routine-option-2', label: 'C. serve', Disabled
+                            StaticText, 0x1042da4c0, {{43.8, 516.2}, {12.3, 20.3}}, label: 'C', Disabled
+                            StaticText, 0x1042dc050, {{82.0, 513.2}, {55.0, 26.3}}, label: 'serve', Disabled
+                          Button, 0x1042dd180, {{15.0, 567.3}, {345.0, 66.0}}, identifier: 'routine-option-3', label: 'D. sue', Disabled
+                            StaticText, 0x1042dc3a0, {{43.8, 590.2}, {12.3, 20.3}}, label: 'D', Disabled
+                            StaticText, 0x1042dbce0, {{82.0, 587.2}, {36.0, 26.3}}, label: 'sue', Disabled
+                          StaticText, 0x1042da840, {{16.0, 648.3}, {343.0, 56.0}}, identifier: 'routine-explanation', label: 'see　看到'
+                        Other, 0x1042dca80, {{326.0, 104.0}, {30.0, 600.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                          Other, 0x1042daf40, {{353.0, 107.0}, {3.0, 582.3}}
+                        Other, 0x1042d93a0, {{326.0, 104.0}, {30.0, 600.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                          Other, 0x10429b3d0, {{353.0, 107.0}, {3.0, 582.3}}
+                      Image, 0x1042d2c00, {{16.0, 694.0}, {343.0, 118.0}}, identifier: 'routine-next', label: 'PaperGrain'
+                      Button, 0x1042d7e60, {{16.0, 694.0}, {343.0, 118.0}}, identifier: 'routine-next', label: '下一題'
+                        Image, 0x1042d5200, {{16.0, 720.0}, {343.0, 50.0}}, label: 'PaperGrain'
+                        StaticText, 0x10429b740, {{16.0, 720.0}, {343.0, 50.0}}, label: '下一題'
+                      Other, 0x1042d4e60, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'routine-next'
+              Other, 0x1093aea30, {{0.0, 0.0}, {375.0, 812.0}}
+                Other, 0x1093addd0, {{0.0, 0.0}, {375.0, 812.0}}
+            Other, 0x1093ae620, {{0.0, 50.0}, {375.0, 728.0}}
+Path to element:
+ →Application, 0x103d6f050, pid: 89437, label: 'WordCat'
+Query chain:
+ →Find: Target Application 'com.rio.word7000'
+  Output: {
+    Application, 0x1093a7170, pid: 89437, label: 'WordCat'
+  }

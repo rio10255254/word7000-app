@@ -22,6 +22,29 @@ final class LayoutTests: XCTestCase {
         return app
     }
 
+    /// The classic Today fills the phone: its practice tiles grow (up to a
+    /// tile's size) down to the tab bar, leaving no strip under them.
+    func testClassicTodayFillsThisPhone() {
+        let app = launch(["-uiTestingClassic"])
+        checkToday(app, name: "layout-classic", tiles: ["today-quiz", "today-speaking", "today-spelling", "today-exam"], maxGap: 40)
+    }
+
+    /// A chapter's route fills the phone too: its steps grow to a strip's
+    /// size and the dashed route between them takes the rest.
+    func testChapterRouteFillsThisPhone() {
+        let app = launch(["-uiTestingClassic"])
+        let tab = app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["語言學習", "Language learning"])).firstMatch
+        XCTAssertTrue(tab.waitForExistence(timeout: 5))
+        tab.tap()
+        let chapter = app.buttons.matching(NSPredicate(format: "label CONTAINS %@ OR label CONTAINS %@", "正在讀", "Reading now")).firstMatch
+        XCTAssertTrue(chapter.waitForExistence(timeout: 5), app.debugDescription)
+        chapter.tap()
+        XCTAssertTrue(app.buttons["chapter-step-cards"].waitForExistence(timeout: 5), app.debugDescription)
+        sleep(2)
+        checkToday(app, name: "layout-chapter", tiles: ["chapter-step-cards", "chapter-step-spell", "chapter-step-quiz", "chapter-step-speaking"],
+                   start: nil, mascot: nil, maxGap: 40)
+    }
+
     func testTodayFitsInEnglishMode() {
         let app = launch()
         checkToday(app, name: "layout-english", tiles: Self.home)
@@ -237,12 +260,14 @@ final class LayoutTests: XCTestCase {
         XCTAssertTrue(element.isHittable, "\(name) can't be tapped", file: file, line: line)
     }
 
-    private func checkToday(_ app: XCUIApplication, name: String, tiles: [String], file: StaticString = #filePath, line: UInt = #line) {
+    private func checkToday(_ app: XCUIApplication, name: String, tiles: [String], start: String? = "today-start",
+                            mascot mascotId: String? = "today-mascot", maxGap: CGFloat = 150,
+                            file: StaticString = #filePath, line: UInt = #line) {
         snap(app, name)
         let window = app.windows.firstMatch.frame
         let tabBar = app.tabBars.firstMatch
         let bottom = tabBar.exists ? tabBar.frame.minY : window.maxY
-        let ids = ["today-start"] + tiles
+        let ids = (start.map { [$0] } ?? []) + tiles
 
         var frames: [String: CGRect] = [:]
         for id in ids {
@@ -258,8 +283,10 @@ final class LayoutTests: XCTestCase {
             XCTAssertLessThanOrEqual(frame.maxY, bottom + 1, "\(name): \(id) \(frame) is under the tab bar (top \(bottom))", file: file, line: line)
         }
 
-        let mascot = app.buttons["today-mascot"]
-        if mascot.exists {
+        let mascot = app.buttons[mascotId ?? "-"]
+        if mascotId == nil {
+            // A page without the strolling companion.
+        } else if mascot.exists {
             // A little slack for the soft shadow at its edges.
             let body = mascot.frame.insetBy(dx: 4, dy: 4)
             for (id, frame) in frames where body.intersects(frame) {
@@ -274,7 +301,7 @@ final class LayoutTests: XCTestCase {
         let gap = bottom - last
         let note = "\(name): window \(window), tab bar top \(bottom), last tile ends \(last), gap \(gap)"
         print("LAYOUT \(note)")
-        XCTAssertLessThan(gap, 150, "\(note): too much empty room at the bottom", file: file, line: line)
+        XCTAssertLessThan(gap, maxGap, "\(note): too much empty room at the bottom", file: file, line: line)
     }
 
     private func snap(_ app: XCUIApplication, _ name: String) {

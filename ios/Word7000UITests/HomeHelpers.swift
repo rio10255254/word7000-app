@@ -12,15 +12,27 @@ extension XCUIApplication {
         row.tap()
     }
 
-    /// Leaves for the home screen and closes the app once iOS has suspended
-    /// it. Saves are written in the background, and going to the background
-    /// the app stays awake until they are on disk, so the next launch finds
-    /// them. A fixed pause before closing raced those saves on a busy
-    /// simulator, where one could land seconds late.
+    /// Leaves for the home screen and closes the app once its saves are on
+    /// disk. Saves are written in the background, and going to the
+    /// background the app stays awake until they land, then (in UI tests)
+    /// leaves a file in the host's home to say so. A fixed pause before
+    /// closing raced those saves on a busy simulator, where one landed
+    /// seconds late. The simulator does not suspend an app under test, so
+    /// its state cannot be the signal.
     func closeAfterSaving(file: StaticString = #filePath, line: UInt = #line) {
+        guard let home = ProcessInfo.processInfo.environment["SIMULATOR_HOST_HOME"] else {
+            XCTFail("Relaunch tests run on the simulator", file: file, line: line)
+            return
+        }
+        let marker = URL(fileURLWithPath: home).appendingPathComponent("word7000-ui-testing/saves-on-disk")
+        try? FileManager.default.removeItem(at: marker)
         XCUIDevice.shared.press(.home)
-        XCTAssertTrue(wait(for: .runningBackgroundSuspended, timeout: 30),
-                      "Not suspended (state \(state.rawValue))", file: file, line: line)
+        let deadline = Date().addingTimeInterval(30)
+        while !FileManager.default.fileExists(atPath: marker.path), Date() < deadline {
+            Thread.sleep(forTimeInterval: 0.2)
+        }
+        XCTAssertTrue(FileManager.default.fileExists(atPath: marker.path),
+                      "The app did not finish saving in the background", file: file, line: line)
         terminate()
     }
 }

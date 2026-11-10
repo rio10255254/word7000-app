@@ -300,6 +300,9 @@ private final class SaveBeforeSuspend {
         // Waiting on the store's queue also raises its priority until it drains.
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             store.finishPendingWrites()
+            #if DEBUG && targetEnvironment(simulator)
+            UITestingSaveSignal.post()
+            #endif
             DispatchQueue.main.async { MainActor.assumeIsolated { self?.release(current) } }
         }
     }
@@ -312,3 +315,18 @@ private final class SaveBeforeSuspend {
         UIApplication.shared.endBackgroundTask(ending)
     }
 }
+
+#if DEBUG && targetEnvironment(simulator)
+/// UI tests that relaunch the app close it only once this file appears,
+/// written when going to the background has put every save on disk
+/// (see `closeAfterSaving` in the UI tests). Under XCTest the simulator
+/// keeps the app running in the background, so it never reads as suspended.
+enum UITestingSaveSignal {
+    static func post() {
+        guard AppRuntime.uiTesting, let home = ProcessInfo.processInfo.environment["SIMULATOR_HOST_HOME"] else { return }
+        let directory = URL(fileURLWithPath: home).appendingPathComponent("word7000-ui-testing", isDirectory: true)
+        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        try? Data().write(to: directory.appendingPathComponent("saves-on-disk"))
+    }
+}
+#endif

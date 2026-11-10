@@ -58,6 +58,13 @@ struct ClassicMetrics {
         if tallCard { return (112, 172) }
         return compact ? (54, 92) : tall ? (70, 112) : (62, 122)
     }
+
+    /// The tallest a practice tile grows when it shares the room left on the
+    /// page: past this it would read as stretched, and the gaps take the rest.
+    func tileCap(tallCard: Bool) -> CGFloat {
+        if tallCard { return 210 }
+        return compact ? 132 : 180
+    }
 }
 
 /// One goal, one button, and the little companion cheering you on. The page
@@ -176,7 +183,11 @@ struct ClassicTodayView: View {
                 .entrance(0, distance: 10)
             notices
             checklist
+            // The tiles take the room first (up to a tile's size); what they
+            // cannot use opens this gap a little before any is left at the end.
+            if fill { Spacer(minLength: 0).frame(maxHeight: m.spacing * 2) }
             practice(m, fill: fill)
+                .layoutPriority(1)
         }
         .padding(.horizontal, Metrics.gutter)
         .padding(.top, m.compact ? 6 : 12)
@@ -557,9 +568,10 @@ struct ClassicTodayView: View {
         }
     }
 
-    /// `grows`: when the page fits, the practice tiles share whatever room is
-    /// left down to the tab bar, so no phone is left with an empty strip at
-    /// the bottom (a fixed tallest size left one on the taller phones).
+    /// `grows`: when the page fits, the practice tiles share the room left
+    /// down to the tab bar (a fixed tallest size left an empty strip on the
+    /// taller phones), up to a size that still looks like a tile; past it
+    /// the room goes to the gaps (see `page`).
     private func tile(_ item: ClassicTileItem, tallCard: Bool, _ m: ClassicMetrics, fill: Bool, order: Int, grows: Bool = true) -> some View {
         let height = m.tileHeight(tallCard: tallCard)
         return Button {
@@ -567,7 +579,7 @@ struct ClassicTodayView: View {
             item.action()
         } label: {
             ClassicTile(item: item, tallCard: tallCard, style: m.tileStyle(tallCard: tallCard),
-                        minHeight: height.min, maxHeight: fill ? (grows ? .infinity : height.max) : nil,
+                        minHeight: height.min, maxHeight: fill ? (grows ? m.tileCap(tallCard: tallCard) : height.max) : nil,
                         bounce: tileTaps[item.id, default: 0])
         }
         .buttonStyle(ClassicTilePressStyle())
@@ -740,8 +752,17 @@ struct ClassicTile: View {
     var minHeight: CGFloat
     var maxHeight: CGFloat?
     var bounce = 0
+    /// The height the tile was given: once a short row has grown tall enough
+    /// it is laid out as a card (icon up top, words along the bottom) with a
+    /// bigger icon and title, so a tile filling a tall phone reads as
+    /// designed for it rather than as a stretched row.
+    @State private var height: CGFloat = 0
+    private static let cardHeight: CGFloat = 118
 
     private var radius: CGFloat { appStyle == .collage ? 0 : tallCard ? 22 : 18 }
+    private var cardLike: Bool { tallCard || height >= Self.cardHeight }
+    private var cardIcon: CGFloat { tallCard ? style.icon : min(56, max(style.icon, (height * 0.34).rounded())) }
+    private var cardTitle: Font.TextStyle { tallCard || height < 150 ? style.title : .title2 }
 
     /// In the collage each way of practising is cut from its own paper; a
     /// chapter's steps take the same papers as their tiles on Today.
@@ -770,16 +791,16 @@ struct ClassicTile: View {
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)
         Group {
-            if tallCard {
+            if cardLike {
                 VStack(alignment: .leading, spacing: 0) {
                     HStack(alignment: .top) {
-                        icon(size: style.icon)
+                        icon(size: cardIcon)
                         Spacer(minLength: 4)
                         corner
                     }
                     Spacer(minLength: 10)
                     Text(item.title)
-                        .font(.display(style.title, weight: .bold))
+                        .font(.display(cardTitle, weight: .bold))
                         .foregroundStyle(.primary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.75)
@@ -819,7 +840,12 @@ struct ClassicTile: View {
             }
         }
         .multilineTextAlignment(.leading)
-        .frame(maxWidth: .infinity, minHeight: minHeight, maxHeight: maxHeight, alignment: tallCard ? .topLeading : .leading)
+        .frame(maxWidth: .infinity, minHeight: minHeight, maxHeight: maxHeight, alignment: cardLike ? .topLeading : .leading)
+        .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height.rounded() } action: { value in
+            var still = Transaction()
+            still.disablesAnimations = true
+            withTransaction(still) { height = value }
+        }
         .background {
             if appStyle == .collage {
                 PaperSurface(kind: paper)
@@ -847,7 +873,7 @@ struct ClassicTile: View {
         .overlay {
             // A soft ring of the tile's colour spreads from the icon when it is tapped.
             if bounce > 0 {
-                ClassicTileRipple(color: item.tint, tallCard: tallCard, iconSize: style.icon)
+                ClassicTileRipple(color: item.tint, tallCard: cardLike, iconSize: cardLike ? cardIcon : style.icon)
                     .id(bounce)
                     .clipShape(shape)
             }
@@ -860,13 +886,13 @@ struct ClassicTile: View {
     private var watermark: some View {
         GeometryReader { proxy in
             let h = proxy.size.height
-            let size = tallCard ? h * 0.62 : h * 0.9
+            let size = cardLike ? h * 0.62 : h * 0.9
             Image(systemName: item.icon)
                 .font(.system(size: size, weight: .bold))
                 .foregroundStyle(item.tint.opacity(0.09))
                 .rotationEffect(.degrees(-12))
-                .position(x: proxy.size.width - size * (tallCard ? 0.32 : 0.3),
-                          y: tallCard ? h - size * 0.3 : h * 0.6)
+                .position(x: proxy.size.width - size * (cardLike ? 0.32 : 0.3),
+                          y: cardLike ? h - size * 0.3 : h * 0.6)
         }
         .allowsHitTesting(false)
         .accessibilityHidden(true)

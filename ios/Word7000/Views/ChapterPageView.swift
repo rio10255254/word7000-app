@@ -9,8 +9,9 @@ import Word7000Core
 /// how much of it is known, today's words, a bookmark with the cat on it.
 /// Below, today's steps one under another, numbered and joined by a dashed
 /// line: a gold stamp on the number once done, the next one ringed and taped
-/// with a Start tab. Like Today it fits the phone: the steps share the room
-/// down to the tab bar, and only very large text scrolls.
+/// with a Start tab. Like Today it fits the phone: the steps grow to a
+/// strip's natural size and the route between them lengthens to take the
+/// rest, and only very large text scrolls.
 struct ChapterPageView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -184,8 +185,10 @@ struct ChapterPageView: View {
 
     // MARK: The route
 
-    /// Today's steps one under another, joined by a dashed line; when the
-    /// page fits they share the room down to the tab bar.
+    /// Today's steps one under another, joined by a dashed line. When the
+    /// page fits, the steps take the room first, up to a size that still
+    /// reads as a strip; past it the dashed line between them lengthens, so a
+    /// tall phone gets a longer route rather than fatter steps.
     private func route(_ nodes: [TodayNode], current: TodayNode?, _ m: ClassicMetrics, fill: Bool) -> some View {
         VStack(spacing: 0) {
             ForEach(Array(nodes.enumerated()), id: \.element) { index, node in
@@ -200,15 +203,24 @@ struct ChapterPageView: View {
                     } label: {
                         ChapterStepCard(node: node, icon: icon(node), title: title(node), detail: detail(node), tint: tint(node),
                                         done: done, next: next, startTitle: startTitle(node), compact: m.compact)
-                            .frame(minHeight: m.compact ? 62 : 74, maxHeight: fill ? .infinity : nil)
                     }
                     .buttonStyle(ClassicTilePressStyle())
                     .accessibilityLabel(title(node))
                     .accessibilityValue(done ? L.t("完成", "Done") : next ? L.t("下一步", "Next") : detail(node))
                     .accessibilityIdentifier("chapter-step-\(node.rawValue)")
                 }
-                .padding(.vertical, m.compact ? 4 : 6)
+                .frame(minHeight: m.compact ? 62 : 74, maxHeight: fill ? (m.compact ? 84 : m.tall ? 112 : 104) : nil)
+                .layoutPriority(1)
                 .entrance(1 + index, distance: 12)
+                if index < nodes.count - 1 {
+                    // The route between two steps: short, and longer when there is room.
+                    HStack(spacing: 0) {
+                        dash.frame(width: 36)
+                        Spacer(minLength: 0)
+                    }
+                    .frame(minHeight: m.compact ? 8 : 12, maxHeight: fill ? (m.compact ? 28 : 44) : (m.compact ? 8 : 12))
+                    .accessibilityHidden(true)
+                }
             }
         }
         .animation(reduceMotion ? nil : Motion.reveal, value: current)
@@ -249,8 +261,6 @@ struct ChapterPageView: View {
             .stroke(TodayView.speakingTint.opacity(0.6), style: StrokeStyle(lineWidth: 2, lineCap: .round, dash: [4, 5]))
             .frame(width: 2)
             .frame(maxHeight: .infinity)
-            // A few points beyond the row, so the line runs on between steps.
-            .padding(.vertical, -6)
     }
 
     // MARK: A step

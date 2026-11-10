@@ -23,8 +23,10 @@ struct MeView: View {
             Group {
                 // Who you are and how far you have come, in one card.
                 Section {
+                    // Plain paper: on the ruled page the blue rules and red
+                    // margin ran through the card's text and buttons.
                     ProfileCard(mastered: stats.mastered, reviewing: stats.review)
-                        .listRowBackground(StyledRowBackground(paper: .ruled))
+                        .listRowBackground(StyledRowBackground())
                 } footer: {
                     if model.progress.streak > 0 {
                         Label {
@@ -597,11 +599,15 @@ private struct ProfileCard: View {
                     .fixedSize()
                     .layoutPriority(1)
             }
-            Label(account.message, systemImage: syncSymbol)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .lineLimit(2)
-                .contentTransition(.opacity)
+            // The symbol on the first line, not centred beside two lines.
+            HStack(alignment: .firstTextBaseline, spacing: 4) {
+                Image(systemName: syncSymbol)
+                Text(account.message)
+                    .lineLimit(2)
+                    .contentTransition(.opacity)
+            }
+            .font(.caption)
+            .foregroundStyle(.secondary)
         }
     }
 
@@ -691,7 +697,7 @@ private struct ProfileCard: View {
         }
         if plus.subscriptionAwaitsSignIn {
             Text(L.t("這個 Apple ID 還有 Premium 訂閱：用 Apple 登入就能使用。不想續訂，請按「管理訂閱」取消。",
-                     "This Apple ID still has Premium: sign in with Apple to use it. To stop renewing, cancel it in Manage subscription."))
+                     "This Apple ID still has Premium: sign in with Apple to use it. To stop renewing, cancel it under Subscription."))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
@@ -707,7 +713,9 @@ private struct ProfileCard: View {
         let button = Button {
             if paying { manageOpen = true } else { plus.paywallReason = .general }
         } label: {
-            Label(paying ? P.manage : plus.access == .expired ? P.unlockPlus : P.upgradePlus, systemImage: "sparkles")
+            // "Manage subscription" was cut short beside Sign in: here it is
+            // "Subscription" (the Chinese 管理訂閱 fits).
+            Label(paying ? L.t("管理訂閱", "Subscription") : plus.access == .expired ? P.unlockPlus : P.upgradePlus, systemImage: "sparkles")
                 .font(.subheadline.weight(.semibold))
                 .frame(maxWidth: .infinity)
         }

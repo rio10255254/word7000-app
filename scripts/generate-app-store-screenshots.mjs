@@ -125,8 +125,9 @@ const ZOOMS = JSON.parse(process.env.ZOOMS ?? 'null') ?? {
   // The line just said back, lit up character by character (for Chinese, with
   // its tones), and how much of it was right.
   said: {
-    zh: { x: 400, y: 1570, w: 770, h: 280 },
-    en: { x: 280, y: 1400, w: 890, h: 450 },
+    // Under the line the learner answers, which stays whole above the card.
+    zh: { x: 400, y: 1570, w: 770, h: 280, below: 1545 },
+    en: { x: 280, y: 1400, w: 890, h: 450, below: 1375 },
   },
 };
 

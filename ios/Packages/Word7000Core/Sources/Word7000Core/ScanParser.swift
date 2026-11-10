@@ -192,15 +192,44 @@ public enum ScanParser {
         return groups.flatMap { group -> [ScannedLine] in
             let fragments = group.sorted { $0.x < $1.x }
             guard fragments.count > 1 else { return fragments }
+            // Handwriting slants: one written line can come back as two
+            // boxes that overlap a little ("Since I was" + "little").
             for i in 1..<fragments.count {
-                if fragments[i].x < fragments[i - 1].x + fragments[i - 1].width - 0.005 { return fragments }
+                if fragments[i].x < fragments[i - 1].x + fragments[i - 1].width - 0.015 { return fragments }
             }
-            let x = fragments.map(\.x).min() ?? 0
-            let y = fragments.map(\.y).min() ?? 0
-            let right = fragments.map { $0.x + $0.width }.max() ?? x
-            let bottom = fragments.map { $0.y + $0.height }.max() ?? y
-            return [ScannedLine(text: fragments.map(\.text).joined(separator: " "), x: x, y: y, width: right - x, height: bottom - y)]
+            // A meaning ends an entry: what starts well to its right is
+            // another column (an example, the next entry), not more of it.
+            // "since 從什麼時候開始 | 從我小時候" stays two rows.
+            var runs: [[ScannedLine]] = [[fragments[0]]]
+            for i in 1..<fragments.count {
+                let previous = fragments[i - 1]
+                let gap = fragments[i].x - (previous.x + previous.width)
+                if gap > columnGap, endsWithChinese(previous.text) {
+                    runs.append([fragments[i]])
+                } else {
+                    runs[runs.count - 1].append(fragments[i])
+                }
+            }
+            return runs.map(joined)
         }
+    }
+
+    /// The space between two columns of a page, as a share of its width.
+    static let columnGap = 0.05
+
+    static func endsWithChinese(_ text: String) -> Bool {
+        text.unicodeScalars.last(where: { !$0.properties.isWhitespace && !CharacterSet.punctuationCharacters.contains($0) })
+            .map(isCJK) ?? false
+    }
+
+    /// Boxes on one row as one line.
+    static func joined(_ fragments: [ScannedLine]) -> ScannedLine {
+        guard fragments.count > 1 else { return fragments[0] }
+        let x = fragments.map(\.x).min() ?? 0
+        let y = fragments.map(\.y).min() ?? 0
+        let right = fragments.map { $0.x + $0.width }.max() ?? x
+        let bottom = fragments.map { $0.y + $0.height }.max() ?? y
+        return ScannedLine(text: fragments.map(\.text).joined(separator: " "), x: x, y: y, width: right - x, height: bottom - y)
     }
 
     // MARK: Pairing lines

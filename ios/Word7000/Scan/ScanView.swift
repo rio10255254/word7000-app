@@ -469,29 +469,37 @@ struct ScanView: View {
                 }
             }
 
-            Section {
-                if plan.duplicateCount > 0 {
+            if plan.duplicateCount > 0 {
+                Section {
                     Text(L.t("\(plan.duplicateCount) 筆相同拼字與意思不會再次加入；同字不同義會保留。", "\(plan.duplicateCount) identical entries will be skipped. Different meanings are kept."))
                         .font(.footnote).foregroundStyle(.secondary)
                         .accessibilityIdentifier("scan-duplicates-summary")
+                        .listRowBackground(Color.clear)
+                        .listRowInsets(EdgeInsets())
                 }
-                Button {
-                    save()
-                } label: {
-                    Text(S.save(count))
-                        .font(.headline)
-                        .contentTransition(.numericText(value: Double(count)))
-                        .frame(maxWidth: .infinity)
-                }
-                .prominentAction()
-                .disabled(count == 0)
-                .accessibilityIdentifier("scan-save")
-                .listRowBackground(Color.clear)
-                .listRowInsets(EdgeInsets())
             }
         }
         .warmList()
         .scrollDismissesKeyboard(.interactively)
+        // The save key on its own bar at the bottom, as on the other screens,
+        // not the last row of the list (where it sat flush with the cards).
+        .safeAreaInset(edge: .bottom) {
+            Button {
+                save()
+            } label: {
+                Text(S.save(count))
+                    .font(.headline)
+                    .contentTransition(.numericText(value: Double(count)))
+                    .frame(maxWidth: .infinity)
+            }
+            .prominentAction()
+            .disabled(count == 0)
+            .accessibilityIdentifier("scan-save")
+            .padding(.horizontal, 20)
+            .padding(.top, 10)
+            .padding(.bottom, 6)
+            .background { PaperBarBackground() }
+        }
     }
 
     /// The word being learned on top, as on the cards: the English word for a

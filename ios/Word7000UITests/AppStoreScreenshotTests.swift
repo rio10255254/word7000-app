@@ -18,6 +18,29 @@ final class AppStoreScreenshotTests: XCTestCase {
 
     func testStoreNextEnglish() { walkNext(prefix: "store-en", chineseMode: true) }
 
+    /// The classic layout, the default for new learners: Today's tiles, the
+    /// Language learning tab's chapters and a chapter's route. `store-*-c*`.
+    func testStoreClassicChinese() { walkClassic(prefix: "store-zh", chineseMode: false) }
+
+    func testStoreClassicEnglish() { walkClassic(prefix: "store-en", chineseMode: true) }
+
+    private func walkClassic(prefix: String, chineseMode: Bool) {
+        let app = launch(chineseMode: chineseMode, ["-uiTestingClassic"])
+        sleep(1)
+        snap(app, "\(prefix)-c1-today")
+        let learning = app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["語言學習", "Language learning"])).firstMatch
+        XCTAssertTrue(learning.waitForExistence(timeout: 5))
+        learning.tap()
+        let chapter = app.buttons.matching(NSPredicate(format: "label CONTAINS %@ OR label CONTAINS %@", "正在讀", "Reading now")).firstMatch
+        XCTAssertTrue(chapter.waitForExistence(timeout: 5), app.debugDescription)
+        sleep(1)
+        snap(app, "\(prefix)-c2-path")
+        chapter.tap()
+        XCTAssertTrue(app.buttons["chapter-step-cards"].waitForExistence(timeout: 5), app.debugDescription)
+        sleep(2)
+        snap(app, "\(prefix)-c3-chapter")
+    }
+
     private static let nextFlags = ["-uiTestingRoutine", "-uiTestingSpeakingRoutine", "-uiTestingDayComplete"]
 
     private func launch(chineseMode: Bool, _ extra: [String] = [], environment: [String: String] = [:]) -> XCUIApplication {

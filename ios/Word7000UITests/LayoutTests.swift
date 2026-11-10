@@ -300,8 +300,10 @@ final class LayoutTests: XCTestCase {
             XCTFail("\(name): the companion is missing", file: file, line: line)
         }
 
-        // The page should use the phone's height: not much left under the last tile.
-        let last = frames.values.map(\.maxY).max() ?? bottom
+        // The page should use the phone's height: not much left under the last
+        // tile, or under Today's note when it has one.
+        let notes = ["today-guest", "today-weekly-quiz", "today-review"].map { app.buttons[$0] }.filter(\.exists)
+        let last = (frames.values.map(\.maxY) + notes.map(\.frame.maxY)).max() ?? bottom
         let gap = bottom - last
         let note = "\(name): window \(window), tab bar top \(bottom), last tile ends \(last), gap \(gap)"
         print("LAYOUT \(note)")

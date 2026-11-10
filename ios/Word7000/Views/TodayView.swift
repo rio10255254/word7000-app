@@ -80,16 +80,16 @@ struct TodayView: View {
     var body: some View {
         GeometryReader { proxy in
             let fits = proxy.size.height > 640 && !dynamicTypeSize.isAccessibilitySize
-            // Roomy if it fits, else the compact card filling the phone (a
-            // 13 mini), else the compact card scrolling (an SE).
+            // Roomy if it fits, else compact without scrolling (a 13 mini),
+            // else compact and scrolling (an SE).
             ViewThatFits(in: .vertical) {
-                page(roomy: fits, height: proxy.size.height)
+                page(roomy: fits)
                     .frame(maxHeight: .infinity, alignment: .top)
                 if fits {
-                    page(roomy: false, height: proxy.size.height)
+                    page(roomy: false)
                         .frame(maxHeight: .infinity, alignment: .top)
                 }
-                ScrollView { page(roomy: false, height: proxy.size.height) }
+                ScrollView { page(roomy: false) }
                     .scrollIndicators(.hidden)
             }
         }
@@ -172,12 +172,20 @@ struct TodayView: View {
 
     /// Epop keeps the home to one thing: the greeting, one big card for the
     /// step to do now, and at most one note. Everything else is a tap away.
-    private func page(roomy: Bool, height: CGFloat) -> some View {
+    private func page(roomy: Bool) -> some View {
         // Roomier now the language switch has left the header: the card sits a
         // little lower instead of leaving the bottom of a tall phone empty.
         VStack(alignment: .leading, spacing: roomy ? 24 : 12) {
-            header
-            focusCard(roomy: roomy, height: height)
+            // Spare room on a tall phone: a little breathing space above the
+            // card (up to 40 points); the card keeps its size and the rest
+            // stays under it. Nothing in the scrolling fallback.
+            VStack(alignment: .leading, spacing: 0) {
+                header
+                Spacer(minLength: 0).frame(maxHeight: 40)
+            }
+            // The header's buttons stay above the cat standing on the card.
+            .zIndex(1)
+            focusCard(roomy: roomy)
             if let nudge = plus.nudge {
                 PlusNudgeBanner(nudge: nudge)
                     .card(padding: 10)
@@ -274,23 +282,15 @@ struct TodayView: View {
     /// One big card for the step to do now, on master's leather: what it
     /// is, today's count, the day's steps as stamps (gold once done) and
     /// the button. The cat stands on its top edge.
-    ///
-    /// On a tall phone the card grows into the room below it rather than
-    /// leaving it empty: the emblem a little bigger (up to 168), and the gaps
-    /// between its parts opening up to a limit each, so it still reads as one
-    /// card; what the gaps cannot take is left under the note.
-    private func focusCard(roomy: Bool, height: CGFloat) -> some View {
+    private func focusCard(roomy: Bool) -> some View {
         let node = currentNode
         let tone: HeroTone = node == .speaking ? .speaking : node == nil ? .done : .words
-        let emblem: CGFloat = roomy ? min(168, max(132, (height * 0.19).rounded())) : 104
-        let card = VStack(spacing: 0) {
+        let card = VStack(spacing: roomy ? 18 : 12) {
             Text(focusKicker(node))
                 .font(.display(.subheadline, weight: .bold))
                 .foregroundStyle(Self.cream.opacity(0.8))
                 .frame(maxWidth: .infinity, alignment: .leading)
-            cardGap(roomy)
-            focusEmblem(node, size: emblem)
-            cardGap(roomy)
+            focusEmblem(node, size: roomy ? 132 : 104)
             VStack(spacing: 6) {
                 Text(focusTitle(node))
                     .font(.display(roomy ? .largeTitle : .title, weight: .heavy))
@@ -304,9 +304,7 @@ struct TodayView: View {
                     .lineLimit(2)
             }
             .foregroundStyle(Self.cream)
-            cardGap(roomy)
             stamps
-            cardGap(roomy)
             mainButton(roomy: roomy)
         }
         .padding(.horizontal, 20)
@@ -316,19 +314,6 @@ struct TodayView: View {
         .background { HeroBackground(tone: tone) }
         return standing(card)
             .animation(reduceMotion ? nil : Motion.reveal, value: node)
-    }
-
-    /// A gap inside the card: 18 points, opening to 46 where the phone has room.
-    /// The compact card (a 13 mini, just short of the roomy one): 12 points,
-    /// opening to 36 instead of leaving a band at the bottom; in the
-    /// scrolling fallback they stay at 12.
-    @ViewBuilder
-    private func cardGap(_ roomy: Bool) -> some View {
-        if roomy {
-            Spacer(minLength: 18).frame(maxHeight: 46)
-        } else {
-            Spacer(minLength: 12).frame(maxHeight: 36)
-        }
     }
 
     private func focusKicker(_ node: TodayNode?) -> String {

@@ -1507,6 +1507,546 @@
           "mood": "smug"
         }
       ]
+    },
+    {
+      "id": "d6",
+      "series": "倒數 6 天",
+      "app": "WordCat 單字貓",
+      "label": "傻貓 SillyCat",
+      "voice": {
+        "engine": "elevenlabs",
+        "voiceId": "fQj4gJSexpu8RDE2Ii5m",
+        "model": "eleven_v4",
+        "language": "zh"
+      },
+      "dayWords": [
+        "還有",
+        "天"
+      ],
+      "note": "11.16 App Store 上架",
+      "outro": "追蹤我們，上架當天通知你",
+      "outroSay": "還有六天。",
+      "kind": "day3d",
+      "days": 6,
+      "launch": "11.16",
+      "endBeats": 7,
+      "endStamp": true,
+      "endStampAt": 0.75,
+      "grooveFrom": 1,
+      "outroAt": 1.0,
+      "screen": "next/n6-plan",
+      "lines": [
+        {
+          "text": "離考試還有幾天，**你算過嗎**？",
+          "say": "[teasing] 離考試還有幾天，你算過嗎？",
+          "beats": 8,
+          "cues": [
+            [
+              0.3,
+              "pop"
+            ]
+          ]
+        },
+        {
+          "text": "先考你兩分鐘，**看你在哪**。",
+          "say": "先考你兩分鐘，看你在哪。",
+          "beats": 8,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              1,
+              "shuffle"
+            ],
+            [
+              2.5,
+              "flip"
+            ],
+            [
+              3,
+              "flip"
+            ],
+            [
+              3.5,
+              "flip"
+            ],
+            [
+              4,
+              "flip"
+            ],
+            [
+              4.5,
+              "flip"
+            ],
+            [
+              6,
+              "thud"
+            ],
+            [
+              6.1,
+              "ding"
+            ]
+          ]
+        },
+        {
+          "text": "選好考試跟日期，**我幫你排**。",
+          "say": "選好考試跟日期，我幫你排。",
+          "beats": 8,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              1,
+              "tap"
+            ],
+            [
+              2,
+              "pop"
+            ],
+            [
+              3,
+              "flip"
+            ],
+            [
+              3.5,
+              "flip"
+            ],
+            [
+              4,
+              "flip"
+            ],
+            [
+              4.5,
+              "flip"
+            ],
+            [
+              5,
+              "pop"
+            ],
+            [
+              6,
+              "stamp"
+            ]
+          ]
+        },
+        {
+          "text": "每天幾個字、讀到第幾章，\n**都算好了**。",
+          "say": "每天幾個字、考前讀到第幾章，都算好了。",
+          "beats": 8,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              1,
+              "thud"
+            ],
+            [
+              2,
+              "thud"
+            ],
+            [
+              3,
+              "thud"
+            ],
+            [
+              4,
+              "thud"
+            ],
+            [
+              5,
+              "thud"
+            ],
+            [
+              5,
+              "tick"
+            ],
+            [
+              5.25,
+              "tick"
+            ],
+            [
+              5.5,
+              "tick"
+            ],
+            [
+              5.75,
+              "tick"
+            ],
+            [
+              6,
+              "ding"
+            ]
+          ]
+        }
+      ],
+      "scene": {
+        "cards": [
+          [
+            "increase",
+            "增加",
+            true
+          ],
+          [
+            "convince",
+            "使相信",
+            true
+          ],
+          [
+            "abandon",
+            "放棄",
+            false
+          ],
+          [
+            "journey",
+            "旅程",
+            true
+          ],
+          [
+            "exquisite",
+            "精緻的",
+            false
+          ]
+        ],
+        "cardFont": "serif",
+        "level": [
+          "程度測好了",
+          "從第 1 章開始"
+        ],
+        "tap": [
+          [
+            620,
+            1860,
+            842,
+            1972
+          ],
+          [
+            835,
+            2262
+          ]
+        ],
+        "phoneLook": 1990,
+        "pages": [
+          [
+            "2026",
+            "11 月",
+            "10",
+            "星期二"
+          ],
+          [
+            "2026",
+            "12 月",
+            "25",
+            "星期五"
+          ],
+          [
+            "2027",
+            "2 月",
+            "6",
+            "星期六"
+          ],
+          [
+            "2027",
+            "4 月",
+            "1",
+            "星期四"
+          ],
+          [
+            "2027",
+            "5 月",
+            "15",
+            "星期六"
+          ]
+        ],
+        "calendarTag": "會考",
+        "stones": [
+          "第 1 章",
+          "第 2 章",
+          "第 3 章",
+          "第 4 章"
+        ],
+        "counter": [
+          "每天",
+          "20",
+          "個字"
+        ],
+        "flag": "會考"
+      }
+    },
+    {
+      "id": "d6-en",
+      "series": "6 days to go",
+      "app": "WordCat",
+      "label": "SillyCat",
+      "voice": {
+        "engine": "elevenlabs",
+        "voiceId": "N2lVS1w4EtoT3dr4eOWO",
+        "model": "eleven_v4",
+        "language": "en"
+      },
+      "dayWords": [
+        "",
+        "days to go"
+      ],
+      "note": "Out 11.16 on the App Store",
+      "outro": "Follow us. We'll tell you when it's out.",
+      "outroSay": "Six days.",
+      "kind": "day3d",
+      "days": 6,
+      "launch": "11.16",
+      "endBeats": 7,
+      "endStamp": true,
+      "endStampAt": 0.75,
+      "grooveFrom": 1,
+      "outroAt": 1.0,
+      "screen": "next/en-n6-plan",
+      "lines": [
+        {
+          "text": "Learning Mandarin **with no plan?**",
+          "say": "[smug] Learning Mandarin... with no plan?",
+          "beats": 8,
+          "cues": [
+            [
+              0.3,
+              "pop"
+            ]
+          ]
+        },
+        {
+          "text": "A two-minute check\n**finds your level.**",
+          "say": "A two-minute check finds your level.",
+          "beats": 8,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              1,
+              "shuffle"
+            ],
+            [
+              2.5,
+              "flip"
+            ],
+            [
+              3,
+              "flip"
+            ],
+            [
+              3.5,
+              "flip"
+            ],
+            [
+              4,
+              "flip"
+            ],
+            [
+              4.5,
+              "flip"
+            ],
+            [
+              6,
+              "thud"
+            ],
+            [
+              6.1,
+              "ding"
+            ]
+          ]
+        },
+        {
+          "text": "Pick a daily goal.\n**I'll plan each day.**",
+          "say": "Pick a daily goal. I'll plan each day.",
+          "beats": 8,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              1,
+              "tap"
+            ],
+            [
+              2,
+              "pop"
+            ],
+            [
+              3,
+              "flip"
+            ],
+            [
+              3.5,
+              "flip"
+            ],
+            [
+              4,
+              "flip"
+            ],
+            [
+              4.5,
+              "flip"
+            ],
+            [
+              5,
+              "pop"
+            ],
+            [
+              6,
+              "stamp"
+            ]
+          ]
+        },
+        {
+          "text": "What to study, every day.\n**All worked out.**",
+          "say": "What to study, every single day. All worked out.",
+          "beats": 9,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              1,
+              "thud"
+            ],
+            [
+              2,
+              "thud"
+            ],
+            [
+              3,
+              "thud"
+            ],
+            [
+              4,
+              "thud"
+            ],
+            [
+              5,
+              "thud"
+            ],
+            [
+              5,
+              "tick"
+            ],
+            [
+              5.25,
+              "tick"
+            ],
+            [
+              5.5,
+              "tick"
+            ],
+            [
+              5.75,
+              "tick"
+            ],
+            [
+              6,
+              "ding"
+            ]
+          ]
+        }
+      ],
+      "scene": {
+        "cards": [
+          [
+            "你好",
+            "hello",
+            true
+          ],
+          [
+            "謝謝",
+            "thanks",
+            true
+          ],
+          [
+            "餐廳",
+            "restaurant",
+            false
+          ],
+          [
+            "開始",
+            "to start",
+            true
+          ],
+          [
+            "這",
+            "this",
+            false
+          ]
+        ],
+        "cardFont": "tc",
+        "level": [
+          "Level check done",
+          "From chapter 1"
+        ],
+        "tap": [
+          [
+            360,
+            1712,
+            592,
+            1820
+          ],
+          [
+            476,
+            1766
+          ]
+        ],
+        "phoneLook": 1830,
+        "pages": [
+          [
+            "EACH DAY",
+            "",
+            "Mon",
+            ""
+          ],
+          [
+            "EACH DAY",
+            "",
+            "Tue",
+            ""
+          ],
+          [
+            "EACH DAY",
+            "",
+            "Wed",
+            ""
+          ],
+          [
+            "EACH DAY",
+            "",
+            "Thu",
+            ""
+          ],
+          [
+            "EVERY DAY",
+            "",
+            "20",
+            "words a day"
+          ]
+        ],
+        "calendarTag": "Daily goal",
+        "stones": [
+          "Cards",
+          "Write 6",
+          "Quiz 5",
+          "Speak"
+        ],
+        "counter": [
+          "Every day",
+          "20",
+          "words"
+        ],
+        "flag": "Done"
+      }
     }
   ]
 }

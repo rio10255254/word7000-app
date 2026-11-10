@@ -137,6 +137,37 @@ def wrong():
     return out * 0.6
 
 
+def flip():
+    """A page or a card turned over: a short brush of paper."""
+    n = int(0.14 * SR)
+    t = np.arange(n) / SR
+    noise = m.rng.uniform(-1, 1, n)
+    return m.bandpass(noise, 1400, 7000) * np.sin(np.pi * t / t[-1]) ** 2 * (0.4 + 0.6 * t / t[-1])
+
+
+def shuffle():
+    """A deck fanned out: a quick run of card edges."""
+    n = int(0.6 * SR)
+    out = np.zeros(n)
+    for i in range(9):
+        m.place(out, flip()[: int(0.07 * SR)], 0.02 + i * 0.055, 0.5 + 0.05 * i)
+    return out
+
+
+def thud():
+    """Card stock landing on the desk: a soft low knock."""
+    n = int(0.22 * SR)
+    t = np.arange(n) / SR
+    return np.sin(2 * np.pi * (70 + 60 * np.exp(-t / 0.015)) * t) * np.exp(-t / 0.05) + 0.25 * m.bandpass(m.rng.uniform(-1, 1, n), 200, 1200) * np.exp(-t / 0.02)
+
+
+def tick():
+    """A flip counter's click."""
+    n = int(0.04 * SR)
+    t = np.arange(n) / SR
+    return m.bandpass(m.rng.uniform(-1, 1, n), 2500, 6000) * np.exp(-t / 0.004)
+
+
 def groove(seconds):
     """A light, bouncy bed under the voice: guitar chucks, marimba, bass and hand drums."""
     n = int((seconds + 2) * SR)
@@ -201,7 +232,8 @@ def mix(episode):
     if "grooveFrom" in episode:
         start = int(slots[episode["grooveFrom"]]["start"] * SR)
         music[:start] = 0
-    sounds = {"pop": (m.pop, 0.4), "tap": (m.tap, 0.9), "whoosh": (lambda: m.whoosh(BEAT), 0.45), "ding": (m.ding, 0.5), "stamp": (m.stamp, 0.5), "wrong": (wrong, 0.7)}
+    sounds = {"pop": (m.pop, 0.4), "tap": (m.tap, 0.9), "whoosh": (lambda: m.whoosh(BEAT), 0.45), "ding": (m.ding, 0.5), "stamp": (m.stamp, 0.5), "wrong": (wrong, 0.7),
+              "flip": (flip, 0.55), "shuffle": (shuffle, 0.6), "thud": (thud, 0.6), "tick": (tick, 0.6)}
     for slot, line in zip(slots, episode["lines"]):
         if not SILENT:
             m.place(voice, slot["audio"], slot["voiceStart"])

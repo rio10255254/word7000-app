@@ -239,3 +239,40 @@ npm run render:reels   # 輸出 out/reel-ep01.mp4 …
 小笨貓的配音由 Kokoro-82M（Apache-2.0）合成，不需標示。
 
 Remotion 對個人與 3 人以下公司免費，規模更大需購買 Company License。
+
+## 上架倒數 3D 版（`Reel-d6` … ）
+
+2.1.0 上架前七天（11/10～11/16）一天一支，一支只講一個功能，用 `@remotion/three` 在一張桌面上把功能「演出來」。規格在 `docs/launch-countdown-brief.md`。
+
+- **共用的 3D 零件**：`src/reels/three/kit.tsx`。有厚度的卡紙（`Card`）、用 2D canvas 以片中字體畫出來的貼圖（`canvasTexture`、`paper`、`label`）、用幾何形狀建的 iPhone（`Phone3D`，螢幕貼真實截圖）、傻貓的紙片立牌（`CatStandee`，把 `Mascot` 的 SVG 印成貼圖並加上刀模白邊）、照時間點移動的鏡頭（`Rig`）。動畫都由 `useCurrentFrame()` 算出來，不用 R3F 的 `useFrame`。
+- **系列共用**：第一格的「還有 N 天」紙卡和探頭的傻貓、字幕帶、片尾，都沿用 `Countdown.tsx`、`Teaser.tsx`、`Intro.tsx` 的 2D 元件，所以七支在 IG 主頁上排起來一樣。
+- **物件上的字**寫在 `episodes.json` 該集的 `scene` 裡（單字卡、日曆每一頁、里程碑、計數牌、小旗）。
+- **音效**：`make-reels.py` 多了紙的聲音：`flip`（翻頁、翻卡）、`shuffle`（牌攤開）、`thud`（卡紙落在桌上）、`tick`（計數牌）。
+- **算繪**：雲端容器沒有 GPU，`--gl=angle` 建不出 WebGL，要用 `--gl=swangle`：
+
+```bash
+python3 scripts/make-voice-elevenlabs.py d6 d6-en   # 改台詞才需要
+python3 scripts/make-reels.py d6 d6-en
+npx remotion render Reel-d6 out/countdown-1110-zh.mp4 --gl=swangle --browser-executable=/opt/pw-browsers/chromium
+npx remotion render Reel-d6-en out/countdown-1110-en.mp4 --gl=swangle --browser-executable=/opt/pw-browsers/chromium
+```
+
+| 日期 | 集 | 主題 | 3D 手法 | 台詞（中文／英文） |
+| --- | --- | --- | --- | --- |
+| 11/10 | `d6`／`d6-en`（`src/reels/Day6.tsx`） | 個人化學習計畫 | 一疊單字卡攤成扇形、五張翻面（對或錯），蓋下「從第 1 章開始」；鏡頭移到手機上真實的計畫頁，點考試日期，撕頁日曆從螢幕跳出來翻到考試那天、紅筆圈起；鏡頭拉高，日曆落到桌子另一頭，一條紙做的路從手機鋪過去，里程碑一拍立起一個，計數牌數到每天 20 個字，傻貓一站一站跳到終點的小旗 | 離考試還有幾天，你算過嗎？／先考你兩分鐘，看你在哪。／選好考試跟日期，我幫你排。／每天幾個字、考前讀到第幾章，都算好了。（片尾：還有六天。）<br>Learning Mandarin with no plan?／A two-minute check finds your level.／Pick a daily goal. I'll plan each day.／What to study, every single day. All worked out.（Six days.） |
+
+英文版的計畫頁沒有考試和日期，所以日曆翻的是星期（Mon → Thu），停在「EVERY DAY · 20 words a day」，路上的站是計畫頁上寫的每日步驟（Cards、Write 6、Quiz 5、Speak）。
+
+**IG 貼文（11/10）**
+
+> 還有 6 天 🗓️
+> 離考試還有幾天，你算過嗎？傻貓幫你算好了。
+> 先花兩分鐘測程度，選好考試跟日期，每天背幾個字、考前讀到第幾章，牠通通排好。你只要每天打開，照著走。
+> 單字貓 WordCat 2.1.0，11/16 App Store 上架。追蹤我們，上架當天通知你。
+> #單字貓 #WordCat #背單字 #會考 #學測 #英文單字 #讀書計畫 #學習App
+
+> 6 days to go 🗓️
+> Learning Mandarin with no plan? SillyCat made one for you.
+> Take a two-minute level check, pick a daily goal, and every day is laid out: cards, writing, a quick quiz, speaking. Just show up.
+> WordCat lands on the App Store 11/16. Follow us and we'll tell you when it's out.
+> #WordCat #LearnChinese #LearnMandarin #TaiwanMandarin #Mandarin #StudyPlan #LanguageLearning

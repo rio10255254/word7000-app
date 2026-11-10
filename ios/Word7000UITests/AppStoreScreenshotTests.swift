@@ -138,6 +138,9 @@ final class AppStoreScreenshotTests: XCTestCase {
         // A Zhuyin keyboard (the Chinese interface on some simulators) holds
         // the letter as input still being composed; Return puts it in the answer.
         if !check.waitForExistence(timeout: 3) { answer.typeText("\n") }
+        // On a small screen the letter can be lost while the chat is still
+        // scrolling the answer above the keyboard: type it again.
+        if !check.waitForExistence(timeout: 3) { answer.tap(); sleep(1); answer.typeText("x") }
         if !check.waitForExistence(timeout: 5) { check.scrollIntoView(in: app, swipes: 3) }
         XCTAssertTrue(check.waitForExistence(timeout: 5), app.debugDescription)
         check.tap()

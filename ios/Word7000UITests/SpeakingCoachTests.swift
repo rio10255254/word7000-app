@@ -302,7 +302,8 @@ final class SpeakingCoachTests: XCTestCase {
         openSpeaking(app)
         tap(app.buttons["coach-record"], in: app)
         let system = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        let allow = system.buttons["Allow"]
+        // iOS 27 lists its glass alert's button twice: take the first.
+        let allow = system.buttons["Allow"].firstMatch
         if allow.waitForExistence(timeout: 5) {
             // A system sheet can still be animating when its button appears in
             // accessibility. Only retry that permission tap, never the recording.
@@ -319,10 +320,10 @@ final class SpeakingCoachTests: XCTestCase {
                 if XCTWaiter.wait(for: [dismissed], timeout: 5) == .completed { break }
             }
             XCTAssertFalse(allow.exists)
-        } else if system.buttons["OK"].exists { system.buttons["OK"].tap() }
+        } else if system.buttons["OK"].exists { system.buttons["OK"].firstMatch.tap() }
         // Live transcription may also ask for speech recognition, once.
-        for label in ["Allow", "OK"] where system.buttons[label].waitForExistence(timeout: 3) {
-            system.buttons[label].tap()
+        for label in ["Allow", "OK"] where system.buttons[label].firstMatch.waitForExistence(timeout: 3) {
+            system.buttons[label].firstMatch.tap()
         }
         let duration = app.staticTexts["coach-recording-duration"]
         let ticking = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in

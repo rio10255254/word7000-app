@@ -153,6 +153,10 @@ if (!version) {
       const type = set.attributes.screenshotDisplayType;
       if (type.startsWith('APP_IPHONE')) iphone.push(shots.length);
       say(`- ${shots.length ? '✅' : '❌'} 截圖 ${type}：${shots.length} 張${broken ? `（${broken} 張還在處理或失敗）` : ''}`);
+      for (const s of shots.filter((x) => x.attributes.assetDeliveryState?.state !== 'COMPLETE')) {
+        const d = s.attributes.assetDeliveryState ?? {};
+        say(`  - ${s.attributes.fileName}：${d.state ?? '?'}${d.errors?.length ? `，錯誤：${d.errors.map((e) => `${e.code} ${e.description ?? ''}`).join('；')}` : ''}${d.warnings?.length ? `，警告：${d.warnings.map((e) => e.code).join('；')}` : ''}`);
+      }
     }
     if (!iphone.some((n) => n > 0)) bad('還沒有 iPhone 截圖（上傳到「iPhone 6.9 吋顯示器」）');
   }

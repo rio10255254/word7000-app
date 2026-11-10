@@ -75,9 +75,13 @@ final class ClassicLayoutTests: XCTestCase {
         let inner = writing.switches.firstMatch
         let control = inner.exists && inner.isHittable ? inner : writing
         control.tap()
-        let off = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value == '0'"), object: writing)
-        if XCTWaiter.wait(for: [off], timeout: 3) != .completed, writing.value as? String == "1" { control.tap() }
-        XCTAssertEqual(XCTWaiter.wait(for: [off], timeout: 5), .completed)
+        func switchedOff(within seconds: TimeInterval) -> Bool {
+            let off = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value == '0'"), object: writing)
+            return XCTWaiter.wait(for: [off], timeout: seconds) == .completed
+        }
+        // A tap the system drops leaves it on: retry once, only while it still reads on.
+        if !switchedOff(within: 3), writing.value as? String == "1" { control.tap() }
+        XCTAssertTrue(switchedOff(within: 5), app.debugDescription)
         snapshot(app, "classic-settings")
 
         // No writing tile on Today, and no writing step in the chapter.

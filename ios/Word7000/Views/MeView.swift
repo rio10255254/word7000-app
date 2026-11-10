@@ -99,10 +99,14 @@ struct MeView: View {
         // Reporting a problem is meant to be easy to find: up top, every visit.
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
+                // Words beside the icon (a toolbar would show the icon alone).
                 Button { reportOpen = true } label: {
-                    Label(L.t("回報問題", "Report a problem"), systemImage: "ladybug.fill")
-                        .labelStyle(.titleAndIcon)
-                        .font(.subheadline.weight(.semibold))
+                    HStack(spacing: 5) {
+                        Image(systemName: "ladybug.fill")
+                        Text(L.t("回報問題", "Report a problem"))
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .fixedSize()
                 }
                 .accessibilityIdentifier("me-report")
             }

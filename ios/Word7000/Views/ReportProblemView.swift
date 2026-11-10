@@ -115,7 +115,7 @@ struct ReportProblemView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .disabled(!ready)
-                    .accessibilityIdentifier("report-send")
+                    .accessibilityIdentifier("report-send-bottom")
                     Button {
                         UIPasteboard.general.string = message
                         copied = true
@@ -135,6 +135,13 @@ struct ReportProblemView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(L.close) { dismiss() }
                         .accessibilityIdentifier("report-close")
+                }
+                // Sending sits up top too, like any mail sheet: in reach
+                // while the keyboard covers the bottom of the form.
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(L.t("寄出", "Send"), action: send)
+                        .disabled(!ready)
+                        .accessibilityIdentifier("report-send")
                 }
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()

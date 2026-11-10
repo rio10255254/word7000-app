@@ -1,8 +1,8 @@
-import { type ReactNode, type RefObject, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useThree } from '@react-three/fiber';
-import { Easing, Freeze, continueRender, delayRender, interpolate, staticFile } from 'remotion';
+import { Easing, continueRender, delayRender, interpolate, staticFile } from 'remotion';
 import * as THREE from 'three';
-import { Mascot, type Mood } from '../../Mascot';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 
 /**
  * The paper-craft 3D kit the launch countdown is built from: card stock
@@ -271,74 +271,151 @@ export const Tape3D = ({ w = 0.5, h = 0.14, color = '#ECE0C4', opacity = 0.78 }:
   </mesh>
 );
 
+// ───────────────────────── materials ─────────────────────────
+
+/** Fired clay with a satin glaze: the solid, coloured things. */
+export const Enamel = ({ color, rough = 0.32 }: { color: string; rough?: number }) => <meshPhysicalMaterial color={color} roughness={rough} clearcoat={0.7} clearcoatRoughness={0.25} />;
+/** Soft-touch: matte, a little sheen at grazing angles. */
+export const Matte = ({ color, map }: { color?: string; map?: THREE.Texture }) => <meshPhysicalMaterial color={color ?? '#ffffff'} map={map ?? null} roughness={0.72} sheen={0.5} sheenColor="#fff3df" sheenRoughness={0.6} />;
+export const Chrome = ({ color = '#d9d6cf', rough = 0.18 }: { color?: string; rough?: number }) => <meshStandardMaterial color={color} metalness={1} roughness={rough} envMapIntensity={1.6} />;
+/** Glass you look through: mostly reflection. */
+export const Glass = ({ opacity = 0.16 }: { opacity?: number }) => <meshPhysicalMaterial color="#ffffff" transparent opacity={opacity} roughness={0.03} metalness={0} envMapIntensity={2.2} clearcoat={1} depthWrite={false} />;
+
 // ───────────────────────── the phone ─────────────────────────
 
 export const SCREEN_W = 1206;
 export const SCREEN_H = 2622;
 /** The screen is 1 unit wide. */
-export const PHONE = { w: 1, h: SCREEN_H / SCREEN_W, depth: 0.075, rim: 0.045, radius: 0.137 };
+export const PHONE = { w: 1, h: SCREEN_H / SCREEN_W, depth: 0.105, rim: 0.04, radius: 0.137 };
 /** A point on the screenshot, in the phone's own space. */
 export const onScreen = (x: number, y: number, lift = 0.004): [number, number, number] => [(x / SCREEN_W - 0.5) * PHONE.w, (0.5 - y / SCREEN_H) * PHONE.h, PHONE.depth / 2 + lift];
 
 /**
- * An iPhone 17 Pro around a real screenshot: titanium band, black bezel,
- * side keys, the Dynamic Island, a soft glare across the glass.
+ * An iPhone 17 Pro, modelled: a titanium frame with rounded edges, the
+ * glass over a real screenshot, the Dynamic Island, the keys, and on the
+ * back the camera plateau with its three lenses.
  */
-export const Phone3D = ({ screen, glare = 0, children }: { screen: THREE.Texture; glare?: number; children?: ReactNode }) => {
+const glareMap = canvasTexture(512, 512, (ctx, w, h) => {
+  const g = ctx.createLinearGradient(0, 0, w, 0);
+  g.addColorStop(0.3, 'rgba(255,250,235,0)');
+  g.addColorStop(0.47, 'rgba(255,250,235,0.13)');
+  g.addColorStop(0.53, 'rgba(255,250,235,0.16)');
+  g.addColorStop(0.7, 'rgba(255,250,235,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+});
+glareMap.wrapS = glareMap.wrapT = THREE.ClampToEdgeWrapping;
+glareMap.rotation = -0.5;
+glareMap.center.set(0.5, 0.5);
+const glareTexture = (p: number) => {
+  glareMap.offset.set(1.3 - p * 2.6, 0);
+  return glareMap;
+};
+
+/** The phone's colour: Cosmic Orange, close to the reels' clay. */
+const BODY = '#C9693A';
+
+export const Phone3D = ({ screen, glare = -1, children }: { screen: THREE.Texture; glare?: number; children?: ReactNode }) => {
   const { w, h, depth, rim, radius } = PHONE;
   const geo = useMemo(() => {
     const body = roundedRect(w + rim * 2, h + rim * 2, radius + rim);
-    const bezel = roundedRect(w + rim * 1.3, h + rim * 1.3, radius + rim * 0.65);
     const glass = roundedRect(w, h, radius);
-    const island = roundedRect(0.312, 0.091, 0.0455);
+    const bezel = roundedRect(w + rim * 1.2, h + rim * 1.2, radius + rim * 0.6);
+    const back = roundedRect(w + rim * 1.5, h + rim * 1.5, radius + rim * 0.75);
+    const plateau = roundedRect(w + rim * 0.6, 0.5, 0.16);
     return {
-      body: slabGeometry(body, depth, 0.012),
-      bezel: new THREE.ShapeGeometry(bezel, 8),
+      body: slabGeometry(body, depth, 0.028),
+      bezel: new THREE.ShapeGeometry(bezel, 12),
       glass: faceGeometry(glass, w, h),
-      island: new THREE.ShapeGeometry(island, 8),
+      back: new THREE.ShapeGeometry(back, 12),
+      island: new THREE.ShapeGeometry(roundedRect(0.312, 0.091, 0.0455), 10),
+      plateau: slabGeometry(plateau, 0.04, 0.012),
+      inset: new THREE.ShapeGeometry(roundedRect(w - 0.1, h - 0.72, 0.1), 10),
     };
   }, [w, h, depth, rim, radius]);
-  const glareMap = useMemo(
-    () =>
-      canvasTexture(256, 512, (ctx, cw, ch) => {
-        const g = ctx.createLinearGradient(0, ch, cw, 0);
-        g.addColorStop(0.3, 'rgba(255,255,255,0)');
-        g.addColorStop(0.47, 'rgba(255,255,255,0.16)');
-        g.addColorStop(0.62, 'rgba(255,255,255,0)');
-        ctx.fillStyle = g;
-        ctx.fillRect(0, 0, cw, ch);
-      }),
-    [],
-  );
-  glareMap.offset.set(glare, glare * 0.5);
+  const z = depth / 2;
   const key = (side: 1 | -1, y: number, length: number) => (
-    <mesh position={[side * (w / 2 + rim + 0.004), y, 0]} castShadow>
-      <boxGeometry args={[0.014, length, 0.03]} />
-      <meshStandardMaterial color="#6b665e" metalness={0.5} roughness={0.4} />
+    <mesh position={[side * (w / 2 + rim + 0.006), y, 0]} rotation={[0, 0, 0]} castShadow>
+      <capsuleGeometry args={[0.011, length, 4, 10]} />
+      <meshStandardMaterial color={BODY} metalness={0.9} roughness={0.3} envMapIntensity={1.25} />
     </mesh>
   );
-  const z = depth / 2;
+  const lens = (x: number, y: number) => (
+    <group position={[x, y, -z - 0.04]} rotation={[Math.PI / 2, 0, 0]}>
+      <mesh castShadow>
+        <cylinderGeometry args={[0.105, 0.11, 0.035, 40]} />
+        <meshStandardMaterial color="#8E4526" metalness={0.95} roughness={0.25} envMapIntensity={1.4} />
+      </mesh>
+      <mesh position={[0, -0.019, 0]}>
+        <cylinderGeometry args={[0.088, 0.088, 0.004, 40]} />
+        <meshPhysicalMaterial color="#07090d" roughness={0.05} clearcoat={1} envMapIntensity={2.5} />
+      </mesh>
+      <mesh position={[0, -0.022, 0]}>
+        <torusGeometry args={[0.05, 0.006, 8, 32]} />
+        <meshStandardMaterial color="#1b2333" metalness={0.8} roughness={0.2} />
+      </mesh>
+      <mesh position={[0, -0.0225, 0]}>
+        <cylinderGeometry args={[0.028, 0.028, 0.002, 24]} />
+        <meshPhysicalMaterial color="#141d33" roughness={0.02} clearcoat={1} envMapIntensity={3} />
+      </mesh>
+    </group>
+  );
   return (
     <group>
-      <mesh geometry={geo.body} castShadow receiveShadow>
-        <meshStandardMaterial color="#7d776d" metalness={0.55} roughness={0.38} />
+      <mesh geometry={geo.body}>
+        <meshStandardMaterial color={BODY} metalness={0.9} roughness={0.36} envMapIntensity={1.25} />
       </mesh>
-      {key(-1, 0.52, 0.12)}
-      {key(-1, 0.3, 0.19)}
-      {key(-1, 0.07, 0.19)}
-      {key(1, 0.24, 0.28)}
-      <mesh geometry={geo.bezel} position={[0, 0, z + 0.001]}>
-        <meshStandardMaterial color="#0b0a09" roughness={0.3} />
+      {key(-1, 0.52, 0.09)}
+      {key(-1, 0.3, 0.16)}
+      {key(-1, 0.07, 0.16)}
+      {key(1, 0.24, 0.26)}
+      {/* The front: bezel, the screen itself, the island, and the glass over it. */}
+      <mesh geometry={geo.bezel} position={[0, 0, z + 0.0005]}>
+        <meshStandardMaterial color="#070707" roughness={0.25} />
       </mesh>
-      <mesh geometry={geo.glass} position={[0, 0, z + 0.002]}>
+      <mesh geometry={geo.glass} position={[0, 0, z + 0.0015]}>
         <meshBasicMaterial map={screen} toneMapped={false} />
       </mesh>
-      <mesh geometry={geo.island} position={[0, h / 2 - 0.0737, z + 0.003]}>
-        <meshBasicMaterial color="#050505" />
+      <mesh geometry={geo.island} position={[0, h / 2 - 0.0737, z + 0.0025]}>
+        <meshBasicMaterial color="#030303" />
       </mesh>
       {children}
-      <mesh geometry={geo.glass} position={[0, 0, z + 0.012]}>
-        <meshBasicMaterial map={glareMap} transparent depthWrite={false} blending={THREE.AdditiveBlending} />
+      <mesh geometry={geo.bezel} position={[0, 0, z + 0.006]}>
+        <Glass opacity={0.1} />
+      </mesh>
+      {/* A softbox passing over the glass: `glare` runs 0 → 1 across it. */}
+      {glare > 0 && glare < 1 ? (
+        <mesh geometry={geo.glass} position={[0, 0, z + 0.007]}>
+          <meshBasicMaterial map={glareTexture(glare)} transparent blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
+        </mesh>
+      ) : null}
+      {/* The bottom edge: the port and the speaker holes. */}
+      <mesh position={[0, -h / 2 - rim - 0.001, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <capsuleGeometry args={[0.014, 0.085, 4, 10]} />
+        <meshStandardMaterial color="#2a1a12" roughness={0.6} />
+      </mesh>
+      {[-0.3, -0.25, -0.2, 0.2, 0.25, 0.3].map((x) => (
+        <mesh key={x} position={[x, -h / 2 - rim - 0.001, 0]}>
+          <sphereGeometry args={[0.0095, 10, 8]} />
+          <meshStandardMaterial color="#2a1a12" roughness={0.6} />
+        </mesh>
+      ))}
+      {/* The back: frosted glass, the plateau, three lenses, the flash. */}
+      <mesh geometry={geo.back} position={[0, 0, -z - 0.0005]} rotation={[0, Math.PI, 0]}>
+        <meshStandardMaterial color={BODY} metalness={0.85} roughness={0.42} envMapIntensity={1.1} />
+      </mesh>
+      <mesh geometry={geo.inset} position={[0, -0.27, -z - 0.0012]} rotation={[0, Math.PI, 0]}>
+        <meshStandardMaterial color="#BC5F31" metalness={0.8} roughness={0.6} envMapIntensity={0.9} />
+      </mesh>
+      <mesh geometry={geo.plateau} position={[0, h / 2 - 0.25, -z - 0.015]} castShadow>
+        <meshStandardMaterial color={BODY} metalness={0.9} roughness={0.34} envMapIntensity={1.25} />
+      </mesh>
+      {lens(0.3, h / 2 - 0.15)}
+      {lens(0.3, h / 2 - 0.36)}
+      {lens(0.09, h / 2 - 0.255)}
+      <mesh position={[-0.2, h / 2 - 0.15, -z - 0.037]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.035, 0.035, 0.004, 24]} />
+        <meshStandardMaterial color="#fff3cf" emissive="#ffe9b0" emissiveIntensity={0.25} roughness={0.3} />
       </mesh>
     </group>
   );
@@ -351,127 +428,114 @@ export const Tap3D = ({ t, at, x, y }: { t: number; at: number; x: number; y: nu
   const p = age / 0.55;
   const s = 0.04 + 0.16 * out(p);
   return (
-    <group position={onScreen(x, y, 0.008)}>
+    <group position={onScreen(x, y, 0.004)}>
       <mesh scale={s}>
         <ringGeometry args={[0.78, 1, 40]} />
-        <meshBasicMaterial color={PAL.clay} transparent opacity={0.85 * (1 - p)} depthWrite={false} />
+        <meshBasicMaterial color={PAL.clay} transparent opacity={0.85 * (1 - p)} depthWrite={false} toneMapped={false} />
       </mesh>
       <mesh scale={0.045 * (1 - 0.4 * p)}>
         <circleGeometry args={[1, 32]} />
-        <meshBasicMaterial color={PAL.clay} transparent opacity={0.4 * (1 - p)} depthWrite={false} />
+        <meshBasicMaterial color={PAL.clay} transparent opacity={0.4 * (1 - p)} depthWrite={false} toneMapped={false} />
       </mesh>
     </group>
   );
 };
 
-// ───────────────────────── 傻貓 as a standee ─────────────────────────
+// ───────────────────────── light ─────────────────────────
 
-const MOODS: Mood[] = ['smug', 'happy', 'cheeky'];
-export type CatMaps = Record<string, THREE.Texture>;
-
-/**
- * 傻貓, drawn once per mood off-screen so it can be printed on card. Put
- * this in the DOM (outside the canvas) and read the textures from
- * `catTextures(ref)` once mounted.
- */
-export const CatSource = ({ holder }: { holder: RefObject<HTMLDivElement | null> }) => (
-  <div ref={holder} style={{ position: 'absolute', left: -4000, top: 0, width: 600, height: 600, opacity: 0, pointerEvents: 'none' }}>
-    <Freeze frame={14}>
-      {MOODS.map((mood) => (
-        <div key={mood} data-mood={mood}>
-          <Mascot mood={mood} size={512} next />
-        </div>
-      ))}
-    </Freeze>
-  </div>
-);
-
-export const catTextures = async (holder: HTMLDivElement): Promise<CatMaps> => {
-  const maps: CatMaps = {};
-  for (const mood of MOODS) {
-    const svg = holder.querySelector(`[data-mood="${mood}"] svg`)!.cloneNode(true) as SVGSVGElement;
-    // The ground shadow under the cat belongs to the 2D reels; the standee casts a real one.
-    svg.querySelector('ellipse')?.remove();
-    svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-    svg.setAttribute('viewBox', '-14 -14 128 128');
-    svg.setAttribute('width', '896');
-    svg.setAttribute('height', '896');
-    const img = await loadImage(`data:image/svg+xml;charset=utf-8,${encodeURIComponent(new XMLSerializer().serializeToString(svg))}`);
-    maps[mood] = canvasTexture(896, 896, (ctx, w, h) => {
-      // A die-cut edge: the cat's outline, fattened, in bare card.
-      const ring = 15;
-      for (let i = 0; i < 28; i++) {
-        const a = (i / 28) * Math.PI * 2;
-        ctx.drawImage(img, Math.cos(a) * ring, Math.sin(a) * ring, w, h);
-      }
-      ctx.globalCompositeOperation = 'source-in';
-      ctx.fillStyle = PAL.cream;
-      ctx.fillRect(0, 0, w, h);
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.drawImage(img, 0, 0, w, h);
-    });
-  }
-  return maps;
+/** A real photo studio to reflect (Poly Haven's Studio Small 08, CC0), as an environment map. */
+export const loadStudio = async (gl: THREE.WebGLRenderer) => {
+  const hdr = await new RGBELoader().loadAsync(staticFile('hdri/studio_small_08_1k.hdr'));
+  hdr.mapping = THREE.EquirectangularReflectionMapping;
+  const pmrem = new THREE.PMREMGenerator(gl);
+  const map = pmrem.fromEquirectangular(hdr).texture;
+  pmrem.dispose();
+  hdr.dispose();
+  return map;
 };
 
-/**
- * The standee: printed card with a die-cut edge and a little thickness,
- * standing on the desk at its feet. `squash` > 0 presses it down (a
- * landing); `lean` tips it sideways.
- */
-export const CatStandee = ({ map, size = 1, squash = 0, lean = 0 }: { map: THREE.Texture; size?: number; squash?: number; lean?: number }) => {
-  const depthMaterial = useMemo(() => new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking, map, alphaTest: 0.5 }), [map]);
-  const sy = 1 - 0.22 * squash;
-  const sx = 1 + 0.16 * squash;
-  // The feet sit about 0.2 of the texture above its lower edge.
+/** The studio in every reflection, turned by `turn` so its softboxes slide across the phone, and a warm key from up left. */
+export const StudioLight = ({ env, turn = 0 }: { env: THREE.Texture; turn?: number }) => {
+  const scene = useThree((s) => s.scene);
+  useLayoutEffect(() => {
+    scene.environment = env;
+    scene.environmentIntensity = 1.0;
+    scene.environmentRotation.set(0, turn, 0);
+    scene.background = null;
+  });
   return (
-    <group rotation={[0, 0, lean]} scale={[size * sx, size * sy, size]}>
-      <group position={[0, 0.5 - 0.17, 0]}>
-        {[-0.02, -0.013, -0.006].map((z, i) => (
-          <mesh key={i} position={[0, 0, z]}>
-            <planeGeometry args={[1, 1]} />
-            <meshStandardMaterial map={map} color={PAL.creamEdge} alphaTest={0.5} side={THREE.DoubleSide} roughness={1} />
-          </mesh>
-        ))}
-        <mesh castShadow customDepthMaterial={depthMaterial}>
-          <planeGeometry args={[1, 1]} />
-          <meshStandardMaterial map={map} alphaTest={0.5} side={THREE.DoubleSide} roughness={0.9} />
-        </mesh>
-      </group>
-    </group>
+    <>
+      <directionalLight position={[-6, 7, 7]} intensity={2.6} color="#FFEBCB" />
+      <directionalLight position={[7, 3, -5]} intensity={2.4} color="#FFD9A0" />
+      <directionalLight position={[-7, -2, -6]} intensity={1.2} color="#FFF4E0" />
+    </>
   );
 };
 
-// ───────────────────────── camera ─────────────────────────
+// ───────────────────────── on the glass ─────────────────────────
 
-export type Shot = { at: number; pos: [number, number, number]; look: [number, number, number]; fov?: number; ease?: (n: number) => number };
+const glassGeometry = faceGeometry(roundedRect(PHONE.w, PHONE.h, PHONE.radius), PHONE.w, PHONE.h);
 
-const mix3 = (a: number[], b: number[], p: number): [number, number, number] => [a[0] + (b[0] - a[0]) * p, a[1] + (b[1] - a[1]) * p, a[2] + (b[2] - a[2]) * p];
+/** Another screen over the phone's own, at `opacity`: a cross-fade from one screenshot to the next, or a dimmer. */
+export const ScreenLayer = ({ map, opacity, color }: { map?: THREE.Texture; opacity: number; color?: string }) =>
+  opacity <= 0 ? null : (
+    <mesh geometry={glassGeometry} position={[0, 0, PHONE.depth / 2 + 0.0019]} renderOrder={1}>
+      <meshBasicMaterial map={map ?? null} color={color ?? '#ffffff'} transparent opacity={opacity} toneMapped={false} depthWrite={false} />
+    </mesh>
+  );
 
-/** Where the camera is at `t`: eased from one written stop to the next. */
-export const shotAt = (shots: Shot[], t: number) => {
-  let i = 0;
-  while (i < shots.length - 1 && t >= shots[i + 1].at) i++;
-  const a = shots[i];
-  const b = shots[Math.min(i + 1, shots.length - 1)];
-  const p = b === a ? 0 : (b.ease ?? inOut)(Math.min(1, Math.max(0, (t - a.at) / (b.at - a.at))));
-  return { pos: mix3(a.pos, b.pos, p), look: mix3(a.look, b.look, p), fov: (a.fov ?? 30) + ((b.fov ?? 30) - (a.fov ?? 30)) * p };
-};
-
-/** Points the canvas's camera, with a hand-held drift so nothing is ever dead still. */
-export const Rig = ({ t, shots, drift = 1 }: { t: number; shots: Shot[]; drift?: number }) => {
-  const camera = useThree((s) => s.camera) as THREE.PerspectiveCamera;
-  const { pos, look, fov } = shotAt(shots, t);
-  useLayoutEffect(() => {
-    const d = drift * 0.02 * pos[1];
-    camera.position.set(pos[0] + Math.sin(t * 0.7) * d, pos[1] + Math.sin(t * 0.53 + 1) * d * 0.5, pos[2] + Math.cos(t * 0.61) * d);
-    camera.fov = fov;
-    camera.up.set(0, 1, 0);
-    camera.lookAt(look[0], look[1], look[2]);
-    camera.updateProjectionMatrix();
-    camera.updateMatrixWorld();
+const softShadow = () =>
+  canvasTexture(256, 128, (ctx, w, h) => {
+    ctx.filter = 'blur(18px)';
+    ctx.fillStyle = 'rgba(40,32,20,0.75)';
+    ctx.beginPath();
+    ctx.roundRect(44, 44, w - 88, h - 88, 12);
+    ctx.fill();
   });
-  return null;
+let shadowMap: THREE.Texture | null = null;
+
+/**
+ * A piece of the interface lifted off the glass: the rectangle
+ * (x0, y0)–(x1, y1) of the screenshot, floating `lift` above the screen
+ * with the shadow it would cast on it. This is the exploded view.
+ */
+export const Lift = ({ map, crop, lift, radius = 44, ground }: { map: THREE.Texture; crop: [number, number, number, number]; lift: number; radius?: number; ground: string }) => {
+  const [x0, y0, x1, y1] = crop;
+  const w = ((x1 - x0) / SCREEN_W) * PHONE.w;
+  const h = ((y1 - y0) / SCREEN_H) * PHONE.h;
+  const geometry = useMemo(() => {
+    const shape = roundedRect(w, h, (radius / SCREEN_W) * PHONE.w);
+    const g = new THREE.ShapeGeometry(shape, 8);
+    const pos = g.attributes.position;
+    const uv = g.attributes.uv;
+    for (let i = 0; i < pos.count; i++) uv.setXY(i, (x0 + (pos.getX(i) / w + 0.5) * (x1 - x0)) / SCREEN_W, 1 - (y0 + (0.5 - pos.getY(i) / h) * (y1 - y0)) / SCREEN_H);
+    return g;
+  }, [w, h, x0, y0, x1, y1, radius]);
+  shadowMap ??= softShadow();
+  if (lift <= 0.0005) return null;
+  const [cx, cy, z] = onScreen((x0 + x1) / 2, (y0 + y1) / 2, 0.003);
+  return (
+    <>
+      <mesh geometry={geometry} position={[cx, cy, z - 0.0008]} renderOrder={2}>
+        <meshBasicMaterial color={ground} transparent opacity={Math.min(1, lift * 9)} toneMapped={false} depthWrite={false} />
+      </mesh>
+      <mesh position={[cx + lift * 0.1, cy - lift * 0.14, z]} scale={[w * 1.5, h * 2.3, 1]} renderOrder={3}>
+        <planeGeometry args={[1, 1]} />
+        <meshBasicMaterial map={shadowMap} transparent opacity={Math.min(0.42, lift * 1.4)} depthWrite={false} toneMapped={false} />
+      </mesh>
+      <mesh geometry={geometry} position={[cx, cy, z + lift]} scale={1 + lift * 0.12} renderOrder={4}>
+        <meshBasicMaterial map={map} toneMapped={false} />
+      </mesh>
+    </>
+  );
 };
 
-export const useHolder = () => useRef<HTMLDivElement>(null);
+/** The colour of the screenshot at (x, y), as CSS: what is left where a piece lifts away. */
+export const colorAt = (map: THREE.Texture, x: number, y: number) => {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 1;
+  const ctx = canvas.getContext('2d')!;
+  ctx.drawImage(map.image as HTMLImageElement, -x, -y);
+  const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+  return `rgb(${r},${g},${b})`;
+};

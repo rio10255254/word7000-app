@@ -242,12 +242,14 @@ Remotion 對個人與 3 人以下公司免費，規模更大需購買 Company Li
 
 ## 上架倒數 3D 版（`Reel-d6` … ）
 
-2.1.0 上架前七天（11/10～11/16）一天一支，一支只講一個功能，用 `@remotion/three` 在一張桌面上把功能「演出來」。規格在 `docs/launch-countdown-brief.md`。
+2.1.0 上架前七天（11/10～11/16）一天一支，一支只講一個功能。規格在 `docs/launch-countdown-brief.md`。質感沿用前導片（橄欖綠背景、紙感道具、字幕帶、片尾），新的是：**手機是一支在攝影棚燈光下的 3D 模型，轉場都是這支手機的動作**。
 
-- **共用的 3D 零件**：`src/reels/three/kit.tsx`。有厚度的卡紙（`Card`）、用 2D canvas 以片中字體畫出來的貼圖（`canvasTexture`、`paper`、`label`）、用幾何形狀建的 iPhone（`Phone3D`，螢幕貼真實截圖）、傻貓的紙片立牌（`CatStandee`，把 `Mascot` 的 SVG 印成貼圖並加上刀模白邊）、照時間點移動的鏡頭（`Rig`）。動畫都由 `useCurrentFrame()` 算出來，不用 R3F 的 `useFrame`。
-- **系列共用**：第一格的「還有 N 天」紙卡和探頭的傻貓、字幕帶、片尾，都沿用 `Countdown.tsx`、`Teaser.tsx`、`Intro.tsx` 的 2D 元件，所以七支在 IG 主頁上排起來一樣。
-- **物件上的字**寫在 `episodes.json` 該集的 `scene` 裡（單字卡、日曆每一頁、里程碑、計數牌、小旗）。
-- **音效**：`make-reels.py` 多了紙的聲音：`flip`（翻頁、翻卡）、`shuffle`（牌攤開）、`thud`（卡紙落在桌上）、`tick`（計數牌）。
+- **手機**（`src/reels/three/kit.tsx` 的 `Phone3D`）：用幾何形狀建模的 iPhone 17 Pro（Cosmic Orange，接近片子的陶土紅）：圓角金屬邊框、玻璃下的真實 App 截圖、動態島、側鍵、底部的連接埠和喇叭孔、背面的相機平台和三顆鏡頭。用 `@remotion/three` 算繪，鏡頭不動、手機動；動作全部由 `useCurrentFrame()` 算出來。
+- **光**：反光來自一張真實攝影棚的 HDRI（Poly Haven「Studio Small 08」，CC0，`public/hdri/`），手機轉動時棚燈在金屬邊框和鏡頭上滑過；手機轉正停下時，一道柔光掃過玻璃。手機靠近時背景失焦、四角壓暗。
+- **介面浮起**（`Lift`）：把截圖上的某一塊（選項、傻貓的話、計畫的某一行）從玻璃上抬起來，帶著它落在螢幕上的影子，手機轉成四分之三側面讓人看見景深。浮起的都是真實截圖的一部分，沒有另外畫介面。
+- **跑出手機的東西**沿用 `props.tsx` 的紙感道具（撕頁桌曆、計數標籤、章節路線、路線站點），從 3D 手機螢幕上對應的位置飛出來。
+- 每一集要換的東西（截圖、點哪裡、哪幾塊浮起、道具、台詞）都寫在 `episodes.json` 該集的 `scene` 裡。
+- **音效**：`make-reels.py` 多了紙的聲音：`flip`（翻頁）、`shuffle`、`thud`、`tick`（計數）。
 - **算繪**：雲端容器沒有 GPU，`--gl=angle` 建不出 WebGL，要用 `--gl=swangle`：
 
 ```bash
@@ -257,11 +259,11 @@ npx remotion render Reel-d6 out/countdown-1110-zh.mp4 --gl=swangle --browser-exe
 npx remotion render Reel-d6-en out/countdown-1110-en.mp4 --gl=swangle --browser-executable=/opt/pw-browsers/chromium
 ```
 
-| 日期 | 集 | 主題 | 3D 手法 | 台詞（中文／英文） |
+| 日期 | 集 | 主題 | 分鏡 | 台詞（中文／英文） |
 | --- | --- | --- | --- | --- |
-| 11/10 | `d6`／`d6-en`（`src/reels/Day6.tsx`） | 個人化學習計畫 | 一疊單字卡攤成扇形、五張翻面（對或錯），蓋下「從第 1 章開始」；鏡頭移到手機上真實的計畫頁，點考試日期，撕頁日曆從螢幕跳出來翻到考試那天、紅筆圈起；鏡頭拉高，日曆落到桌子另一頭，一條紙做的路從手機鋪過去，里程碑一拍立起一個，計數牌數到每天 20 個字，傻貓一站一站跳到終點的小旗 | 離考試還有幾天，你算過嗎？／先考你兩分鐘，看你在哪。／選好考試跟日期，我幫你排。／每天幾個字、考前讀到第幾章，都算好了。（片尾：還有六天。）<br>Learning Mandarin with no plan?／A two-minute check finds your level.／Pick a daily goal. I'll plan each day.／What to study, every single day. All worked out.（Six days.） |
+| 11/10 | `d6`／`d6-en`（`src/reels/Day6.tsx`） | 個人化學習計畫 | 封面紙卡往後翻倒，手機背面朝鏡頭從下方升起、轉正；推近到一題考題，點錯，手機搖頭，轉成側面，傻貓的話和兩個選項從玻璃上一層層浮起；收回，手機轉一圈換到計畫頁，往下看到考試和日期，點日期，桌曆飛出來翻到考試那天、紅筆圈起；再轉一圈，計畫的兩行浮起，計數標籤數到 20、章節路線亮到第 4 章，傻貓從左邊探頭 | 離考試還有幾天，你算過嗎？／先考你兩分鐘，看你在哪。／選好考試跟日期，我幫你排。／每天幾個字、考前讀到第幾章，都算好了。（片尾：還有六天。）<br>Learning Mandarin with no plan?／A two-minute check finds your level.／Pick a daily goal. I'll plan each day.／What to study, every single day. All worked out.（Six days.） |
 
-英文版的計畫頁沒有考試和日期，所以日曆翻的是星期（Mon → Thu），停在「EVERY DAY · 20 words a day」，路上的站是計畫頁上寫的每日步驟（Cards、Write 6、Quiz 5、Speak）。
+英文版的計畫頁沒有考試和日期，所以點的是每日目標「20」，飛出來的是「Daily goal 20 words a day」的計數標籤，最後是 Cards → Writing → Quiz 的路線。
 
 **IG 貼文（11/10）**
 
@@ -273,6 +275,6 @@ npx remotion render Reel-d6-en out/countdown-1110-en.mp4 --gl=swangle --browser-
 
 > 6 days to go 🗓️
 > Learning Mandarin with no plan? SillyCat made one for you.
-> Take a two-minute level check, pick a daily goal, and every day is laid out: cards, writing, a quick quiz, speaking. Just show up.
+> Take a two-minute level check, pick a daily goal, and every day is laid out: cards, writing, a quick quiz. Just show up.
 > WordCat lands on the App Store 11/16. Follow us and we'll tell you when it's out.
 > #WordCat #LearnChinese #LearnMandarin #TaiwanMandarin #Mandarin #StudyPlan #LanguageLearning

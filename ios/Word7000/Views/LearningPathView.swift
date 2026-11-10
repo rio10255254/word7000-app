@@ -43,7 +43,7 @@ struct LearningPathView: View {
             .padding(.vertical, 12)
         }
         .scrollIndicators(.hidden)
-        .background { AmbientBackground(tint: Palette.accent) }
+        .background { AmbientBackground(tint: TodayView.speakingTint) }
         .navigationTitle(L.t("語言學習", "Language learning"))
         .navigationDestination(for: Int.self) { chapter in
             ChapterPageView(chapter: chapter, start: start)
@@ -61,19 +61,35 @@ struct LearningPathView: View {
 
     // MARK: Top
 
+    /// The whole list on a light olive card, as Today's: a ring of the words
+    /// known, and how the chapters open.
     private func summary(_ chapters: [ShelfChapter]) -> some View {
         let mastered = chapters.reduce(0) { $0 + $1.mastered }
         let total = chapters.reduce(0) { $0 + $1.total }
-        return VStack(alignment: .leading, spacing: 4) {
-            Text(L.t("已會 \(mastered.formatted()) / \(total.formatted()) 個字", "\(mastered.formatted()) of \(total.formatted()) words known"))
-                .font(.display(.title3, weight: .bold))
-                .foregroundStyle(Palette.ink)
-            Text(L.t("一章一章往下讀；這一章會了八成，下一章就打開。", "One chapter at a time: know four in five of its words and the next one opens."))
-                .font(.subheadline)
-                .foregroundStyle(Palette.secondaryLabel)
-                .fixedSize(horizontal: false, vertical: true)
+        let cream = TodayView.cream
+        return HStack(spacing: 16) {
+            ProgressRing(fraction: total > 0 ? Double(mastered) / Double(total) : 0, color: cream, lineWidth: 9, track: cream.opacity(0.22)) {
+                Image(systemName: "books.vertical.fill")
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundStyle(cream)
+            }
+            .frame(width: 76, height: 76)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(L.t("已會 \(mastered.formatted()) / \(total.formatted()) 個字", "\(mastered.formatted()) of \(total.formatted()) known"))
+                    .font(.display(.title3, weight: .bold))
+                    .foregroundStyle(cream)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                Text(L.t("一章一章往下讀；這一章會了八成，下一章就打開。", "One chapter at a time: know four in five of its words and the next one opens."))
+                    .font(.footnote)
+                    .foregroundStyle(cream.opacity(0.85))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 0)
         }
-        .padding(.horizontal, 4)
+        .padding(18)
+        .background { HeroBackground(tone: .done) }
+        .accessibilityElement(children: .combine)
         .accessibilityIdentifier("path-summary")
     }
 
@@ -103,7 +119,7 @@ struct LearningPathView: View {
                     Image(systemName: "chevron.right")
                 }
                 .font(.headline)
-                .foregroundStyle(Palette.accent)
+                .foregroundStyle(TodayView.speakingTint)
                 .padding(.horizontal, 16)
                 .frame(minHeight: 52)
                 .background { PremiumSurface(radius: 16) }
@@ -152,10 +168,10 @@ struct LearningPathView: View {
                         .foregroundStyle(Palette.ink)
                     Text(status(stop))
                         .font(.caption.weight(.bold))
-                        .foregroundStyle(current ? Palette.accent : Palette.secondaryLabel)
+                        .foregroundStyle(current ? Self.olive : Palette.secondaryLabel)
                 }
                 ProgressView(value: chapter.fraction)
-                    .tint(stop == .read ? Palette.known : Palette.accent)
+                    .tint(stop == .read ? Palette.known : Self.olive)
                 Text(L.t("已會 \(chapter.mastered) / \(chapter.total) 個字", "\(chapter.mastered) of \(chapter.total) known"))
                     .font(.caption)
                     .foregroundStyle(Palette.secondaryLabel)
@@ -165,20 +181,12 @@ struct LearningPathView: View {
             if stop != .locked {
                 Image(systemName: "chevron.right")
                     .font(.subheadline.weight(.bold))
-                    .foregroundStyle(current ? Palette.accent : Palette.secondaryLabel)
+                    .foregroundStyle(current ? Self.olive : Palette.secondaryLabel)
             }
         }
         .padding(.horizontal, 16)
         .padding(.vertical, current ? 16 : 12)
-        .background {
-            PremiumSurface(radius: 18)
-                .overlay {
-                    if current {
-                        RoundedRectangle(cornerRadius: 18, style: .continuous)
-                            .strokeBorder(Palette.accent, lineWidth: 2)
-                    }
-                }
-        }
+        .background { ChapterRowBackground(index: index, current: current) }
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
     }
@@ -205,10 +213,12 @@ struct LearningPathView: View {
         switch stop {
         case .read: Palette.known
         case .skipped: Palette.chinese
-        case .current: Palette.accent
+        case .current: Self.olive
         case .locked: Palette.secondaryLabel.opacity(0.18)
         }
     }
+
+    private static let olive = TodayView.speakingTint
 
     /// A round of the chapter's words: those studied, the most due first;
     /// for a chapter never studied (one the level test skipped), its first words.
@@ -217,5 +227,35 @@ struct LearningPathView: View {
         let studied = ids.filter { (model.progress.words[$0]?.status ?? .new) != .new }
         model.startStudySession(onlyIds: studied.isEmpty ? ids : studied, limit: model.progress.dailyTarget)
         start(.study)
+    }
+}
+
+/// A chapter's row as Today's practice tiles are: cut from coloured paper in
+/// the collage (each chapter its own paper, laid down at a slight slant), a
+/// soft card otherwise; the chapter being read ringed in light olive and
+/// taped on.
+private struct ChapterRowBackground: View {
+    @Environment(\.appStyle) private var appStyle
+    var index: Int
+    var current: Bool
+
+    private static let papers: [PaperKind] = [.ruled, .graph, .peach, .sage, .mustard]
+
+    var body: some View {
+        let olive = TodayView.speakingTint
+        if appStyle == .collage {
+            PaperSurface(kind: Self.papers[index % Self.papers.count])
+                .clipShape(TornEdgeShape(edges: index % 2 == 0 ? [.bottom] : [], depth: 3, seed: index + 2))
+                .overlay { if current { Rectangle().strokeBorder(olive, lineWidth: 2.5) } }
+                .overlay(alignment: .top) { if current { TapeStrip(width: 54, angle: -4).offset(y: -9) } }
+                .rotationEffect(.degrees(index % 2 == 0 ? -0.4 : 0.4))
+        } else {
+            PremiumSurface(radius: 18)
+                .overlay {
+                    if current {
+                        RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(olive, lineWidth: 2)
+                    }
+                }
+        }
     }
 }

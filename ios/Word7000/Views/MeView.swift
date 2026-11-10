@@ -360,8 +360,8 @@ struct SettingsView: View {
                 // to practise: 2.0.2's Today, and the chapters as their own tab.
                 Section {
                     ChoiceRow(title: L.t("版面", "Layout"), icon: "rectangle.3.group.fill", tint: Palette.accent,
-                              options: [ChoiceOption(value: false, title: L.t("新版", "New"), detail: L.t("每日路線", "Daily path"), icon: "map.fill"),
-                                        ChoiceOption(value: true, title: L.t("經典", "Classic"), detail: L.t("自己挑練習", "Pick your practice"), icon: "square.grid.2x2.fill")],
+                              options: [ChoiceOption(value: true, title: L.t("經典模式", "Classic"), detail: L.t("自己挑練習", "Pick your practice"), icon: "square.grid.2x2.fill"),
+                                        ChoiceOption(value: false, title: L.t("懶人模式", "Easy mode"), detail: L.t("每天幫你排好", "Planned for you"), icon: "wand.and.stars")],
                               selection: model.classicLayout, identifier: "settings-layout") { classic in
                         withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.3)) { model.setClassicLayout(classic) }
                     }
@@ -379,10 +379,10 @@ struct SettingsView: View {
                     Text(L.t("版面", "Layout"))
                 } footer: {
                     Text(model.classicLayout
-                         ? L.t("經典：首頁是 2.0 的練習磚塊，自己挑想練的；「語言學習」分頁照章節一章一章走。關掉拼字練習，翻卡後就不會再拼字。",
-                               "Classic: Today has 2.0's practice tiles to pick from, and Language learning goes through the chapters in order. With writing off, no writing follows the cards.")
-                         : L.t("經典版面：首頁換回 2.0 的練習磚塊，章節路線另外放一個分頁。進度不會變。",
-                               "Classic puts 2.0's practice tiles back on Today and the chapters in a tab of their own. Your progress stays the same."))
+                         ? L.t("經典模式：首頁是練習磚塊，想練什麼自己挑；「語言學習」分頁照章節一章一章走。關掉拼字練習，翻卡後就不會再拼字。",
+                               "Classic: Today has the practice tiles to pick from, and Language learning goes through the chapters in order. With writing off, no writing follows the cards.")
+                         : L.t("懶人模式：每天幫你排好一條路，翻卡、寫字、考考看、口說照著走。換模式不會影響進度。",
+                               "Easy mode: each day is laid out for you, cards, writing, quiz and speaking in order. Switching keeps your progress."))
                 }
     
                 // Premium's subscription, for those paying: out of the

@@ -661,6 +661,9 @@ enum AppRuntime {
     static let labOnboarding = !uiTesting || ProcessInfo.processInfo.arguments.contains("-uiTestingLabOnboarding")
     /// WordCat Next: a stamp when today's words and speaking are both done.
     static let dayComplete = !uiTesting || ProcessInfo.processInfo.arguments.contains("-uiTestingDayComplete")
+    /// A new learner chooses classic or easy mode after the first launch. UI
+    /// tests of the first launch go straight on unless they ask for it.
+    static let layoutChoice = !uiTesting || ProcessInfo.processInfo.arguments.contains("-uiTestingLayoutChoice")
     /// The App Store art: `-uiTestingMascotPoster happy:white` shows only
     /// the cat in that mood on white (or black), still, for cutting out.
     static let mascotPoster: (mood: Mascot.Mood, white: Bool)? = {

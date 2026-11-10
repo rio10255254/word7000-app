@@ -65,7 +65,7 @@ final class ClassicLayoutTests: XCTestCase {
                 start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: -160)))
             }
         }
-        let classic = app.buttons["settings-layout-1"]
+        let classic = app.buttons["settings-layout-0"]
         reach(classic)
         XCTAssertTrue(classic.isSelected, app.debugDescription)
         let writing = app.switches["settings-writing"]
@@ -97,14 +97,32 @@ final class ClassicLayoutTests: XCTestCase {
         XCTAssertFalse(app.buttons["chapter-step-spell"].exists, "no writing tile either")
         snapshot(app, "classic-chapter-no-writing")
 
-        // Back to the new layout: Practice returns, Language learning goes.
+        // Easy mode: Practice returns, Language learning goes.
         tab(app, ["我", "Me"]).tap()
-        let newLayout = app.buttons["settings-layout-0"]
+        let newLayout = app.buttons["settings-layout-1"]
         reach(newLayout)
         newLayout.tap()
         XCTAssertTrue(tab(app, ["練習", "Practice"]).waitForExistence(timeout: 5), app.debugDescription)
         XCTAssertFalse(tab(app, ["語言學習", "Language learning"]).exists)
         XCTAssertFalse(app.switches["settings-writing"].exists, "the writing switch is only for the classic layout")
+    }
+
+    /// After the first launch a new learner picks classic (chosen already)
+    /// or easy mode; easy mode brings today's path and the Practice tab.
+    func testANewLearnerChoosesClassicOrEasyMode() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingSampleProgress", "-uiTestingLayoutChoice"]
+        app.launch()
+        let classic = app.buttons["layout-choice-classic"]
+        XCTAssertTrue(classic.waitForExistence(timeout: 10), app.debugDescription)
+        XCTAssertTrue(classic.isSelected, "classic is the default")
+        snapshot(app, "layout-choice")
+        app.buttons["layout-choice-easy"].tap()
+        XCTAssertTrue(app.buttons["layout-choice-easy"].isSelected)
+        app.buttons["layout-choice-start"].tap()
+        XCTAssertTrue(tab(app, ["練習", "Practice"]).waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertFalse(tab(app, ["語言學習", "Language learning"]).exists)
+        XCTAssertTrue(app.buttons["today-node-cards"].waitForExistence(timeout: 5), "easy mode's Today is the path")
     }
 
     private func snapshot(_ app: XCUIApplication, _ name: String) {

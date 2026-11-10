@@ -11,7 +11,7 @@ import Word7000Core
 /// Three heights cover every iPhone: SE-sized (about 600 points between the
 /// status bar and the tab bar), the usual 6.1" to 6.3" phones, and the big Plus
 /// and Pro Max ones (about 750 and up).
-private struct ClassicMetrics {
+struct ClassicMetrics {
     enum Tier { case compact, regular, tall }
     var tier: Tier
     /// Accessibility text sizes: one column, nothing peeking over the card.
@@ -57,6 +57,13 @@ private struct ClassicMetrics {
     func tileHeight(tallCard: Bool) -> (min: CGFloat, max: CGFloat) {
         if tallCard { return (112, 172) }
         return compact ? (54, 92) : tall ? (70, 112) : (62, 122)
+    }
+
+    /// The tallest a practice tile grows when it shares the room left on the
+    /// page: past this it would read as stretched, and the gaps take the rest.
+    func tileCap(tallCard: Bool) -> CGFloat {
+        if tallCard { return 210 }
+        return compact ? 132 : 180
     }
 }
 
@@ -176,7 +183,11 @@ struct ClassicTodayView: View {
                 .entrance(0, distance: 10)
             notices
             checklist
+            // The tiles take the room first (up to a tile's size); what they
+            // cannot use opens this gap a little before any is left at the end.
+            if fill { Spacer(minLength: 0).frame(maxHeight: m.spacing * 2) }
             practice(m, fill: fill)
+                .layoutPriority(1)
         }
         .padding(.horizontal, Metrics.gutter)
         .padding(.top, m.compact ? 6 : 12)
@@ -209,12 +220,14 @@ struct ClassicTodayView: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
             }
+            // The greeting stays whole ("Afternoon!", not "Afternoo…"); a
+            // long bank name is the one shortened.
+            .layoutPriority(1)
             if !m.large { Spacer(minLength: 4) }
             HStack(spacing: 8) {
                 languageSwitch
                 scopeChip
             }
-            .layoutPriority(1)
         }
     }
 
@@ -541,7 +554,7 @@ struct ClassicTodayView: View {
                 .font(.display(m.compact ? .headline : .title3, weight: .bold))
                 .padding(.leading, 4)
             if let review = reviewTile {
-                tile(review, tallCard: false, m, fill: fill, order: 1)
+                tile(review, tallCard: false, m, fill: fill, order: 1, grows: false)
             }
             ForEach(rows.indices, id: \.self) { row in
                 HStack(spacing: m.tileSpacing) {
@@ -555,14 +568,18 @@ struct ClassicTodayView: View {
         }
     }
 
-    private func tile(_ item: ClassicTileItem, tallCard: Bool, _ m: ClassicMetrics, fill: Bool, order: Int) -> some View {
+    /// `grows`: when the page fits, the practice tiles share the room left
+    /// down to the tab bar (a fixed tallest size left an empty strip on the
+    /// taller phones), up to a size that still looks like a tile; past it
+    /// the room goes to the gaps (see `page`).
+    private func tile(_ item: ClassicTileItem, tallCard: Bool, _ m: ClassicMetrics, fill: Bool, order: Int, grows: Bool = true) -> some View {
         let height = m.tileHeight(tallCard: tallCard)
         return Button {
             tileTaps[item.id, default: 0] += 1
             item.action()
         } label: {
             ClassicTile(item: item, tallCard: tallCard, style: m.tileStyle(tallCard: tallCard),
-                        minHeight: height.min, maxHeight: fill ? height.max : nil,
+                        minHeight: height.min, maxHeight: fill ? (grows ? m.tileCap(tallCard: tallCard) : height.max) : nil,
                         bounce: tileTaps[item.id, default: 0])
         }
         .buttonStyle(ClassicTilePressStyle())
@@ -695,12 +712,16 @@ struct ClassicTileItem: Identifiable {
     var detail: String
     var locked = false
     var badge: String? = nil
+    /// A chapter's step: done (a gold stamp), or the one to do next (ringed,
+    /// with a "Next" tab).
+    var done = false
+    var next = false
     var action: () -> Void
 }
 
 /// Pressing a tile sinks it a little and tips it toward the finger's side,
 /// like pressing into soft leather.
-private struct ClassicTilePressStyle: ButtonStyle {
+struct ClassicTilePressStyle: ButtonStyle {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     func makeBody(configuration: Configuration) -> some View {
@@ -723,7 +744,7 @@ struct ClassicTileStyle {
 /// A practice tile, in one of two compositions: a tall card (icon at the top,
 /// title and detail along the bottom) or a short row (icon, title and detail
 /// side by side), each with a faint, tilted watermark of its icon.
-private struct ClassicTile: View {
+struct ClassicTile: View {
     @Environment(\.appStyle) private var appStyle
     var item: ClassicTileItem
     var tallCard = false
@@ -731,16 +752,26 @@ private struct ClassicTile: View {
     var minHeight: CGFloat
     var maxHeight: CGFloat?
     var bounce = 0
+    /// The height the tile was given: once a short row has grown tall enough
+    /// it is laid out as a card (icon up top, words along the bottom) with a
+    /// bigger icon and title, so a tile filling a tall phone reads as
+    /// designed for it rather than as a stretched row.
+    @State private var height: CGFloat = 0
+    private static let cardHeight: CGFloat = 118
 
     private var radius: CGFloat { appStyle == .collage ? 0 : tallCard ? 22 : 18 }
+    private var cardLike: Bool { tallCard || height >= Self.cardHeight }
+    private var cardIcon: CGFloat { tallCard ? style.icon : min(56, max(style.icon, (height * 0.34).rounded())) }
+    private var cardTitle: Font.TextStyle { tallCard || height < 150 ? style.title : .title2 }
 
-    /// In the collage each way of practising is cut from its own paper.
+    /// In the collage each way of practising is cut from its own paper; a
+    /// chapter's steps take the same papers as their tiles on Today.
     private var paper: PaperKind {
         switch item.id {
         case "today-review": .ruled
-        case "today-quiz": .graph
-        case "today-speaking": .peach
-        case "today-spelling": .sage
+        case "today-quiz", "chapter-step-quiz": .graph
+        case "today-speaking", "chapter-step-speaking": .peach
+        case "today-spelling", "chapter-step-spell": .sage
         default: .mustard
         }
     }
@@ -760,16 +791,16 @@ private struct ClassicTile: View {
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)
         Group {
-            if tallCard {
+            if cardLike {
                 VStack(alignment: .leading, spacing: 0) {
                     HStack(alignment: .top) {
-                        icon(size: style.icon)
+                        icon(size: cardIcon)
                         Spacer(minLength: 4)
                         corner
                     }
                     Spacer(minLength: 10)
                     Text(item.title)
-                        .font(.display(style.title, weight: .bold))
+                        .font(.display(cardTitle, weight: .bold))
                         .foregroundStyle(.primary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.75)
@@ -809,7 +840,12 @@ private struct ClassicTile: View {
             }
         }
         .multilineTextAlignment(.leading)
-        .frame(maxWidth: .infinity, minHeight: minHeight, maxHeight: maxHeight, alignment: tallCard ? .topLeading : .leading)
+        .frame(maxWidth: .infinity, minHeight: minHeight, maxHeight: maxHeight, alignment: cardLike ? .topLeading : .leading)
+        .onGeometryChange(for: CGFloat.self) { proxy in proxy.size.height.rounded() } action: { value in
+            var still = Transaction()
+            still.disablesAnimations = true
+            withTransaction(still) { height = value }
+        }
         .background {
             if appStyle == .collage {
                 PaperSurface(kind: paper)
@@ -825,12 +861,19 @@ private struct ClassicTile: View {
             }
         }
         .overlay(alignment: .top) {
-            if appStyle == .collage, item.id == "today-review" { TapeStrip(width: 58, angle: -4).offset(y: -9) }
+            if appStyle == .collage, item.id == "today-review" || item.next { TapeStrip(width: 58, angle: -4).offset(y: -9) }
+        }
+        .overlay {
+            // The step to do next, ringed in its colour.
+            if item.next { shape.strokeBorder(item.tint, lineWidth: 2.5) }
+        }
+        .overlay(alignment: .topTrailing) {
+            if item.done { DoneStamp().offset(x: 6, y: -8) }
         }
         .overlay {
             // A soft ring of the tile's colour spreads from the icon when it is tapped.
             if bounce > 0 {
-                ClassicTileRipple(color: item.tint, tallCard: tallCard, iconSize: style.icon)
+                ClassicTileRipple(color: item.tint, tallCard: cardLike, iconSize: cardLike ? cardIcon : style.icon)
                     .id(bounce)
                     .clipShape(shape)
             }
@@ -843,13 +886,13 @@ private struct ClassicTile: View {
     private var watermark: some View {
         GeometryReader { proxy in
             let h = proxy.size.height
-            let size = tallCard ? h * 0.62 : h * 0.9
+            let size = cardLike ? h * 0.62 : h * 0.9
             Image(systemName: item.icon)
                 .font(.system(size: size, weight: .bold))
                 .foregroundStyle(item.tint.opacity(0.09))
                 .rotationEffect(.degrees(-12))
-                .position(x: proxy.size.width - size * (tallCard ? 0.32 : 0.3),
-                          y: tallCard ? h - size * 0.3 : h * 0.6)
+                .position(x: proxy.size.width - size * (cardLike ? 0.32 : 0.3),
+                          y: cardLike ? h - size * 0.3 : h * 0.6)
         }
         .allowsHitTesting(false)
         .accessibilityHidden(true)
@@ -888,7 +931,9 @@ private struct ClassicTile: View {
     /// The tall card's top corner: the Plus mark when locked, else a small arrow.
     @ViewBuilder
     private var corner: some View {
-        if item.locked {
+        if item.next {
+            nextTab
+        } else if item.locked {
             PlusBadgeFitting()
         } else if let badge = item.badge {
             pill(badge)
@@ -905,7 +950,9 @@ private struct ClassicTile: View {
     /// The short row's far end: the Plus mark, a count, or nothing.
     @ViewBuilder
     private var rowEnd: some View {
-        if item.locked {
+        if item.next {
+            nextTab
+        } else if item.locked {
             PlusBadgeFitting()
         } else if let badge = item.badge {
             if roomy {
@@ -926,6 +973,18 @@ private struct ClassicTile: View {
                 pill(badge)
             }
         }
+    }
+
+    /// "Next", on the step to do now.
+    private var nextTab: some View {
+        Text(L.t("下一步", "Next"))
+            .font(.caption.weight(.heavy))
+            .foregroundStyle(.white)
+            .lineLimit(1)
+            .fixedSize()
+            .padding(.horizontal, 9)
+            .padding(.vertical, 4)
+            .background(item.tint, in: Capsule())
     }
 
     private func pill(_ text: String) -> some View {
@@ -965,5 +1024,25 @@ private struct ClassicTileRipple: View {
             guard !reduceMotion else { return }
             withAnimation(.easeOut(duration: 0.55)) { spread = true }
         }
+    }
+}
+
+/// A gold stamp, pressed in at a slant, on a step once it is done.
+struct DoneStamp: View {
+    var size: CGFloat = 32
+
+    var body: some View {
+        ZStack {
+            Circle().fill(LinearGradient(colors: [Color(red: 0.98, green: 0.84, blue: 0.5), Color(red: 0.82, green: 0.6, blue: 0.24)],
+                                         startPoint: .topLeading, endPoint: .bottomTrailing))
+            Circle().strokeBorder(Color.white.opacity(0.45), lineWidth: 1.5).padding(3)
+            Image(systemName: "checkmark")
+                .font(.system(size: size * 0.44, weight: .heavy))
+                .foregroundStyle(Color(red: 0.42, green: 0.27, blue: 0.1))
+        }
+        .frame(width: size, height: size)
+        .rotationEffect(.degrees(-10))
+        .shadow(color: .black.opacity(0.12), radius: 2, y: 1)
+        .accessibilityHidden(true)
     }
 }

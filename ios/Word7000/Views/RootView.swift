@@ -48,12 +48,14 @@ struct RootView: View {
     @State private var studyAfterWelcome = false
     /// WordCat Next: today's stamp, once words and speaking are done.
     @State private var dayCompleteOpen = false
+    /// A new learner choosing classic or easy mode, after the first launch.
+    @State private var layoutChoiceOpen = false
     /// The Me tab's pages, kept here so Settings stays open when changing the
     /// study mode rebuilds the tabs in the other language.
     @State private var mePath: [MeRoute] = []
 
     var body: some View {
-        withCovers
+        withFirstLaunch
         .task { welcomeOpen = model.settings.onboardingComplete != true; openRequestedPractice() }
         // Notifications are asked for once, as soon as the app opens, so the
         // developer's announcements reach every learner from the start.
@@ -100,7 +102,7 @@ struct RootView: View {
             UpdateWindow.shared.show(required, style: model.settings.appStyle ?? .standard,
                                      scheme: model.settings.theme.colorScheme)
         }
-        .fullScreenCover(item: Binding(get: { (updateGate.required == nil && activity == nil && !welcomeOpen && !dayCompleteOpen && plus.paywallReason == nil && !plus.trialRecapPending
+        .fullScreenCover(item: Binding(get: { (updateGate.required == nil && activity == nil && !welcomeOpen && !layoutChoiceOpen && !dayCompleteOpen && plus.paywallReason == nil && !plus.trialRecapPending
                                      && !model.styleChoiceDue && !signInForScan) ? announcements.current : nil },
                              set: { if $0 == nil, let shown = announcements.current { announcements.markSeen(shown) } }),
                onDismiss: {
@@ -236,17 +238,23 @@ struct RootView: View {
             // The screenshot tests show the stamp straight away.
             if ProcessInfo.processInfo.arguments.contains("-uiTestingDayCompleteNow") { dayCompleteOpen = true }
         }
-        .sheet(isPresented: Binding(get: { model.styleChoiceDue && activity == nil && !welcomeOpen && !signInForScan
+        .sheet(isPresented: Binding(get: { model.styleChoiceDue && activity == nil && !welcomeOpen && !layoutChoiceOpen && !signInForScan
                                            && plus.paywallReason == nil && !plus.trialRecapPending },
                                     set: { if !$0 { model.settings.stylePicked = true } })) {
             StyleChoiceSheet()
         }
+    }
+
+    /// The first launch, and the choice of classic or easy mode after it.
+    private var withFirstLaunch: some View {
+        withCovers
         .fullScreenCover(isPresented: $welcomeOpen, onDismiss: {
-            if studyAfterWelcome {
-                studyAfterWelcome = false
-                PracticeLaunch.shared.requested = nil
-                activity = .study
-            } else { openRequestedPractice() }
+            // A new learner picks classic or easy mode before anything else.
+            if model.settings.layoutChosen == nil, AppRuntime.layoutChoice {
+                layoutChoiceOpen = true
+            } else {
+                afterWelcome()
+            }
         }) {
             WelcomeView { mode, target, knownIds, learningIds, practice in
                 model.settings.onboardingComplete = true
@@ -261,6 +269,23 @@ struct RootView: View {
                 model.saveNow()
             }
         }
+        .fullScreenCover(isPresented: $layoutChoiceOpen, onDismiss: afterWelcome) {
+            LayoutChoiceView()
+        }
+        .task {
+            // The UI tests of the choice open it straight away.
+            if ProcessInfo.processInfo.arguments.contains("-uiTestingLayoutChoice") { layoutChoiceOpen = true }
+        }
+    }
+
+    /// After the first launch (and the layout choice): the first cards, or
+    /// whatever practice was asked for.
+    private func afterWelcome() {
+        if studyAfterWelcome {
+            studyAfterWelcome = false
+            PracticeLaunch.shared.requested = nil
+            activity = .study
+        } else { openRequestedPractice() }
     }
 
     /// The tabs: the layout's first two, then Words and Me. Split out of

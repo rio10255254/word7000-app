@@ -80,9 +80,15 @@ struct TodayView: View {
     var body: some View {
         GeometryReader { proxy in
             let fits = proxy.size.height > 640 && !dynamicTypeSize.isAccessibilitySize
+            // Roomy if it fits, else compact without scrolling (a 13 mini),
+            // else compact and scrolling (an SE).
             ViewThatFits(in: .vertical) {
                 page(roomy: fits)
                     .frame(maxHeight: .infinity, alignment: .top)
+                if fits {
+                    page(roomy: false)
+                        .frame(maxHeight: .infinity, alignment: .top)
+                }
                 ScrollView { page(roomy: false) }
                     .scrollIndicators(.hidden)
             }
@@ -170,7 +176,15 @@ struct TodayView: View {
         // Roomier now the language switch has left the header: the card sits a
         // little lower instead of leaving the bottom of a tall phone empty.
         VStack(alignment: .leading, spacing: roomy ? 24 : 12) {
-            header
+            // Spare room on a tall phone: a little breathing space above the
+            // card (up to 40 points); the card keeps its size and the rest
+            // stays under it. Nothing in the scrolling fallback.
+            VStack(alignment: .leading, spacing: 0) {
+                header
+                Spacer(minLength: 0).frame(maxHeight: 40)
+            }
+            // The header's buttons stay above the cat standing on the card.
+            .zIndex(1)
             focusCard(roomy: roomy)
             if let nudge = plus.nudge {
                 PlusNudgeBanner(nudge: nudge)
@@ -837,10 +851,12 @@ struct TodayView: View {
     }
 
     /// Speaking's colour, on the card and in its screens.
-    static let speakingTint = Color(red: 0.27, green: 0.47, blue: 0.41)
+    /// The light olive of the goal-met card, which 2.0 used for its greens;
+    /// speaking takes it too rather than a teal of its own.
+    static let speakingTint = Color(red: 0.42, green: 0.5, blue: 0.29)
     private static let deep = Color(red: 0.45, green: 0.27, blue: 0.16)
     private static let doneDeep = Color(red: 0.3, green: 0.38, blue: 0.22)
-    private static let speakingDeep = Color(red: 0.16, green: 0.3, blue: 0.27)
+    private static let speakingDeep = Color(red: 0.3, green: 0.38, blue: 0.22)
     /// Text and the button on the leather card.
     static let cream = Color(red: 1.0, green: 0.97, blue: 0.91)
 }
@@ -1029,7 +1045,7 @@ private struct CollageHeroBackground: View {
         let colors: [Color] = switch tone {
         case .done: [Color(red: 0.6, green: 0.65, blue: 0.4), Color(red: 0.36, green: 0.45, blue: 0.27)]
         case .words: [Color(red: 0.79, green: 0.55, blue: 0.37), Color(red: 0.6, green: 0.37, blue: 0.23)]
-        case .speaking: [Color(red: 0.43, green: 0.6, blue: 0.52), Color(red: 0.24, green: 0.4, blue: 0.35)]
+        case .speaking: [Color(red: 0.6, green: 0.65, blue: 0.4), Color(red: 0.36, green: 0.45, blue: 0.27)]
         }
         ZStack {
             PaperSurface(kind: .graph)
@@ -1057,8 +1073,8 @@ private struct CollageHeroBackground: View {
     }
 }
 
-/// The big card's colour: caramel for words, olive once today's words are
-/// done, moss for speaking.
+/// The big card's colour: caramel for words, light olive once today's
+/// words are done and for speaking.
 enum HeroTone { case words, done, speaking }
 
 /// The big card's face: caramel leather darkening to brown (moss for
@@ -1085,7 +1101,7 @@ struct HeroBackground: View {
         let colors: [Color] = switch tone {
         case .done: [Color(red: 0.6, green: 0.65, blue: 0.4), Color(red: 0.33, green: 0.42, blue: 0.25)]
         case .words: [Color(red: 0.77, green: 0.55, blue: 0.36), Color(red: 0.45, green: 0.29, blue: 0.19)]
-        case .speaking: [Color(red: 0.42, green: 0.58, blue: 0.5), Color(red: 0.19, green: 0.33, blue: 0.29)]
+        case .speaking: [Color(red: 0.6, green: 0.65, blue: 0.4), Color(red: 0.33, green: 0.42, blue: 0.25)]
         }
         shape
             .fill(LinearGradient(colors: colors, startPoint: .topLeading, endPoint: .bottomTrailing))

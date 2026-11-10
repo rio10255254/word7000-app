@@ -11,6 +11,18 @@ extension XCUIApplication {
         XCTAssertTrue(row.waitForExistence(timeout: 5), debugDescription, file: file, line: line)
         row.tap()
     }
+
+    /// Leaves for the home screen and closes the app once iOS has suspended
+    /// it. Saves are written in the background, and going to the background
+    /// the app stays awake until they are on disk, so the next launch finds
+    /// them. A fixed pause before closing raced those saves on a busy
+    /// simulator, where one could land seconds late.
+    func closeAfterSaving(file: StaticString = #filePath, line: UInt = #line) {
+        XCUIDevice.shared.press(.home)
+        XCTAssertTrue(wait(for: .runningBackgroundSuspended, timeout: 30),
+                      "Not suspended (state \(state.rawValue))", file: file, line: line)
+        terminate()
+    }
 }
 
 extension XCUIElement {

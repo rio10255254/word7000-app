@@ -135,9 +135,7 @@ final class ScanPickerTests: XCTestCase {
     func testRepeatedScanKeepsDifferentMeaningsAndSkipsExactDuplicates() {
         var app = openScanner(pastedText: "bank n. 銀行")
         let bankName = savePastedBank(app)
-        XCUIDevice.shared.press(.home)
-        sleep(1)
-        app.terminate()
+        app.closeAfterSaving()
 
         app = openScanner(pastedText: "BANK n. 銀行\nbank n. 河岸\nobjectively adv. 客觀地\nobjective n. 目標", reset: false)
         readPasted(app)

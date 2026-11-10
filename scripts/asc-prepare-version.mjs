@@ -186,12 +186,23 @@ async function uploadScreenshots(localizationId, folder, locale) {
   }
   const current = (await get(`/v1/appScreenshotSets/${set.id}/appScreenshots?limit=20`)).data;
   const wanted = files.map((f) => ({ name: f, bytes: fs.readFileSync(path.join(folder, f)) }));
+  const processed = (s) => s.attributes.assetDeliveryState?.state === 'COMPLETE';
   const same = current.length === wanted.length && current.every((s, i) =>
-    s.attributes.sourceFileChecksum === md5(wanted[i].bytes) && s.attributes.assetDeliveryState?.state === 'COMPLETE');
+    s.attributes.sourceFileChecksum === md5(wanted[i].bytes) && processed(s));
   if (same) { skip(`${locale}：${wanted.length} 張截圖已是最新`); return; }
-  for (const shot of current) await api('DELETE', `/v1/appScreenshots/${shot.id}`);
-  const ids = [];
+  // Keep a processed screenshot that is already right; replace the rest,
+  // including one stuck before processing (UPLOAD_COMPLETE for long).
+  const keep = new Map();
   for (const file of wanted) {
+    const match = current.find((s) => processed(s) && s.attributes.sourceFileChecksum === md5(file.bytes) && ![...keep.values()].includes(s.id));
+    if (match) keep.set(file.name, match.id);
+  }
+  for (const shot of current) if (![...keep.values()].includes(shot.id)) await api('DELETE', `/v1/appScreenshots/${shot.id}`);
+  const ids = [];
+  let uploaded = 0;
+  for (const file of wanted) {
+    if (keep.has(file.name)) { ids.push(keep.get(file.name)); continue; }
+    uploaded += 1;
     const reserved = (await api('POST', '/v1/appScreenshots', { data: { type: 'appScreenshots', attributes: { fileName: file.name, fileSize: file.bytes.length },
       relationships: { appScreenshotSet: { data: { type: 'appScreenshotSets', id: set.id } } } } })).data;
     for (const part of reserved.attributes.uploadOperations) {
@@ -203,7 +214,7 @@ async function uploadScreenshots(localizationId, folder, locale) {
     ids.push(reserved.id);
   }
   await api('PATCH', `/v1/appScreenshotSets/${set.id}/relationships/appScreenshots`, { data: ids.map((id) => ({ type: 'appScreenshots', id })) });
-  done(`${locale}：上傳 ${ids.length} 張 6.9 吋 iPhone 截圖${current.length ? `（換掉原本 ${current.length} 張）` : ''}`);
+  done(`${locale}：重新上傳 ${uploaded} 張 6.9 吋 iPhone 截圖，保留已處理好的 ${ids.length - uploaded} 張，共 ${ids.length} 張依序排好`);
 }
 
 say('\n## 各語言的描述、關鍵字、截圖');

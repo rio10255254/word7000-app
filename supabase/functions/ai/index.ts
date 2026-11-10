@@ -1,7 +1,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.108.2';
 import { verifySubscriptionTransaction } from './entitlement.ts';
 import { AIFailure, complete } from './claude.ts';
-import { COACH_MODEL, COACH_MODEL_DAILY, coachUsesStrongModel, dailyLimit, InputError, isTaskName, planTask, tierFor } from './tasks.ts';
+import { COACH_MODEL, COACH_MODEL_DAILY, coachUsesStrongModel, dailyLimit, InputError, isTaskName, MAX_PHOTO_BASE64, planTask, tierFor } from './tasks.ts';
 
 // The Anthropic key lives only here, as the ANTHROPIC_API_KEY function secret.
 // The app sends task data with the learner's session. Guest sessions are
@@ -16,6 +16,8 @@ const corsHeaders = {
 
 // Room for a StoreKit transaction (a few kilobytes) alongside the task data.
 const MAX_BODY_BYTES = 32_768;
+// A scan photo (base64 JPEG, see MAX_PHOTO_BASE64) with the same around it.
+const MAX_PHOTO_BODY_BYTES = MAX_PHOTO_BASE64 + MAX_BODY_BYTES;
 const BUNDLE_ID = 'com.rio.word7000';
 const PLUS_PRODUCTS = ['com.rio.word7000.plus.monthly', 'com.rio.word7000.plus.yearly'];
 // Learners agreed to send text to a named provider. Builds that asked about an
@@ -39,7 +41,7 @@ Deno.serve(async (request) => {
   }
   // Refuse an oversized body before reading it.
   const declared = Number(request.headers.get('content-length') ?? '0');
-  if (Number.isFinite(declared) && declared > MAX_BODY_BYTES) return reply({ error: 'invalid_input' }, 400);
+  if (Number.isFinite(declared) && declared > MAX_PHOTO_BODY_BYTES) return reply({ error: 'invalid_input' }, 400);
   const userClient = createClient(supabaseUrl, publishableKey, {
     auth: { persistSession: false },
     global: { headers: { Authorization: authorization } },
@@ -53,11 +55,14 @@ Deno.serve(async (request) => {
   const service = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } });
 
   const raw = await request.text();
-  if (new TextEncoder().encode(raw).length > MAX_BODY_BYTES) return reply({ error: 'invalid_input' }, 400);
+  const size = new TextEncoder().encode(raw).length;
+  if (size > MAX_PHOTO_BODY_BYTES) return reply({ error: 'invalid_input' }, 400);
   let body: { task?: unknown; input?: unknown; entitlement?: unknown; consent?: unknown };
   try { body = JSON.parse(raw); } catch { return reply({ error: 'invalid_input' }, 400); }
   if (body.consent !== PROVIDER) return reply({ error: 'unavailable' }, 503);
   if (!isTaskName(body.task)) return reply({ error: 'invalid_input' }, 400);
+  // Only a scan photo needs the larger body.
+  if (body.task !== 'scanPhoto' && size > MAX_BODY_BYTES) return reply({ error: 'invalid_input' }, 400);
 
   const task = body.task;
   try { planTask(task, body.input); }

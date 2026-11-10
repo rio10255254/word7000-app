@@ -6,7 +6,7 @@
 //
 //   --effort tries another thinking depth (low, medium, high) on every case.
 //   --model compares another Claude model on the same cases (the service itself always uses MODEL).
-//   --only takes task names: coach, scan, explain, quizWhy, fillWord, insights, ask, chat, lines, verdict.
+//   --only takes task names: coach, scan, scanPhoto, explain, quizWhy, fillWord, insights, ask, chat, lines, verdict.
 // Run by .github/workflows/ai-eval.yml. A failed check is printed as a GitHub
 // warning; the exit code is 1 only when Claude gave no answer at all.
 import fs from 'node:fs';
@@ -122,6 +122,10 @@ function fillFromChineseCheck(accepted: string[]): Check {
     if (content.example && !usesWord(String(content.example), word)) problems.push('example does not use the word');
     return problems;
   };
+}
+
+function photo(name: string): string {
+  return fs.readFileSync(path.join(path.dirname(new URL(import.meta.url).pathname), 'ai-eval-photos', name)).toString('base64');
 }
 
 function scanCheck(expected: [string, string][]): Check {
@@ -293,6 +297,19 @@ const cases: Case[] = [
     task: 'scan', name: 'scan a messy two-column list',
     input: { text: 'Unit 3 Vocabulary\n1. apple n. 蘋果   2. borrow v. 借入\n3. careful adj. 小心的\nEx: Be careful!\n4. decide v. 決定' },
     check: scanCheck([['apple', '蘋果'], ['borrow', '借入'], ['careful', '小心的'], ['decide', '決定']]),
+  },
+  // Photos made by scripts/ai-eval-photos: a notes page laid out like a
+  // learner's (meanings beside the words, examples in a second column) and a
+  // printed list with check boxes, a heading and an example line.
+  {
+    task: 'scanPhoto', name: 'scan photo: notes page with an example column',
+    input: { image: photo('notes-page.jpg') },
+    check: scanCheck([['for', '多長'], ['since', '從什麼時候開始'], ['during', '在…期間']]),
+  },
+  {
+    task: 'scanPhoto', name: 'scan photo: printed list with check boxes',
+    input: { image: photo('printed-list.jpg') },
+    check: scanCheck([['abandon', '放棄'], ['benefit', '好處；利益'], ['careful', '小心的'], ['decline', '下降；婉拒'], ['environment', '環境']]),
   },
   {
     task: 'ask', name: 'ask: abandon vs give up',

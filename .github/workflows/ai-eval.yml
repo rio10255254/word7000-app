@@ -16,6 +16,7 @@ on:
     paths:
       - 'supabase/functions/ai/**'
       - 'scripts/ai-eval.ts'
+      - 'scripts/ai-eval-photos/**'
       - '.github/workflows/ai-eval.yml'
   workflow_dispatch:
     inputs:
@@ -32,7 +33,7 @@ on:
         type: string
         default: ''
       only:
-        description: 'Only these tasks (coach, scan, explain, quizWhy, fillWord, insights, ask, chat, lines, verdict); empty = all'
+        description: 'Only these tasks (coach, scan, scanPhoto, explain, quizWhy, fillWord, insights, ask, chat, lines, verdict); empty = all'
         type: string
         default: ''
 

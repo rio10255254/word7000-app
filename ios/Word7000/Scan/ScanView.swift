@@ -247,7 +247,7 @@ struct ScanView: View {
         switch plus.decide(.scan) {
         case .allowed:
             // Ask about the online AI before the camera opens, not halfway through reading.
-            if IntelligenceSettings.shared.scanAllowed, CloudAssistant.shared.needsConsent {
+            if IntelligenceSettings.shared.scanAllowed, CloudAssistant.shared.needsConsent || CloudAssistant.shared.needsPhotoConsent {
                 afterCloudAnswer = action
                 askCloud = true
             } else {
@@ -469,29 +469,37 @@ struct ScanView: View {
                 }
             }
 
-            Section {
-                if plan.duplicateCount > 0 {
+            if plan.duplicateCount > 0 {
+                Section {
                     Text(L.t("\(plan.duplicateCount) 筆相同拼字與意思不會再次加入；同字不同義會保留。", "\(plan.duplicateCount) identical entries will be skipped. Different meanings are kept."))
                         .font(.footnote).foregroundStyle(.secondary)
                         .accessibilityIdentifier("scan-duplicates-summary")
+                        .listRowBackground(Color.clear)
+                        .listRowInsets(EdgeInsets())
                 }
-                Button {
-                    save()
-                } label: {
-                    Text(S.save(count))
-                        .font(.headline)
-                        .contentTransition(.numericText(value: Double(count)))
-                        .frame(maxWidth: .infinity)
-                }
-                .prominentAction()
-                .disabled(count == 0)
-                .accessibilityIdentifier("scan-save")
-                .listRowBackground(Color.clear)
-                .listRowInsets(EdgeInsets())
             }
         }
         .warmList()
         .scrollDismissesKeyboard(.interactively)
+        // The save key on its own bar at the bottom, as on the other screens,
+        // not the last row of the list (where it sat flush with the cards).
+        .safeAreaInset(edge: .bottom) {
+            Button {
+                save()
+            } label: {
+                Text(S.save(count))
+                    .font(.headline)
+                    .contentTransition(.numericText(value: Double(count)))
+                    .frame(maxWidth: .infinity)
+            }
+            .prominentAction()
+            .disabled(count == 0)
+            .accessibilityIdentifier("scan-save")
+            .padding(.horizontal, 20)
+            .padding(.top, 10)
+            .padding(.bottom, 6)
+            .background { PaperBarBackground() }
+        }
     }
 
     /// The word being learned on top, as on the cards: the English word for a
@@ -691,7 +699,7 @@ private struct ScanDots: View {
 /// Scan screen copy (English-word mode).
 private enum S {
     static var title: String { L.t("掃描單字表", "Scan a word list") }
-    static var intro: String { L.t("印刷的、手寫的單字表我都讀得懂。照片只留在你的 iPhone。", "Printed or handwritten, I can read it. Photos stay on your iPhone.") }
+    static var intro: String { L.t("印刷的、手寫的單字表我都讀得懂。", "Printed or handwritten, I can read it.") }
     static var scanTitle: String { L.t("掃描單字表", "Scan a list") }
     static var scanSubtitle: String { L.t("可多頁，手寫也行", "Several pages, handwriting OK") }
     static var photoSubtitle: String { L.t("挑一張單字表照片", "Pick a photo of a list") }

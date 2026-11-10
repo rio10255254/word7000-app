@@ -52,7 +52,7 @@ WordCat 單字貓：你的英文單字口說家教
 
 【講義拍一下，變成單字卡】
 ・印刷的、手寫的單字表都認得出來
-・照片只在你的 iPhone 上處理
+・同意使用線上 AI 時，照片交給 AI 讀，手寫的也讀得更準
 
 【打開就能開始】
 不用先註冊，打開就能背。用 Apple 登入可以保存進度，換手機也找得回來。
@@ -119,7 +119,7 @@ A CAT WITH OPINIONS
 
 SNAP A WORD LIST
 • Turn printed or handwritten lists into flashcards
-• Photos are processed on your iPhone
+• With online AI, the photo is read by AI for sharper handwriting recognition
 
 START RIGHT AWAY
 No account needed to start. Sign in with Apple to keep your progress across devices.
@@ -144,7 +144,7 @@ A whole new WordCat!
 - 用 Apple 登入後可同步進度；「我 → 帳號 → 刪除帳號與資料」可永久刪除帳號，刪除前會請使用者用 Apple 確認一次，並向 Apple 撤銷登入授權。
 - Premium 是自動續訂訂閱（月訂、年訂），付費頁有恢復購買、隱私權政策和使用條款連結。
 - Premium 綁在帳號上：訂閱狀態和線上 AI 的每日額度記在我們的伺服器，並在同一個人的多支 iPhone 之間共用，所以付費頁會請訪客先用 Apple 登入再購買（不需要其他個人資料）。
-- 線上 AI 功能（口說批改等）第一次使用前會請使用者同意傳送文字；不傳錄音、照片、姓名或 Email。
+- 線上 AI 功能（口說批改、掃描等）第一次使用前會請使用者同意傳送文字與掃描照片；不傳錄音、姓名或 Email。
 - 介面依「學英文／學中文」切換中文或英文；設定在「我」頁。
 
 ## Review Notes (English)
@@ -155,5 +155,5 @@ A whole new WordCat!
 - Sign in with Apple syncs progress. Me → Account → Delete Account and Data permanently deletes the account; the app asks the user to confirm with Apple first and revokes the Sign in with Apple authorization.
 - Premium is an auto-renewing subscription (monthly and yearly). The paywall links to Restore Purchases, the Privacy Policy and the Terms of Use.
 - Premium belongs to an account: the subscription status and the daily online-AI allowance are kept on our server and shared across the learner's iPhones, so the paywall asks a guest to Sign in with Apple before buying (no other personal information).
-- Before online AI features (such as speaking feedback) are used for the first time, the app asks the user to agree to send text. Recordings, photos, names and email addresses are never sent.
+- Before online AI features (such as speaking feedback and scanning) are used for the first time, the app asks the user to agree to send text and scan photos. Recordings, names and email addresses are never sent.
 - The interface is Chinese for learners of English and English for learners of Chinese; switch on the Me tab.

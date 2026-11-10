@@ -237,3 +237,43 @@ final class ScanQualityTests: XCTestCase {
         XCTAssertNil(replaced.first?.suggestedWord)
     }
 }
+
+/// A handwritten notes page read by Vision: each word with its Chinese on
+/// the left, examples in a second column on the right ("since 從什麼時候
+/// 開始 … Since I was little 從我小時候開始").
+final class ScanNotesPageTests: XCTestCase {
+    static let page: [ScannedLine] = [
+        ScannedLine(text: "for", x: 0.1063, y: 0.1076, width: 0.0833, height: 0.0347),
+        ScannedLine(text: "how_ong", x: 0.2038, y: 0.0836, width: 0.1383, height: 0.0312),
+        ScannedLine(text: "多", x: 0.2356, y: 0.1099, width: 0.0632, height: 0.0366),
+        ScannedLine(text: "Since", x: 0.1115, y: 0.2640, width: 0.0988, height: 0.0302),
+        ScannedLine(text: "when Starts", x: 0.2471, y: 0.2454, width: 0.1840, height: 0.0264),
+        ScannedLine(text: "從什麼時候開始", x: 0.2557, y: 0.2756, width: 0.2415, height: 0.0329),
+        ScannedLine(text: "during", x: 0.1178, y: 0.3728, width: 0.1034, height: 0.0496),
+        ScannedLine(text: "在…期間", x: 0.2701, y: 0.3985, width: 0.1580, height: 0.0347),
+        ScannedLine(text: "Sor thvee hours", x: 0.3962, y: 0.0978, width: 0.2679, height: 0.0393),
+        ScannedLine(text: "ten years", x: 0.4815, y: 0.1481, width: 0.1845, height: 0.0395),
+        ScannedLine(text: "30", x: 0.5029, y: 0.2023, width: 0.0517, height: 0.0176),
+        ScannedLine(text: "minuite", x: 0.5632, y: 0.1940, width: 0.1293, height: 0.0239),
+        ScannedLine(text: "Since 工 was", x: 0.5567, y: 0.2475, width: 0.2256, height: 0.0288),
+        ScannedLine(text: "little", x: 0.7759, y: 0.2435, width: 0.0891, height: 0.0259),
+        ScannedLine(text: "從我小時候", x: 0.7213, y: 0.2713, width: 0.1437, height: 0.0326),
+        ScannedLine(text: "開始", x: 0.8218, y: 0.3058, width: 0.0690, height: 0.0304),
+        ScannedLine(text: "during工walk工Saw", x: 0.5178, y: 0.3761, width: 0.3341, height: 0.0534),
+        ScannedLine(text: "a bird.", x: 0.7701, y: 0.4202, width: 0.1178, height: 0.0325),
+    ]
+
+    /// The example's Chinese on the same baseline is not part of the
+    /// meaning, and the example's words are not entries.
+    func testExampleColumnStaysOutOfTheEntries() {
+        let found = ScanParser.parsePage(Self.page)
+        XCTAssertEqual(found.map { "\($0.word.lowercased()) \($0.meaningZh)" }, ["for 多", "since 從什麼時候開始", "during 在…期間"])
+    }
+
+    func testAMeaningEndsItsRow() {
+        let rows = ScanParser.readingRows(Self.page).map(\.text)
+        XCTAssertTrue(rows.contains("Since 從什麼時候開始"), "\(rows)")
+        XCTAssertTrue(rows.contains("從我小時候"), "\(rows)")
+        XCTAssertTrue(rows.contains("during 在…期間"), "\(rows)")
+    }
+}

@@ -136,7 +136,15 @@ export function requestBody(plan: TaskPlan, effort: Effort, note?: string, model
     model,
     max_tokens: plan.maxTokens + THINKING_ROOM[effort],
     system,
-    messages: [{ role: 'user', content: plan.user }],
+    messages: [{
+      role: 'user',
+      content: plan.image
+        ? [
+          { type: 'image', source: { type: 'base64', media_type: plan.image.mediaType, data: plan.image.data } },
+          { type: 'text', text: plan.user },
+        ]
+        : plan.user,
+    }],
     thinking: { type: 'adaptive' },
     output_config: { effort, format: { type: 'json_schema', schema: plan.schema } },
   };

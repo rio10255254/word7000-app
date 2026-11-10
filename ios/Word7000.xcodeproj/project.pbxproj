@@ -361,8 +361,8 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "單字貓";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Word7000 需要使用相機拍下單字表，在手機上辨識英文與中文意思。照片不會上傳。";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Word7000 需要讀取你選的照片，在手機上辨識單字表裡的英文與中文意思。照片不會上傳。";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Word7000 需要使用相機拍下單字表，辨識英文與中文意思。同意使用線上 AI 時，照片會傳給 AI 辨識；否則只在手機上辨識。";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Word7000 需要讀取你選的照片，辨識單字表裡的英文與中文意思。同意使用線上 AI 時，照片會傳給 AI 辨識；否則只在手機上辨識。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -396,8 +396,8 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "單字貓";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Word7000 需要使用相機拍下單字表，在手機上辨識英文與中文意思。照片不會上傳。";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Word7000 需要讀取你選的照片，在手機上辨識單字表裡的英文與中文意思。照片不會上傳。";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Word7000 需要使用相機拍下單字表，辨識英文與中文意思。同意使用線上 AI 時，照片會傳給 AI 辨識；否則只在手機上辨識。";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Word7000 需要讀取你選的照片，辨識單字表裡的英文與中文意思。同意使用線上 AI 時，照片會傳給 AI 辨識；否則只在手機上辨識。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;

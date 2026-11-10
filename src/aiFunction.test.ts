@@ -106,6 +106,33 @@ describe('AI tasks', () => {
   });
 });
 
+describe('scan photo', () => {
+  // A tiny JPEG header is enough: the server only checks it is base64 JPEG.
+  const jpeg = '/9j/4AAQSkZJRgABAQAAAQABAAD';
+
+  it('sends the photo as an image block before the request', () => {
+    const plan = planTask('scanPhoto', { image: jpeg });
+    expect(plan.effort).toBe('low');
+    expect(plan.review).toBeUndefined();
+    const body = requestBody(plan, plan.effort);
+    const content = body.messages[0].content as Array<Record<string, unknown>>;
+    expect(content[0]).toEqual({ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: jpeg } });
+    expect(content[1]).toEqual({ type: 'text', text: plan.user });
+  });
+
+  it('refuses anything but a base64 JPEG of a sensible size', () => {
+    expect(() => planTask('scanPhoto', {})).toThrow(InputError);
+    expect(() => planTask('scanPhoto', { image: 'iVBORw0KGgo=' })).toThrow(InputError);
+    expect(() => planTask('scanPhoto', { image: '/9j/<script>' })).toThrow(InputError);
+    expect(() => planTask('scanPhoto', { image: '/9j/' + 'A'.repeat(1_400_000) })).toThrow(InputError);
+  });
+
+  it('keeps text tasks as plain text', () => {
+    const body = requestBody(planTask('scan', { text: 'apple 蘋果' }), 'low');
+    expect(typeof body.messages[0].content).toBe('string');
+  });
+});
+
 describe('AI tiers', () => {
   const now = Date.UTC(2026, 9, 25);
   const daysAgo = (days: number) => new Date(now - days * 86_400_000).toISOString();

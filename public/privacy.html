@@ -35,7 +35,7 @@
           <li>不登入（訪客）也能背單字，但進度不會保存，也不會上傳。</li>
           <li>用 Apple 登入後，學習進度會同步到我們的伺服器，換手機也找得回來。</li>
           <li>錄音只留在你的 iPhone，從不上傳；離開練習就刪除。</li>
-          <li>線上 AI 只在你同意後使用，只傳送當次需要的文字，不傳錄音、照片、姓名或 Email。</li>
+          <li>線上 AI 只在你同意後使用，只傳送當次需要的文字，以及掃描時的單字表照片；不傳錄音、姓名或 Email。</li>
           <li>我們不賣資料、不放廣告、不做追蹤或第三方分析。</li>
           <li>你可以隨時在 App 裡永久刪除帳號和所有資料。</li>
         </ul>
@@ -55,13 +55,13 @@
         <p>把錄音轉成文字使用 iPhone 內建的離線語音辨識。第一次使用時，iPhone 可能會自動從 Apple 下載該語言的辨識資源；錄音本身不會被送出去辨識。系統鍵盤的聽寫功能則依 Apple 的設定處理。</p>
 
         <h2>掃描單字表</h2>
-        <p>掃描時拍的照片或選的圖片在 iPhone 上辨識文字，照片不會上傳。若你使用線上 AI 整理掃描結果，只會送出辨識出來的文字。</p>
+        <p>掃描時拍的照片或選的圖片，若你同意使用線上 AI（Premium），會傳送到 Anthropic 的 Claude 讀出單字與意思，我們的伺服器不保存照片；沒有同意、沒有網路或線上 AI 無法使用時，照片在 iPhone 上辨識，不會上傳。</p>
 
         <h2>AI 功能</h2>
         <p>口說批改、單字解說與提問、測驗解說、掃描整理、單字補完和學習分析會使用 AI。</p>
         <ul>
           <li><strong>手機上的 AI：</strong>支援 Apple Intelligence 的 iPhone，可以用 Apple 的裝置端模型，內容不會離開你的手機（若 Apple 交給其 Private Cloud Compute 處理，Apple 表示不會保存）。</li>
-          <li><strong>線上 AI（Premium）：</strong>訂閱 Premium 並在 App 中同意後，會使用 Anthropic, PBC（美國）提供的 Claude。只會送出該次請求需要的文字：你的回答與題目、掃描辨識出的文字、你查詢的單字和你打的問題，或在你要求學習分析時，最近 14 天的摘要（練習次數、測驗正確率、連續天數，以及最多 12 個最常忘記的單字）。錄音、照片、姓名、Email 和完整學習紀錄都不會送出。</li>
+          <li><strong>線上 AI（Premium）：</strong>訂閱 Premium 並在 App 中同意後，會使用 Anthropic, PBC（美國）提供的 Claude。只會送出該次請求需要的內容：你的回答與題目、掃描的單字表照片（或辨識出的文字）、你查詢的單字和你打的問題，或在你要求學習分析時，最近 14 天的摘要（練習次數、測驗正確率、連續天數，以及最多 12 個最常忘記的單字）。錄音、其他照片、姓名、Email 和完整學習紀錄都不會送出。</li>
           <li>請求會先經過我們的伺服器，確認你已登入並訂閱 Premium，並計算每個帳號每天的使用次數以公平分配；我們不保存請求內容。Anthropic 依其商業資料條款處理文字並回傳建議。</li>
           <li>你可以隨時在「設定 → AI 與錄音」拒絕或關閉線上 AI。AI 解說會存在你的 iPhone，方便再次打開，不會上傳到帳號。AI 的建議可能有錯。</li>
         </ul>
@@ -96,7 +96,7 @@
           <li>You can study without signing in, but as a guest your progress is not saved or uploaded.</li>
           <li>Signed in with Apple, your progress syncs to our server so it comes back on another iPhone.</li>
           <li>Recordings stay on your iPhone, are never uploaded, and are deleted when you leave the practice.</li>
-          <li>Online AI is used only after you agree, and only the text a request needs is sent: never recordings, photos, your name or email.</li>
+          <li>Online AI is used only after you agree, and only what a request needs is sent (text, and the photo of a word list you scan): never recordings, your name or email.</li>
           <li>No selling of data, no ads, no tracking or third-party analytics.</li>
           <li>You can permanently delete your account and data in the app at any time.</li>
         </ul>
@@ -115,13 +115,13 @@
         <p>Turning a recording into text uses the iPhone's on-device speech recognition. The first time, your iPhone may download that language's recognition assets from Apple automatically; the recording itself is not sent anywhere for recognition. System keyboard dictation follows Apple's settings.</p>
 
         <h2>Scanning word lists</h2>
-        <p>Photos you take or pick for scanning are read on your iPhone and are not uploaded. If online AI tidies a scan, only the recognised text is sent.</p>
+        <p>If you agreed to online AI (Premium), photos you take or pick for scanning are sent to Anthropic's Claude to read the words and meanings; our server does not store them. Without that agreement, offline, or when online AI is unavailable, photos are read on your iPhone and are not uploaded.</p>
 
         <h2>AI features</h2>
         <p>The speaking coach, word explanations and questions, quiz explanations, scan tidy-up, word fill-in and learning insights use AI.</p>
         <ul>
           <li><strong>On-device AI:</strong> on iPhones with Apple Intelligence, Apple's on-device model can be used and the content stays on your iPhone (when Apple hands a request to its Private Cloud Compute, Apple says it is not stored).</li>
-          <li><strong>Online AI (Premium):</strong> with a Premium subscription and once you agree in the app, Claude by Anthropic, PBC (United States) is used. Only the text a request needs is sent: your answer and its question, the text recognised from a scan, the word you look up and any question you type, or, when you ask for learning insights, a 14-day summary (practice counts, quiz accuracy, streak and up to 12 words you forget most). Recordings, photos, your name, email and full learning history are never sent.</li>
+          <li><strong>Online AI (Premium):</strong> with a Premium subscription and once you agree in the app, Claude by Anthropic, PBC (United States) is used. Only what a request needs is sent: your answer and its question, the photo of a word list you scan (or the text recognised from it), the word you look up and any question you type, or, when you ask for learning insights, a 14-day summary (practice counts, quiz accuracy, streak and up to 12 words you forget most). Recordings, other photos, your name, email and full learning history are never sent.</li>
           <li>Requests pass through our server, which checks that you are signed in and subscribed and counts requests per account per day to share the service fairly; it does not store their content. Anthropic processes the text to return a suggestion under its commercial data terms.</li>
           <li>You can decline or turn off online AI at any time in Settings → AI and recording. AI explanations are kept on your iPhone so they reopen quickly; they are not uploaded to your account. AI suggestions may contain mistakes.</li>
         </ul>

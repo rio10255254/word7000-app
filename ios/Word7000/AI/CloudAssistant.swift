@@ -33,6 +33,10 @@ final class CloudAssistant {
     /// The online AI could be used once the learner agrees.
     var offered: Bool { reachable && IntelligenceSettings.shared.cloudOffered }
     var needsConsent: Bool { offered && IntelligenceSettings.shared.cloudConsent == nil }
+    /// Agreed to text before photos were asked about: ask again before a scan.
+    var needsPhotoConsent: Bool {
+        offered && IntelligenceSettings.shared.cloudConsent == true && IntelligenceSettings.shared.cloudPhotoConsent == nil
+    }
     /// The online AI will be tried for the next request.
     var ready: Bool {
         guard reachable, IntelligenceSettings.shared.cloudAllowed, lastFailure != .quota || !sameDay else { return false }
@@ -119,8 +123,8 @@ enum PlusAI {
 extension L {
     static var cloudConsentTitle: String { t("使用線上 AI？", "Use online AI?") }
     static var cloudConsentMessage: String {
-        t("口說教練、單字解說與提問、測驗講解、掃描整理、單字建議與學習分析可以改用更聰明的線上 AI（Anthropic 的 Claude）。使用時，你輸入或說出的文字與相關單字會傳送到 Anthropic（美國）處理，不包含錄音、帳號名稱或 Email。你隨時可以在「AI 與錄音」關閉。",
-          "The speaking coach, word explanations and questions, quiz explanations, scan tidy-up, word suggestions and learning insights can use smarter online AI (Anthropic's Claude). When used, the text you type or say and the related words are sent to Anthropic (USA) for processing, without recordings, your account name or email. You can turn this off anytime in AI and recording.")
+        t("口說教練、單字解說與提問、測驗講解、掃描、單字建議與學習分析可以改用更聰明的線上 AI（Anthropic 的 Claude）。使用時，你輸入或說出的文字、相關單字，以及掃描時拍的單字表照片，會傳送到 Anthropic（美國）處理，不包含錄音、帳號名稱或 Email。你隨時可以在「AI 與錄音」關閉。",
+          "The speaking coach, word explanations and questions, quiz explanations, scanning, word suggestions and learning insights can use smarter online AI (Anthropic's Claude). When used, the text you type or say, the related words and the photos of word lists you scan are sent to Anthropic (USA) for processing, without recordings, your account name or email. You can turn this off anytime in AI and recording.")
     }
     static var cloudConsentAllow: String { t("使用線上 AI", "Use online AI") }
     static var cloudConsentDecline: String { t("只用裝置內", "On-device only") }
@@ -134,9 +138,18 @@ private struct CloudConsentAlert: ViewModifier {
 
     func body(content: Content) -> some View {
         content.alert(L.cloudConsentTitle, isPresented: $isPresented) {
-            Button(L.cloudConsentAllow) { IntelligenceSettings.shared.cloudConsent = true; then() }
-                .accessibilityIdentifier("cloud-consent-allow")
-            Button(L.cloudConsentDecline, role: .cancel) { IntelligenceSettings.shared.cloudConsent = false; then() }
+            Button(L.cloudConsentAllow) {
+                IntelligenceSettings.shared.cloudConsent = true
+                IntelligenceSettings.shared.cloudPhotoConsent = true
+                then()
+            }
+            .accessibilityIdentifier("cloud-consent-allow")
+            Button(L.cloudConsentDecline, role: .cancel) {
+                // Asked again only for photos: "no" keeps the text agreement.
+                if IntelligenceSettings.shared.cloudConsent != true { IntelligenceSettings.shared.cloudConsent = false }
+                IntelligenceSettings.shared.cloudPhotoConsent = false
+                then()
+            }
         } message: {
             Text(L.cloudConsentMessage)
         }

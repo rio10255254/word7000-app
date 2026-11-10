@@ -1,21 +1,23 @@
 import SwiftUI
 import Word7000Core
 
-/// The classic layout's chapter page, in the classic Today's own look: the
-/// chapter's card on light olive (today's ring, how much of the chapter is
-/// known, the streak, the button for the next step, the cat on its edge),
-/// then today's steps as the same coloured paper tiles as Today's practice
-/// (cards, writing, quiz, speaking), each saying where it stands, a gold
-/// stamp once done, the next one ringed. Like Today it fits the phone: the
-/// tiles share the room down to the tab bar, and only very large text scrolls.
+/// The classic layout's chapter page. It keeps the classic Today's materials
+/// (the leather card, coloured paper, tape, the gold stamp, the cat) but not
+/// its layout, so the two are never mistaken for each other: Today is a grid
+/// of practice to pick from, a chapter is a route to follow. At the top, the
+/// chapter's cover on light olive: its number set large on a stitched label,
+/// how much of it is known, today's words, a bookmark with the cat on it.
+/// Below, today's steps one under another, numbered and joined by a dashed
+/// line: a gold stamp on the number once done, the next one ringed and taped
+/// with a Start tab. Like Today it fits the phone: the steps share the room
+/// down to the tab bar, and only very large text scrolls.
 struct ChapterPageView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var studySettingsOpen = false
     @State private var hops = 0
-    @State private var tileTaps: [String: Int] = [:]
-    @State private var heroWidth: CGFloat = 0
+    @State private var taps = 0
 
     /// The chapter (0-based); nil for today's words outside the chapters.
     var chapter: Int?
@@ -36,7 +38,7 @@ struct ChapterPageView: View {
         .navigationTitle(chapterTitle)
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $studySettingsOpen) { StudySettingsSheet().compactSheet() }
-        .sensoryFeedback(.impact(weight: .light), trigger: tileTaps) { _, _ in model.settings.hapticsEnabled ?? true }
+        .sensoryFeedback(.impact(weight: .light), trigger: taps) { _, _ in model.settings.hapticsEnabled ?? true }
         .task {
             try? await Task.sleep(for: .milliseconds(400))
             if !reduceMotion { hops += 1 }
@@ -51,10 +53,10 @@ struct ChapterPageView: View {
         let nodes = model.todayNodes
         let current = model.currentTodayNode
         return VStack(alignment: .leading, spacing: m.spacing) {
-            hero(m, current: current)
+            cover(m, current: current)
                 .entrance(0, distance: 10)
             HStack(alignment: .firstTextBaseline) {
-                Text(L.t("今天要做的", "Today's steps"))
+                Text(L.t("今天的路線", "Today's route"))
                     .font(.display(m.compact ? .headline : .title3, weight: .bold))
                 Spacer()
                 Text(L.t("完成 \(nodes.filter(model.isDone).count) / \(nodes.count)", "\(nodes.filter(model.isDone).count) of \(nodes.count) done"))
@@ -64,116 +66,112 @@ struct ChapterPageView: View {
                     .accessibilityIdentifier("chapter-steps-done")
             }
             .padding(.horizontal, 4)
-            grid(nodes, current: current, m, fill: fill)
+            route(nodes, current: current, m, fill: fill)
         }
         .padding(.horizontal, Metrics.gutter)
         .padding(.top, m.compact ? 6 : 12)
-        .padding(.bottom, m.compact ? 12 : 20)
+        .padding(.bottom, m.compact ? 8 : 14)
     }
 
-    // MARK: The card
+    // MARK: The cover
 
-    /// As Today's card: the ring of today's words, the chapter and how much of
-    /// it is known, the streak and the words left, and one button for the next
-    /// step; on light olive, the cat standing on its top edge.
-    private func hero(_ m: ClassicMetrics, current: TodayNode?) -> some View {
-        let progress = model.progress
+    private func cover(_ m: ClassicMetrics, current: TodayNode?) -> some View {
         let cream = TodayView.cream
+        let progress = model.progress
         let known = chapter.flatMap { index in model.shelfChapters.indices.contains(index) ? model.shelfChapters[index] : nil }
-        let left = max(0, progress.dailyTarget - progress.studiedToday)
-        let summary = VStack(alignment: .leading, spacing: m.compact ? 6 : 8) {
-            Text(chapterTitle)
-                .font(.display(m.compact ? .title3 : .title2, weight: .bold))
-                .foregroundStyle(cream)
-                .lineLimit(1)
-                .minimumScaleFactor(0.75)
-            if let known {
-                Text(L.t("這一章已會 \(known.mastered) / \(known.total) 個字", "\(known.mastered) of \(known.total) known"))
-                    .font(m.tall ? .subheadline : .footnote)
-                    .foregroundStyle(cream.opacity(0.85))
-                    .monospacedDigit()
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
-            }
-            HStack(spacing: 6) {
-                chip {
-                    Label {
-                        Text(L.t("\(progress.streak) 天", "\(progress.streak)d"))
-                    } icon: {
-                        Image(systemName: "flame.fill")
-                            .foregroundStyle(LinearGradient(colors: [Color(red: 1, green: 0.85, blue: 0.35), Color(red: 1, green: 0.55, blue: 0.25)],
-                                                            startPoint: .top, endPoint: .bottom))
+        return HStack(alignment: .center, spacing: m.compact ? 14 : 18) {
+            label(m)
+            VStack(alignment: .leading, spacing: m.compact ? 6 : 8) {
+                Text(L.t("語言學習", "Language learning"))
+                    .font(.display(.caption, weight: .heavy))
+                    .tracking(1)
+                    .foregroundStyle(cream.opacity(0.75))
+                if let known {
+                    Text(L.t("已會 \(known.mastered) / \(known.total) 個字", "\(known.mastered) of \(known.total) known"))
+                        .font(.display(m.compact ? .headline : .title3, weight: .bold))
+                        .foregroundStyle(cream)
+                        .monospacedDigit()
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                    GeometryReader { bar in
+                        ZStack(alignment: .leading) {
+                            Capsule().fill(cream.opacity(0.2))
+                            Capsule().fill(cream).frame(width: max(8, bar.size.width * known.fraction))
+                        }
                     }
+                    .frame(height: 8)
+                    .accessibilityHidden(true)
+                } else {
+                    Text(L.t("今天的單字", "Today's words"))
+                        .font(.display(.title3, weight: .bold))
+                        .foregroundStyle(cream)
                 }
-                .accessibilityLabel(L.t("連續 \(progress.streak) 天", "\(progress.streak)-day streak"))
-                chip {
-                    if model.goalDone {
-                        Label(L.t("達成", "Done"), systemImage: "checkmark.seal.fill")
-                    } else {
-                        Label(L.t("差 \(left) 個", "\(left) to go"), systemImage: "target")
-                    }
+                HStack(spacing: 6) {
+                    chip(L.t("今天 \(progress.studiedToday)/\(progress.dailyTarget)", "Today \(progress.studiedToday)/\(progress.dailyTarget)"),
+                         icon: model.goalDone ? "checkmark.seal.fill" : "target")
+                    chip(L.t("\(progress.streak) 天", "\(progress.streak)d"), icon: "flame.fill")
                 }
             }
-        }
-        let ring = ProgressRing(fraction: model.dailyFraction, color: cream, lineWidth: m.compact ? 9 : m.tall ? 12 : 11, track: cream.opacity(0.22)) {
-            VStack(spacing: 0) {
-                Text("\(progress.studiedToday)")
-                    .font(.display(m.compact ? .title2 : m.tall ? .largeTitle : .title, weight: .bold))
-                    .monospacedDigit()
-                    .contentTransition(.numericText(value: Double(progress.studiedToday)))
-                Text(L.ofTarget(progress.dailyTarget))
-                    .font(.display(.caption2, weight: .semibold))
-                    .opacity(0.8)
-            }
-            .foregroundStyle(cream)
-            .lineLimit(1)
-            .minimumScaleFactor(0.4)
-            .padding(.horizontal, 12)
-        }
-        .frame(width: m.ring, height: m.ring)
-
-        return VStack(alignment: .leading, spacing: m.compact ? 14 : 18) {
-            if m.large {
-                summary
-                nextButton(m, current: current)
-                ring
-            } else {
-                HStack(alignment: .center, spacing: m.compact ? 14 : 18) {
-                    ring
-                    summary
-                    Spacer(minLength: 0)
-                }
-                nextButton(m, current: current)
-            }
+            Spacer(minLength: m.large ? 0 : 36)
         }
         .padding(m.heroPadding)
-        // Light olive, not the caramel of today's words: a chapter is a place.
         .background { HeroBackground(tone: .done) }
-        .background {
-            GeometryReader { proxy in
-                Color.clear
-                    .onAppear { heroWidth = proxy.size.width }
-                    .onChange(of: proxy.size.width) { _, width in heroWidth = width }
-            }
-        }
+        // A bookmark hangs from the top edge, the cat sitting on it.
         .overlay(alignment: .topTrailing) {
             if !m.large {
-                StrollingCompanion(mood: current == nil ? .cheer : .smug, size: m.mascot, lines: catLines(current),
-                                   greeting: catLines(current).first ?? "", tip: nil,
-                                   hop: hops + tileTaps.values.reduce(0, +),
-                                   range: m.standsOnCard ? max(0, heroWidth - m.mascot - 28) : 0,
-                                   pause: tileTaps.values.reduce(0, +))
-                    .offset(x: -12, y: -m.peek)
-                    .accessibilityHidden(true)
+                VStack(spacing: 0) {
+                    Mascot(mood: current == nil ? .cheer : .happy, size: m.mascot * 0.82)
+                        .offset(y: 8)
+                        .accessibilityHidden(true)
+                    BookmarkShape()
+                        .fill(LinearGradient(colors: [Palette.miss.opacity(0.85), Palette.miss], startPoint: .top, endPoint: .bottom))
+                        .frame(width: 26, height: m.compact ? 40 : 52)
+                        .shadow(color: .black.opacity(0.15), radius: 2, y: 1)
+                }
+                .padding(.trailing, 20)
+                .offset(y: -m.mascot * 0.7)
             }
         }
-        .padding(.top, m.heroTop)
-        .accessibilityElement(children: .contain)
+        .padding(.top, m.large ? 0 : m.mascot * 0.55)
+        .accessibilityElement(children: .combine)
         .accessibilityIdentifier("chapter-header")
     }
 
-    private func chip<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
-        content()
+    /// The chapter's number, large, on a stitched label.
+    private func label(_ m: ClassicMetrics) -> some View {
+        let cream = TodayView.cream
+        let size: CGFloat = m.compact ? 70 : 86
+        return VStack(spacing: -2) {
+            if let chapter {
+                Text(L.t("第", "CH."))
+                    .font(.display(.caption, weight: .heavy))
+                    .opacity(0.8)
+                Text("\(chapter + 1)")
+                    .font(.displaySize(size * 0.52, weight: .heavy))
+                    .monospacedDigit()
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
+                if L.zh {
+                    Text("章").font(.display(.caption, weight: .heavy)).opacity(0.8)
+                }
+            } else {
+                Image(systemName: "rectangle.on.rectangle.angled")
+                    .font(.system(size: size * 0.36, weight: .bold))
+            }
+        }
+        .foregroundStyle(cream)
+        .frame(width: size, height: size * 1.12)
+        .background(cream.opacity(0.14), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .strokeBorder(cream.opacity(0.55), style: StrokeStyle(lineWidth: 1.5, dash: [4, 3]))
+                .padding(4)
+        }
+        .rotationEffect(.degrees(-3))
+    }
+
+    private func chip(_ text: String, icon: String) -> some View {
+        Label(text, systemImage: icon)
             .font(.display(.footnote, weight: .semibold))
             .foregroundStyle(TodayView.cream)
             .lineLimit(1)
@@ -184,95 +182,96 @@ struct ChapterPageView: View {
             .overlay(Capsule().strokeBorder(TodayView.cream.opacity(0.28), lineWidth: 1))
     }
 
-    /// The card's button: the next step, or another set once all are done.
-    private func nextButton(_ m: ClassicMetrics, current: TodayNode?) -> some View {
-        Button {
-            if let current { tap(current, current: current) } else {
-                model.ensureStudySession(daySet: true)
-                start(.study)
-            }
-        } label: {
-            HStack(spacing: 8) {
-                Text(nextTitle(current))
-                Image(systemName: "arrow.right").symbolEffect(.bounce, value: hops)
-            }
-            .font(.headline)
-            .foregroundStyle(Color(red: 0.3, green: 0.38, blue: 0.22))
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, m.compact ? 13 : m.tall ? 17 : 15)
-            .background(TodayView.cream, in: Capsule())
-            .shadow(color: PremiumSurface.umber.opacity(0.3), radius: 10, y: 5)
-        }
-        .buttonStyle(SoftPressStyle())
-        .accessibilityIdentifier("chapter-next")
-    }
+    // MARK: The route
 
-    private func nextTitle(_ current: TodayNode?) -> String {
-        switch current {
-        case .cards: return model.progress.studiedToday > 0 ? L.t("繼續翻卡", "Keep flipping") : L.t("開始翻卡", "Start the cards")
-        case .spell: return model.studyMode == .english ? L.t("開始拼字", "Start spelling") : L.t("開始寫字", "Start writing")
-        case .quiz: return L.t("開始考考看", "Start the quiz")
-        case .speaking: return L.t("開始口說", "Start speaking")
-        default: return L.extraAction
-        }
-    }
-
-    private func catLines(_ current: TodayNode?) -> [String] {
-        switch current {
-        case .cards: [L.t("先翻卡，翻完我再考你。", "Cards first. Then I'm quizzing you.")]
-        case .spell: [model.studyMode == .english ? L.t("剛學的字，拼給我看。", "Those new words? Spell them for me.")
-                                                  : L.t("剛學的字，寫給我看。", "Those new words? Write them for me.")]
-        case .quiz: [L.t("考考看，是真記得還是假記得。", "Quiz time. Did it really stick?")]
-        case .speaking: [L.t("開口說說看，我聽著。", "Say it out loud. I'm listening.")]
-        default: [L.t("今天的份做完了，算你厲害。", "All done today. Not bad, I guess.")]
-        }
-    }
-
-    // MARK: The steps
-
-    /// Two by two, as Today's practice tiles; they share the room down to the
-    /// tab bar when the page fits.
-    private func grid(_ nodes: [TodayNode], current: TodayNode?, _ m: ClassicMetrics, fill: Bool) -> some View {
-        let items = nodes.map { item($0, current: current) }
-        let columns = m.large ? 1 : 2
-        let rows = stride(from: 0, to: items.count, by: columns).map { Array(items[$0..<min($0 + columns, items.count)]) }
-        return VStack(spacing: m.tileSpacing) {
-            ForEach(rows.indices, id: \.self) { row in
-                HStack(spacing: m.tileSpacing) {
-                    ForEach(Array(rows[row].enumerated()), id: \.element.id) { offset, item in
-                        let tallCard = m.tallCards && rows[row].count == columns
-                        let height = m.tileHeight(tallCard: tallCard)
-                        Button {
-                            tileTaps[item.id, default: 0] += 1
-                            item.action()
-                        } label: {
-                            ClassicTile(item: item, tallCard: tallCard, style: m.tileStyle(tallCard: tallCard),
-                                        minHeight: height.min, maxHeight: fill ? .infinity : nil,
-                                        bounce: tileTaps[item.id, default: 0])
-                        }
-                        .buttonStyle(ClassicTilePressStyle())
-                        .entrance(1 + row * columns + offset, distance: 12)
-                        .accessibilityIdentifier(item.id)
-                        .accessibilityValue(item.done ? L.t("完成", "Done") : item.next ? L.t("下一步", "Next") : item.detail)
+    /// Today's steps one under another, joined by a dashed line; when the
+    /// page fits they share the room down to the tab bar.
+    private func route(_ nodes: [TodayNode], current: TodayNode?, _ m: ClassicMetrics, fill: Bool) -> some View {
+        VStack(spacing: 0) {
+            ForEach(Array(nodes.enumerated()), id: \.element) { index, node in
+                let done = model.isDone(node)
+                let next = node == current
+                HStack(alignment: .center, spacing: 12) {
+                    marker(number: index + 1, done: done, next: next, tint: tint(node),
+                           first: index == 0, last: index == nodes.count - 1)
+                    Button {
+                        taps += 1
+                        tap(node, current: current)
+                    } label: {
+                        ChapterStepCard(node: node, icon: icon(node), title: title(node), detail: detail(node), tint: tint(node),
+                                        done: done, next: next, startTitle: startTitle(node), compact: m.compact)
+                            .frame(minHeight: m.compact ? 62 : 74, maxHeight: fill ? .infinity : nil)
                     }
+                    .buttonStyle(ClassicTilePressStyle())
+                    .accessibilityLabel(title(node))
+                    .accessibilityValue(done ? L.t("完成", "Done") : next ? L.t("下一步", "Next") : detail(node))
+                    .accessibilityIdentifier("chapter-step-\(node.rawValue)")
                 }
+                .padding(.vertical, m.compact ? 4 : 6)
+                .entrance(1 + index, distance: 12)
             }
         }
         .animation(reduceMotion ? nil : Motion.reveal, value: current)
     }
 
-    /// A step as a tile in its Today colours.
-    private func item(_ node: TodayNode, current: TodayNode?) -> ClassicTileItem {
-        var icon = "bubble.left.and.text.bubble.right.fill"
-        var tint = Palette.known
-        switch node {
-        case .cards: icon = "rectangle.on.rectangle.angled"; tint = Palette.review
-        case .spell: icon = model.studyMode == .english ? "character.cursor.ibeam" : "pencil.and.scribble"; tint = Palette.accent
-        case .quiz: icon = "checklist"; tint = Palette.chinese
-        default: break
+    /// The step's number on the dashed line: a gold stamp once done, filled
+    /// in the step's colour when it is next.
+    private func marker(number: Int, done: Bool, next: Bool, tint: Color, first: Bool, last: Bool) -> some View {
+        ZStack {
+            VStack(spacing: 0) {
+                dash.opacity(first ? 0 : 1)
+                dash.opacity(last ? 0 : 1)
+            }
+            Group {
+                if done {
+                    DoneStamp(size: 34)
+                } else {
+                    Text("\(number)")
+                        .font(.display(.subheadline, weight: .heavy))
+                        .foregroundStyle(next ? .white : Palette.secondaryLabel)
+                        .frame(width: 32, height: 32)
+                        .background {
+                            if next { Circle().fill(tint) } else {
+                                Circle().fill(Palette.background)
+                                Circle().strokeBorder(Palette.secondaryLabel.opacity(0.45), lineWidth: 1.5)
+                            }
+                        }
+                        .scaleEffect(next && !reduceMotion ? 1.08 : 1)
+                }
+            }
         }
-        return ClassicTileItem(id: "chapter-step-\(node.rawValue)", icon: icon, tint: tint, title: title(node), detail: detail(node),
-                               done: model.isDone(node), next: node == current) { tap(node, current: current) }
+        .frame(width: 36)
+        .accessibilityHidden(true)
+    }
+
+    private var dash: some View {
+        VerticalLine()
+            .stroke(TodayView.speakingTint.opacity(0.6), style: StrokeStyle(lineWidth: 2, lineCap: .round, dash: [4, 5]))
+            .frame(width: 2)
+            .frame(maxHeight: .infinity)
+            // A few points beyond the row, so the line runs on between steps.
+            .padding(.vertical, -6)
+    }
+
+    // MARK: A step
+
+    private func icon(_ node: TodayNode) -> String {
+        switch node {
+        case .cards: "rectangle.on.rectangle.angled"
+        case .spell: model.studyMode == .english ? "character.cursor.ibeam" : "pencil.and.scribble"
+        case .quiz: "checklist"
+        default: "bubble.left.and.text.bubble.right.fill"
+        }
+    }
+
+    /// The same colours as these practices' tiles on Today.
+    private func tint(_ node: TodayNode) -> Color {
+        switch node {
+        case .cards: Palette.review
+        case .spell: Palette.accent
+        case .quiz: Palette.chinese
+        default: Palette.known
+        }
     }
 
     private func title(_ node: TodayNode) -> String {
@@ -285,22 +284,26 @@ struct ChapterPageView: View {
         }
     }
 
+    private func startTitle(_ node: TodayNode) -> String {
+        node == .cards && model.progress.studiedToday > 0 ? L.t("繼續", "Continue") : L.t("開始", "Start")
+    }
+
     private func detail(_ node: TodayNode) -> String {
         let routine = model.activeRoutine
         let done = model.isDone(node)
         switch node {
         case .cards:
-            if done { return L.t("今天 \(model.progress.studiedToday) 個字", "\(model.progress.studiedToday) words today") }
+            if done { return L.t("今天翻了 \(model.progress.studiedToday) 個字", "\(model.progress.studiedToday) words today") }
             if model.studyPlan.total == 0, !model.routinePending { return L.t("沒有字了，換個範圍", "Nothing left: change the range") }
             let plan = model.studyPlan
             return L.todayPlan(due: plan.review, fresh: plan.fresh)
         case .spell:
             if done { return L.t("寫完了", "All written") }
             if routine?.step == .spell { return L.t("還剩 \(routine?.spellLeft.count ?? 0) 個字", "\(routine?.spellLeft.count ?? 0) words left") }
-            return L.t("翻完卡，寫剛學的字", "After the cards")
+            return L.t("翻完卡，寫剛學的字", "The new words, after the cards")
         case .quiz:
             if done { return L.t("考完了", "All answered") }
-            if routine?.step == .exam { return L.t("還剩 \(routine?.examLeft.count ?? 0) 題", "\(routine?.examLeft.count ?? 0) left") }
+            if routine?.step == .exam { return L.t("還剩 \(routine?.examLeft.count ?? 0) 題", "\(routine?.examLeft.count ?? 0) questions left") }
             return model.examStyleName
         case .speaking:
             if done { return L.t("今天過關了", "Cleared today") }
@@ -338,5 +341,116 @@ struct ChapterPageView: View {
             start(.speaking)
         default: break
         }
+    }
+}
+
+/// One step on the chapter's route: a strip of the step's own paper in the
+/// collage (a soft card otherwise) with its sign, name and where it stands;
+/// the next one ringed in its colour, taped on, with a Start tab.
+private struct ChapterStepCard: View {
+    @Environment(\.appStyle) private var appStyle
+    var node: TodayNode
+    var icon: String
+    var title: String
+    var detail: String
+    var tint: Color
+    var done: Bool
+    var next: Bool
+    var startTitle: String
+    var compact: Bool
+
+    private var paper: PaperKind {
+        switch node {
+        case .cards: .mustard
+        case .spell: .sage
+        case .quiz: .graph
+        default: .peach
+        }
+    }
+
+    var body: some View {
+        let radius: CGFloat = appStyle == .collage ? 0 : 18
+        let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: compact ? 16 : 19, weight: .semibold))
+                .foregroundStyle(.white)
+                .frame(width: compact ? 38 : 44, height: compact ? 38 : 44)
+                .background(tint, in: Circle())
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.display(compact ? .headline : .title3, weight: .bold))
+                    .foregroundStyle(.primary)
+                    .lineLimit(1)
+                Text(detail)
+                    .font(compact ? .caption : .subheadline)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.85)
+            }
+            .layoutPriority(1)
+            Spacer(minLength: 4)
+            if next {
+                HStack(spacing: 4) {
+                    Text(startTitle)
+                    Image(systemName: "arrow.right")
+                }
+                .font(.subheadline.weight(.heavy))
+                .foregroundStyle(.white)
+                .lineLimit(1)
+                .fixedSize()
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(tint, in: Capsule())
+            } else {
+                Image(systemName: "chevron.right")
+                    .font(.footnote.weight(.bold))
+                    .foregroundStyle(.tertiary)
+            }
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, compact ? 8 : 10)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        .multilineTextAlignment(.leading)
+        .background {
+            if appStyle == .collage {
+                PaperSurface(kind: paper)
+                    .clipShape(TornEdgeShape(edges: paper == .peach ? [.bottom] : [], depth: 3, seed: title.count + 1))
+            } else {
+                PremiumSurface(radius: radius)
+            }
+        }
+        .overlay {
+            if next { shape.strokeBorder(tint, lineWidth: 2.5) }
+        }
+        .overlay(alignment: .topLeading) {
+            if appStyle == .collage, next { TapeStrip(width: 48, angle: -6).offset(x: 18, y: -9) }
+        }
+        .opacity(done && !next ? 0.8 : 1)
+        .contentShape(shape)
+    }
+}
+
+/// A ribbon bookmark: a strip with a notch cut into its lower end.
+private struct BookmarkShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.minX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY - rect.width * 0.4))
+        path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
+        path.closeSubpath()
+        return path
+    }
+}
+
+/// A line down the middle, for the dashed route between steps.
+private struct VerticalLine: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.midX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
+        return path
     }
 }

@@ -33,6 +33,23 @@ final class WordRoutineTests: XCTestCase {
         XCTAssertEqual(r.examIds, ["r1", "r3", "r4", "r5", "r6"])
     }
 
+    /// The classic layout with writing off asks for no spelling: the cards go
+    /// straight to the exam questions, or end the routine when there are none.
+    func testNoSpellingGoesStraightToTheExamOrTheEnd() {
+        var r = routine(stages: ["r4": 4], cards: ["n1", "n2", "r4"])
+        r.planChecks(knownIds: ["n1", "n2", "r4"], unsureIds: [], maxSpell: 0,
+                     canSpell: { _ in true }, canExam: { _ in true })
+        XCTAssertTrue(r.spellIds.isEmpty)
+        XCTAssertEqual(r.examIds, ["r4"])
+        XCTAssertEqual(r.step, .exam)
+
+        var young = routine(stages: [:], cards: ["n1", "n2"])
+        young.planChecks(knownIds: ["n1", "n2"], unsureIds: [], maxSpell: 0,
+                         canSpell: { _ in true }, canExam: { _ in true })
+        XCTAssertTrue(young.spellIds.isEmpty)
+        XCTAssertEqual(young.step, .done)
+    }
+
     func testOnlyExamQuestionsGoStraightToTheExamStep() {
         var r = routine(stages: ["r1": 3], cards: ["r1"])
         r.planChecks(knownIds: ["r1"], unsureIds: [], canSpell: { _ in true }, canExam: { _ in true })

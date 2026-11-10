@@ -194,6 +194,7 @@ final class AppModel {
                 for (id, entry) in sample.words { progress.words[ModeProgress.chinesePrefix + id] = entry }
             }
         }
+        if arguments.contains("-uiTestingClassic") { settings.classicLayout = true }
         if arguments.contains("-uiTestingLight") { settings.theme = .light }
         if arguments.contains("-uiTestingCollage") { settings.appStyle = .collage }
         // UI tests see the default look, the paper collage, unless they ask
@@ -996,7 +997,7 @@ final class AppModel {
         guard var routine = activeRoutine, routine.step == .flip, let session = studySession, session.isComplete else { return }
         let profile = learnerProfile
         routine.planChecks(knownIds: session.knownIds, unsureIds: session.reviewIds,
-                           maxSpell: profile.spellChecks, maxExam: profile.examChecks,
+                           maxSpell: skipsWriting ? 0 : profile.spellChecks, maxExam: profile.examChecks,
                            canSpell: { [self] id in word(id: id).flatMap { Cloze.sentence(for: $0, chinese: learnsChinese) } != nil },
                            canExam: { [self] id in
                                guard let word = word(id: id), Cloze.sentence(for: word, chinese: learnsChinese) != nil else { return false }

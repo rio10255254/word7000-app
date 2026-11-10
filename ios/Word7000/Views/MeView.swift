@@ -332,6 +332,35 @@ struct SettingsView: View {
                 } header: {
                     Text(L.t("顯示與操作", "Display and feel"))
                 }
+
+                // The classic layout, for learners who would rather pick what
+                // to practise: 2.0.2's Today, and the chapters as their own tab.
+                Section {
+                    ChoiceRow(title: L.t("版面", "Layout"), icon: "rectangle.3.group.fill", tint: Palette.accent,
+                              options: [ChoiceOption(value: false, title: L.t("新版", "New"), detail: L.t("每日路線", "Daily path"), icon: "map.fill"),
+                                        ChoiceOption(value: true, title: L.t("經典", "Classic"), detail: L.t("自己挑練習", "Pick your practice"), icon: "square.grid.2x2.fill")],
+                              selection: model.classicLayout, identifier: "settings-layout") { classic in
+                        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.3)) { model.setClassicLayout(classic) }
+                    }
+                    if model.classicLayout {
+                        Toggle(isOn: Binding(
+                            get: { !model.skipsWriting },
+                            set: { model.setWritingOff(!$0) }
+                        )) {
+                            SettingsLabel(model.studyMode == .english ? L.t("拼字練習", "Spelling practice") : L.t("寫字練習", "Writing practice"),
+                                          icon: "pencil.line", tint: Palette.accent)
+                        }
+                        .accessibilityIdentifier("settings-writing")
+                    }
+                } header: {
+                    Text(L.t("版面", "Layout"))
+                } footer: {
+                    Text(model.classicLayout
+                         ? L.t("經典：首頁是 2.0 的練習磚塊，自己挑想練的；「語言學習」分頁照章節一章一章走。關掉拼字練習，翻卡後就不會再拼字。",
+                               "Classic: Today has 2.0's practice tiles to pick from, and Language learning goes through the chapters in order. With writing off, no writing follows the cards.")
+                         : L.t("經典版面：首頁換回 2.0 的練習磚塊，章節路線另外放一個分頁。進度不會變。",
+                               "Classic puts 2.0's practice tiles back on Today and the chapters in a tab of their own. Your progress stays the same."))
+                }
     
                 // Premium's subscription, for those paying: out of the
                 // profile card, where a big button took the eye every day.

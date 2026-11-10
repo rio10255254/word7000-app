@@ -3,6 +3,8 @@ import Word7000Core
 
 enum AppTab: Hashable {
     case today, practice, words, me
+    /// The classic layout's chapters (LearningPathView), in place of Practice.
+    case learning
 }
 
 /// What runs full screen on top of the tabs.
@@ -52,32 +54,32 @@ struct RootView: View {
 
     var body: some View {
         TabView(selection: $tab) {
-            // Today has no navigation bar: its own header takes that place, and
-            // a hidden bar would still sit over it and swallow taps.
-            TodayView(start: { next in
-                if next == .exam {
-                    plus.require(.examPractice) { activity = .exam }
-                } else if next == .scan {
-                    openScan()
-                } else {
-                    activity = next
-                }
-            }, showWords: { tab = .words })
-            .tabItem { Label(L.tabToday, systemImage: "sun.max.fill") }
-            .tag(AppTab.today)
+            if model.classicLayout {
+                // The classic layout: 2.0.2's Today with its practice tiles,
+                // and today's path as chapters in a tab of their own.
+                ClassicTodayView(start: startActivity)
+                    .tabItem { Label(L.tabToday, systemImage: "sun.max.fill") }
+                    .tag(AppTab.today)
 
-            // WordCat Next: every way to practise outside today's path.
-            NavigationStack {
-                PracticeView(start: { next in
-                    if next == .exam {
-                        plus.require(.examPractice) { activity = .exam }
-                    } else {
-                        activity = next
-                    }
-                })
+                NavigationStack {
+                    LearningPathView(start: startActivity, showWords: { tab = .words })
+                }
+                .tabItem { Label(L.t("語言學習", "Language learning"), systemImage: "map.fill") }
+                .tag(AppTab.learning)
+            } else {
+                // Today has no navigation bar: its own header takes that place, and
+                // a hidden bar would still sit over it and swallow taps.
+                TodayView(start: startActivity, showWords: { tab = .words })
+                    .tabItem { Label(L.tabToday, systemImage: "sun.max.fill") }
+                    .tag(AppTab.today)
+
+                // WordCat Next: every way to practise outside today's path.
+                NavigationStack {
+                    PracticeView(start: startActivity)
+                }
+                .tabItem { Label(L.t("練習", "Practice"), systemImage: "dumbbell.fill") }
+                .tag(AppTab.practice)
             }
-            .tabItem { Label(L.t("練習", "Practice"), systemImage: "dumbbell.fill") }
-            .tag(AppTab.practice)
 
             NavigationStack {
                 WordsView(scan: openScan, study: { activity = .study })
@@ -97,6 +99,10 @@ struct RootView: View {
         .overlay { CatPeekHost() }
         .onChange(of: tab) { _, new in
             CatPeek.shared.poke(CatPeek.tabLines(new), mood: .smug, chance: 0.35, gap: 30)
+        }
+        // A tab the other layout does not have is left for Today.
+        .onChange(of: model.classicLayout) { _, classic in
+            if tab == (classic ? .practice : .learning) { tab = .today }
         }
         .task(id: scenePhase == .active && activity == nil) {
             guard scenePhase == .active, activity == nil else { return }
@@ -283,6 +289,18 @@ struct RootView: View {
             }
         }
         .animation(Motion.reveal, value: model.storageFailed)
+    }
+
+    /// Opens something full screen from a tab: the mock exam asks for
+    /// Premium first, and scanning for an account.
+    private func startActivity(_ next: Activity) {
+        if next == .exam {
+            plus.require(.examPractice) { activity = .exam }
+        } else if next == .scan {
+            openScan()
+        } else {
+            activity = next
+        }
     }
 
     /// Scanned banks live in the learner's account, so scanning asks a guest

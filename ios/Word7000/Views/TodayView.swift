@@ -257,7 +257,8 @@ struct TodayView: View {
 
     /// The steps of the day, as stamps on the card.
     private var nodes: [TodayNode] {
-        let words: [TodayNode] = [.cards, .spell, .quiz]
+        // The classic layout can leave writing out.
+        let words: [TodayNode] = model.skipsWriting ? [.cards, .quiz] : [.cards, .spell, .quiz]
         guard model.homeShowsSpeaking else { return words }
         return model.settings.homeLead == .speaking ? [.speaking] + words : words + [.speaking]
     }
@@ -875,7 +876,7 @@ struct TodayView: View {
 /// hold, a drag or a tapped practice tile keeps it still for a while, so it
 /// never walks off just as you reach for it. It stays put with Reduce Motion,
 /// on the small phones, and under UI tests.
-private struct StrollingCompanion: View {
+struct StrollingCompanion: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var mood: Mascot.Mood
     var size: CGFloat
@@ -1179,7 +1180,7 @@ private struct NoteSlipBackground: View {
 
 /// "Start here!", bobbing on the main button until a new learner's first
 /// round is done.
-private struct StartHereSticker: View {
+struct StartHereSticker: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var bob = false
 

@@ -19,6 +19,7 @@ struct RoutineStepStrip: View {
     }
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(AppModel.self) private var model
     var routine: WordRoutine
     /// While the cards are being flipped: how far along.
     var flipped: (done: Int, total: Int)?
@@ -74,7 +75,8 @@ struct RoutineStepStrip: View {
     private var segments: [Double] {
         let flip: Double = routine.step == .flip ? flipped.map { Double($0.done) / Double(max(1, $0.total)) } ?? 0 : 1
         var parts = [flip]
-        if routine.step == .flip || !routine.spellIds.isEmpty {
+        // The classic layout can leave writing out: no part for it then.
+        if (routine.step == .flip && !model.skipsWriting) || !routine.spellIds.isEmpty {
             parts.append(routine.step == .spell ? Double(routine.spellResults.count) / Double(max(1, routine.spellIds.count))
                          : routine.step == .flip ? 0 : 1)
         }

@@ -87,6 +87,11 @@ final class CatPeek {
             L.t("今天的份做完了沒？我在看喔。", "Done today's lot yet? I'm watching."),
             L.t("又來滑手機？那順便背幾個。", "Scrolling again? Learn a few while you're here."),
         ]
+        case .learning: [
+            L.t("一章一章來，不要跳。", "One chapter at a time. No skipping."),
+            L.t("這章讀完了沒？鎖還開不了喔。", "Read this chapter yet? The next one's still locked."),
+            L.t("翻卡、考考看、開口說，一個都不能少。", "Cards, quiz, speaking. All of them."),
+        ]
         case .practice: [
             L.t("選一個啦，選擇困難喔？", "Pick one. Can't decide?"),
             L.t("練口說啦，不要只會看。", "Try speaking. Looking isn't practising."),

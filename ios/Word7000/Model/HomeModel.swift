@@ -8,6 +8,31 @@ extension AppModel {
 
     var homeShowsSpeaking: Bool { settings.homeShowsSpeaking ?? true }
 
+    /// The classic layout: 2.0.2's Today, and the chapters in a tab of their own.
+    var classicLayout: Bool { settings.classicLayout == true }
+
+    /// The classic layout without writing: no spelling step after the cards.
+    var skipsWriting: Bool { classicLayout && settings.classicWritingOff == true }
+
+    func setClassicLayout(_ on: Bool) {
+        settings.classicLayout = on
+        scheduleSave()
+        Usage.log("classic_layout", on ? "on" : "off")
+    }
+
+    func setWritingOff(_ off: Bool) {
+        settings.classicWritingOff = off
+        scheduleSave()
+    }
+
+    /// The built-in words of one chapter (0-based), in list order.
+    func chapterWordIds(_ chapter: Int) -> [String] {
+        let groups = shelfChapters.map(\.group)
+        guard groups.indices.contains(chapter) else { return [] }
+        let group = groups[chapter]
+        return coreWords.filter { $0.group == group }.map(\.id)
+    }
+
     /// The pillar shown as the big card.
     var homeLead: Pillar {
         HomeLayout.lead(preferred: settings.homeLead ?? .words, wordsDone: goalDone,

@@ -19,6 +19,12 @@ final class IntelligenceSettings {
         didSet { UserDefaults.standard.set(cloudConsent, forKey: Self.consentKey) }
     }
     private static let consentKey = "intelligence.cloudConsent.anthropic"
+    /// Scan photos are sent only after the question that names them: an
+    /// agreement given before it said "text" and covers text alone.
+    var cloudPhotoConsent: Bool? {
+        didSet { UserDefaults.standard.set(cloudPhotoConsent, forKey: Self.photoConsentKey) }
+    }
+    private static let photoConsentKey = "intelligence.cloudConsent.anthropic.photos"
     /// The answer about Groq, the earlier provider: only a "no" carries over.
     private static let groqConsentKey = "intelligence.cloudConsent"
     private(set) var policy: IntelligencePolicy?
@@ -30,15 +36,18 @@ final class IntelligenceSettings {
     var cloudOffered: Bool { enabled && cloudEnabled && cloudConsent != false && policy?.cloudEnabled != false }
     /// Online AI may be used right now.
     var cloudAllowed: Bool { cloudOffered && cloudConsent == true }
+    /// A scan photo may go to the online AI.
+    var cloudPhotosAllowed: Bool { cloudAllowed && cloudPhotoConsent == true }
 
     private init() {
         enabled = UserDefaults.standard.object(forKey: "intelligence.enabled") as? Bool ?? true
         cloudEnabled = UserDefaults.standard.object(forKey: "intelligence.cloud") as? Bool ?? true
         let groqDeclined = UserDefaults.standard.object(forKey: Self.groqConsentKey) as? Bool == false
         cloudConsent = UserDefaults.standard.object(forKey: Self.consentKey) as? Bool ?? (groqDeclined ? false : nil)
+        cloudPhotoConsent = UserDefaults.standard.object(forKey: Self.photoConsentKey) as? Bool
         policy = UserDefaults.standard.data(forKey: "intelligence.policy").flatMap(IntelligencePolicy.decode)
         #if DEBUG
-        if ProcessInfo.processInfo.arguments.contains("-uiTestingReset") { enabled = true; cloudEnabled = true; cloudConsent = nil; policy = nil }
+        if ProcessInfo.processInfo.arguments.contains("-uiTestingReset") { enabled = true; cloudEnabled = true; cloudConsent = nil; cloudPhotoConsent = nil; policy = nil }
         #endif
     }
 

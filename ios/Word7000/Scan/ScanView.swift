@@ -247,7 +247,7 @@ struct ScanView: View {
         switch plus.decide(.scan) {
         case .allowed:
             // Ask about the online AI before the camera opens, not halfway through reading.
-            if IntelligenceSettings.shared.scanAllowed, CloudAssistant.shared.needsConsent {
+            if IntelligenceSettings.shared.scanAllowed, CloudAssistant.shared.needsConsent || CloudAssistant.shared.needsPhotoConsent {
                 afterCloudAnswer = action
                 askCloud = true
             } else {
@@ -699,7 +699,7 @@ private struct ScanDots: View {
 /// Scan screen copy (English-word mode).
 private enum S {
     static var title: String { L.t("掃描單字表", "Scan a word list") }
-    static var intro: String { L.t("印刷的、手寫的單字表我都讀得懂。照片只留在你的 iPhone。", "Printed or handwritten, I can read it. Photos stay on your iPhone.") }
+    static var intro: String { L.t("印刷的、手寫的單字表我都讀得懂。", "Printed or handwritten, I can read it.") }
     static var scanTitle: String { L.t("掃描單字表", "Scan a list") }
     static var scanSubtitle: String { L.t("可多頁，手寫也行", "Several pages, handwriting OK") }
     static var photoSubtitle: String { L.t("挑一張單字表照片", "Pick a photo of a list") }

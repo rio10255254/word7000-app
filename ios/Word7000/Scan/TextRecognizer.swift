@@ -4,9 +4,10 @@ import UIKit
 import Vision
 import Word7000Core
 
-/// Reads every line of text in a photo on the device with Apple Vision; the
-/// photo never leaves the phone (only recognised text may go to the online AI
-/// for tidying up, see `SmartScan`). Boxes come back normalised to the image with the
+/// Reads every line of text in a photo on the device with Apple Vision. When
+/// the learner agreed to send scan photos, the online AI reads the photo first
+/// (`SmartScan.photoCandidates`) and this is the fallback; otherwise the photo
+/// never leaves the phone (only recognised text may go to the online AI). Boxes come back normalised to the image with the
 /// origin at the top left, which is what `ScanParser` expects.
 enum TextRecognizer {
     static let languages = ["zh-Hant", "en-US"]
@@ -26,6 +27,21 @@ enum TextRecognizer {
         for (page, image) in images.enumerated() {
             try Task.checkCancellation()
             let prepared = try await preparedImage(image)
+            // The online AI reads the photo itself when the learner agreed;
+            // the on-device reading below is the fallback.
+            if let read = await SmartScan.photoCandidates(prepared) {
+                try Task.checkCancellation()
+                for candidate in read {
+                    let key = ScanImportPlan.wordKey(candidate.word)
+                    var copy = candidate
+                    copy.key = "p\(page)-\(candidate.key)"
+                    if !(indices[key] ?? []).contains(where: { ScanImportPlan.sameEntry(result[$0].reviewedWord, candidate.reviewedWord) }) {
+                        indices[key, default: []].append(result.count)
+                        result.append(copy)
+                    }
+                }
+                continue
+            }
             let reading = try await recognize(prepared, languages: languages, suggester: suggester)
             let rows = ScanParser.readingRows(reading.lines)
             let table = await SmartScan.tableCandidates(in: UIImage(cgImage: prepared))

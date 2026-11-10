@@ -78,6 +78,51 @@ enum SmartScan {
         return found
     }
 
+    /// The page read by the online AI from the photo itself, when the learner
+    /// agreed to send scan photos: handwriting and layout are read with the
+    /// content in view. nil when it cannot be used or does not answer, and
+    /// the on-device reading is used instead.
+    @MainActor static func photoCandidates(_ image: CGImage) async -> [ScannedWordCandidate]? {
+        guard IntelligenceSettings.shared.scanAllowed, IntelligenceSettings.shared.cloudPhotosAllowed, CloudAssistant.shared.ready,
+              let jpeg = await photoForUpload(image) else { return nil }
+        guard let entries = try? await CloudAssistant.shared.run(.scanPhoto, ["image": .string(jpeg)], as: CloudAI.ScanEntries.self).entries,
+              !Task.isCancelled else { return nil }
+        let found = entries.enumerated().compactMap { index, entry -> ScannedWordCandidate? in
+            let word = entry.word.trimmingCharacters(in: .whitespacesAndNewlines)
+            let meaning = entry.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !word.isEmpty, !meaning.isEmpty else { return nil }
+            return ScannedWordCandidate(key: "photo-\(index)-\(word.lowercased())", meaningZh: meaning,
+                                        partOfSpeech: entry.partOfSpeech.trimmingCharacters(in: .whitespacesAndNewlines), word: word)
+        }
+        return found.isEmpty ? nil : found
+    }
+
+    /// The photo as base64 JPEG, at most 1600 pixels on its long side (what
+    /// Claude reads at full detail) and well under the server's limit.
+    static let uploadPixels = 1600
+    static let uploadLimit = 1_300_000
+
+    static func photoForUpload(_ image: CGImage) async -> String? {
+        await Task.detached(priority: .userInitiated) {
+            let scale = min(1, Double(uploadPixels) / Double(max(image.width, image.height)))
+            let size = CGSize(width: (Double(image.width) * scale).rounded(), height: (Double(image.height) * scale).rounded())
+            let format = UIGraphicsImageRendererFormat()
+            format.scale = 1
+            format.opaque = true
+            let resized = UIGraphicsImageRenderer(size: size, format: format).image { context in
+                UIColor.white.setFill()
+                context.fill(CGRect(origin: .zero, size: size))
+                UIImage(cgImage: image).draw(in: CGRect(origin: .zero, size: size))
+            }
+            for quality in [0.75, 0.6, 0.45] {
+                guard let data = resized.jpegData(compressionQuality: quality) else { return nil }
+                let base64 = data.base64EncodedString()
+                if base64.count <= uploadLimit { return base64 }
+            }
+            return nil
+        }.value
+    }
+
     @MainActor private static func onlineEntries(_ source: String) async -> [CloudAI.ScanEntries.Entry]? {
         guard CloudAssistant.shared.ready else { return nil }
         return try? await CloudAssistant.shared.run(.scan, ["text": .string(String(source.prefix(4000)))], as: CloudAI.ScanEntries.self).entries

@@ -13,7 +13,7 @@ public enum CloudAI {
     public static let provider = "anthropic"
 
     public enum Kind: String, Codable, Sendable {
-        case coach, scan, explain, quizWhy, fillWord, insights, ask, chat, lines, verdict
+        case coach, scan, scanPhoto, explain, quizWhy, fillWord, insights, ask, chat, lines, verdict
     }
 
     public enum Failure: Error, Equatable, Sendable {

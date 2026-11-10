@@ -53,46 +53,7 @@ struct RootView: View {
     @State private var mePath: [MeRoute] = []
 
     var body: some View {
-        TabView(selection: $tab) {
-            if model.classicLayout {
-                // The classic layout: 2.0.2's Today with its practice tiles,
-                // and today's path as chapters in a tab of their own.
-                ClassicTodayView(start: startActivity)
-                    .tabItem { Label(L.tabToday, systemImage: "sun.max.fill") }
-                    .tag(AppTab.today)
-
-                NavigationStack {
-                    LearningPathView(start: startActivity, showWords: { tab = .words })
-                }
-                .tabItem { Label(L.t("語言學習", "Language learning"), systemImage: "map.fill") }
-                .tag(AppTab.learning)
-            } else {
-                // Today has no navigation bar: its own header takes that place, and
-                // a hidden bar would still sit over it and swallow taps.
-                TodayView(start: startActivity, showWords: { tab = .words })
-                    .tabItem { Label(L.tabToday, systemImage: "sun.max.fill") }
-                    .tag(AppTab.today)
-
-                // WordCat Next: every way to practise outside today's path.
-                NavigationStack {
-                    PracticeView(start: startActivity)
-                }
-                .tabItem { Label(L.t("練習", "Practice"), systemImage: "dumbbell.fill") }
-                .tag(AppTab.practice)
-            }
-
-            NavigationStack {
-                WordsView(scan: openScan, study: { activity = .study })
-            }
-            .tabItem { Label(L.tabWords, systemImage: "books.vertical.fill") }
-            .tag(AppTab.words)
-
-            NavigationStack(path: $mePath) {
-                MeView()
-            }
-            .tabItem { Label(L.tabMe, systemImage: "person.crop.circle.fill") }
-            .tag(AppTab.me)
-        }
+        tabs
         // The interface language follows the study mode; rebuild on change.
         .id(model.studyMode)
         // WordCat Next: Silly Cat pops in from the edges now and then.
@@ -289,6 +250,62 @@ struct RootView: View {
             }
         }
         .animation(Motion.reveal, value: model.storageFailed)
+    }
+
+    /// The tabs: the layout's first two, then Words and Me. Split out of
+    /// `body` so the release build type-checks it in reasonable time.
+    private var tabs: some View {
+        TabView(selection: $tab) {
+            if model.classicLayout {
+                classicTabs
+            } else {
+                pathTabs
+            }
+
+            NavigationStack {
+                WordsView(scan: openScan, study: { activity = .study })
+            }
+            .tabItem { Label(L.tabWords, systemImage: "books.vertical.fill") }
+            .tag(AppTab.words)
+
+            NavigationStack(path: $mePath) {
+                MeView()
+            }
+            .tabItem { Label(L.tabMe, systemImage: "person.crop.circle.fill") }
+            .tag(AppTab.me)
+        }
+    }
+
+    /// The classic layout: 2.0.2's Today with its practice tiles, and
+    /// today's path as chapters in a tab of their own.
+    @ViewBuilder
+    private var classicTabs: some View {
+        ClassicTodayView(start: startActivity)
+            .tabItem { Label(L.tabToday, systemImage: "sun.max.fill") }
+            .tag(AppTab.today)
+
+        NavigationStack {
+            LearningPathView(start: startActivity, showWords: { tab = .words })
+        }
+        .tabItem { Label(L.t("語言學習", "Language learning"), systemImage: "map.fill") }
+        .tag(AppTab.learning)
+    }
+
+    /// Today's path, and every way to practise outside it.
+    @ViewBuilder
+    private var pathTabs: some View {
+        // Today has no navigation bar: its own header takes that place, and
+        // a hidden bar would still sit over it and swallow taps.
+        TodayView(start: startActivity, showWords: { tab = .words })
+            .tabItem { Label(L.tabToday, systemImage: "sun.max.fill") }
+            .tag(AppTab.today)
+
+        // WordCat Next: every way to practise outside today's path.
+        NavigationStack {
+            PracticeView(start: startActivity)
+        }
+        .tabItem { Label(L.t("練習", "Practice"), systemImage: "dumbbell.fill") }
+        .tag(AppTab.practice)
     }
 
     /// Opens something full screen from a tab: the mock exam asks for

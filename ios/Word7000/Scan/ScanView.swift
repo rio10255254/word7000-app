@@ -31,6 +31,9 @@ struct ScanView: View {
         var originalWord: String?
         var suggestedWord: String?
         var needsReview = false
+        /// The page gave a part of speech (or the row is typed by hand). A
+        /// scanned row without one shows no empty "Part" box.
+        var showsPart = true
     }
 
     enum Target: Hashable {
@@ -49,6 +52,7 @@ struct ScanView: View {
     @State private var cameraOpen = false
     @State private var documentScannerOpen = false
     @State private var suggester: WordSuggester?
+    @State private var meanings: ScanDictionary?
     @State private var message: String?
     @State private var sourcePreviews: [UIImage] = []
     @State private var previewOpen = false
@@ -198,7 +202,9 @@ struct ScanView: View {
                     pasted = text
                     sourcePreviews = []
                     pageCount = 0
-                    showReview(ScanParser.parse(ScanParser.lines(fromPlainText: text)))
+                    let lines = ScanParser.lines(fromPlainText: text)
+                    showReview(ScanGrounding.respelled(ScanParser.parsePage(lines), pageWords: ScanParser.latinWords(in: lines),
+                                                       dictionary: meaningDictionary()))
                 })
                 .padding(.top, 4)
                 Text(S.pasteHint)
@@ -274,7 +280,7 @@ struct ScanView: View {
                 try Task.checkCancellation()
                 let image = imageAt(index)
                 if index < 8, let thumbnail = await thumbnail(image) { sourcePreviews.append(thumbnail) }
-                let candidates = try await TextRecognizer.candidates(in: [image], suggester: dictionary())
+                let candidates = try await TextRecognizer.candidates(in: [image], suggester: dictionary(), dictionary: meaningDictionary())
                 for var candidate in candidates {
                     let key = ScanImportPlan.wordKey(candidate.word)
                     guard !(seen[key] ?? []).contains(where: { ScanImportPlan.sameEntry($0, candidate.reviewedWord) }) else { continue }
@@ -327,10 +333,23 @@ struct ScanView: View {
         }
     }
 
+    /// English spellings for suggestions. A scanned row's word is English in
+    /// both modes; learning Chinese, the built-in list's words are English
+    /// glosses ("I; me"), so the English list is used instead.
     private func dictionary() -> WordSuggester {
         if let suggester { return suggester }
-        let built = WordSuggester(words: model.vocabularyWords.map(\.word))
+        let words = model.studyMode == .chinese ? model.englishCoreWords : model.vocabularyWords
+        let built = WordSuggester(words: words.map(\.word))
         suggester = built
+        return built
+    }
+
+    /// The English list's meanings, to tell "daring" from "during" by the
+    /// meaning printed beside it.
+    private func meaningDictionary() -> ScanDictionary {
+        if let meanings { return meanings }
+        let built = ScanDictionary(words: model.englishCoreWords)
+        meanings = built
         return built
     }
 
@@ -338,7 +357,8 @@ struct ScanView: View {
         let suggester = dictionary()
         rows = candidates.enumerated().map { index, candidate in
             Row(id: "\(candidate.key)-r\(index)", include: !candidate.needsReview, word: candidate.word, partOfSpeech: candidate.partOfSpeech, meaning: candidate.meaningZh,
-                suggestedWord: suggester.correction(for: candidate.word), needsReview: candidate.needsReview)
+                originalWord: candidate.originalWord, suggestedWord: candidate.suggestedWord ?? suggester.correction(for: candidate.word),
+                needsReview: candidate.needsReview, showsPart: !candidate.partOfSpeech.trimmed.isEmpty)
         }
         target = .new
         phase = .review
@@ -390,23 +410,7 @@ struct ScanView: View {
                                 Label(L.t("相近拼字，請對照原圖後勾選", "Similar readings: compare with the source before selecting"), systemImage: "exclamationmark.circle")
                                     .font(.caption).foregroundStyle(Palette.review)
                             }
-                            HStack {
-                                TextField(S.word, text: $row.word)
-                                    .font(.display(.headline))
-                                    .textInputAutocapitalization(.never)
-                                    .autocorrectionDisabled()
-                                    .accessibilityIdentifier("scan-word-\(row.id)")
-                                    .onChange(of: row.word) { _, _ in row.suggestedWord = nil }
-                                TextField(S.pos, text: $row.partOfSpeech)
-                                    .font(.subheadline)
-                                    .foregroundStyle(Palette.accent)
-                                    .frame(minWidth: 64, maxWidth: 100)
-                                    .textInputAutocapitalization(.never)
-                                    .autocorrectionDisabled()
-                            }
-                            TextField(S.meaning, text: $row.meaning)
-                                .font(.subheadline)
-                                .accessibilityIdentifier("scan-meaning-\(row.id)")
+                            entryFields($row)
                             if row.id.contains("-ai-") {
                                 Label(S.organizedByAI, systemImage: "sparkles")
                                     .font(.caption)
@@ -488,6 +492,60 @@ struct ScanView: View {
         }
         .warmList()
         .scrollDismissesKeyboard(.interactively)
+    }
+
+    /// The word being learned on top, as on the cards: the English word for a
+    /// learner of English, the Chinese with its pinyin for a learner of
+    /// Chinese. Either way the English is saved as the word and the Chinese
+    /// as its meaning, as in the built-in lists.
+    @ViewBuilder
+    private func entryFields(_ row: Binding<Row>) -> some View {
+        if model.studyMode == .chinese {
+            HStack(alignment: .firstTextBaseline) {
+                TextField(S.chineseWord, text: row.meaning)
+                    .font(.display(.headline))
+                    .accessibilityIdentifier("scan-meaning-\(row.wrappedValue.id)")
+                partField(row)
+            }
+            let pinyin = ChineseDisplay.pronunciationWithTones(ChineseDisplay.conciseMeaning(row.wrappedValue.meaning))
+            if !pinyin.isEmpty {
+                Text(pinyin)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            englishField(row, font: .subheadline)
+        } else {
+            HStack {
+                englishField(row, font: .display(.headline))
+                partField(row)
+            }
+            TextField(S.meaning, text: row.meaning)
+                .font(.subheadline)
+                .accessibilityIdentifier("scan-meaning-\(row.wrappedValue.id)")
+        }
+    }
+
+    private func englishField(_ row: Binding<Row>, font: Font) -> some View {
+        TextField(S.word, text: row.word)
+            .font(font)
+            .textInputAutocapitalization(.never)
+            .autocorrectionDisabled()
+            .accessibilityIdentifier("scan-word-\(row.wrappedValue.id)")
+            .onChange(of: row.wrappedValue.word) { _, _ in row.wrappedValue.suggestedWord = nil }
+    }
+
+    /// The part of speech printed on the page. A scanned row without one
+    /// shows nothing rather than an empty "Part" box.
+    @ViewBuilder
+    private func partField(_ row: Binding<Row>) -> some View {
+        if row.wrappedValue.showsPart {
+            TextField(S.pos, text: row.partOfSpeech)
+                .font(.subheadline)
+                .foregroundStyle(Palette.accent)
+                .frame(minWidth: 64, maxWidth: 100)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+        }
     }
 
     @ViewBuilder
@@ -650,9 +708,11 @@ private enum S {
     static func found(_ count: Int) -> String { L.t("找到 \(count) 個單字", count == 1 ? "1 word found" : "\(count) words found") }
     static var reviewHint: String { L.t("儲存前可以直接修改英文或中文；取消勾選的不會存入。左滑可以刪除。", "Fix any word or meaning before saving. Unchecked rows are skipped; swipe left to delete.") }
     static var noneFound: String { L.t("沒有找到成對的英文和中文意思。可以換一張更清楚的照片，或用「新增一列」手動加入。", "No word and meaning pairs were found. Try a clearer photo, or add rows by hand.") }
-    static var word: String { L.t("英文", "English") }
+    static var word: String { L.t("英文", "English meaning") }
     static var meaning: String { L.t("中文意思", "Chinese meaning") }
-    static var pos: String { L.t("詞性", "Part") }
+    /// The Chinese word a learner of Chinese studies, shown first.
+    static var chineseWord: String { L.t("中文", "Chinese") }
+    static var pos: String { L.t("詞性", "Word class") }
     static var addRow: String { L.t("新增一列", "Add row") }
     static var saveTo: String { L.t("存到", "Save to") }
     static var newBank: String { L.t("新字庫", "New bank") }

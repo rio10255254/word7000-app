@@ -17,8 +17,10 @@ enum TextRecognizer {
 
     /// Reads every page and pairs words with meanings page by page.
     /// Preserve Vision's highest-confidence spelling, including words and
-    /// inflections absent from the built-in vocabulary.
-    static func candidates(in images: [UIImage], suggester: WordSuggester?) async throws -> [ScannedWordCandidate] {
+    /// inflections absent from the built-in vocabulary. `dictionary` (the
+    /// English list's meanings) only settles which of two readings of one
+    /// word the printed meaning belongs to.
+    static func candidates(in images: [UIImage], suggester: WordSuggester?, dictionary: ScanDictionary? = nil) async throws -> [ScannedWordCandidate] {
         var indices: [String: [Int]] = [:]
         var result: [ScannedWordCandidate] = []
         for (page, image) in images.enumerated() {
@@ -28,22 +30,27 @@ enum TextRecognizer {
             let rows = ScanParser.readingRows(reading.lines)
             let table = await SmartScan.tableCandidates(in: UIImage(cgImage: prepared))
             try Task.checkCancellation()
-            var found = ScanGrounding.merging(primary: ScanParser.parse(rows) + ScanParser.parse(reading.lines), supplemental: table)
-            let expected = reading.lines.filter { $0.text.unicodeScalars.contains(where: ScanParserContains.cjk) }.count
+            var found = ScanGrounding.merging(primary: ScanParser.parsePage(reading.lines), supplemental: table, dictionary: dictionary)
+            var pageWords = ScanParser.latinWords(in: reading.lines)
+            // Check boxes and bullets read as 口 or 工 are not meanings to find.
+            let expected = ScanParser.meaningLineCount(reading.lines)
             let unique = found.count
             let needsHelp = unique == 0 || (expected > 0 && Double(unique) < Double(expected) * 0.7)
             if needsHelp || reading.confidence < 0.7 {
                 if let enhanced = await enhancedImage(prepared),
                    let alternate = try? await recognize(enhanced, languages: ["en-US", "zh-Hant"], suggester: suggester) {
-                    found = ScanGrounding.merging(primary: found, supplemental: ScanParser.parse(ScanParser.readingRows(alternate.lines)) + ScanParser.parse(alternate.lines))
+                    found = ScanGrounding.merging(primary: found, supplemental: ScanParser.parsePage(alternate.lines), dictionary: dictionary)
+                    pageWords.formUnion(ScanParser.latinWords(in: alternate.lines))
                 }
             }
             try Task.checkCancellation()
             let recovered = found.count
             let assistanceAllowed = await SmartScan.canOrganize
             if (recovered == 0 || Double(recovered) < Double(expected) * 0.7), assistanceAllowed {
-                found = ScanGrounding.merging(primary: found, supplemental: await SmartScan.organize(text: rows.map(\.text).joined(separator: "\n")))
+                found = ScanGrounding.merging(primary: found, supplemental: await SmartScan.organize(text: rows.map(\.text).joined(separator: "\n")),
+                                              dictionary: dictionary)
             }
+            if let dictionary { found = ScanGrounding.respelled(found, pageWords: pageWords, dictionary: dictionary) }
             try Task.checkCancellation()
             for candidate in found {
                 let key = ScanImportPlan.wordKey(candidate.word)
@@ -128,11 +135,5 @@ enum TextRecognizer {
                 .applyingFilter("CISharpenLuminance", parameters: [kCIInputSharpnessKey: 0.3])
             return CIContext(options: [.cacheIntermediates: false]).createCGImage(adjusted, from: adjusted.extent)
         }.value
-    }
-}
-
-private enum ScanParserContains {
-    static func cjk(_ scalar: Unicode.Scalar) -> Bool {
-        (0x3400...0x4DBF).contains(scalar.value) || (0x4E00...0x9FFF).contains(scalar.value) || (0xF900...0xFAFF).contains(scalar.value)
     }
 }

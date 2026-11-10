@@ -66,6 +66,14 @@ public struct ScanImportPlan: Sendable {
             .matches(Identity(word: rhs.word, meaning: rhs.meaningZh, part: rhs.partOfSpeech))
     }
 
+    /// Whether two parts of speech can name the same entry: one is missing,
+    /// or both say the same ("adj." and "a").
+    static func samePartOfSpeech(_ lhs: String, _ rhs: String) -> Bool {
+        let left = Identity(word: "", meaning: "", part: lhs).parts
+        let right = Identity(word: "", meaning: "", part: rhs).parts
+        return left.isEmpty || right.isEmpty || left == right
+    }
+
     private struct Identity {
         let word: String
         let meanings: Set<String>

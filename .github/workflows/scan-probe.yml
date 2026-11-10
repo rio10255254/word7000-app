@@ -1,0 +1,10 @@
+name: Scan probe
+on:
+  push:
+    branches: ['claude/scan-probe']
+jobs:
+  probe:
+    runs-on: xcode-27
+    steps:
+      - uses: actions/checkout@v4
+      - run: sw_vers; swift probe/probe.swift probe/page.jpg

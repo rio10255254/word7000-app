@@ -14,6 +14,7 @@ struct Word7000App: App {
     @State private var reminderRefreshPending = false
     @State private var registrations = ReminderRegistrationCoordinator()
     @State private var reminderBackground = ReminderBackgroundUpload()
+    @State private var saveLease = SaveBeforeSuspend()
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
@@ -130,6 +131,7 @@ struct Word7000App: App {
             case .background:
                 plus.suspendTimeUpdates()
                 model.saveNow()
+                saveLease.hold(Persistence.live.store)
                 account.flushBeforeBackground()
                 account.sendUsageBeforeBackground()
                 uploadRegistrationBeforeBackground()
@@ -277,3 +279,54 @@ private final class ReminderBackgroundUpload {
         finish(generation: generation)
     }
 }
+
+/// Saves are written on a background queue that a busy iPhone can hold up
+/// for seconds. Going to the background, the app stays awake until every
+/// queued save is on disk, so being suspended and then closed loses nothing.
+@MainActor
+private final class SaveBeforeSuspend {
+    private var identifier: UIBackgroundTaskIdentifier = .invalid
+    private var generation = 0
+
+    func hold(_ store: LearningFileStore) {
+        guard identifier == .invalid else { return }
+        generation &+= 1
+        let current = generation
+        identifier = UIApplication.shared.beginBackgroundTask(withName: "word7000-save") { [weak self] in
+            // UIKit calls this synchronously on the main thread.
+            MainActor.assumeIsolated { self?.release(current) }
+        }
+        guard identifier != .invalid else { return }
+        // Waiting on the store's queue also raises its priority until it drains.
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            store.finishPendingWrites()
+            #if DEBUG && targetEnvironment(simulator)
+            UITestingSaveSignal.post()
+            #endif
+            DispatchQueue.main.async { MainActor.assumeIsolated { self?.release(current) } }
+        }
+    }
+
+    /// Ends this hold only: a drain that finishes late never ends a later one.
+    private func release(_ hold: Int) {
+        guard hold == generation, identifier != .invalid else { return }
+        let ending = identifier
+        identifier = .invalid
+        UIApplication.shared.endBackgroundTask(ending)
+    }
+}
+
+#if DEBUG && targetEnvironment(simulator)
+/// UI tests that relaunch the app close it only once this file appears,
+/// written when going to the background has put every save on disk
+/// (see `closeAfterSaving` in the UI tests). Under XCTest the simulator
+/// keeps the app running in the background, so it never reads as suspended.
+enum UITestingSaveSignal {
+    static func post() {
+        guard AppRuntime.uiTesting, let home = ProcessInfo.processInfo.environment["SIMULATOR_HOST_HOME"] else { return }
+        let directory = URL(fileURLWithPath: home).appendingPathComponent("word7000-ui-testing", isDirectory: true)
+        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        try? Data().write(to: directory.appendingPathComponent("saves-on-disk"))
+    }
+}
+#endif

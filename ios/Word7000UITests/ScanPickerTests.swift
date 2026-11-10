@@ -135,9 +135,7 @@ final class ScanPickerTests: XCTestCase {
     func testRepeatedScanKeepsDifferentMeaningsAndSkipsExactDuplicates() {
         var app = openScanner(pastedText: "bank n. 銀行")
         let bankName = savePastedBank(app)
-        XCUIDevice.shared.press(.home)
-        sleep(1)
-        app.terminate()
+        app.closeAfterSaving()
 
         app = openScanner(pastedText: "BANK n. 銀行\nbank n. 河岸\nobjectively adv. 客觀地\nobjective n. 目標", reset: false)
         readPasted(app)
@@ -211,9 +209,14 @@ final class ScanPickerTests: XCTestCase {
         snapshot(app, name: "bank-deletion-restored")
     }
 
+    /// The bank is made and filled in one launch. Relaunching in between
+    /// made this test flaky: saves are written in the background, and on a
+    /// busy simulator one could still be waiting when the test killed the app
+    /// 1.5 s after Home, so the new bank was sometimes not on disk yet.
     func testScanCanBeAddedToAnEmptyManuallyCreatedBank() {
-        var app = XCUIApplication()
-        app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingFakePlans"]
+        let app = XCUIApplication()
+        app.launchArguments = ["-uiTestingReset", "-uiTestingLight", "-uiTestingFakePlans", "-uiTestingScanText"]
+        app.launchEnvironment["WORD7000_SCAN_TEST_TEXT"] = "objectively adv. 客觀地"
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
         app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["單字", "Words"])).firstMatch.tap()
@@ -227,11 +230,14 @@ final class ScanPickerTests: XCTestCase {
         app.buttons["bank-name-save"].tap()
         let created = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'bank-set-' AND label CONTAINS 'Lesson'")).firstMatch
         XCTAssertTrue(created.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertTrue(created.label.contains("0"), created.label)
         snapshot(app, name: "empty-manual-bank-created")
-        XCUIDevice.shared.press(.home)
-        sleep(1)
-        app.terminate()
-        app = openScanner(pastedText: "objectively adv. 客觀地", reset: false)
+        // The "+" menu is always on screen; the scan card can sit past a small phone's edge.
+        app.buttons["words-add"].tap()
+        let scan = app.buttons["words-add-scan"]
+        XCTAssertTrue(scan.waitForExistence(timeout: 5), app.debugDescription)
+        scan.tap()
+        XCTAssertTrue(app.buttons["scan-choose-photo"].waitForExistence(timeout: 5), app.debugDescription)
         readPasted(app)
         // The banks are chips under "Save to".
         let lesson = app.buttons["Lesson"]
@@ -241,6 +247,11 @@ final class ScanPickerTests: XCTestCase {
         let save = app.buttons["scan-save"]
         save.scrollIntoView(in: app, swipes: 5)
         saveScan(save, in: app)
+        // The word went into the bank that was made by hand, not a new one.
+        app.buttons["scan-close"].tap()
+        let filled = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'bank-set-' AND label CONTAINS 'Lesson' AND label CONTAINS '1'")).firstMatch
+        XCTAssertTrue(filled.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertEqual(app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'bank-set-'")).count, 1, app.debugDescription)
     }
 
     private func readPasted(_ app: XCUIApplication) {

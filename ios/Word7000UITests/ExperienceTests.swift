@@ -117,9 +117,7 @@ final class ExperienceTests: XCTestCase {
         waitForReadyCard(app)
         let prompt = app.staticTexts["study-prompt"].label
         let position = app.staticTexts["study-position"].label
-        XCUIDevice.shared.press(.home)
-        sleep(1)
-        app.terminate()
+        app.closeAfterSaving()
         app.launchArguments = ["-uiTestingLight", "-uiTestingFakePlans"]
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
@@ -231,9 +229,7 @@ final class ExperienceTests: XCTestCase {
         startFromWelcome(app, snap: true)
         waitForReadyCard(app)
         XCTAssertEqual(app.staticTexts["study-position"].label, "1 / 5")
-        XCUIDevice.shared.press(.home)
-        sleep(1)
-        app.terminate()
+        app.closeAfterSaving()
         app.launchArguments = ["-uiTestingLight", "-uiTestingFakePlans"]
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))
@@ -365,9 +361,7 @@ final class ExperienceTests: XCTestCase {
         control.tap()
         if !switchedOn(within: 3), autoSpeak.value as? String == "0" { control.tap() }
         XCTAssertTrue(switchedOn(within: 3), app.debugDescription)
-        XCUIDevice.shared.press(.home)
-        sleep(1)
-        app.terminate()
+        app.closeAfterSaving()
         app.launchArguments = ["-uiTestingLight", "-uiTestingFakePlans"]
         app.launch()
         XCTAssertTrue(app.buttons["today-start"].waitForExistence(timeout: 10))

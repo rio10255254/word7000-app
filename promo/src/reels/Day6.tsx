@@ -154,16 +154,20 @@ const useFilm = (id: string) => {
     return { crop: [x0, y0, x1, y1] as [number, number, number, number], lift: depth * 1.5 * ramp(t, up, up + 0.45, out) * (1 - ramp(t, down, down + 0.3, inOut)) };
   });
   const dim = Math.min(1, Math.max(0, ...lifts.map((l) => l.lift * 2.2)));
+  // Where the phone's shadow falls: behind it, a little smaller, narrowing as it turns edge-on.
+  const centre = project(603, 1311);
+  const size = (FOCAL / (CAM_Z - pose.z)) * 0.8;
+  const shadow = { x: centre.x, y: centre.y, w: Math.max(60, PHONE.w * size * Math.abs(Math.cos(pose.ry))), h: PHONE.h * size };
   // A softbox crosses the glass each time the phone comes to rest facing you.
   const glare = [rise + 1.75, spin1 + 0.4, route + 0.45].reduce((g, start) => (t >= start && t < start + 0.9 ? (t - start) / 0.9 : g), -1);
-  return { t, episode, s, timing, at, check, plan, route, end, rise, tapAt, answered, pose, turning, project, onPlan, lifts, dim, propOut, glare };
+  return { t, episode, s, timing, at, check, plan, route, end, rise, tapAt, answered, pose, turning, project, onPlan, lifts, dim, propOut, glare, shadow };
 };
 
 const Stage = ({ id }: { id: string }) => {
   const gl = useThree((state) => state.gl);
   const film = useFilm(id);
   const { t, s, pose } = film;
-  const maps = usePrepared('', async () => {
+  const maps = usePrepared(async () => {
     const [quiz, done, plan, env] = await Promise.all([imageTexture(`${s.quiz[0]}.jpg`), imageTexture(`${s.quiz[1]}.jpg`), imageTexture(`${s.plan}.jpg`), loadStudio(gl)]);
     // What is left where a piece lifts off: the page just outside its top-left corner.
     const ground = (map: THREE.Texture, crops: Crop[]) => crops.map(([x0, y0]) => colorAt(map, x0 + 60, y0 - 14));
@@ -177,7 +181,7 @@ const Stage = ({ id }: { id: string }) => {
       <group position={[pose.x, pose.y + Math.sin(t * 1.3) * 0.012, pose.z]} rotation={[pose.rx + Math.sin(t * 0.9) * 0.008, pose.ry, pose.rz, 'YXZ']}>
         <Phone3D screen={film.onPlan ? maps.plan : maps.quiz} glare={film.glare}>
           {!film.onPlan ? <ScreenLayer map={maps.done} opacity={film.answered} /> : null}
-          <ScreenLayer color="#2a2418" opacity={film.dim * 0.16} />
+          <ScreenLayer color="#2a2418" opacity={Math.max(film.dim * 0.16, film.propOut * 0.3)} over />
           {film.lifts.map((l, i) => (
             <Lift key={`${film.onPlan}${i}`} map={top} crop={l.crop} lift={l.lift} ground={(film.onPlan ? maps.planGround : maps.quizGround)[i]} />
           ))}
@@ -200,7 +204,6 @@ export const Day6 = ({ id }: { id: string }) => {
   const leave = ramp(t, end - 0.15, end + 0.35, inOut);
   const smear = Math.min(26, Math.max(0, film.turning - 2.5) * 2.4);
   const lit = ramp(t, rise, rise + 0.8, (n) => n) * (1 - leave);
-  const near = lit * Math.min(1, Math.max(0, film.pose.z / 3.4));
 
   return (
     <AbsoluteFill style={{ fontFamily: FONT, overflow: 'hidden' }}>
@@ -213,9 +216,7 @@ export const Day6 = ({ id }: { id: string }) => {
           </filter>
         </defs>
       </svg>
-      <AbsoluteFill style={{ filter: near > 0.02 ? `blur(${near * 5}px)` : undefined, transform: `scale(${1.03 + near * 0.05})` }}>
-        <Backdrop t={t} frame={frameNo} drift={(film.pose.y - MID) * 260} />
-      </AbsoluteFill>
+      <Backdrop t={t} frame={frameNo} drift={(film.pose.y - MID) * 260} />
       <AbsoluteFill style={{ background: `radial-gradient(70% 46% at 50% 42%, rgba(255,244,214,${0.2 * lit}) 0%, rgba(255,244,214,0) 70%), radial-gradient(120% 90% at 50% 42%, rgba(0,0,0,0) 45%, rgba(26,30,12,${0.42 * lit}) 100%)` }} />
       <Motes t={t} />
 
@@ -229,16 +230,30 @@ export const Day6 = ({ id }: { id: string }) => {
       ) : null}
       <Peek t={t} at={0} until={rise + 0.3} side={1} mood="smug" y={760} outAt={rise - 0.14} />
 
+      {/* The phone's shadow on the backdrop. */}
+      {lit > 0 && leave < 1 ? (
+        <div
+          style={{
+            position: 'absolute',
+            left: film.shadow.x - film.shadow.w / 2,
+            top: film.shadow.y - film.shadow.h / 2 + 34,
+            width: film.shadow.w,
+            height: film.shadow.h,
+            borderRadius: film.shadow.w * 0.3,
+            background: 'rgba(28,32,12,0.3)',
+            boxShadow: '0 30px 70px 34px rgba(28,32,12,0.3)',
+            opacity: lit * (1 - leave),
+            ...ABOVE_CAPTIONS,
+          }}
+        />
+      ) : null}
+
       {/* The phone. */}
-      {leave < 1 ? (
+      {t >= rise - 0.2 && leave < 1 ? (
         <AbsoluteFill style={{ opacity: 1 - leave, ...ABOVE_CAPTIONS }}>
           <AbsoluteFill
             style={{
-              filter: [
-                'drop-shadow(0 46px 50px rgba(28,32,12,0.38)) drop-shadow(0 8px 10px rgba(28,32,12,0.25))',
-                smear > 0.5 ? 'url(#smear)' : '',
-                leave > 0 || film.propOut > 0 ? `blur(${leave * 12 + film.propOut * 2.5}px) brightness(${1 - 0.16 * film.propOut})` : '',
-              ].join(' '),
+              filter: smear > 0.5 ? 'url(#smear)' : leave > 0 ? `blur(${leave * 12}px)` : undefined,
             }}
           >
             <ThreeCanvas width={1080} height={1920} dpr={1} gl={{ antialias: true, alpha: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.0 }} camera={{ fov: FOV, near: 0.5, far: 60, position: [0, 0, CAM_Z] }}>

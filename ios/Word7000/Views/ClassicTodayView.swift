@@ -11,7 +11,7 @@ import Word7000Core
 /// Three heights cover every iPhone: SE-sized (about 600 points between the
 /// status bar and the tab bar), the usual 6.1" to 6.3" phones, and the big Plus
 /// and Pro Max ones (about 750 and up).
-private struct ClassicMetrics {
+struct ClassicMetrics {
     enum Tier { case compact, regular, tall }
     var tier: Tier
     /// Accessibility text sizes: one column, nothing peeking over the card.
@@ -700,12 +700,16 @@ struct ClassicTileItem: Identifiable {
     var detail: String
     var locked = false
     var badge: String? = nil
+    /// A chapter's step: done (a gold stamp), or the one to do next (ringed,
+    /// with a "Next" tab).
+    var done = false
+    var next = false
     var action: () -> Void
 }
 
 /// Pressing a tile sinks it a little and tips it toward the finger's side,
 /// like pressing into soft leather.
-private struct ClassicTilePressStyle: ButtonStyle {
+struct ClassicTilePressStyle: ButtonStyle {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     func makeBody(configuration: Configuration) -> some View {
@@ -728,7 +732,7 @@ struct ClassicTileStyle {
 /// A practice tile, in one of two compositions: a tall card (icon at the top,
 /// title and detail along the bottom) or a short row (icon, title and detail
 /// side by side), each with a faint, tilted watermark of its icon.
-private struct ClassicTile: View {
+struct ClassicTile: View {
     @Environment(\.appStyle) private var appStyle
     var item: ClassicTileItem
     var tallCard = false
@@ -739,13 +743,14 @@ private struct ClassicTile: View {
 
     private var radius: CGFloat { appStyle == .collage ? 0 : tallCard ? 22 : 18 }
 
-    /// In the collage each way of practising is cut from its own paper.
+    /// In the collage each way of practising is cut from its own paper; a
+    /// chapter's steps take the same papers as their tiles on Today.
     private var paper: PaperKind {
         switch item.id {
         case "today-review": .ruled
-        case "today-quiz": .graph
-        case "today-speaking": .peach
-        case "today-spelling": .sage
+        case "today-quiz", "chapter-step-quiz": .graph
+        case "today-speaking", "chapter-step-speaking": .peach
+        case "today-spelling", "chapter-step-spell": .sage
         default: .mustard
         }
     }
@@ -830,7 +835,14 @@ private struct ClassicTile: View {
             }
         }
         .overlay(alignment: .top) {
-            if appStyle == .collage, item.id == "today-review" { TapeStrip(width: 58, angle: -4).offset(y: -9) }
+            if appStyle == .collage, item.id == "today-review" || item.next { TapeStrip(width: 58, angle: -4).offset(y: -9) }
+        }
+        .overlay {
+            // The step to do next, ringed in its colour.
+            if item.next { shape.strokeBorder(item.tint, lineWidth: 2.5) }
+        }
+        .overlay(alignment: .topTrailing) {
+            if item.done { DoneStamp().offset(x: 6, y: -8) }
         }
         .overlay {
             // A soft ring of the tile's colour spreads from the icon when it is tapped.
@@ -893,7 +905,9 @@ private struct ClassicTile: View {
     /// The tall card's top corner: the Plus mark when locked, else a small arrow.
     @ViewBuilder
     private var corner: some View {
-        if item.locked {
+        if item.next {
+            nextTab
+        } else if item.locked {
             PlusBadgeFitting()
         } else if let badge = item.badge {
             pill(badge)
@@ -910,7 +924,9 @@ private struct ClassicTile: View {
     /// The short row's far end: the Plus mark, a count, or nothing.
     @ViewBuilder
     private var rowEnd: some View {
-        if item.locked {
+        if item.next {
+            nextTab
+        } else if item.locked {
             PlusBadgeFitting()
         } else if let badge = item.badge {
             if roomy {
@@ -931,6 +947,18 @@ private struct ClassicTile: View {
                 pill(badge)
             }
         }
+    }
+
+    /// "Next", on the step to do now.
+    private var nextTab: some View {
+        Text(L.t("下一步", "Next"))
+            .font(.caption.weight(.heavy))
+            .foregroundStyle(.white)
+            .lineLimit(1)
+            .fixedSize()
+            .padding(.horizontal, 9)
+            .padding(.vertical, 4)
+            .background(item.tint, in: Capsule())
     }
 
     private func pill(_ text: String) -> some View {
@@ -970,5 +998,25 @@ private struct ClassicTileRipple: View {
             guard !reduceMotion else { return }
             withAnimation(.easeOut(duration: 0.55)) { spread = true }
         }
+    }
+}
+
+/// A gold stamp, pressed in at a slant, on a step once it is done.
+struct DoneStamp: View {
+    var size: CGFloat = 32
+
+    var body: some View {
+        ZStack {
+            Circle().fill(LinearGradient(colors: [Color(red: 0.98, green: 0.84, blue: 0.5), Color(red: 0.82, green: 0.6, blue: 0.24)],
+                                         startPoint: .topLeading, endPoint: .bottomTrailing))
+            Circle().strokeBorder(Color.white.opacity(0.45), lineWidth: 1.5).padding(3)
+            Image(systemName: "checkmark")
+                .font(.system(size: size * 0.44, weight: .heavy))
+                .foregroundStyle(Color(red: 0.42, green: 0.27, blue: 0.1))
+        }
+        .frame(width: size, height: size)
+        .rotationEffect(.degrees(-10))
+        .shadow(color: .black.opacity(0.12), radius: 2, y: 1)
+        .accessibilityHidden(true)
     }
 }

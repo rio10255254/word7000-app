@@ -39,9 +39,14 @@ final class ClassicLayoutTests: XCTestCase {
         XCTAssertTrue(chapter.waitForExistence(timeout: 5), app.debugDescription)
         snapshot(app, "classic-path")
         chapter.tap()
-        XCTAssertTrue(app.buttons["today-node-cards"].waitForExistence(timeout: 5), app.debugDescription)
-        XCTAssertTrue(app.buttons["today-spelling"].exists, "writing is one of the chapter's steps")
+        XCTAssertTrue(app.buttons["chapter-step-cards"].waitForExistence(timeout: 5), app.debugDescription)
+        for step in ["spell", "quiz", "speaking"] {
+            XCTAssertTrue(app.buttons["chapter-step-\(step)"].exists, "\(step) is one of the chapter's tiles")
+        }
         snapshot(app, "classic-chapter")
+        // The first tile opens today's cards.
+        app.buttons["chapter-step-cards"].tap()
+        XCTAssertTrue(app.buttons["study-show-answer"].waitForExistence(timeout: 10), app.debugDescription)
     }
 
     func testWritingCanBeTurnedOffAndTheLayoutSwitchedBack() {
@@ -83,9 +88,9 @@ final class ClassicLayoutTests: XCTestCase {
         let chapter = readingChapter(app)
         XCTAssertTrue(chapter.waitForExistence(timeout: 5), app.debugDescription)
         chapter.tap()
-        XCTAssertTrue(app.buttons["today-node-cards"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["today-quiz"].exists)
-        XCTAssertFalse(app.buttons["today-spelling"].exists, "no writing step either")
+        XCTAssertTrue(app.buttons["chapter-step-cards"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["chapter-step-quiz"].exists)
+        XCTAssertFalse(app.buttons["chapter-step-spell"].exists, "no writing tile either")
         snapshot(app, "classic-chapter-no-writing")
 
         // Back to the new layout: Practice returns, Language learning goes.

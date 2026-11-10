@@ -25,6 +25,36 @@ extension AppModel {
         scheduleSave()
     }
 
+    /// The steps of the day: the words' cards, writing and quiz, and the
+    /// speaking stage first or last (or not at all). The classic layout can
+    /// leave writing out.
+    var todayNodes: [TodayNode] {
+        let words: [TodayNode] = skipsWriting ? [.cards, .quiz] : [.cards, .spell, .quiz]
+        guard homeShowsSpeaking else { return words }
+        return settings.homeLead == .speaking ? [.speaking] + words : words + [.speaking]
+    }
+
+    /// Whether a step of the day is done.
+    func isDone(_ node: TodayNode) -> Bool {
+        let routine = activeRoutine
+        let routineDone = routine?.step == .done
+        // A set shorter than the goal (the first after the welcome) leaves
+        // today's words to do until the goal is met; a bank smaller than the
+        // goal is done with one set.
+        let enough = goalDone || (routineDone && wordsLeftForGoal == 0)
+        let wordsDone = enough && (routine == nil || routineDone)
+        switch node {
+        case .cards: return wordsDone || routine?.step == .spell || routine?.step == .exam
+        case .spell: return wordsDone || routine?.step == .exam
+        case .quiz: return wordsDone
+        case .speaking: return speakingDoneToday
+        case .weekly, .mockExam, .chest: return false
+        }
+    }
+
+    /// The step to do now; nil once all are done.
+    var currentTodayNode: TodayNode? { todayNodes.first { !isDone($0) } }
+
     /// The built-in words of one chapter (0-based), in list order.
     func chapterWordIds(_ chapter: Int) -> [String] {
         let groups = shelfChapters.map(\.group)

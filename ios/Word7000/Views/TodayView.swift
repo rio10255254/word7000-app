@@ -256,34 +256,12 @@ struct TodayView: View {
     // MARK: Today's steps
 
     /// The steps of the day, as stamps on the card.
-    private var nodes: [TodayNode] {
-        // The classic layout can leave writing out.
-        let words: [TodayNode] = model.skipsWriting ? [.cards, .quiz] : [.cards, .spell, .quiz]
-        guard model.homeShowsSpeaking else { return words }
-        return model.settings.homeLead == .speaking ? [.speaking] + words : words + [.speaking]
-    }
+    private var nodes: [TodayNode] { model.todayNodes }
 
-    private func isDone(_ node: TodayNode) -> Bool {
-        let routine = model.activeRoutine
-        let routineDone = routine?.step == .done
-        // A set shorter than the goal (the first after the welcome) leaves
-        // today's words to do until the goal is met; a bank smaller than the
-        // goal is done with one set.
-        let enough = model.goalDone || (routineDone && model.wordsLeftForGoal == 0)
-        let wordsDone = enough && (routine == nil || routineDone)
-        switch node {
-        case .cards: return wordsDone || routine?.step == .spell || routine?.step == .exam
-        case .spell: return wordsDone || routine?.step == .exam
-        case .quiz: return wordsDone
-        case .speaking: return model.speakingDoneToday
-        case .weekly, .mockExam, .chest: return false
-        }
-    }
+    private func isDone(_ node: TodayNode) -> Bool { model.isDone(node) }
 
     /// The step to do now; nil once all are done.
-    private var currentNode: TodayNode? {
-        nodes.first { !isDone($0) }
-    }
+    private var currentNode: TodayNode? { model.currentTodayNode }
 
     // MARK: The focus card
 

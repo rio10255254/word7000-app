@@ -3,7 +3,7 @@ import Word7000Core
 
 /// The classic layout's Language learning tab: the chapters of the built-in
 /// words as a path, opened in order. The chapter being read opens today's
-/// words as their four steps (cards, writing, quiz, speaking: TodayView); a
+/// words as four big tiles (cards, writing, quiz, speaking: ChapterPageView); a
 /// chapter read through, or one the level test skipped, opens a round of its
 /// words to review; the chapters after the one being read stay locked until
 /// it is read through (four in five of its words known).
@@ -46,9 +46,7 @@ struct LearningPathView: View {
         .background { AmbientBackground(tint: Palette.accent) }
         .navigationTitle(L.t("語言學習", "Language learning"))
         .navigationDestination(for: Int.self) { chapter in
-            TodayView(start: start, showWords: showWords)
-                .navigationTitle(L.t("第 \(chapter + 1) 章", "Chapter \(chapter + 1)"))
-                .navigationBarTitleDisplayMode(.inline)
+            ChapterPageView(chapter: chapter, start: start)
         }
     }
 
@@ -96,9 +94,7 @@ struct LearningPathView: View {
                 .foregroundStyle(Palette.secondaryLabel)
                 .fixedSize(horizontal: false, vertical: true)
             NavigationLink {
-                TodayView(start: start, showWords: showWords)
-                    .navigationTitle(L.t("今天的單字", "Today's words"))
-                    .navigationBarTitleDisplayMode(.inline)
+                ChapterPageView(chapter: nil, start: start)
             } label: {
                 HStack {
                     Image(systemName: "rectangle.on.rectangle.angled")

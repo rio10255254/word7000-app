@@ -256,33 +256,12 @@ struct TodayView: View {
     // MARK: Today's steps
 
     /// The steps of the day, as stamps on the card.
-    private var nodes: [TodayNode] {
-        let words: [TodayNode] = [.cards, .spell, .quiz]
-        guard model.homeShowsSpeaking else { return words }
-        return model.settings.homeLead == .speaking ? [.speaking] + words : words + [.speaking]
-    }
+    private var nodes: [TodayNode] { model.todayNodes }
 
-    private func isDone(_ node: TodayNode) -> Bool {
-        let routine = model.activeRoutine
-        let routineDone = routine?.step == .done
-        // A set shorter than the goal (the first after the welcome) leaves
-        // today's words to do until the goal is met; a bank smaller than the
-        // goal is done with one set.
-        let enough = model.goalDone || (routineDone && model.wordsLeftForGoal == 0)
-        let wordsDone = enough && (routine == nil || routineDone)
-        switch node {
-        case .cards: return wordsDone || routine?.step == .spell || routine?.step == .exam
-        case .spell: return wordsDone || routine?.step == .exam
-        case .quiz: return wordsDone
-        case .speaking: return model.speakingDoneToday
-        case .weekly, .mockExam, .chest: return false
-        }
-    }
+    private func isDone(_ node: TodayNode) -> Bool { model.isDone(node) }
 
     /// The step to do now; nil once all are done.
-    private var currentNode: TodayNode? {
-        nodes.first { !isDone($0) }
-    }
+    private var currentNode: TodayNode? { model.currentTodayNode }
 
     // MARK: The focus card
 
@@ -875,7 +854,7 @@ struct TodayView: View {
 /// hold, a drag or a tapped practice tile keeps it still for a while, so it
 /// never walks off just as you reach for it. It stays put with Reduce Motion,
 /// on the small phones, and under UI tests.
-private struct StrollingCompanion: View {
+struct StrollingCompanion: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var mood: Mascot.Mood
     var size: CGFloat
@@ -1179,7 +1158,7 @@ private struct NoteSlipBackground: View {
 
 /// "Start here!", bobbing on the main button until a new learner's first
 /// round is done.
-private struct StartHereSticker: View {
+struct StartHereSticker: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var bob = false
 

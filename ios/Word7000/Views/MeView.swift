@@ -13,6 +13,7 @@ struct MeView: View {
     @Environment(AccountModel.self) private var account
     @State private var historyOpen = false
     @State private var signInOpen = false
+    @State private var reportOpen = false
     private let dailyTargetOptions = [10, 20, 30, 50]
 
     var body: some View {
@@ -84,12 +85,33 @@ struct MeView: View {
                         Label(L.settings, systemImage: "gearshape")
                     }
                     .accessibilityIdentifier("me-settings")
+                    Button { reportOpen = true } label: {
+                        Label(L.t("回報問題", "Report a problem"), systemImage: "ladybug")
+                    }
+                    .tint(.primary)
+                    .accessibilityIdentifier("me-report-row")
                 }
             }
             .listRowBackground(StyledRowBackground())
         }
         .warmList()
         .navigationTitle(L.tabMe)
+        // Reporting a problem is meant to be easy to find: up top, every visit.
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                // Words beside the icon (a toolbar would show the icon alone).
+                Button { reportOpen = true } label: {
+                    HStack(spacing: 5) {
+                        Image(systemName: "ladybug.fill")
+                        Text(L.t("回報問題", "Report a problem"))
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .fixedSize()
+                }
+                .accessibilityIdentifier("me-report")
+            }
+        }
+        .sheet(isPresented: $reportOpen) { ReportProblemView() }
         .navigationDestination(isPresented: $historyOpen) { HistoryView() }
         .navigationDestination(for: MeRoute.self) { route in
             switch route {
@@ -206,6 +228,7 @@ struct SettingsView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var manageOpen = false
     @State private var timeOpen = false
+    @State private var reportOpen = false
     private let dailyTargetOptions = [10, 20, 30, 50]
 
     /// "第 3 章 · 每天 20 個", or the goal alone outside the built-in words.
@@ -332,6 +355,35 @@ struct SettingsView: View {
                 } header: {
                     Text(L.t("顯示與操作", "Display and feel"))
                 }
+
+                // The classic layout, for learners who would rather pick what
+                // to practise: 2.0.2's Today, and the chapters as their own tab.
+                Section {
+                    ChoiceRow(title: L.t("版面", "Layout"), icon: "rectangle.3.group.fill", tint: Palette.accent,
+                              options: [ChoiceOption(value: false, title: L.t("新版", "New"), detail: L.t("每日路線", "Daily path"), icon: "map.fill"),
+                                        ChoiceOption(value: true, title: L.t("經典", "Classic"), detail: L.t("自己挑練習", "Pick your practice"), icon: "square.grid.2x2.fill")],
+                              selection: model.classicLayout, identifier: "settings-layout") { classic in
+                        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.3)) { model.setClassicLayout(classic) }
+                    }
+                    if model.classicLayout {
+                        Toggle(isOn: Binding(
+                            get: { !model.skipsWriting },
+                            set: { model.setWritingOff(!$0) }
+                        )) {
+                            SettingsLabel(model.studyMode == .english ? L.t("拼字練習", "Spelling practice") : L.t("寫字練習", "Writing practice"),
+                                          icon: "pencil.line", tint: Palette.accent)
+                        }
+                        .accessibilityIdentifier("settings-writing")
+                    }
+                } header: {
+                    Text(L.t("版面", "Layout"))
+                } footer: {
+                    Text(model.classicLayout
+                         ? L.t("經典：首頁是 2.0 的練習磚塊，自己挑想練的；「語言學習」分頁照章節一章一章走。關掉拼字練習，翻卡後就不會再拼字。",
+                               "Classic: Today has 2.0's practice tiles to pick from, and Language learning goes through the chapters in order. With writing off, no writing follows the cards.")
+                         : L.t("經典版面：首頁換回 2.0 的練習磚塊，章節路線另外放一個分頁。進度不會變。",
+                               "Classic puts 2.0's practice tiles back on Today and the chapters in a tab of their own. Your progress stays the same."))
+                }
     
                 // Premium's subscription, for those paying: out of the
                 // profile card, where a big button took the eye every day.
@@ -349,6 +401,10 @@ struct SettingsView: View {
                 AccountSection(includeDeletion: true)
     
                 Section {
+                    Button { reportOpen = true } label: {
+                        SettingsLabel(L.t("回報問題", "Report a problem"), icon: "ladybug.fill", tint: Palette.miss)
+                    }
+                    .accessibilityIdentifier("settings-report")
                     Link(destination: URL(string: "https://word7000-app.rio10255254.workers.dev/privacy.html")!) {
                         SettingsLabel(L.privacyPolicy, icon: "hand.raised.fill", tint: Palette.secondaryLabel, external: true)
                     }
@@ -376,6 +432,7 @@ struct SettingsView: View {
             ))
         }
         .modifier(PlusManageSheet(isPresented: $manageOpen, groupID: plus.subscriptionGroupID))
+        .sheet(isPresented: $reportOpen) { ReportProblemView() }
         .navigationBarTitleDisplayMode(.inline)
         .task { await account.checkReminderSupport() }
         .animation(reduceMotion ? nil : Motion.reveal, value: model.reminderEnabled)

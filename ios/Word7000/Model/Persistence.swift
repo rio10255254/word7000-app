@@ -88,6 +88,12 @@ struct AppSettings: Codable, Equatable, Sendable {
     /// WordCat Next: the day the weekly quiz was last taken, so its note
     /// leaves Today once done.
     var weeklyQuizDoneOn: String?
+    /// The classic layout (2.0.2's Today with its practice tiles, and the
+    /// chapters as a tab of their own) instead of today's path; nil means off.
+    var classicLayout: Bool?
+    /// In the classic layout: no writing (spelling) step after the cards and
+    /// no writing tile; nil means writing stays.
+    var classicWritingOff: Bool?
 
     var speakingHistoryOwnerKey: String {
         Self.speakingHistoryKey(ownerId: localOwnerId, anonymous: localOwnerIsAnonymous)

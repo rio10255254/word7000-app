@@ -464,6 +464,42 @@ final class ExperienceTests: XCTestCase {
         XCTAssertTrue(app.switches["settings-ai-toggle"].waitForExistence(timeout: 5))
     }
 
+    /// Reporting a problem is one tap from Me (top right), and from Settings.
+    func testReportAProblemIsOneTapFromMe() {
+        let app = launch()
+        app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
+        let report = app.buttons["me-report"]
+        XCTAssertTrue(report.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertTrue(report.isHittable)
+        report.tap()
+        let send = app.buttons["report-send"]
+        XCTAssertTrue(send.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertFalse(send.isEnabled, "nothing written yet")
+        XCTAssertTrue(app.buttons["report-kind-0"].isSelected, "a bug by default")
+        app.buttons["report-kind-2"].tap()
+        XCTAssertTrue(app.buttons["report-kind-2"].isSelected)
+        let text = app.textViews["report-text"]
+        XCTAssertTrue(text.waitForExistence(timeout: 5))
+        text.tap()
+        text.typeText("The card froze on the second word")
+        let enabled = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true"), object: send)
+        // The toolbar's button can take a moment to catch up with the text on a busy simulator.
+        XCTAssertEqual(XCTWaiter.wait(for: [enabled], timeout: 15), .completed, "writing something lets it be sent")
+        snapshot(app, "report-problem")
+        app.buttons["report-close"].tap()
+        XCTAssertTrue(report.waitForExistence(timeout: 5))
+
+        // Settings has it too.
+        let settings = app.buttons["me-settings"]
+        settings.scrollIntoView(in: app, swipes: 5)
+        settings.tap()
+        let row = app.buttons["settings-report"]
+        for _ in 0..<12 where !(row.exists && row.isHittable) { app.swipeUp() }
+        XCTAssertTrue(row.isHittable, app.debugDescription)
+        row.tap()
+        XCTAssertTrue(app.buttons["report-send"].waitForExistence(timeout: 5))
+    }
+
     private func openSpeechSettings(_ app: XCUIApplication) {
         app.tabBars.buttons.matching(NSPredicate(format: "label IN %@", ["我", "Me"])).firstMatch.tap()
         let settings = app.buttons["me-settings"]

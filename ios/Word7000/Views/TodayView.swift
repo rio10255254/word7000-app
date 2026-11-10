@@ -277,7 +277,7 @@ struct TodayView: View {
         let node = currentNode
         let tone: HeroTone = node == .speaking ? .speaking : node == nil ? .done : .words
         let emblem: CGFloat = roomy ? min(168, max(132, (height * 0.19).rounded())) : 104
-        let card = VStack(spacing: roomy ? 0 : 12) {
+        let card = VStack(spacing: 0) {
             Text(focusKicker(node))
                 .font(.display(.subheadline, weight: .bold))
                 .foregroundStyle(Self.cream.opacity(0.8))
@@ -313,9 +313,16 @@ struct TodayView: View {
     }
 
     /// A gap inside the card: 18 points, opening to 46 where the phone has room.
+    /// The compact card (a 13 mini, just short of the roomy one): 12 points,
+    /// opening to 36 instead of leaving a band at the bottom; in the
+    /// scrolling fallback they stay at 12.
     @ViewBuilder
     private func cardGap(_ roomy: Bool) -> some View {
-        if roomy { Spacer(minLength: 18).frame(maxHeight: 46) }
+        if roomy {
+            Spacer(minLength: 18).frame(maxHeight: 46)
+        } else {
+            Spacer(minLength: 12).frame(maxHeight: 36)
+        }
     }
 
     private func focusKicker(_ node: TodayNode?) -> String {

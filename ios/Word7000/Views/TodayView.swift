@@ -80,9 +80,15 @@ struct TodayView: View {
     var body: some View {
         GeometryReader { proxy in
             let fits = proxy.size.height > 640 && !dynamicTypeSize.isAccessibilitySize
+            // Roomy if it fits, else the compact card filling the phone (a
+            // 13 mini), else the compact card scrolling (an SE).
             ViewThatFits(in: .vertical) {
                 page(roomy: fits, height: proxy.size.height)
                     .frame(maxHeight: .infinity, alignment: .top)
+                if fits {
+                    page(roomy: false, height: proxy.size.height)
+                        .frame(maxHeight: .infinity, alignment: .top)
+                }
                 ScrollView { page(roomy: false, height: proxy.size.height) }
                     .scrollIndicators(.hidden)
             }

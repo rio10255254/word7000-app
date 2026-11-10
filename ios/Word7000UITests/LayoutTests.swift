@@ -208,7 +208,11 @@ final class LayoutTests: XCTestCase {
         sleep(1)
         snap(app, "tour-4-quiz-answered")
         onScreen(next, in: window, "routine-next")
-        app.buttons["exam-round-close"].tap()
+        let close = app.buttons["exam-round-close"]
+        close.tap()
+        // A tap during the answer's animation can be dropped: tap again.
+        if !close.waitForNonExistence(timeout: 3), close.exists { close.tap() }
+        XCTAssertTrue(close.waitForNonExistence(timeout: 5), "the quiz did not close")
 
         let speaking = app.buttons["today-speaking"]
         XCTAssertTrue(speaking.waitForExistence(timeout: 5))

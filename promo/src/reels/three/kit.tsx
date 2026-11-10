@@ -2,7 +2,6 @@ import { type ReactNode, useEffect, useLayoutEffect, useMemo, useRef, useState }
 import { useThree } from '@react-three/fiber';
 import { Easing, continueRender, delayRender, interpolate, staticFile } from 'remotion';
 import * as THREE from 'three';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 
@@ -168,53 +167,25 @@ const glareTexture = (p: number) => {
   return glareMap;
 };
 
-/** Parts of the model that keep their own colour: glass, lenses, the screen. */
-const KEEP = ['zFdeDaGNRwzccye', 'ujsvqBWRMnqdwPx', 'hUlRcbieVuIiOXG', 'jlzuBkUzuJqgiAK', 'xNrofRCqOXXHVZt'];
 /** The model's own display, which the real screenshot replaces. */
-const DISPLAY = 'xXDHkMplTIDAXLN';
+const DISPLAY = 'baf05346569e3be49c2a';
 
 /**
- * The phone itself: "Apple iPhone 15 Pro Max" by polyman (Sketchfab,
- * CC BY 4.0), tinted white titanium, turned to face +z and sized so its
- * display is exactly the screenshot's rectangle on z = depth / 2.
+ * The phone itself: "iPhone 16 - Free" by wimell (Sketchfab, Free
+ * Standard), recoloured white in the file, sized so its display is
+ * exactly the screenshot's rectangle on z = depth / 2.
  */
 export const loadPhone = async () => {
-  const draco = new DRACOLoader().setDecoderPath(staticFile('draco/'));
-  const gltf = await new GLTFLoader().setDRACOLoader(draco).loadAsync(staticFile('models/iphone-15-pro-max.glb'));
-  draco.dispose();
+  const gltf = await new GLTFLoader().loadAsync(staticFile('models/iphone-16/iphone-16.gltf'));
   const model = gltf.scene;
-  model.rotation.y = Math.PI;
   model.updateMatrixWorld(true);
-  let display: THREE.Object3D | null = null;
-  const tint = new THREE.Color('#D6D4CD');
-  model.traverse((o) => {
-    const mesh = o as THREE.Mesh;
-    if (!mesh.isMesh) return;
-    if (mesh.name === DISPLAY) display = mesh;
-    const m = mesh.material as THREE.MeshStandardMaterial;
-    if (!KEEP.includes(m.name) && mesh.name !== DISPLAY) {
-      m.color.copy(tint);
-      // White titanium, not chrome: mirror-like metal only reflects the dark side of the studio.
-      m.metalness = Math.min(m.metalness, 0.55);
-      m.roughness = Math.max(m.roughness, 0.4);
-      m.envMapIntensity = 1.1;
-      // The band's own textures are the black model's: plain brushed metal instead.
-      if (m.name === 'eShKpuMNVJTRrgg') {
-        m.map = null;
-        m.metalnessMap = null;
-        m.roughnessMap = null;
-        m.metalness = 0.6;
-        m.roughness = 0.42;
-        m.needsUpdate = true;
-      }
-    }
-  });
+  const display = model.getObjectByName(DISPLAY);
   if (!display) throw new Error('the phone model has no display');
   const box = new THREE.Box3().setFromObject(display);
   const all = new THREE.Box3().setFromObject(model);
   const size = box.getSize(new THREE.Vector3());
   const mid = box.getCenter(new THREE.Vector3());
-  (display as THREE.Object3D).visible = false;
+  display.visible = false;
   const sx = PHONE.w / size.x;
   const sy = PHONE.h / size.y;
   const holder = new THREE.Group();

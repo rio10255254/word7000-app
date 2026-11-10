@@ -48,29 +48,27 @@ const COPY = {
         cat: { mood: 'smug', x: 0.74, y: 0.395, w: 0.40, bubble: { text: '今天背了沒？', x: 0.33, y: 0.355 } } },
       { file: '02-ai-tutor', theme: 'honey', screen: 'store-zh-7-cat', icon: 'spark', kicker: 'AI 家教', title: '有問題<br>直接<mark>問傻貓</mark>',
         text: '單字、文法隨時問。它記得你哪天考試，<br>還會挑出你該練的字。', note: 'AI 功能為 Premium 功能',
-        cat: { mood: 'cheeky', x: 0.80, y: 0.355, w: 0.34 } },
+        zoom: 'chat' },
       { file: '03-ai-scan', theme: 'cream', screen: 'store-zh-6-scan', icon: 'spark', kicker: 'AI 拍照掃描', title: '講義拍一下<br>AI <mark>抄成單字卡</mark>',
         text: '印刷的、手寫的都讀得懂，<br>例句和雜訊自動跳過。', note: 'AI 掃描為 Premium 功能',
-        sticker: { text: '手寫也 OK', x: 0.76, y: 0.43 } },
+        phoneTop: 1330,
+        photo: { x: 0.405, y: 0.285, w: 0.565, rotate: 5, rows: [['objectively', 'adv.', '客觀地'], ['objective', 'n.', '目標'], ['carefully', 'adv.', '小心地'], ['considerable', 'adj.', '相當大的']] }  },
       { file: '04-listen', theme: 'sage', screen: 'store-zh-n7-listen', kicker: '口說練習', title: '先聽<mark>真人</mark><br>怎麼說',
-        text: '點餐、問路、看醫生……20 關生活情境，<br>每個角色都有自己的聲音。',
-        sticker: { text: '真人錄音', x: 0.72, y: 0.47 } },
+        text: '點餐、問路、看醫生……20 關生活情境，<br>每個角色都有自己的聲音。'  },
       { file: '05-shadowing', theme: 'sage', screen: 'store-zh-n8-shadow', zoom: 'said', kicker: '口說練習', title: '念到哪<br><mark>亮到哪</mark>',
         text: '跟著示範念，念對的字變綠，<br>念錯的標出來，念對才往下。' },
       { file: '06-feedback', theme: 'sage', screen: 'store-zh-5-coach', icon: 'spark', kicker: 'AI 口說批改', title: '講錯沒差<br>AI 幫你<mark>改順</mark>',
         text: '用說的或打的回答，AI 告訴你怎麼講比較自然。', note: 'AI 批改為 Premium 功能' },
       { file: '07-plan', theme: 'cream', screen: 'store-zh-n6-plan', icon: 'plan', kicker: '個人計畫', title: '考前讀得完？<br>傻貓<mark>算給你看</mark>',
-        text: '先測兩分鐘程度，<br>再照你的考試和日期排好每天的量。',
-        sticker: { text: '照考試日期排', x: 0.73, y: 0.745 } },
+        text: '先測兩分鐘程度，<br>再照你的考試和日期排好每天的量。'  },
       { file: '08-checks', theme: 'cream', pair: ['store-zh-n3-write-solved', 'store-zh-n4-exam-answered'], icon: 'plan', kicker: '背完就考', title: '背完<br>馬上<mark>考一下</mark>',
-        text: '翻完卡接著拼字、做題，題型照你的考試出。<br>錯的會再回來，背到記住為止。',
-        sticker: { text: '學測題型', x: 0.80, y: 0.405 } },
+        text: '翻完卡接著拼字、做題，題型照你的考試出。<br>錯的會再回來，背到記住為止。'  },
       { file: '09-stamp', theme: 'dark', screen: 'store-zh-n11-stamp', title: '做完一天<br><mark>蓋個章</mark>',
         text: '連續天數一天天累積，日曆越塗越滿。' },
       { file: '10-start', finale: true, kicker: '傻貓在等你', title: '還在滑？<br>來背單字',
         collage: ['store-zh-c1-today', 'store-zh-6-scan', 'store-zh-n11-stamp'],
-        chips: ['翻卡', '拼字', '考題', '口說', 'AI 家教'],
-        text: '經典模式自己挑，懶人模式每天排好一條路。',
+        chips: ['AI 家教', '翻卡', '考題', '口說'],
+        text: '經典模式自己挑，<br>懶人模式每天幫你排好。',
         cat: { mood: 'cheer', x: 0.80, y: 0.50, w: 0.36 } },
     ],
   },
@@ -83,28 +81,27 @@ const COPY = {
         cat: { mood: 'smug', x: 0.74, y: 0.395, w: 0.40, bubble: { text: 'Studied yet?', x: 0.34, y: 0.355 } } },
       { file: '02-ai-tutor', theme: 'honey', screen: 'store-en-7-cat', icon: 'spark', kicker: 'AI tutor', title: 'Ask the cat<br><mark>anything</mark>',
         text: 'Words, grammar, what to study next. It remembers your goal and your test date.', note: 'AI features are part of Premium',
-        cat: { mood: 'cheeky', x: 0.80, y: 0.355, w: 0.34 } },
+        zoom: 'chat' },
       { file: '03-ai-scan', theme: 'cream', screen: 'store-en-6-scan', icon: 'spark', kicker: 'AI scanning', title: 'Snap a list,<br><mark>get flashcards</mark>',
         text: 'Printed or handwritten, the AI reads the photo and skips the example sentences.', note: 'AI scanning is part of Premium',
-        sticker: { text: 'Handwriting OK', x: 0.74, y: 0.43 } },
+        phoneTop: 1330,
+        photo: { x: 0.505, y: 0.30, w: 0.445, rotate: 5, rows: [['醫院', '', 'hospital'], ['藥局', '', 'pharmacy'], ['發燒', '', 'fever'], ['掛號', '', 'register']] }  },
       { file: '04-listen', theme: 'sage', screen: 'store-en-n7-listen', kicker: 'Speaking', title: 'Hear it from<br><mark>real voices</mark>',
-        text: '20 stages of everyday Taiwan, and every role has its own Taiwanese Mandarin voice.',
-        sticker: { text: 'Real voices', x: 0.72, y: 0.47 } },
-      { file: '05-tones', theme: 'sage', screen: 'store-en-n8-shadow', zoom: 'said', kicker: 'Speaking', title: 'See your<br><mark>tones</mark>',
+        text: '20 stages of everyday Taiwan, and every role has its own Taiwanese Mandarin voice.'  },
+      { file: '05-tones', theme: 'sage', screen: 'store-en-4-speaking-shadow-result', zoom: 'said', kicker: 'Speaking', title: 'See your<br><mark>tones</mark>',
         text: 'Say it along. Each character lights up as you say it, and a slipped tone is marked to say again.' },
       { file: '06-feedback', theme: 'sage', screen: 'store-en-5-coach', icon: 'spark', kicker: 'AI feedback', title: 'Say it<br><mark>out loud</mark>',
         text: 'Mess it up, that’s fine. The AI shows you a smoother way to say it.',
         note: 'AI feedback is part of Premium' },
       { file: '07-plan', theme: 'cream', screen: 'store-en-n6-plan', icon: 'plan', kicker: 'Your plan', title: 'A plan that<br><mark>fits you</mark>',
-        text: 'A two-minute check finds your level. Set a goal, and the cat works out each day for you.',
-        sticker: { text: 'Made for you', x: 0.73, y: 0.745 } },
+        text: 'A two-minute check finds your level. Set a goal, and the cat works out each day for you.'  },
       { file: '08-checks', theme: 'cream', pair: ['store-en-n2-card', 'store-en-n3-write-solved'], icon: 'plan', kicker: 'Practice', title: 'Flip it,<br>then <mark>write it</mark>',
         text: 'Flip the cards, then write each word in Chinese. The ones you miss come back until they stick.' },
       { file: '09-stamp', theme: 'dark', screen: 'store-en-n11-stamp', title: 'Finish the day,<br><mark>stamp it</mark>',
         text: 'Your streak grows, and the calendar fills up.' },
       { file: '10-start', finale: true, kicker: 'Silly Cat is waiting', title: 'Still<br>scrolling?',
         collage: ['store-en-c1-today', 'store-en-6-scan', 'store-en-n11-stamp'],
-        chips: ['Cards', 'Writing', 'Speaking', 'AI tutor'],
+        chips: ['AI tutor', 'Cards', 'Writing', 'Speaking'],
         text: 'Pick your own practice, or follow a short path a day.',
         cat: { mood: 'cheer', x: 0.82, y: 0.585, w: 0.34 } },
     ],
@@ -119,6 +116,12 @@ const COPY = {
  * the record button).
  */
 const ZOOMS = JSON.parse(process.env.ZOOMS ?? 'null') ?? {
+  // The cat's chat: its nudge, the word drill it offers, and the exam date
+  // it is asked to remember (and does).
+  chat: {
+    zh: { x: 40, y: 1500, w: 1130, h: 790 },
+    en: { x: 40, y: 1500, w: 1130, h: 790 },
+  },
   // The line just said back, lit up character by character (for Chinese, with
   // its tones), and how much of it was right.
   said: {
@@ -148,7 +151,7 @@ const ICONS = {
 };
 
 const css = `
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&family=Noto+Sans+TC:wght@500;700;900&display=block');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&family=Noto+Sans+TC:wght@500;700;900&family=Caveat:wght@600;700&family=LXGW+WenKai+TC:wght@400;700&display=block');
   * { box-sizing: border-box; margin: 0; }
   html, body { width: ${W}px; height: ${H}px; overflow: hidden; }
   body { position: relative; font-family: Inter, 'Noto Sans TC', sans-serif; color: ${C.ink}; -webkit-font-smoothing: antialiased;
@@ -247,6 +250,19 @@ const css = `
     box-shadow: 0 3px 8px rgba(80,45,20,.14); }
   .zoom .tape.a { left: 70px; transform: rotate(-7deg); }
   .zoom .tape.b { right: 80px; transform: rotate(6deg); }
+  /* A photo of a handwritten word list, as the learner would snap it. */
+  .photo { position: absolute; z-index: 4; padding: 22px 22px 54px; background: #FFFDF8; border-radius: 10px;
+    box-shadow: 0 36px 70px rgba(60,30,10,.30), 0 8px 18px rgba(60,30,10,.18); }
+  .photo .paper { position: relative; border-radius: 4px; padding: 34px 30px 26px 74px; color: #253A8C;
+    background-color: #FBF3DF; background-image: repeating-linear-gradient(transparent 0 80px, rgba(80,120,190,.28) 80px 82px);
+    background-position: 0 30px; font-family: 'Caveat', 'LXGW WenKai TC', cursive; }
+  .photo .paper::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50px; width: 3px; background: rgba(214,96,82,.55); }
+  .photo .row { display: flex; align-items: baseline; gap: 22px; height: 82px; white-space: nowrap; }
+  .photo .w { font-size: 68px; font-weight: 700; letter-spacing: .5px; }
+  .photo .p { font-size: 42px; color: #6A7FBF; }
+  .photo .m { font-size: 54px; font-weight: 700; }
+  .photo .tape { position: absolute; top: -26px; left: 50%; width: 170px; height: 52px; margin-left: -85px; transform: rotate(-4deg);
+    background: rgba(236,214,162,.85); box-shadow: 0 3px 8px rgba(70,20,5,.18); }
 `;
 
 const page = (body, { lang, finale = false, theme = 'cream' }) =>
@@ -298,9 +314,17 @@ function feature(p, lang) {
     </div>
     ${p.character ? '' : p.pair ? pairOf(p.pair) : phone(screen, top)}
     ${p.zoom ? zoom(screen, ZOOMS[p.zoom][lang], top) : ''}
+    ${p.photo ? photoOf(p.photo) : ''}
     ${p.sticker ? `<div class="sticker" style="left:${Math.round(p.sticker.x * W)}px;top:${Math.round(p.sticker.y * H)}px">${p.sticker.text}</div>` : ''}
     ${catArt(p.cat)}${bubbles(p.bubbles)}
   `, { lang, theme: p.theme });
+}
+
+/** A snapped word list (`rows` of word, part of speech, meaning), taped on at an angle. */
+function photoOf(ph) {
+  const rows = ph.rows.map(([w, pos, m]) => `<div class="row"><span class="w">${w}</span>${pos ? `<span class="p">${pos}</span>` : ''}<span class="m">${m}</span></div>`).join('');
+  return `<div class="photo" style="left:${Math.round(ph.x * W)}px;top:${Math.round(ph.y * H)}px;width:${Math.round(ph.w * W)}px;transform:rotate(${ph.rotate ?? 5}deg)">
+    <span class="tape"></span><div class="paper">${rows}</div></div>`;
 }
 
 /** Two screens side by side, the second a little lower, each a phone leaning in. */

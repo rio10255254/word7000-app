@@ -378,6 +378,20 @@ private struct ChapterStepCard: View {
         }
     }
 
+    private var startKey: some View {
+        HStack(spacing: 4) {
+            Text(startTitle)
+            Image(systemName: "arrow.right")
+        }
+        .font((compact ? Font.caption : .subheadline).weight(.heavy))
+        .foregroundStyle(.white)
+        .lineLimit(1)
+        .fixedSize()
+        .padding(.horizontal, compact ? 10 : 12)
+        .padding(.vertical, compact ? 5 : 6)
+        .background(tint, in: Capsule())
+    }
+
     var body: some View {
         let radius: CGFloat = appStyle == .collage ? 0 : 18
         let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)
@@ -387,11 +401,22 @@ private struct ChapterStepCard: View {
                 .foregroundStyle(.white)
                 .frame(width: compact ? 38 : 44, height: compact ? 38 : 44)
                 .background(tint, in: Circle())
+            // The next step's key sits on the title's line, so the title and
+            // the detail under it keep the card's whole width ("Flip cards",
+            // not "Flip car…" beside a Continue key).
             VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.display(compact ? .headline : .title3, weight: .bold))
-                    .foregroundStyle(.primary)
-                    .lineLimit(1)
+                HStack(spacing: 6) {
+                    Text(title)
+                        .font(.display(compact ? .headline : .title3, weight: .bold))
+                        .foregroundStyle(.primary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.85)
+                        .layoutPriority(1)
+                    if next {
+                        Spacer(minLength: 6)
+                        startKey
+                    }
+                }
                 Text(detail)
                     .font(compact ? .caption : .subheadline)
                     .foregroundStyle(.secondary)
@@ -399,20 +424,8 @@ private struct ChapterStepCard: View {
                     .minimumScaleFactor(0.85)
             }
             .layoutPriority(1)
-            Spacer(minLength: 4)
-            if next {
-                HStack(spacing: 4) {
-                    Text(startTitle)
-                    Image(systemName: "arrow.right")
-                }
-                .font(.subheadline.weight(.heavy))
-                .foregroundStyle(.white)
-                .lineLimit(1)
-                .fixedSize()
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(tint, in: Capsule())
-            } else {
+            if !next {
+                Spacer(minLength: 4)
                 Image(systemName: "chevron.right")
                     .font(.footnote.weight(.bold))
                     .foregroundStyle(.tertiary)

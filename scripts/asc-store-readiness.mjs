@@ -92,13 +92,35 @@ else {
     const on = all.filter((t) => t.attributes.available);
     const states = [...new Set(all.map((t) => t.attributes.contentStatuses?.join('/')).filter(Boolean))];
     on.length ? ok(`在 ${on.length}${territories.links?.next ? '+' : ''} 個地區供應${states.length ? `（狀態：${states.join('、')}）` : ''}`) : bad(`${all.length} 個地區全都沒有供應（${states.join('、') || '未供應'}）：到「價格與供應狀況」把地區打開；狀態是 CANNOT_SELL 時也要確認付費 App 協議已生效`);
+    // The two stores the listing is written for, in detail.
+    const detail = await tryApi(`/v2/appAvailabilities/${availability.data.id}/territoryAvailabilities?include=territory&limit=200`);
+    for (const id of ['TWN', 'USA', 'CAN']) {
+      const row = (detail.data ?? []).find((t) => t.relationships?.territory?.data?.id === id);
+      say(`- ℹ️ ${id}：${row ? `available=${row.attributes.available}，${row.attributes.contentStatuses?.join('/') ?? '-'}，releaseDate=${row.attributes.releaseDate ?? '-'}，preOrder=${row.attributes.preOrderEnabled}` : '沒有這個地區'}`);
+    }
+    say(`- ℹ️ availableInNewTerritories=${availability.data.attributes?.availableInNewTerritories}`);
   }
+}
+// Review submissions in flight, and what each holds.
+say('\n## 送審');
+const submissions = (await tryApi(`/v1/apps/${app.id}/reviewSubmissions?filter[platform]=IOS&limit=10`)).data ?? [];
+for (const sub of submissions.filter((s) => !['COMPLETE'].includes(s.attributes.state)).slice(0, 5)) {
+  const items = (await tryApi(`/v1/reviewSubmissions/${sub.id}/items?include=appStoreVersion&limit=20`));
+  const what = (items.data ?? []).map((item) => {
+    const versionId = item.relationships?.appStoreVersion?.data?.id;
+    const v = (items.included ?? []).find((x) => x.id === versionId);
+    return `${v ? `版本 ${v.attributes.versionString}` : 'item'}（${item.attributes.state}）`;
+  });
+  say(`- ℹ️ 送審 ${sub.id.slice(0, 8)}：${sub.attributes.state}，送出 ${sub.attributes.submittedDate ?? '-'}，內容：${what.join('、') || '（空）'}`);
 }
 
 // The version being prepared, its build, store text, screenshots and review details.
 say('\n## 版本');
 const versions = (await api(`/v1/apps/${app.id}/appStoreVersions?filter[platform]=IOS&limit=10`)).data;
-for (const v of versions.slice(0, 4)) say(`- ℹ️ ${v.attributes.versionString}：${v.attributes.appVersionState ?? v.attributes.appStoreState}`);
+for (const v of versions.slice(0, 4)) {
+  const b = (await tryApi(`/v1/appStoreVersions/${v.id}/build`)).data;
+  say(`- ℹ️ ${v.attributes.versionString}：${v.attributes.appVersionState ?? v.attributes.appStoreState}${b ? `，建置 (${b.attributes.version})` : ''}`);
+}
 const editable = ['PREPARE_FOR_SUBMISSION', 'DEVELOPER_REJECTED', 'REJECTED', 'METADATA_REJECTED', 'INVALID_BINARY', 'READY_FOR_REVIEW'];
 const version = versions.find((v) => (wantedVersion ? v.attributes.versionString === wantedVersion : true) && editable.includes(v.attributes.appVersionState ?? v.attributes.appStoreState));
 if (!version) {

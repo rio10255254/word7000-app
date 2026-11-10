@@ -53,162 +53,7 @@ struct RootView: View {
     @State private var mePath: [MeRoute] = []
 
     var body: some View {
-        TabView(selection: $tab) {
-            if model.classicLayout {
-                // The classic layout: 2.0.2's Today with its practice tiles,
-                // and today's path as chapters in a tab of their own.
-                ClassicTodayView(start: startActivity)
-                    .tabItem { Label(L.tabToday, systemImage: "sun.max.fill") }
-                    .tag(AppTab.today)
-
-                NavigationStack {
-                    LearningPathView(start: startActivity, showWords: { tab = .words })
-                }
-                .tabItem { Label(L.t("語言學習", "Language learning"), systemImage: "map.fill") }
-                .tag(AppTab.learning)
-            } else {
-                // Today has no navigation bar: its own header takes that place, and
-                // a hidden bar would still sit over it and swallow taps.
-                TodayView(start: startActivity, showWords: { tab = .words })
-                    .tabItem { Label(L.tabToday, systemImage: "sun.max.fill") }
-                    .tag(AppTab.today)
-
-                // WordCat Next: every way to practise outside today's path.
-                NavigationStack {
-                    PracticeView(start: startActivity)
-                }
-                .tabItem { Label(L.t("練習", "Practice"), systemImage: "dumbbell.fill") }
-                .tag(AppTab.practice)
-            }
-
-            NavigationStack {
-                WordsView(scan: openScan, study: { activity = .study })
-            }
-            .tabItem { Label(L.tabWords, systemImage: "books.vertical.fill") }
-            .tag(AppTab.words)
-
-            NavigationStack(path: $mePath) {
-                MeView()
-            }
-            .tabItem { Label(L.tabMe, systemImage: "person.crop.circle.fill") }
-            .tag(AppTab.me)
-        }
-        // The interface language follows the study mode; rebuild on change.
-        .id(model.studyMode)
-        // WordCat Next: Silly Cat pops in from the edges now and then.
-        .overlay { CatPeekHost() }
-        .onChange(of: tab) { _, new in
-            CatPeek.shared.poke(CatPeek.tabLines(new), mood: .smug, chance: 0.35, gap: 30)
-        }
-        // A tab the other layout does not have is left for Today.
-        .onChange(of: model.classicLayout) { _, classic in
-            if tab == (classic ? .practice : .learning) { tab = .today }
-        }
-        .task(id: scenePhase == .active && activity == nil) {
-            guard scenePhase == .active, activity == nil else { return }
-            while !Task.isCancelled {
-                try? await Task.sleep(for: .seconds(Double.random(in: 45...80)))
-                guard !Task.isCancelled, !welcomeOpen, plus.paywallReason == nil else { continue }
-                CatPeek.shared.poke(CatPeek.idleLines, mood: [.smug, .idle, .cheeky].randomElement() ?? .smug, chance: 0.6, gap: 40)
-            }
-        }
-        .task { Feel.enabled = model.settings.hapticsEnabled ?? true }
-        .onChange(of: model.settings.hapticsEnabled) { _, on in Feel.enabled = on ?? true }
-        .environment(\.locale, Locale(identifier: L.zh ? "zh_Hant_TW" : "en_US"))
-        .sheet(item: Binding(get: { plus.paywallReason }, set: { plus.paywallReason = $0 })) { reason in
-            PaywallView(reason: reason)
-        }
-        .sheet(isPresented: Binding(get: { plus.trialRecapPending && plus.paywallReason == nil && activity == nil && !signInForScan && !welcomeOpen && model.settings.onboardingComplete == true },
-                                    set: { if !$0 { plus.markTrialRecapShown() } }), onDismiss: {
-            if plansAfterRecap { plansAfterRecap = false; plus.paywallReason = .general }
-        }) {
-            TrialRecapView(seePlans: { plansAfterRecap = true })
-        }
-        .sheet(isPresented: $signInForScan, onDismiss: {
-            if scanAfterSignIn { scanAfterSignIn = false; plus.require(.scan) { activity = .scan } }
-        }) {
-            SignInSheet(reason: .scan, onSignedIn: {
-                scanAfterSignIn = true
-            })
-        }
-        .onChange(of: activity) { _, new in
-            if let new, let step = GuideStep(activity: new) { model.noteTried(step) }
-        }
-        .fullScreenCover(item: $activity, onDismiss: {
-            guard let next = pendingActivity else {
-                if model.dayCompleteDue { dayCompleteOpen = true } else { openRequestedPractice() }
-                return
-            }
-            pendingActivity = nil
-            activity = next
-        }) { activity in
-            Group {
-            switch activity {
-            case .study:
-                StudySessionView(startQuiz: { switchTo(.quiz) })
-            case .quiz, .quizReady:
-                QuizSessionView(studyMissed: { ids in
-                    model.startStudySession(onlyIds: ids)
-                    switchTo(.study)
-                }, skipSetup: activity == .quizReady)
-            case .speaking:
-                SpeakingSessionView()
-            case .spelling:
-                SpellingSessionView(studyMissed: { ids in
-                    model.startStudySession(onlyIds: ids)
-                    switchTo(.study)
-                })
-            case .exam:
-                ExamView(studyMissed: { ids in
-                    model.startStudySession(onlyIds: ids)
-                    switchTo(.study)
-                })
-            case .scan:
-                ScanView(onStudy: { switchTo(.study) })
-            case .cloze:
-                ClozeSessionView()
-            case .quickExam, .weeklyExam:
-                ExamRoundView(kind: activity == .weeklyExam ? .weekly : .quick, studyMissed: { ids in
-                    model.startStudySession(onlyIds: ids)
-                    switchTo(.study)
-                })
-            }
-            }
-            // The cat follows you into practice too, to comment on your answers.
-            .overlay { CatPeekHost() }
-        }
-        .fullScreenCover(isPresented: $dayCompleteOpen, onDismiss: openRequestedPractice) {
-            DayCompleteView()
-        }
-        .task {
-            // The screenshot tests show the stamp straight away.
-            if ProcessInfo.processInfo.arguments.contains("-uiTestingDayCompleteNow") { dayCompleteOpen = true }
-        }
-        .sheet(isPresented: Binding(get: { model.styleChoiceDue && activity == nil && !welcomeOpen && !signInForScan
-                                           && plus.paywallReason == nil && !plus.trialRecapPending },
-                                    set: { if !$0 { model.settings.stylePicked = true } })) {
-            StyleChoiceSheet()
-        }
-        .fullScreenCover(isPresented: $welcomeOpen, onDismiss: {
-            if studyAfterWelcome {
-                studyAfterWelcome = false
-                PracticeLaunch.shared.requested = nil
-                activity = .study
-            } else { openRequestedPractice() }
-        }) {
-            WelcomeView { mode, target, knownIds, learningIds, practice in
-                model.settings.onboardingComplete = true
-                model.settings.guideActive = true
-                model.setStudyMode(mode)
-                model.setDailyTarget(target)
-                model.applyPlacement(knownIds: knownIds, learningIds: learningIds)
-                if practice { model.startStudySession(limit: 5) }
-                studyAfterWelcome = practice
-                if !practice { tab = .words }
-                welcomeOpen = false
-                model.saveNow()
-            }
-        }
+        withCovers
         .task { welcomeOpen = model.settings.onboardingComplete != true; openRequestedPractice() }
         // Notifications are asked for once, as soon as the app opens, so the
         // developer's announcements reach every learner from the start.
@@ -289,6 +134,189 @@ struct RootView: View {
             }
         }
         .animation(Motion.reveal, value: model.storageFailed)
+    }
+
+    /// The tabs with their own reactions and the first sheets. `body` is
+    /// split in three so the release build type-checks it in reasonable time.
+    private var withSheets: some View {
+        tabs
+        // The interface language follows the study mode; rebuild on change.
+        .id(model.studyMode)
+        // WordCat Next: Silly Cat pops in from the edges now and then.
+        .overlay { CatPeekHost() }
+        .onChange(of: tab) { _, new in
+            CatPeek.shared.poke(CatPeek.tabLines(new), mood: .smug, chance: 0.35, gap: 30)
+        }
+        // A tab the other layout does not have is left for Today.
+        .onChange(of: model.classicLayout) { _, classic in
+            if tab == (classic ? .practice : .learning) { tab = .today }
+        }
+        .task(id: scenePhase == .active && activity == nil) {
+            guard scenePhase == .active, activity == nil else { return }
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(Double.random(in: 45...80)))
+                guard !Task.isCancelled, !welcomeOpen, plus.paywallReason == nil else { continue }
+                CatPeek.shared.poke(CatPeek.idleLines, mood: [.smug, .idle, .cheeky].randomElement() ?? .smug, chance: 0.6, gap: 40)
+            }
+        }
+        .task { Feel.enabled = model.settings.hapticsEnabled ?? true }
+        .onChange(of: model.settings.hapticsEnabled) { _, on in Feel.enabled = on ?? true }
+        .environment(\.locale, Locale(identifier: L.zh ? "zh_Hant_TW" : "en_US"))
+        .sheet(item: Binding(get: { plus.paywallReason }, set: { plus.paywallReason = $0 })) { reason in
+            PaywallView(reason: reason)
+        }
+        .sheet(isPresented: Binding(get: { plus.trialRecapPending && plus.paywallReason == nil && activity == nil && !signInForScan && !welcomeOpen && model.settings.onboardingComplete == true },
+                                    set: { if !$0 { plus.markTrialRecapShown() } }), onDismiss: {
+            if plansAfterRecap { plansAfterRecap = false; plus.paywallReason = .general }
+        }) {
+            TrialRecapView(seePlans: { plansAfterRecap = true })
+        }
+        .sheet(isPresented: $signInForScan, onDismiss: {
+            if scanAfterSignIn { scanAfterSignIn = false; plus.require(.scan) { activity = .scan } }
+        }) {
+            SignInSheet(reason: .scan, onSignedIn: {
+                scanAfterSignIn = true
+            })
+        }
+    }
+
+    /// The full-screen activities, the day's stamp and the first launch.
+    private var withCovers: some View {
+        withSheets
+        .onChange(of: activity) { _, new in
+            if let new, let step = GuideStep(activity: new) { model.noteTried(step) }
+        }
+        .fullScreenCover(item: $activity, onDismiss: {
+            guard let next = pendingActivity else {
+                if model.dayCompleteDue { dayCompleteOpen = true } else { openRequestedPractice() }
+                return
+            }
+            pendingActivity = nil
+            activity = next
+        }) { activity in
+            Group {
+            switch activity {
+            case .study:
+                StudySessionView(startQuiz: { switchTo(.quiz) })
+            case .quiz, .quizReady:
+                QuizSessionView(studyMissed: { ids in
+                    model.startStudySession(onlyIds: ids)
+                    switchTo(.study)
+                }, skipSetup: activity == .quizReady)
+            case .speaking:
+                SpeakingSessionView()
+            case .spelling:
+                SpellingSessionView(studyMissed: { ids in
+                    model.startStudySession(onlyIds: ids)
+                    switchTo(.study)
+                })
+            case .exam:
+                ExamView(studyMissed: { ids in
+                    model.startStudySession(onlyIds: ids)
+                    switchTo(.study)
+                })
+            case .scan:
+                ScanView(onStudy: { switchTo(.study) })
+            case .cloze:
+                ClozeSessionView()
+            case .quickExam, .weeklyExam:
+                ExamRoundView(kind: activity == .weeklyExam ? .weekly : .quick, studyMissed: { ids in
+                    model.startStudySession(onlyIds: ids)
+                    switchTo(.study)
+                })
+            }
+            }
+            // The cat follows you into practice too, to comment on your answers.
+            .overlay { CatPeekHost() }
+        }
+        .fullScreenCover(isPresented: $dayCompleteOpen, onDismiss: openRequestedPractice) {
+            DayCompleteView()
+        }
+        .task {
+            // The screenshot tests show the stamp straight away.
+            if ProcessInfo.processInfo.arguments.contains("-uiTestingDayCompleteNow") { dayCompleteOpen = true }
+        }
+        .sheet(isPresented: Binding(get: { model.styleChoiceDue && activity == nil && !welcomeOpen && !signInForScan
+                                           && plus.paywallReason == nil && !plus.trialRecapPending },
+                                    set: { if !$0 { model.settings.stylePicked = true } })) {
+            StyleChoiceSheet()
+        }
+        .fullScreenCover(isPresented: $welcomeOpen, onDismiss: {
+            if studyAfterWelcome {
+                studyAfterWelcome = false
+                PracticeLaunch.shared.requested = nil
+                activity = .study
+            } else { openRequestedPractice() }
+        }) {
+            WelcomeView { mode, target, knownIds, learningIds, practice in
+                model.settings.onboardingComplete = true
+                model.settings.guideActive = true
+                model.setStudyMode(mode)
+                model.setDailyTarget(target)
+                model.applyPlacement(knownIds: knownIds, learningIds: learningIds)
+                if practice { model.startStudySession(limit: 5) }
+                studyAfterWelcome = practice
+                if !practice { tab = .words }
+                welcomeOpen = false
+                model.saveNow()
+            }
+        }
+    }
+
+    /// The tabs: the layout's first two, then Words and Me. Split out of
+    /// `body` so the release build type-checks it in reasonable time.
+    private var tabs: some View {
+        TabView(selection: $tab) {
+            if model.classicLayout {
+                classicTabs
+            } else {
+                pathTabs
+            }
+
+            NavigationStack {
+                WordsView(scan: openScan, study: { activity = .study })
+            }
+            .tabItem { Label(L.tabWords, systemImage: "books.vertical.fill") }
+            .tag(AppTab.words)
+
+            NavigationStack(path: $mePath) {
+                MeView()
+            }
+            .tabItem { Label(L.tabMe, systemImage: "person.crop.circle.fill") }
+            .tag(AppTab.me)
+        }
+    }
+
+    /// The classic layout: 2.0.2's Today with its practice tiles, and
+    /// today's path as chapters in a tab of their own.
+    @ViewBuilder
+    private var classicTabs: some View {
+        ClassicTodayView(start: startActivity)
+            .tabItem { Label(L.tabToday, systemImage: "sun.max.fill") }
+            .tag(AppTab.today)
+
+        NavigationStack {
+            LearningPathView(start: startActivity, showWords: { tab = .words })
+        }
+        .tabItem { Label(L.t("語言學習", "Language learning"), systemImage: "map.fill") }
+        .tag(AppTab.learning)
+    }
+
+    /// Today's path, and every way to practise outside it.
+    @ViewBuilder
+    private var pathTabs: some View {
+        // Today has no navigation bar: its own header takes that place, and
+        // a hidden bar would still sit over it and swallow taps.
+        TodayView(start: startActivity, showWords: { tab = .words })
+            .tabItem { Label(L.tabToday, systemImage: "sun.max.fill") }
+            .tag(AppTab.today)
+
+        // WordCat Next: every way to practise outside today's path.
+        NavigationStack {
+            PracticeView(start: startActivity)
+        }
+        .tabItem { Label(L.t("練習", "Practice"), systemImage: "dumbbell.fill") }
+        .tag(AppTab.practice)
     }
 
     /// Opens something full screen from a tab: the mock exam asks for

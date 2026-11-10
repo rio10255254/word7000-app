@@ -89,8 +89,12 @@ struct AppSettings: Codable, Equatable, Sendable {
     /// leaves Today once done.
     var weeklyQuizDoneOn: String?
     /// The classic layout (2.0.2's Today with its practice tiles, and the
-    /// chapters as a tab of their own) instead of today's path; nil means off.
+    /// chapters as a tab of their own) or the easy mode (today's path); nil
+    /// means classic, the default since 2.1.0 (4) (it meant the path before).
     var classicLayout: Bool?
+    /// A new learner has picked classic or easy mode at the end of the first
+    /// launch; nil means not asked (learners from before are not asked).
+    var layoutChosen: Bool?
     /// In the classic layout: no writing (spelling) step after the cards and
     /// no writing tile; nil means writing stays.
     var classicWritingOff: Bool?

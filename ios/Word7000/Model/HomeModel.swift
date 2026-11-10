@@ -8,14 +8,17 @@ extension AppModel {
 
     var homeShowsSpeaking: Bool { settings.homeShowsSpeaking ?? true }
 
-    /// The classic layout: 2.0.2's Today, and the chapters in a tab of their own.
-    var classicLayout: Bool { settings.classicLayout == true }
+    /// The classic layout: 2.0.2's Today, and the chapters in a tab of their
+    /// own. The default; easy mode (today's path) is chosen. UI tests written
+    /// for the path keep it unless they ask for classic.
+    var classicLayout: Bool { settings.classicLayout ?? !AppRuntime.uiTesting }
 
     /// The classic layout without writing: no spelling step after the cards.
     var skipsWriting: Bool { classicLayout && settings.classicWritingOff == true }
 
     func setClassicLayout(_ on: Bool) {
         settings.classicLayout = on
+        settings.layoutChosen = true
         scheduleSave()
         Usage.log("classic_layout", on ? "on" : "off")
     }

@@ -209,12 +209,14 @@ struct ClassicTodayView: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
             }
+            // The greeting stays whole ("Afternoon!", not "Afternoo…"); a
+            // long bank name is the one shortened.
+            .layoutPriority(1)
             if !m.large { Spacer(minLength: 4) }
             HStack(spacing: 8) {
                 languageSwitch
                 scopeChip
             }
-            .layoutPriority(1)
         }
     }
 
@@ -541,7 +543,7 @@ struct ClassicTodayView: View {
                 .font(.display(m.compact ? .headline : .title3, weight: .bold))
                 .padding(.leading, 4)
             if let review = reviewTile {
-                tile(review, tallCard: false, m, fill: fill, order: 1)
+                tile(review, tallCard: false, m, fill: fill, order: 1, grows: false)
             }
             ForEach(rows.indices, id: \.self) { row in
                 HStack(spacing: m.tileSpacing) {
@@ -555,14 +557,17 @@ struct ClassicTodayView: View {
         }
     }
 
-    private func tile(_ item: ClassicTileItem, tallCard: Bool, _ m: ClassicMetrics, fill: Bool, order: Int) -> some View {
+    /// `grows`: when the page fits, the practice tiles share whatever room is
+    /// left down to the tab bar, so no phone is left with an empty strip at
+    /// the bottom (a fixed tallest size left one on the taller phones).
+    private func tile(_ item: ClassicTileItem, tallCard: Bool, _ m: ClassicMetrics, fill: Bool, order: Int, grows: Bool = true) -> some View {
         let height = m.tileHeight(tallCard: tallCard)
         return Button {
             tileTaps[item.id, default: 0] += 1
             item.action()
         } label: {
             ClassicTile(item: item, tallCard: tallCard, style: m.tileStyle(tallCard: tallCard),
-                        minHeight: height.min, maxHeight: fill ? height.max : nil,
+                        minHeight: height.min, maxHeight: fill ? (grows ? .infinity : height.max) : nil,
                         bounce: tileTaps[item.id, default: 0])
         }
         .buttonStyle(ClassicTilePressStyle())

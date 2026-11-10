@@ -172,7 +172,7 @@ const DISPLAY = 'baf05346569e3be49c2a';
 
 /**
  * The phone itself: "iPhone 16 - Free" by wimell (Sketchfab, Free
- * Standard), recoloured white in the file, sized so its display is
+ * Standard), without its textures, sized so its display is
  * exactly the screenshot's rectangle on z = depth / 2.
  */
 export const loadPhone = async () => {

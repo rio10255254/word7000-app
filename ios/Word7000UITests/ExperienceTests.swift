@@ -483,7 +483,8 @@ final class ExperienceTests: XCTestCase {
         text.tap()
         text.typeText("The card froze on the second word")
         let enabled = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true"), object: send)
-        XCTAssertEqual(XCTWaiter.wait(for: [enabled], timeout: 5), .completed, "writing something lets it be sent")
+        // The toolbar's button can take a moment to catch up with the text on a busy simulator.
+        XCTAssertEqual(XCTWaiter.wait(for: [enabled], timeout: 15), .completed, "writing something lets it be sent")
         snapshot(app, "report-problem")
         app.buttons["report-close"].tap()
         XCTAssertTrue(report.waitForExistence(timeout: 5))

@@ -37,11 +37,17 @@ function token() {
   return `${head}.${body}.${base64url(signature)}`;
 }
 async function api(method, url, body) {
-  const response = await fetch(`https://api.appstoreconnect.apple.com${url}`, {
-    method,
-    headers: { Authorization: `Bearer ${token()}`, ...(body ? { 'Content-Type': 'application/json' } : {}) },
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  // App Store Connect answers 5xx now and then: try again a few times.
+  let response;
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    response = await fetch(`https://api.appstoreconnect.apple.com${url}`, {
+      method,
+      headers: { Authorization: `Bearer ${token()}`, ...(body ? { 'Content-Type': 'application/json' } : {}) },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    if (response.status < 500 || attempt === 4) break;
+    await new Promise((resolve) => setTimeout(resolve, 3000 * (attempt + 1)));
+  }
   if (response.status === 204) return {};
   const json = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(`${method} ${url} → ${response.status}: ${json.errors?.map((e) => e.detail ?? e.title).join('; ')}`);

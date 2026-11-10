@@ -244,7 +244,7 @@ Remotion 對個人與 3 人以下公司免費，規模更大需購買 Company Li
 
 2.1.0 上架前七天（11/10～11/16）一天一支，一支只講一個功能。規格在 `docs/launch-countdown-brief.md`。質感沿用前導片（橄欖綠背景、紙感道具、字幕帶、片尾），新的是：**手機是一支在攝影棚燈光下的 3D 模型，轉場都是這支手機的動作**。
 
-- **手機**（`src/reels/three/kit.tsx` 的 `loadPhone`／`Phone3D`）：現成的 iPhone 16 模型（wimell 的「iPhone 16 - Free」，Sketchfab Free Standard 授權，見 `public/models/CREDITS.md`），拿掉原本的貼圖（壓縮檔裡沒有附），顏色用模型自己的，螢幕換成真實 App 截圖。
+- **手機**（`src/reels/three/kit.tsx` 的 `loadPhone`／`Phone3D`）：現成的 iPhone 16 模型（wimell 的「iPhone 16 - Free」，Sketchfab Free Standard 授權，見 `public/models/CREDITS.md`），拿掉原本的貼圖（壓縮檔裡沒有附），顏色用模型自己的藍綠色（Teal），背板和標誌因為缺貼圖是照實機手調的，螢幕換成真實 App 截圖。
 - **光**：反光來自一張真實攝影棚的 HDRI（Poly Haven「Studio Small 08」，CC0，`public/hdri/`），手機轉動時棚燈在金屬邊框和鏡頭上滑過；手機轉正停下時，一道柔光掃過玻璃。手機靠近時背景失焦、四角壓暗。
 - **介面浮起**（`Lift`）：把截圖上的某一塊（選項、傻貓的話、計畫的某一行）從玻璃上抬起來，帶著它落在螢幕上的影子，手機轉成四分之三側面讓人看見景深。浮起的都是真實截圖的一部分，沒有另外畫介面。
 - **跑出手機的東西**沿用 `props.tsx` 的紙感道具（撕頁桌曆、計數標籤、章節路線、路線站點），從 3D 手機螢幕上對應的位置飛出來。

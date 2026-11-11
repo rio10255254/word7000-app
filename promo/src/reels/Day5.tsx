@@ -555,7 +555,7 @@ export const Day5 = ({ id }: { id: string }) => {
           <div key={dir} style={{ position: 'absolute', left: (dir > 0 ? 806 : 262) - 150, top: 236 + film.knock * 0.6, width: 300, opacity: show, transform: `translateY(${(1 - show) * -120}px) rotate(${dir > 0 ? 2.5 : -2.5}deg) scale(${1 + bump * 0.1})`, transformOrigin: '50% 50%' }}>
             <div style={{ position: 'absolute', left: 110, top: -16, width: 80, height: 30, background: 'rgba(238,226,190,0.78)', transform: 'rotate(-3deg)', boxShadow: '0 1px 2px rgba(0,0,0,0.12)' }} />
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 22px 10px 24px', borderRadius: 6, backgroundColor: '#FBF6EA', backgroundImage: `url(${staticFile('paper-grain.png')})`, backgroundBlendMode: 'multiply', backgroundSize: '300px', boxShadow: '0 10px 22px rgba(30,30,10,0.32), 0 1px 0 rgba(255,255,255,0.6) inset', border: '1px solid rgba(90,80,50,0.16)' }}>
-              <span style={{ fontWeight: 900, fontSize: 40, color, letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
+              <span style={{ fontWeight: 900, fontSize: s.tally[0].length > 3 ? 31 : 40, color, letterSpacing: s.tally[0].length > 3 ? '0.02em' : '0.06em', whiteSpace: 'nowrap' }}>
                 {dir > 0 ? '✓' : '✕'} {s.tally[dir > 0 ? 0 : 1]}
               </span>
               <span style={{ position: 'relative', display: 'block', width: 56, height: 66, overflow: 'hidden' }}>

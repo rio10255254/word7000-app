@@ -349,11 +349,14 @@ const SwipeCard = ({ map, back, badges, top, rect, state, t }: Shared & { state:
 };
 
 type Flight = { fling: number; dir: number; nth: number; from: { position: [number, number, number]; rotation: [number, number, number] } };
-/** Where each pile sits: off the phone's top corners, nearer the lens than the phone. */
-const PILE_Z = 3.5;
+/**
+ * Where each pile sits: beside the phone and behind it. Everything a card does happens nearer the
+ * lens than its pile (in the hand, in the air), so a pile can never show through a card.
+ */
+const PILE_Z = 1.1;
 const PILE_X = { 1: 944, [-1]: 136 } as Record<number, number>;
 const pileAt = (dir: number) => new THREE.Vector3(((PILE_X[dir] - 540) / FOCAL) * (CAM_Z - PILE_Z), ((960 - 474) / FOCAL) * (CAM_Z - PILE_Z), PILE_Z);
-const PILE_SCALE = 0.26;
+const PILE_SCALE = 0.4;
 const LEAN = [-0.1, 0.07, -0.03, 0.12, -0.07];
 
 /**
@@ -381,12 +384,11 @@ const FlyingCard = ({ map, back, badges, top, rect, flight, t, ghost = 0 }: Shar
   const s0 = new THREE.Vector3();
   phone.multiply(local).decompose(p0, q0, s0);
   // Where it comes to rest.
-  const p1 = pileAt(flight.dir).add(new THREE.Vector3(LEAN[flight.nth % 5] * 0.25, -flight.nth * 0.012, flight.nth * 0.006));
+  const p1 = pileAt(flight.dir).add(new THREE.Vector3(LEAN[flight.nth % 5] * 0.3, -flight.nth * 0.016, flight.nth * 0.01));
   const q1 = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, flight.dir < 0 ? PI : 0, LEAN[flight.nth % 5] * (flight.dir < 0 ? -1 : 1)));
   const pos = p0.clone().lerp(p1, e);
-  // It comes out to the piles' depth straight away and stays nearer the lens than they are until it
-  // lands, so a card in the air is always in front of the cards already down.
-  pos.z = p0.z + (p1.z - p0.z) * out(Math.min(1, u * 1.8)) + Math.sin(PI * u) * 0.42;
+  // It lifts towards the lens as it leaves, then falls away to the pile behind the phone.
+  pos.z += Math.sin(PI * Math.min(1, u * 1.4)) * 0.4;
   pos.y += Math.sin(PI * u) * 0.12;
   const quat = q0.clone().slerp(q1, e);
   const size = 1 + (PILE_SCALE - 1) * e;

@@ -11,7 +11,8 @@ import { Caption } from './Intro';
 import { ABOVE_CAPTIONS, CAPTION_TOP, Peek } from './Teaser';
 import { CountdownEnd, DaysStamp, StampCard } from './Countdown';
 import { Counter } from './props';
-import { Backdrop, Grade, InkFilters, Motes } from './finish';
+import { DeepBackdrop, Foreground, Grade, InkFilters, Motes } from './finish';
+import { Mascot, type Mood } from '../Mascot';
 import { Lift, PAL, PHONE, SCREEN_H, SCREEN_W, canvasTexture, colorAt, Phone3D, ScreenLayer, StudioLight, Tap3D, imageTexture, inOut, loadPhone, loadStudio, onScreen, out, ramp, roundedRect, usePrepared } from './three/kit';
 
 /**
@@ -41,7 +42,7 @@ const MID = ((960 - 825) / FOCAL) * CAM_Z;
 type Slot = { start: number; length: number };
 type Prop = { kind: 'counter'; slot: number; beat: number; from: [number, number]; at: [number, number]; tilt: number; label: string; unit: string; to: number };
 /** `cards`: screenshot and the row its card starts on. `rect`: the card's left, right and bottom, the same in every screenshot. `swipes`: slot, beat, direction, beats held before it is flung. */
-type Scene = { base: string; cards: [string, number][]; rect: [number, number, number]; look: number; swipes: [number, number, number, number][]; badges: [string, string]; back: string; tally: [string, string]; returns: string; props: Prop[] };
+type Scene = { base: string; cards: [string, number][]; rect: [number, number, number]; look: number; swipes: [number, number, number, number][]; badges: [string, string]; back: string; desk: [string, number][]; tally: [string, string]; returns: string; props: Prop[] };
 type Episode = { id: string; days: number; app: string; label: string; dayWords: [string, string]; note: string; outro: string; lines: { text: string }[]; scene: Scene };
 type Pose = { x: number; y: number; z: number; rx: number; ry: number; rz: number };
 type Key = { at: number; pose: Pose; ease?: (n: number) => number };
@@ -98,14 +99,14 @@ const useFilm = (id: string) => {
     { at: right + 1.4 * BEAT, pose: { x: 0, y: yCard(2.40, 940), z: 2.40, rx: 0.02, ry: PI * 2, rz: 0 }, ease: out },
     { at: first.grab, pose: { x: 0, y: yCard(2.45, 940), z: 2.45, rx: 0.02, ry: PI * 2, rz: 0 }, ease: (n) => n },
     // The phone leans the way the card goes, so the card stands off the glass.
-    { at: first.grab + 0.6, pose: { x: -0.1, y: yCard(2.30, 940), z: 2.30, rx: 0.1, ry: PI * 2 + 0.3, rz: -0.02 }, ease: out },
-    { at: first.fling, pose: { x: -0.1, y: yCard(2.35, 940), z: 2.35, rx: 0.1, ry: PI * 2 + 0.36, rz: -0.02 }, ease: (n) => n },
-    { at: first.fling + 0.5, pose: { x: -0.2, y: yCard(2.15, 940), z: 2.15, rx: 0.08, ry: PI * 2 + 0.46, rz: -0.03 }, ease: out },
+    { at: first.grab + 0.6, pose: { x: -0.04, y: yCard(2.30, 940), z: 2.30, rx: 0.1, ry: PI * 2 + 0.3, rz: -0.02 }, ease: out },
+    { at: first.fling, pose: { x: -0.04, y: yCard(2.35, 940), z: 2.35, rx: 0.1, ry: PI * 2 + 0.36, rz: -0.02 }, ease: (n) => n },
+    { at: first.fling + 0.5, pose: { x: -0.06, y: yCard(2.15, 940), z: 2.15, rx: 0.08, ry: PI * 2 + 0.46, rz: -0.03 }, ease: out },
     { at: second.grab, pose: { x: 0, y: yCard(2.40, 940), z: 2.40, rx: 0.03, ry: PI * 2, rz: 0 } },
-    { at: second.grab + 0.6, pose: { x: 0.1, y: yCard(2.30, 940), z: 2.30, rx: 0.1, ry: PI * 2 - 0.3, rz: 0.02 }, ease: out },
-    { at: second.fling, pose: { x: 0.1, y: yCard(2.35, 940), z: 2.35, rx: 0.1, ry: PI * 2 - 0.36, rz: 0.02 }, ease: (n) => n },
-    { at: second.fling + 0.5, pose: { x: 0.22, y: yCard(2.1, 940), z: 2.1, rx: 0.08, ry: PI * 2 - 0.5, rz: 0.03 }, ease: out },
-    { at: fast - 0.1, pose: { x: 0.2, y: yCard(2.15, 940), z: 2.15, rx: 0.08, ry: PI * 2 - 0.44, rz: 0.03 }, ease: (n) => n },
+    { at: second.grab + 0.6, pose: { x: 0.04, y: yCard(2.30, 940), z: 2.30, rx: 0.1, ry: PI * 2 - 0.3, rz: 0.02 }, ease: out },
+    { at: second.fling, pose: { x: 0.04, y: yCard(2.35, 940), z: 2.35, rx: 0.1, ry: PI * 2 - 0.36, rz: 0.02 }, ease: (n) => n },
+    { at: second.fling + 0.5, pose: { x: 0.06, y: yCard(2.1, 940), z: 2.1, rx: 0.08, ry: PI * 2 - 0.5, rz: 0.03 }, ease: out },
+    { at: fast - 0.1, pose: { x: 0.06, y: yCard(2.15, 940), z: 2.15, rx: 0.08, ry: PI * 2 - 0.44, rz: 0.03 }, ease: (n) => n },
     // Back a little and to three-quarters: the cards go quickly now.
     { at: fast + 0.5, pose: { x: 0.12, y: yCard(1.9, 960), z: 1.9, rx: 0.13, ry: PI * 2 - 0.34, rz: 0.02 }, ease: inOut },
     { at: end - 0.2, pose: { x: 0.06, y: yCard(2.0, 960), z: 2.0, rx: 0.1, ry: PI * 2 - 0.16, rz: 0.012 }, ease: (n) => n },
@@ -350,8 +351,9 @@ const SwipeCard = ({ map, back, badges, top, rect, state, t }: Shared & { state:
 type Flight = { fling: number; dir: number; nth: number; from: { position: [number, number, number]; rotation: [number, number, number] } };
 /** Where each pile sits: off the phone's top corners, nearer the lens than the phone. */
 const PILE_Z = 3.5;
-const pileAt = (dir: number) => new THREE.Vector3(((dir > 0 ? 806 : 262) - 540) / FOCAL * (CAM_Z - PILE_Z), ((960 - 452) / FOCAL) * (CAM_Z - PILE_Z), PILE_Z);
-const PILE_SCALE = 0.3;
+const PILE_X = { 1: 944, [-1]: 136 } as Record<number, number>;
+const pileAt = (dir: number) => new THREE.Vector3(((PILE_X[dir] - 540) / FOCAL) * (CAM_Z - PILE_Z), ((960 - 474) / FOCAL) * (CAM_Z - PILE_Z), PILE_Z);
+const PILE_SCALE = 0.26;
 const LEAN = [-0.1, 0.07, -0.03, 0.12, -0.07];
 
 /**
@@ -468,6 +470,28 @@ const Stage = ({ id }: { id: string }) => {
   );
 };
 
+/**
+ * 傻貓, watching from the corner the whole time: one cat that stays, whose
+ * face changes with each card and who hops when one lands.
+ */
+const Buddy = ({ film }: { film: ReturnType<typeof useFilm> }) => {
+  const { t, end, swipes, stampAt } = film;
+  const arrive = swipes[0].grab - 0.3;
+  if (t < arrive) return null;
+  const events: { at: number; mood: Mood; stay: boolean }[] = [...swipes.map((sw) => ({ at: sw.fling + FLIGHT, mood: (sw.dir > 0 ? 'happy' : 'annoyed') as Mood, stay: false })), { at: stampAt, mood: 'cheeky' as Mood, stay: true }];
+  const now = [...events].reverse().find((e) => t >= e.at);
+  const age = now ? t - now.at : 9;
+  const mood: Mood = now && (now.stay || age < 1.0) ? now.mood : 'smug';
+  const inP = ramp(t, arrive, arrive + 0.5, out) * (1 - ramp(t, end - 0.25, end + 0.1, inOut));
+  const hop = age < 0.6 ? Math.exp(-age * 7) * Math.sin(age * 17) : 0;
+  const squash = age < 0.3 ? Math.exp(-age * 12) * 0.07 : 0;
+  return (
+    <div style={{ position: 'absolute', left: -96 - (1 - inP) * 360, top: 1068 - hop * 30, transform: `rotate(${13 + hop * 3}deg) scale(${1 + squash}, ${1 - squash})`, transformOrigin: '30% 100%', filter: 'drop-shadow(0 18px 20px rgba(30,34,14,0.34))' }}>
+      <Mascot mood={mood} size={400} next />
+    </div>
+  );
+};
+
 export const Day5 = ({ id }: { id: string }) => {
   const frameNo = useCurrentFrame();
   const film = useFilm(id);
@@ -491,7 +515,7 @@ export const Day5 = ({ id }: { id: string }) => {
           </filter>
         </defs>
       </svg>
-      <Backdrop t={t} frame={frameNo} drift={(film.pose.y - MID) * 260} />
+      <DeepBackdrop t={t} frame={frameNo} drift={(film.pose.y - MID) * 260 + film.pose.x * 500} focus={lit} cards={s.desk.map(([src, top]) => (src ? { src: `${src}.jpg`, crop: [s.rect[0], top, s.rect[1] - s.rect[0], s.rect[2] - top] as [number, number, number, number] } : {}))} />
       <AbsoluteFill style={{ background: `radial-gradient(70% 46% at 50% 42%, rgba(255,244,214,${0.2 * lit}) 0%, rgba(255,244,214,0) 70%), radial-gradient(120% 90% at 50% 42%, rgba(0,0,0,0) 45%, rgba(26,30,12,${0.42 * lit}) 100%)` }} />
       <Motes t={t} />
 
@@ -552,25 +576,22 @@ export const Day5 = ({ id }: { id: string }) => {
         // The number rolls: the old one leaves upward as the new one arrives.
         const roll = age >= 0 && age < 0.28 ? 1 - out(age / 0.28) : 0;
         return (
-          <div key={dir} style={{ position: 'absolute', left: (dir > 0 ? 806 : 262) - 150, top: 236 + film.knock * 0.6, width: 300, opacity: show, transform: `translateY(${(1 - show) * -120}px) rotate(${dir > 0 ? 2.5 : -2.5}deg) scale(${1 + bump * 0.1})`, transformOrigin: '50% 50%' }}>
-            <div style={{ position: 'absolute', left: 110, top: -16, width: 80, height: 30, background: 'rgba(238,226,190,0.78)', transform: 'rotate(-3deg)', boxShadow: '0 1px 2px rgba(0,0,0,0.12)' }} />
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 22px 10px 24px', borderRadius: 6, backgroundColor: '#FBF6EA', backgroundImage: `url(${staticFile('paper-grain.png')})`, backgroundBlendMode: 'multiply', backgroundSize: '300px', boxShadow: '0 10px 22px rgba(30,30,10,0.32), 0 1px 0 rgba(255,255,255,0.6) inset', border: '1px solid rgba(90,80,50,0.16)' }}>
-              <span style={{ fontWeight: 900, fontSize: s.tally[0].length > 3 ? 31 : 40, color, letterSpacing: s.tally[0].length > 3 ? '0.02em' : '0.06em', whiteSpace: 'nowrap' }}>
+          <div key={dir} style={{ position: 'absolute', left: PILE_X[dir] - 118, top: 244 + film.knock * 0.6, width: 236, opacity: show, transform: `translateY(${(1 - show) * -120}px) rotate(${dir > 0 ? 2.5 : -2.5}deg) scale(${1 + bump * 0.1})`, transformOrigin: '50% 50%' }}>
+            <div style={{ position: 'absolute', left: 78, top: -16, width: 80, height: 30, background: 'rgba(238,226,190,0.78)', transform: 'rotate(-3deg)', boxShadow: '0 1px 2px rgba(0,0,0,0.12)' }} />
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 14px 8px 16px', borderRadius: 6, backgroundColor: '#FBF6EA', backgroundImage: `url(${staticFile('paper-grain.png')})`, backgroundBlendMode: 'multiply', backgroundSize: '300px', boxShadow: '0 10px 22px rgba(30,30,10,0.32), 0 1px 0 rgba(255,255,255,0.6) inset', border: '1px solid rgba(90,80,50,0.16)' }}>
+              <span style={{ fontWeight: 900, fontSize: s.tally[0].length > 3 ? 25 : 34, color, letterSpacing: s.tally[0].length > 3 ? '0.01em' : '0.04em', whiteSpace: 'nowrap' }}>
                 {dir > 0 ? '✓' : '✕'} {s.tally[dir > 0 ? 0 : 1]}
               </span>
-              <span style={{ position: 'relative', display: 'block', width: 56, height: 66, overflow: 'hidden' }}>
-                <span style={{ position: 'absolute', inset: 0, textAlign: 'right', fontFamily: SERIF, fontWeight: 800, fontSize: 64, lineHeight: '66px', color: '#2B2620', transform: `translateY(${roll * 66}px)` }}>{pile.length}</span>
-                {roll > 0 ? <span style={{ position: 'absolute', inset: 0, textAlign: 'right', fontFamily: SERIF, fontWeight: 800, fontSize: 64, lineHeight: '66px', color: '#2B2620', transform: `translateY(${(roll - 1) * 66}px)` }}>{pile.length - 1}</span> : null}
+              <span style={{ position: 'relative', display: 'block', width: 44, height: 58, overflow: 'hidden' }}>
+                <span style={{ position: 'absolute', inset: 0, textAlign: 'right', fontFamily: SERIF, fontWeight: 800, fontSize: 54, lineHeight: '58px', color: '#2B2620', transform: `translateY(${roll * 58}px)` }}>{pile.length}</span>
+                {roll > 0 ? <span style={{ position: 'absolute', inset: 0, textAlign: 'right', fontFamily: SERIF, fontWeight: 800, fontSize: 54, lineHeight: '58px', color: '#2B2620', transform: `translateY(${(roll - 1) * 58}px)` }}>{pile.length - 1}</span> : null}
               </span>
             </div>
           </div>
         );
       })}
-      {/* 傻貓 has an opinion about every card. */}
-      {film.swipes.map((sw, i) => (
-        <Peek key={i} t={t} at={sw.fling + 0.15} until={sw.fling + 1.35} side={sw.dir > 0 ? 1 : -1} mood={sw.dir > 0 ? 'happy' : 'annoyed'} y={1010} outAt={sw.fling + 0.95} />
-      ))}
-      <Peek t={t} at={film.back + 0.5} until={end + 0.4} side={1} mood="cheeky" y={1010} outAt={end - 0.15} />
+      <Buddy film={film} />
+      <Foreground t={t} drift={(film.pose.y - MID) * 260 + film.pose.x * 500} show={lit} />
       <Motes t={t} front />
       {episode.lines.map((line, i) => (
         <Caption key={i} text={line.text} start={timing.slots[i].start} length={timing.slots[i].length} t={t} first={i === 0} label={episode.label} top={CAPTION_TOP} size={62} glass />

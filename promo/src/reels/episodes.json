@@ -2338,7 +2338,29 @@
      "認識",
      "不熟"
     ],
-    "returns": "又來了"
+    "returns": "又來了",
+    "desk": [
+     [
+      "cards/zh-extend",
+      547
+     ],
+     [
+      "",
+      0
+     ],
+     [
+      "next/n2-card",
+      547
+     ],
+     [
+      "cards/zh-think",
+      478
+     ],
+     [
+      "",
+      0
+     ]
+    ]
    }
   },
   {
@@ -2527,7 +2549,29 @@
      "Know it",
      "Not yet"
     ],
-    "returns": "Back again"
+    "returns": "Back again",
+    "desk": [
+     [
+      "next/en-n2-card",
+      547
+     ],
+     [
+      "",
+      0
+     ],
+     [
+      "cards/en-nali",
+      478
+     ],
+     [
+      "cards/en-zhege",
+      478
+     ],
+     [
+      "",
+      0
+     ]
+    ]
    }
   },
   {

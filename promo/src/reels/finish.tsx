@@ -69,6 +69,80 @@ export const Backdrop = ({ t, frame, drift = 0 }: { t: number; frame: number; dr
   );
 };
 
+/** A thing lying on the desk behind the subject: `src` cropped to (x, y, w, h) of a 1206-wide screenshot, or a plain ruled sheet. */
+export type DeskCard = { src?: string; crop?: [number, number, number, number] };
+
+/**
+ * The same desk with depth to it, for a subject held near the lens. Far:
+ * the backdrop, thrown out of focus by `focus` (0–1). Middle: cards lying
+ * about on the desk, softer the further they are, sliding against the
+ * backdrop as the subject moves (`drift`). Then daylight through a
+ * window in slow bands, and a darker edge to the frame.
+ */
+export const DeepBackdrop = ({ t, frame, drift = 0, focus = 1, cards = [] }: { t: number; frame: number; drift?: number; focus?: number; cards?: DeskCard[] }) => {
+  const spots: { x: number; y: number; r: number; k: number; depth: number }[] = [
+    { x: -150, y: 1010, r: -19, k: 0.33, depth: 0.5 },
+    { x: 800, y: 560, r: 15, k: 0.3, depth: 0.8 },
+    { x: 700, y: 1360, r: -9, k: 0.34, depth: 0.6 },
+    { x: -70, y: 330, r: 9, k: 0.27, depth: 1 },
+    { x: 380, y: 30, r: -5, k: 0.26, depth: 1.1 },
+  ];
+  return (
+    <AbsoluteFill style={{ overflow: 'hidden' }}>
+      <AbsoluteFill style={{ filter: `blur(${2 + focus * 7}px)`, transform: 'scale(1.06)' }}>
+        <Backdrop t={t} frame={frame} drift={drift} />
+      </AbsoluteFill>
+      {cards.slice(0, spots.length).map((card, i) => {
+        const at = spots[i];
+        const [cx, cy, cw, ch] = card.crop ?? [0, 0, 1102, 1760];
+        const slide = drift * 0.1 * (1.4 - at.depth);
+        return (
+          <div
+            key={i}
+            style={{
+              position: 'absolute',
+              left: at.x - slide + Math.sin(t * 0.3 + i) * 5,
+              top: at.y + Math.cos(t * 0.26 + i * 2) * 6,
+              width: cw * at.k,
+              height: ch * at.k,
+              borderRadius: 5,
+              backgroundColor: '#F4EEDD',
+              backgroundImage: card.src ? `url(${staticFile(card.src)})` : 'repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 27px, rgba(110,100,80,0.2) 28px)',
+              backgroundSize: card.src ? `${1206 * at.k}px auto` : undefined,
+              backgroundPosition: card.src ? `${-cx * at.k}px ${-cy * at.k}px` : undefined,
+              transform: `rotate(${at.r + Math.sin(t * 0.22 + i) * 0.8}deg)`,
+              boxShadow: '0 18px 30px rgba(26,30,10,0.34), 0 2px 4px rgba(26,30,10,0.25)',
+              filter: `blur(${4 + focus * 5 * (0.6 + at.depth)}px) brightness(${0.8 - at.depth * 0.08}) saturate(0.85)`,
+              opacity: 0.86,
+            }}
+          />
+        );
+      })}
+      {/* Daylight through a window: soft bands that creep across the desk. */}
+      <AbsoluteFill
+        style={{
+          background: 'repeating-linear-gradient(112deg, rgba(255,244,206,0) 0px, rgba(255,244,206,0.5) 150px, rgba(255,244,206,0.5) 230px, rgba(255,244,206,0) 380px, rgba(255,244,206,0) 620px)',
+          backgroundPosition: `${t * 16}px 0`,
+          mixBlendMode: 'soft-light',
+          filter: 'blur(26px)',
+          transform: 'scale(1.15)',
+          opacity: 0.45,
+        }}
+      />
+      <AbsoluteFill style={{ background: `radial-gradient(90% 70% at 50% 44%, rgba(18,22,8,0) 40%, rgba(18,22,8,${0.2 + focus * 0.22}) 100%)` }} />
+    </AbsoluteFill>
+  );
+};
+
+/** Paper close to the lens, far out of focus, at the edges of the frame: it moves the other way from the desk. */
+export const Foreground = ({ t, drift = 0, show = 1 }: { t: number; drift?: number; show?: number }) =>
+  show <= 0 ? null : (
+    <AbsoluteFill style={{ pointerEvents: 'none', opacity: show }}>
+      <div style={{ position: 'absolute', left: -330 + drift * 0.22 + Math.sin(t * 0.37) * 14, top: 560 + Math.cos(t * 0.3) * 18, width: 470, height: 640, borderRadius: 14, background: 'linear-gradient(120deg, #FBF6EA, #E9DFC6)', transform: `rotate(${17 + Math.sin(t * 0.25) * 1.5}deg)`, filter: 'blur(30px)', opacity: 0.34 }} />
+      <div style={{ position: 'absolute', right: -360 + drift * 0.3 + Math.cos(t * 0.31) * 16, top: -210 + Math.sin(t * 0.27) * 14, width: 560, height: 520, borderRadius: 14, background: 'linear-gradient(200deg, #F6EFDD, #DCCFAE)', transform: `rotate(${-24 + Math.cos(t * 0.21) * 1.5}deg)`, filter: 'blur(34px)', opacity: 0.3 }} />
+    </AbsoluteFill>
+  );
+
 /** The lens and the vignette over everything, for one look across the whole piece. */
 export const Grade = ({ frame }: { frame: number }) => (
   <>

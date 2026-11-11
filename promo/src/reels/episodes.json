@@ -3015,6 +3015,471 @@
     ],
     "voiceTag": "Real voice"
    }
+  },
+  {
+   "id": "d3",
+   "series": "倒數 3 天",
+   "app": "WordCat 單字貓",
+   "label": "傻貓 SillyCat",
+   "voice": {
+    "engine": "elevenlabs",
+    "voiceId": "fQj4gJSexpu8RDE2Ii5m",
+    "model": "eleven_v4",
+    "language": "zh"
+   },
+   "dayWords": [
+    "還有",
+    "天"
+   ],
+   "note": "11.16 App Store 上架",
+   "outro": "追蹤我們，上架當天通知你",
+   "outroSay": "還有三天。",
+   "kind": "day3d",
+   "days": 3,
+   "launch": "11.16",
+   "endBeats": 7,
+   "endStamp": true,
+   "endStampAt": 0.75,
+   "grooveFrom": 1,
+   "outroAt": 1.0,
+   "lines": [
+    {
+     "text": "老師發的講義，\n**要一個一個打**？",
+     "say": "[teasing] 老師發的講義，要一個一個打？",
+     "beats": 9,
+     "cues": [
+      [
+       0.3,
+       "pop"
+      ],
+      [
+       2.2,
+       "thud"
+      ]
+     ]
+    },
+    {
+     "text": "拍一下。\n**手寫的也讀得懂**。",
+     "say": "拍一下。手寫的也讀得懂。",
+     "beats": 8,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       2,
+       "tap"
+      ],
+      [
+       2.1,
+       "pop"
+      ],
+      [
+       2.6,
+       "whoosh"
+      ]
+     ]
+    },
+    {
+     "text": "一個一個，\n**變成單字卡**。",
+     "say": "一個一個，變成單字卡。",
+     "beats": 8,
+     "cues": [
+      [
+       1.6,
+       "pop"
+      ],
+      [
+       3.2,
+       "pop"
+      ],
+      [
+       4.8,
+       "pop"
+      ],
+      [
+       1.75,
+       "tick"
+      ],
+      [
+       3.35,
+       "tick"
+      ],
+      [
+       4.95,
+       "tick"
+      ]
+     ]
+    },
+    {
+     "text": "存起來，\n**馬上開始背**。",
+     "say": "存起來，馬上開始背。",
+     "beats": 10,
+     "cues": [
+      [
+       1.0,
+       "tap"
+      ],
+      [
+       1.6,
+       "ding"
+      ],
+      [
+       4.8,
+       "whoosh"
+      ],
+      [
+       6.2,
+       "pop"
+      ]
+     ]
+    }
+   ],
+   "scene": {
+    "review": "scan/zh-review",
+    "header": [
+     40,
+     650,
+     700,
+     760
+    ],
+    "rows": [
+     [
+      50,
+      790,
+      1158,
+      1000
+     ],
+     [
+      50,
+      1010,
+      1158,
+      1235
+     ],
+     [
+      50,
+      1245,
+      1158,
+      1470
+     ]
+    ],
+    "land": [
+     1.6,
+     3.2,
+     4.8
+    ],
+    "save": [
+     50,
+     2385,
+     1158,
+     2545
+    ],
+    "look": 1500,
+    "saved": "scan/zh-saved",
+    "savedLift": [
+     60,
+     410,
+     1150,
+     1000
+    ],
+    "card": "scan/zh-card",
+    "cardCrop": [
+     52,
+     478,
+     1154,
+     2288
+    ],
+    "sheet": {
+     "title": "Unit 5 單字",
+     "note": "週五小考！",
+     "rows": [
+      [
+       "objectively",
+       "客觀地"
+      ],
+      [
+       "objective",
+       "目標"
+      ],
+      [
+       "carefully",
+       "小心地"
+      ]
+     ]
+    },
+    "premium": "Premium",
+    "desk": [
+     [
+      "scan/zh-card",
+      52,
+      478,
+      1102,
+      1810
+     ],
+     [
+      "",
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      "",
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      "scan/zh-review",
+      50,
+      780,
+      1108,
+      700
+     ],
+     [
+      "",
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "d3-en",
+   "series": "3 days to go",
+   "app": "WordCat",
+   "label": "SillyCat",
+   "voice": {
+    "engine": "elevenlabs",
+    "voiceId": "N2lVS1w4EtoT3dr4eOWO",
+    "model": "eleven_v4",
+    "language": "en"
+   },
+   "dayWords": [
+    "",
+    "days to go"
+   ],
+   "note": "Out 11.16 on the App Store",
+   "outro": "Follow us. We'll tell you when it's out.",
+   "outroSay": "Three days.",
+   "kind": "day3d",
+   "days": 3,
+   "launch": "11.16",
+   "endBeats": 7,
+   "endStamp": true,
+   "endStampAt": 0.75,
+   "grooveFrom": 1,
+   "outroAt": 1.0,
+   "lines": [
+    {
+     "text": "A word list on paper?\n**Don't type it.**",
+     "say": "[teasing] A word list on paper? Don't type it.",
+     "beats": 9,
+     "cues": [
+      [
+       0.3,
+       "pop"
+      ],
+      [
+       2.2,
+       "thud"
+      ]
+     ]
+    },
+    {
+     "text": "Snap it.\n**Even handwriting.**",
+     "say": "Snap it. Even handwriting.",
+     "beats": 8,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       2,
+       "tap"
+      ],
+      [
+       2.1,
+       "pop"
+      ],
+      [
+       2.6,
+       "whoosh"
+      ]
+     ]
+    },
+    {
+     "text": "Line by line,\n**into flashcards.**",
+     "say": "Line by line, into flashcards.",
+     "beats": 8,
+     "cues": [
+      [
+       1.2,
+       "pop"
+      ],
+      [
+       2.6,
+       "pop"
+      ],
+      [
+       4.0,
+       "pop"
+      ],
+      [
+       5.4,
+       "pop"
+      ],
+      [
+       1.35,
+       "tick"
+      ],
+      [
+       2.75,
+       "tick"
+      ],
+      [
+       4.15,
+       "tick"
+      ],
+      [
+       5.55,
+       "tick"
+      ]
+     ]
+    },
+    {
+     "text": "Saved.\n**Not a word typed.**",
+     "say": "Saved. Not a word typed.",
+     "beats": 10,
+     "cues": [
+      [
+       1.0,
+       "tap"
+      ],
+      [
+       1.6,
+       "ding"
+      ],
+      [
+       3.0,
+       "pop"
+      ]
+     ]
+    }
+   ],
+   "scene": {
+    "review": "scan/en-review",
+    "header": [
+     40,
+     370,
+     700,
+     445
+    ],
+    "rows": [
+     [
+      50,
+      481,
+      1158,
+      690
+     ],
+     [
+      50,
+      700,
+      1158,
+      925
+     ],
+     [
+      50,
+      935,
+      1158,
+      1160
+     ],
+     [
+      50,
+      1170,
+      1158,
+      1395
+     ]
+    ],
+    "land": [
+     1.2,
+     2.6,
+     4.0,
+     5.4
+    ],
+    "save": [
+     50,
+     2305,
+     1158,
+     2465
+    ],
+    "look": 1250,
+    "sheet": {
+     "title": "Lesson 3 生詞",
+     "note": "quiz Fri!",
+     "rows": [
+      [
+       "醫院",
+       "hospital"
+      ],
+      [
+       "藥局",
+       "pharmacy"
+      ],
+      [
+       "發燒",
+       "fever"
+      ],
+      [
+       "掛號",
+       "register"
+      ]
+     ]
+    },
+    "premium": "Premium",
+    "desk": [
+     [
+      "scan/en-review",
+      50,
+      470,
+      1108,
+      930
+     ],
+     [
+      "",
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      "",
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      "scan/en-review",
+      50,
+      470,
+      1108,
+      700
+     ],
+     [
+      "",
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   }
   }
  ]
 }

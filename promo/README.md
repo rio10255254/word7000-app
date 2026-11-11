@@ -335,3 +335,25 @@ Know the words but freeze when it's time to talk?
 Twenty real-life scenes, starting with getting a table. Real recorded voices: listen first, then say it yourself and watch it light up.
 Out 11/16 on the App Store. Follow so you don't miss it.
 #WordCat #LearnChinese #Mandarin #SpeakChinese #LanguageLearning
+
+### 11/13｜還有 3 天：智慧掃描（Premium）（`d3`／`d3-en`，`src/reels/Day3.tsx`）
+
+一張手寫的單字紙拍在桌上，手機從旁邊升起、朝著它。閃一下，一道光從上往下讀過紙面，讀到的每一行被螢光筆劃過；接著每一行離開紙面飛到手機上，落進 App 複查頁真實的那一列，那一列從玻璃上彈起。紙滑走，手機回到中間，點「存入字庫」，進到已存入的畫面並迸出金色火花；中文版再轉一圈，回來是剛掃進來的第一張單字卡。全程右上角有 Premium 紙籤。紙是為這支片做的道具，上面的字和截圖一致；手機上的畫面來源見 `public/scan/SOURCE.md`。
+
+**IG 貼文（中）**
+
+還有 3 天 🐱
+老師發的單字講義，還在一個一個打？
+拍一下就好。印刷的、手寫的我都讀得懂，一行一行幫你變成單字卡，存起來馬上開始背。
+（掃描是 Premium 功能；背單字永遠免費。）
+11/16 App Store 上架，追蹤我們，上架當天通知你。
+#單字貓 #WordCat #背單字 #英文單字 #讀書方法
+
+**IG post (EN)**
+
+3 days to go 🐱
+A vocabulary list on paper? Don't type it.
+Snap a photo. Printed or handwritten, I read it line by line and turn it into flashcards.
+(Scanning is a Premium feature. Studying words is always free.)
+Out 11/16 on the App Store. Follow so you don't miss it.
+#WordCat #LearnChinese #Mandarin #Flashcards #StudyTips

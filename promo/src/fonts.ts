@@ -7,6 +7,7 @@ import '@fontsource/noto-serif/800.css';
 import '@fontsource/caveat/400.css';
 import '@fontsource/caveat/600.css';
 import '@fontsource/noto-serif-tc/900.css';
+import '@fontsource/iansui/400.css';
 import { continueRender, delayRender } from 'remotion';
 import reels from './reels/episodes.json';
 
@@ -18,6 +19,8 @@ export const SERIF = '"Noto Serif", "New York", Georgia, serif';
 export const SERIF_TC = '"Noto Serif TC", "Songti TC", serif';
 /** Handwriting on a scanned word list. */
 export const HAND = '"Caveat", cursive';
+/** Chinese written by hand (芫荽, a Taiwanese handwriting face). */
+export const HAND_TC = '"Iansui", "Caveat", cursive';
 
 // Every glyph on screen, so the matching unicode-range subsets are fetched
 // before the first frame is captured. Regenerate when the copy changes.
@@ -33,6 +36,7 @@ Promise.all([
   ...['400', '700', '800'].map((weight) => document.fonts.load(`${weight} 64px "Noto Serif"`, LATIN + 'əˈ\'')),
   ...['400', '600'].map((weight) => document.fonts.load(`${weight} 64px "Caveat"`, LATIN)),
   document.fonts.load('900 64px "Noto Serif TC"', REELS),
+  document.fonts.load('400 64px "Iansui"', REELS),
 ])
   .then(() => continueRender(handle))
   .catch((error) => {

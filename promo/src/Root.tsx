@@ -3,6 +3,7 @@ import { FULL_DURATION, Full } from './Full';
 import { Intro } from './reels/Intro';
 import { Teaser } from './reels/Teaser';
 import { Countdown } from './reels/Countdown';
+import { Day3 } from './reels/Day3';
 import { Day4 } from './reels/Day4';
 import { Day5 } from './reels/Day5';
 import { Day6 } from './reels/Day6';
@@ -17,7 +18,7 @@ export const Root = () => (
       <Composition
         key={e.id}
         id={`Reel-${e.id}`}
-        component={e.id.startsWith('d6') ? Day6 : e.id.startsWith('d5') ? Day5 : e.id.startsWith('d4') ? Day4 : e.id.startsWith('cd5') ? PathDay : e.id.startsWith('cd') ? Countdown : e.id.startsWith('teaser') ? Teaser : e.id.startsWith('ep01') ? Intro : Reel}
+        component={e.id.startsWith('d6') ? Day6 : e.id.startsWith('d5') ? Day5 : e.id.startsWith('d4') ? Day4 : e.id.startsWith('d3') ? Day3 : e.id.startsWith('cd5') ? PathDay : e.id.startsWith('cd') ? Countdown : e.id.startsWith('teaser') ? Teaser : e.id.startsWith('ep01') ? Intro : Reel}
         defaultProps={{ id: e.id }}
         durationInFrames={reelFrames(e.id)}
         fps={REEL_FPS}

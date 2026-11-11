@@ -2182,16 +2182,12 @@
        "tap"
       ],
       [
-       2.2,
+       5,
        "whoosh"
       ],
       [
-       3,
+       5.4,
        "ding"
-      ],
-      [
-       5.5,
-       "pop"
       ]
      ]
     },
@@ -2205,24 +2201,16 @@
        "tap"
       ],
       [
-       1.7,
-       "whoosh"
-      ],
-      [
-       2.5,
-       "wrong"
-      ],
-      [
        4,
        "whoosh"
       ],
       [
-       4.6,
+       4.5,
        "flip"
       ],
       [
-       6,
-       "whoosh"
+       4.8,
+       "wrong"
       ]
      ]
     },
@@ -2232,74 +2220,117 @@
      "beats": 8,
      "cues": [
       [
-       1.3,
-       "pop"
+       0,
+       "whoosh"
       ],
       [
-       1.6,
-       "pop"
+       1,
+       "tap"
       ],
       [
-       2.2,
-       "tick"
-      ],
-      [
-       2.4,
-       "tick"
+       1.8,
+       "whoosh"
       ],
       [
        2.6,
+       "tap"
+      ],
+      [
+       3.4,
+       "whoosh"
+      ],
+      [
+       4,
        "tick"
       ],
       [
-       2.8,
+       4.2,
        "tick"
       ],
       [
-       3.5,
-       "pop"
+       4.4,
+       "tick"
       ],
       [
-       5,
+       4.6,
+       "tick"
+      ],
+      [
+       5.6,
        "ding"
       ]
      ]
     }
    ],
    "scene": {
-    "card": "next/n2-card",
-    "cardCrop": [
-     56,
-     540,
-     1164,
-     2300
+    "base": "cards/zh-ticket",
+    "cards": [
+     [
+      "cards/zh-ticket",
+      478
+     ],
+     [
+      "cards/zh-think",
+      478
+     ],
+     [
+      "v210/card-answer",
+      478
+     ],
+     [
+      "cards/zh-extend",
+      547
+     ],
+     [
+      "next/n2-card",
+      547
+     ]
     ],
-    "look": 1420,
+    "rect": [
+     52,
+     1154,
+     2288
+    ],
+    "look": 1400,
+    "swipes": [
+     [
+      1,
+      2,
+      1,
+      3
+     ],
+     [
+      2,
+      1.5,
+      -1,
+      2.5
+     ],
+     [
+      3,
+      1,
+      1,
+      0.8
+     ],
+     [
+      3,
+      2.6,
+      -1,
+      0.8
+     ]
+    ],
     "badges": [
      "認識",
      "不熟"
     ],
     "back": "會再回來",
-    "today": "next/n1-today",
-    "todayLook": 1150,
-    "todayLifts": [
-     [
-      50,
-      520,
-      1160,
-      2005,
-      0.3,
-      1.2
-     ]
-    ],
     "props": [
      {
       "kind": "counter",
       "slot": 3,
-      "beat": 2.0,
+      "beat": 3.6,
       "from": [
-       605,
-       1010
+       603,
+       1400
       ],
       "at": [
        70,
@@ -2365,16 +2396,12 @@
        "tap"
       ],
       [
-       2.2,
+       5,
        "whoosh"
       ],
       [
-       3,
+       5.4,
        "ding"
-      ],
-      [
-       5.5,
-       "pop"
       ]
      ]
     },
@@ -2388,24 +2415,16 @@
        "tap"
       ],
       [
-       1.7,
-       "whoosh"
-      ],
-      [
-       2.5,
-       "wrong"
-      ],
-      [
        4,
        "whoosh"
       ],
       [
-       4.6,
+       4.5,
        "flip"
       ],
       [
-       6,
-       "whoosh"
+       4.8,
+       "wrong"
       ]
      ]
     },
@@ -2415,74 +2434,99 @@
      "beats": 8,
      "cues": [
       [
-       1.3,
-       "pop"
+       0,
+       "whoosh"
       ],
       [
-       1.6,
-       "pop"
+       1,
+       "tap"
       ],
       [
-       2.2,
+       1.8,
+       "whoosh"
+      ],
+      [
+       4,
        "tick"
       ],
       [
-       2.4,
+       4.2,
        "tick"
       ],
       [
-       2.6,
+       4.4,
        "tick"
       ],
       [
-       2.8,
+       4.6,
        "tick"
       ],
       [
-       3.5,
-       "pop"
-      ],
-      [
-       5,
+       5.6,
        "ding"
       ]
      ]
     }
    ],
    "scene": {
-    "card": "next/en-n2-card",
-    "cardCrop": [
-     56,
-     540,
-     1164,
-     2300
+    "base": "cards/en-zhege",
+    "cards": [
+     [
+      "cards/en-zhege",
+      478
+     ],
+     [
+      "cards/en-nali",
+      478
+     ],
+     [
+      "cards/en-zheli",
+      547
+     ],
+     [
+      "next/en-n2-card",
+      547
+     ]
     ],
-    "look": 1420,
+    "rect": [
+     52,
+     1154,
+     2288
+    ],
+    "look": 1400,
+    "swipes": [
+     [
+      1,
+      2,
+      1,
+      3
+     ],
+     [
+      2,
+      1.5,
+      -1,
+      2.5
+     ],
+     [
+      3,
+      1,
+      1,
+      0.8
+     ]
+    ],
     "badges": [
      "Know it",
      "Not yet"
     ],
     "back": "It comes back",
-    "today": "next/en-n1-today",
-    "todayLook": 1150,
-    "todayLifts": [
-     [
-      50,
-      520,
-      1160,
-      2005,
-      0.3,
-      1.2
-     ]
-    ],
     "props": [
      {
       "kind": "counter",
       "slot": 3,
-      "beat": 2.0,
+      "beat": 3.6,
       "from": [
-       605,
-       1010
+       603,
+       1400
       ],
       "at": [
        70,

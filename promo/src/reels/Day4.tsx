@@ -9,9 +9,10 @@ import { REEL_FPS } from './Reel';
 import { Caption } from './Intro';
 import { ABOVE_CAPTIONS, CAPTION_TOP, Peek } from './Teaser';
 import { CountdownEnd, DaysStamp, StampCard } from './Countdown';
-import { Backdrop, Grade, InkFilters, Motes } from './finish';
+import { Burst, DeepBackdrop, Foreground, Grade, InkFilters, Motes } from './finish';
+import { Mascot, type Mood } from '../Mascot';
 import waves from './waves.json';
-import { Lift, PAL, PHONE, SCREEN_H, SCREEN_W, colorAt, Phone3D, ScreenLayer, StudioLight, Tap3D, imageTexture, inOut, loadPhone, loadStudio, onScreen, out, ramp, usePrepared } from './three/kit';
+import { Lift, PAL, PHONE, SCREEN_H, SCREEN_W, canvasTexture, colorAt, Phone3D, ScreenLayer, StudioLight, Tap3D, imageTexture, inOut, loadPhone, loadStudio, onScreen, out, ramp, usePrepared } from './three/kit';
 
 /**
  * 11/12, four days to go: speaking, with real voices.
@@ -36,7 +37,7 @@ const MID = ((960 - 825) / FOCAL) * CAM_Z;
 
 type Slot = { start: number; length: number };
 type Crop = [number, number, number, number];
-type Scene = { map: string; mapLook: number; mapLifts: [number, number, number, number, number, number][]; talk: [string, string]; talkLook: number; doneLook: number; server: Crop; reply: Crop; replyDone: Crop; score: Crop };
+type Scene = { map: string; mapLook: number; mapLifts: [number, number, number, number, number, number][]; talk: [string, string]; talkLook: number; doneLook: number; server: Crop; reply: Crop; replyDone: Crop; score: Crop; desk: [string, number, number, number, number][]; voiceTag: string };
 type Episode = { id: string; days: number; app: string; label: string; dayWords: [string, string]; note: string; outro: string; lines: { text: string; clips?: [number, string, number][] }[]; scene: Scene };
 type Pose = { x: number; y: number; z: number; rx: number; ry: number; rz: number };
 type Key = { at: number; pose: Pose; ease?: (n: number) => number };
@@ -131,28 +132,45 @@ const useFilm = (id: string) => {
   const glare = [rise + 1.75, spin + 0.5, scored + 0.5].reduce((g, start) => (t >= start && t < start + 0.9 ? (t - start) / 0.9 : g), -1);
   // The room goes quiet for the recordings.
   const hush = Math.max(up(heard), up(said, -0.1));
-  return { t, episode, s, timing, at, end, rise, pose, turning, project, glare, shadow, onTalk, mapLifts, talk, dim, heard, said, scored, hush };
+  const landed = scored + 0.95;
+  const knock = t >= landed && t < landed + 0.35 ? Math.exp(-(t - landed) * 14) * Math.cos((t - landed) * 60) * 9 : 0;
+  return { t, episode, s, timing, at, end, rise, pose, turning, project, glare, shadow, onTalk, mapLifts, talk, dim, heard, said, scored, hush, landed, knock, spin };
 };
 
-const BARS = 34;
-/** A recording as a wave over its bubble: each bar is how loud it was a moment ago, so the sound travels along the row. */
-const Wave = ({ crop, lift, clip, t, color }: { crop: Crop; lift: number; clip: { start: number; length: number; env: number[] }; t: number; color: string }) => {
+const BARS = 40;
+const capsule = canvasTexture(32, 160, (ctx, w, h) => {
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.roundRect(4, 2, w - 8, h - 4, (w - 8) / 2);
+  ctx.fill();
+});
+/**
+ * A recording as a wave over its bubble. Each bar is how loud it was a
+ * moment ago, above and below a centre line, so the sound travels along
+ * the row; the newest bars are the brightest.
+ */
+const Wave = ({ crop, lift, clip, t, color, below = false }: { crop: Crop; lift: number; clip: { start: number; length: number; env: number[] }; t: number; color: string; below?: boolean }) => {
   const age = t - clip.start;
-  if (age < -0.1 || age > clip.length + 0.7 || lift <= 0.001) return null;
-  const [x0, y0, x1] = crop;
+  if (age < -0.25 || age > clip.length + 0.8 || lift <= 0.001) return null;
+  const [x0, y0, x1, y1] = crop;
   const w = ((x1 - x0) / SCREEN_W) * PHONE.w;
-  const [cx, top, z] = onScreen((x0 + x1) / 2, y0, 0.003);
-  const step = (w * 0.92) / BARS;
+  // Over the bubble, or under it when something is already written above.
+  const [cx, edge, z] = onScreen((x0 + x1) / 2, below ? y1 : y0, 0.003);
+  const top = below ? edge - 0.21 : edge;
+  const span = w * 0.94;
+  const step = span / BARS;
+  const show = ramp(t, clip.start - 0.25, clip.start, out) * (1 - ramp(t, clip.start + clip.length + 0.4, clip.start + clip.length + 0.8, inOut));
   return (
-    <group position={[cx - (w * 0.92) / 2, top + 0.035, z + lift]}>
+    <group position={[cx - span / 2, top + 0.105, z + lift]}>
       {Array.from({ length: BARS }, (_, i) => {
-        const at = age - i * 0.016;
+        const at = age - i * 0.014;
         const amp = at < 0 ? 0 : (clip.env[Math.floor(at * 60)] ?? 0);
-        const h = 0.012 + amp * 0.2;
+        const h = 0.014 + amp * 0.17;
+        const fresh = Math.max(0, 1 - i / 14);
         return (
-          <mesh key={i} position={[(i + 0.5) * step, h / 2, 0]} scale={[step * 0.55, h, 1]} renderOrder={6}>
+          <mesh key={i} position={[(i + 0.5) * step, 0, 0]} scale={[step * 0.6, h, 1]} renderOrder={6}>
             <planeGeometry args={[1, 1]} />
-            <meshBasicMaterial color={color} transparent opacity={0.35 + 0.65 * Math.min(1, amp * 2.2)} depthWrite={false} toneMapped={false} />
+            <meshBasicMaterial map={capsule} color={color} transparent opacity={show * (0.3 + 0.45 * Math.min(1, amp * 2.4) + 0.25 * fresh * Math.min(1, amp * 3))} depthWrite={false} toneMapped={false} />
           </mesh>
         );
       })}
@@ -182,7 +200,7 @@ const Stage = ({ id }: { id: string }) => {
               <Lift map={maps.shadowing} crop={s.server} lift={film.talk.server} ground={maps.talkGround[0]} />
               <Lift map={maps.shadowing} crop={s.reply} lift={film.talk.reply} ground={maps.talkGround[1]} />
               <Wave crop={s.server} lift={film.talk.server * 1.06} clip={film.heard} t={t} color={PAL.clay} />
-              <Wave crop={s.reply} lift={film.talk.reply * 1.06} clip={film.said} t={t} color={PAL.sage} />
+              <Wave crop={s.reply} lift={film.talk.reply * 1.06} clip={film.said} t={t} color={PAL.sage} below />
               <Tap3D t={t} at={film.heard.start - 0.2} x={s.server[2] - 50} y={(s.server[1] + s.server[3]) / 2 - 20} />
               <Tap3D t={t} at={film.said.start - 0.3} x={603} y={2290} />
             </>
@@ -197,6 +215,27 @@ const Stage = ({ id }: { id: string }) => {
         </Phone3D>
       </group>
     </>
+  );
+};
+
+/**
+ * 傻貓 in the corner for the whole of it: one cat who stays. He nods to
+ * the recordings as they play, and is pleased with the score.
+ */
+const Buddy = ({ film }: { film: ReturnType<typeof useFilm> }) => {
+  const { t, end, heard, said, landed } = film;
+  const arrive = film.at(1, 0.6);
+  if (t < arrive) return null;
+  const inP = ramp(t, arrive, arrive + 0.5, out) * (1 - ramp(t, end - 0.25, end + 0.1, inOut));
+  const loud = (c: { start: number; length: number; env: number[] }) => (t >= c.start && t < c.start + c.length ? (c.env[Math.floor((t - c.start) * 60)] ?? 0) : 0);
+  const listening = loud(heard) + loud(said);
+  const age = t - landed;
+  const mood: Mood = age >= 0 ? 'happy' : t >= heard.start - 0.3 ? 'idle' : 'smug';
+  const hop = age >= 0 && age < 0.7 ? Math.exp(-age * 6) * Math.sin(age * 16) : 0;
+  return (
+    <div style={{ position: 'absolute', left: -96 - (1 - inP) * 360, top: 1068 - hop * 34 + listening * 12, transform: `rotate(${13 + hop * 3 - listening * 4}deg)`, transformOrigin: '30% 100%', filter: 'drop-shadow(0 18px 20px rgba(30,34,14,0.34))' }}>
+      <Mascot mood={mood} size={400} next />
+    </div>
   );
 };
 
@@ -223,7 +262,7 @@ export const Day4 = ({ id }: { id: string }) => {
           </filter>
         </defs>
       </svg>
-      <Backdrop t={t} frame={frameNo} drift={(film.pose.y - MID) * 260} />
+      <DeepBackdrop t={t} frame={frameNo} drift={(film.pose.y - MID) * 260 + film.pose.x * 500} focus={lit} cards={s.desk.map(([src, x, y, w, h]) => (src ? { src: `${src}.jpg`, crop: [x, y, w, h] as [number, number, number, number] } : {}))} />
       <AbsoluteFill style={{ background: `radial-gradient(70% 46% at 50% 42%, rgba(255,244,214,${0.2 * lit}) 0%, rgba(255,244,214,0) 70%), radial-gradient(120% 90% at 50% 42%, rgba(0,0,0,0) 45%, rgba(26,30,12,${0.42 * lit}) 100%)` }} />
       <AbsoluteFill style={{ background: `radial-gradient(60% 40% at 50% 42%, rgba(20,24,10,0) 30%, rgba(20,24,10,${0.5 * film.hush}) 100%)` }} />
       <Motes t={t} />
@@ -258,7 +297,7 @@ export const Day4 = ({ id }: { id: string }) => {
 
       {/* The phone. */}
       {t >= rise - 0.2 && leave < 1 ? (
-        <AbsoluteFill style={{ opacity: 1 - leave, ...ABOVE_CAPTIONS }}>
+        <AbsoluteFill style={{ opacity: 1 - leave, transform: `translateY(${film.knock}px)`, ...ABOVE_CAPTIONS }}>
           <AbsoluteFill
             style={{
               filter: smear > 0.5 ? 'url(#smear)' : leave > 0 ? `blur(${leave * 12}px)` : undefined,
@@ -272,7 +311,28 @@ export const Day4 = ({ id }: { id: string }) => {
       ) : null}
 
       {/* What comes out of the phone. */}
-      <Peek t={t} at={film.scored + 0.5} until={end + 0.4} side={-1} mood="happy" y={1010} outAt={end - 0.15} />
+      {/* What you are hearing: a paper label, lit while the recording plays. */}
+      {(() => {
+        const on = ramp(t, film.heard.start - 0.35, film.heard.start - 0.05, out) * (1 - ramp(t, film.heard.start + film.heard.length + 0.35, film.heard.start + film.heard.length + 0.7, inOut));
+        if (on <= 0) return null;
+        const live = t > film.heard.start && t < film.heard.start + film.heard.length;
+        return (
+          <div style={{ position: 'absolute', left: 60, top: 252, opacity: on, transform: `translateY(${(1 - on) * -90}px) rotate(-3deg)` }}>
+            <div style={{ position: 'absolute', left: 96, top: -16, width: 84, height: 30, background: 'rgba(238,226,190,0.78)', transform: 'rotate(-3deg)', boxShadow: '0 1px 2px rgba(0,0,0,0.12)' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '12px 26px 12px 20px', borderRadius: 6, backgroundColor: '#FBF6EA', backgroundImage: `url(${staticFile('paper-grain.png')})`, backgroundBlendMode: 'multiply', backgroundSize: '300px', boxShadow: '0 10px 22px rgba(30,30,10,0.32)', border: '1px solid rgba(90,80,50,0.16)' }}>
+              <span style={{ width: 22, height: 22, borderRadius: 11, background: '#C96442', opacity: live ? 0.55 + 0.45 * Math.sin(t * 9) ** 2 : 0.4, boxShadow: live ? '0 0 14px rgba(201,100,66,0.7)' : 'none' }} />
+              <span style={{ fontWeight: 900, fontSize: 44, color: '#2B2620', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>{s.voiceTag}</span>
+            </div>
+          </div>
+        );
+      })()}
+      {/* Gold off the score as it lands. */}
+      {(() => {
+        const at2 = film.project((s.score[0] + s.score[2]) / 2, (s.score[1] + s.score[3]) / 2);
+        return <Burst t={t} at={film.landed} x={at2.x} y={at2.y - 20} scale={1.1} count={18} />;
+      })()}
+      <Buddy film={film} />
+      <Foreground t={t} drift={(film.pose.y - MID) * 260 + film.pose.x * 500} show={lit} />
       <Motes t={t} front />
       {episode.lines.map((line, i) => (
         <Caption key={i} text={line.text} start={timing.slots[i].start} length={timing.slots[i].length} t={t} first={i === 0} label={episode.label} top={CAPTION_TOP} size={62} glass />

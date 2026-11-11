@@ -293,6 +293,8 @@ node scripts/render-local.mjs d6 d6-en     # 輸出 out/d6.mp4、out/d6-en.mp4
 - 需要 Node 20 以上；Chromium 和 ffmpeg 由 Remotion 自己下載。
 - 預設用 `--gl=angle`（走顯卡）。畫面全黑或報 WebGL 錯誤時加 `--gl=vulkan` 試試，最後才退回 `--gl=swangle`（軟體算繪）。
 - 配音、配樂、`timing.json` 都已經在 repo 裡，本機不需要 ElevenLabs 金鑰。
+- **雙顯卡筆電**：Windows 預設把無頭 Chrome 分給內顯。要用獨顯，到「設定 → 系統 → 顯示器 → 圖形」，加入 `promo\node_modules\.remotion` 底下的 `chrome-headless-shell.exe`，選「高效能」；或在顯卡工具把整台切到只用獨顯。
+- 其他參數會原樣傳給 Remotion，例如 `--concurrency=8`、`--frames=0-120`（只算前兩秒試速度）。
 
 ### 11/11｜還有 5 天：滑卡背單字（`d5`／`d5-en`，`src/reels/Day5.tsx`）
 

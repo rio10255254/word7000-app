@@ -298,13 +298,13 @@ node scripts/render-local.mjs d6 d6-en     # 輸出 out/d6.mp4、out/d6-en.mp4
 
 ### 11/11｜還有 5 天：滑卡背單字（`d5`／`d5-en`，`src/reels/Day5.tsx`）
 
-右滑會了、左滑不會：一疊從模擬器截圖裁出來的真實單字卡（來源見 `public/cards/SOURCE.md`）。第一張被手指拖向右，染綠出現「認識」後甩出去，下一張已經在底下；第二張往左染紅「不熟」，在空中翻到背面；接著手機側過來連續快滑，計數到 10。
+右滑會了、左滑不會：一疊從模擬器截圖裁出來的真實單字卡（來源見 `public/cards/SOURCE.md`）。兩張往右染綠「認識」甩出去，飛進右上那疊並累計；一張往左染紅「不熟」，在空中翻面，飛進左上那疊；傻貓每滑一張就探頭反應。接著連續快滑，最後被左滑的那張又回到最上面，蓋上「又來了」。
 
 **IG 貼文（中）**
 
 還有 5 天 🐱
 背單字不用正襟危坐。會了往右滑，不會往左滑，不會的我會再拿回來煩你。
-一張兩秒，等一班車就能背十個。
+一張兩秒。不會的那張？放心，它會自己回來找你。
 11/16 App Store 上架，追蹤我們，上架當天通知你。
 #單字貓 #WordCat #背單字 #學測英文 #會考英文 #英文單字
 
@@ -312,7 +312,7 @@ node scripts/render-local.mjs d6 d6-en     # 輸出 out/d6.mp4、out/d6-en.mp4
 
 5 days to go 🐱
 Learning Mandarin shouldn't feel like homework. Know the word? Swipe right. Don't? Swipe left, and I'll bring it back.
-Two seconds a card. Ten on one bus ride.
+Two seconds a card. The one you missed? It finds its way back.
 Out 11/16 on the App Store. Follow so you don't miss it.
 #WordCat #LearnChinese #Mandarin #Flashcards #LanguageLearning
 

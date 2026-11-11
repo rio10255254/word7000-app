@@ -403,25 +403,25 @@
         "start": 0.0,
         "length": 4.0,
         "voiceStart": 0.12,
-        "voiceLength": 2.146
+        "voiceLength": 2.195
       },
       {
         "start": 4.0,
         "length": 4.0,
         "voiceStart": 4.12,
-        "voiceLength": 2.407
+        "voiceLength": 2.47
       },
       {
         "start": 8.0,
         "length": 4.0,
         "voiceStart": 8.12,
-        "voiceLength": 2.688
+        "voiceLength": 2.635
       },
       {
         "start": 12.0,
         "length": 4.0,
         "voiceStart": 12.12,
-        "voiceLength": 2.828
+        "voiceLength": 2.831
       }
     ]
   },
@@ -433,25 +433,25 @@
         "start": 0.0,
         "length": 4.0,
         "voiceStart": 0.12,
-        "voiceLength": 2.052
+        "voiceLength": 2.086
       },
       {
         "start": 4.0,
         "length": 4.0,
         "voiceStart": 4.12,
-        "voiceLength": 2.548
+        "voiceLength": 2.524
       },
       {
         "start": 8.0,
         "length": 4.0,
         "voiceStart": 8.12,
-        "voiceLength": 2.701
+        "voiceLength": 2.774
       },
       {
         "start": 12.0,
         "length": 4.0,
         "voiceStart": 12.12,
-        "voiceLength": 3.319
+        "voiceLength": 2.986
       }
     ]
   },

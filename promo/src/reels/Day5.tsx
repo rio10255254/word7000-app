@@ -39,11 +39,11 @@ const MID = ((960 - 825) / FOCAL) * CAM_Z;
 type Slot = { start: number; length: number };
 type Prop = { kind: 'counter'; slot: number; beat: number; from: [number, number]; at: [number, number]; tilt: number; label: string; unit: string; to: number };
 /** `cards`: screenshot and the row its card starts on. `rect`: the card's left, right and bottom, the same in every screenshot. `swipes`: slot, beat, direction, beats held before it is flung. */
-type Scene = { base: string; cards: [string, number][]; rect: [number, number, number]; look: number; swipes: [number, number, number, number][]; badges: [string, string]; back: string; props: Prop[] };
+type Scene = { base: string; cards: [string, number][]; rect: [number, number, number]; look: number; swipes: [number, number, number, number][]; badges: [string, string]; back: string; tally: [string, string]; returns: string; props: Prop[] };
 type Episode = { id: string; days: number; app: string; label: string; dayWords: [string, string]; note: string; outro: string; lines: { text: string }[]; scene: Scene };
 type Pose = { x: number; y: number; z: number; rx: number; ry: number; rz: number };
 type Key = { at: number; pose: Pose; ease?: (n: number) => number };
-type CardState = { drag: number; lift: number; flip: number; rise: number; fade: number; touching: boolean; under: number };
+type CardState = { drag: number; lift: number; flip: number; rise: number; fade: number; touching: boolean; under: number; small: number };
 
 const poseAt = (keys: Key[], t: number): Pose => {
   let i = 0;
@@ -74,17 +74,19 @@ const useFilm = (id: string) => {
     const before = swipes[i - 1];
     // Waiting under the card above: it comes up to full size as that one leaves.
     const under = before ? ramp(t, before.fling, before.fling + 0.35, out) : 1;
-    if (!sw) return { drag: 0, lift: 0, flip: 0, rise: 0, fade: 1, touching: false, under };
+    if (!sw) return { drag: 0, lift: 0, flip: 0, rise: 0, fade: 1, touching: false, under, small: 0 };
     const pull = ramp(t, sw.grab, sw.grab + 0.42, out);
-    const gone = ramp(t, sw.fling, sw.fling + 0.9, (n) => n * (2 - n) * 0.6 + n * n * 0.4);
+    const gone = ramp(t, sw.fling, sw.fling + 0.78, (n) => n * (2 - n) * 0.6 + n * n * 0.4);
     const held = pull > 0.9 && gone === 0 ? Math.sin(t * 5) * 0.012 : 0;
     return {
-      drag: sw.dir * (0.4 * pull + 1.5 * gone) + held,
-      lift: 0.05 * pull + 0.8 * gone,
+      // Flung, it arcs up to its pile at the top of the frame, shrinking as it goes.
+      drag: sw.dir * (0.4 * pull + 0.42 * gone) + held,
+      lift: 0.05 * pull + 0.5 * gone,
       // Only a card sent left turns over: it is the one that comes back.
       flip: sw.dir < 0 ? ramp(t, sw.fling + 0.05, sw.fling + 0.55, inOut) * PI : 0,
-      rise: gone * 0.45,
-      fade: 1 - ramp(t, sw.fling + 0.72, sw.fling + 0.92, (n) => n),
+      rise: gone * gone * 1.05,
+      fade: 1 - ramp(t, sw.fling + 0.6, sw.fling + 0.78, (n) => n),
+      small: ramp(t, sw.fling + 0.1, sw.fling + 0.75, inOut),
       touching: t > sw.grab && t < sw.fling,
       under,
     };
@@ -93,7 +95,8 @@ const useFilm = (id: string) => {
 
   const whole = (z: number, row = 825) => frame(1311, row, z);
   const yCard = (z: number, row = 830) => frame(s.look, row, z);
-  const [first, second] = swipes;
+  const first = swipes[0];
+  const second = swipes.find((sw) => sw.dir < 0)!;
   const keys: Key[] = [
     { at: rise, pose: { x: 0.25, y: -5.4, z: 0, rx: 0.55, ry: PI + 0.9, rz: 0.28 } },
     { at: rise + 0.8, pose: { x: 0.08, y: whole(2.2) + 0.05, z: 2.2, rx: 0.12, ry: PI + 0.42, rz: 0.07 }, ease: out },
@@ -130,7 +133,9 @@ const useFilm = (id: string) => {
   const size = (FOCAL / (CAM_Z - pose.z)) * 0.8;
   const shadow = { x: centre.x, y: centre.y, w: Math.max(60, PHONE.w * size * Math.abs(Math.cos(pose.ry))), h: PHONE.h * size };
   const glare = [rise + 1.75, fast + 0.5].reduce((g, start) => (t >= start && t < start + 0.9 ? (t - start) / 0.9 : g), -1);
-  return { t, episode, s, timing, at, end, rise, pose, turning, project, glare, shadow, cards, top, swipes };
+  const landed = (dir: number) => swipes.filter((sw) => sw.dir === dir && t >= sw.fling + 0.6);
+  const back = swipes[swipes.length - 1].fling + 0.35; // the card sent left is on top again
+  return { t, episode, s, timing, at, end, rise, pose, turning, project, glare, shadow, cards, top, swipes, landed, back };
 };
 
 /** A pill like the app's own verdict on a dragged card. */
@@ -206,7 +211,7 @@ const SwipeCard = ({ map, back, badges, top, rect, state, t }: { map: THREE.Text
   const badge = Math.min(1, Math.max(0, (Math.abs(state.drag) - 0.06) / 0.14)) * facing;
   // The card turns on its foot, as it does in the app.
   const tilt = -state.drag * 0.42;
-  const grow = 0.955 + 0.045 * state.under;
+  const grow = (0.955 + 0.045 * state.under) * (1 - 0.7 * state.small);
   return (
     <>
       {state.lift > 0.002 ? (
@@ -360,11 +365,41 @@ export const Day5 = ({ id }: { id: string }) => {
       ) : null}
 
       {/* What comes out of the phone. */}
-      {s.props.map((pr, i) => (
-        <Counter key={i} t={t} at={at(pr.slot, pr.beat)} until={end - 0.2} from={film.project(pr.from[0], pr.from[1])} left={pr.at[0]} top={pr.at[1]} tilt={pr.tilt} label={pr.label} unit={pr.unit} to={pr.to} />
+      {/* The two piles: each card flung lands on one and is counted. */}
+      {([1, -1] as const).map((dir) => {
+        const pile = film.landed(dir);
+        const first = film.swipes[0].grab;
+        const show = ramp(t, first - 0.5, first - 0.1, out) * (1 - ramp(t, end - 0.3, end, inOut));
+        if (show <= 0) return null;
+        const last = pile.length ? pile[pile.length - 1].fling + 0.6 : -9;
+        const bump = t - last < 0.5 ? Math.exp(-(t - last) * 9) * Math.cos((t - last) * 16) : 0;
+        const color = dir > 0 ? '#6E8F5E' : '#C96442';
+        return (
+          <div key={dir} style={{ position: 'absolute', left: dir > 0 ? 628 : 52, top: 248, width: 400, transform: `translateY(${(1 - show) * -260}px) rotate(${dir > 0 ? 3 : -3}deg) scale(${1 + bump * 0.16})`, transformOrigin: '50% 50%' }}>
+            {/* The cards already there, fanned under the label. */}
+            {pile.slice(-3).map((_, i) => (
+              <div key={i} style={{ position: 'absolute', left: 40 + i * 14, top: 84 + i * 8, width: 300, height: 120, background: '#F6EFDD', border: '2px solid rgba(60,50,30,0.18)', borderRadius: 8, transform: `rotate(${(i - 1) * 4 * dir}deg)`, boxShadow: '0 6px 14px rgba(30,30,10,0.25)' }} />
+            ))}
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, padding: '18px 30px', borderRadius: 26, background: color, color: '#FFFDF6', boxShadow: '0 12px 28px rgba(30,30,10,0.35)', fontWeight: 900 }}>
+              <span style={{ fontSize: 46, letterSpacing: '0.04em', whiteSpace: 'nowrap' }}>
+                {dir > 0 ? '✓' : '✕'} {s.tally[dir > 0 ? 0 : 1]}
+              </span>
+              <span style={{ fontFamily: SERIF_TC, fontSize: 84, lineHeight: 1 }}>{pile.length}</span>
+            </div>
+          </div>
+        );
+      })}
+      {/* 傻貓 has an opinion about every card. */}
+      {film.swipes.map((sw, i) => (
+        <Peek key={i} t={t} at={sw.fling + 0.15} until={sw.fling + 1.35} side={sw.dir > 0 ? 1 : -1} mood={sw.dir > 0 ? 'happy' : 'annoyed'} y={1010} outAt={sw.fling + 0.95} />
       ))}
-
-      <Peek t={t} at={at(3, 6)} until={end + 0.4} side={-1} mood="cheeky" y={1010} outAt={end - 0.15} />
+      {/* The one sent left is back on top. */}
+      {t > film.back ? (
+        <div style={{ position: 'absolute', left: 86, top: 1180, opacity: 1 - ramp(t, end - 0.3, end, inOut), transform: `rotate(-8deg) scale(${ramp(t, film.back + 0.3, film.back + 0.6, out) * (1 + Math.max(0, Math.exp(-(t - film.back - 0.6) * 8)) * 0.25)})`, transformOrigin: '50% 50%' }}>
+          <div style={{ padding: '10px 34px', border: `8px solid #C96442`, borderRadius: 18, color: '#C96442', fontFamily: SERIF_TC, fontWeight: 900, fontSize: 84, background: '#FBF6EA', boxShadow: '0 12px 26px rgba(30,30,10,0.35)', whiteSpace: 'nowrap' }}>{s.returns}</div>
+        </div>
+      ) : null}
+      <Peek t={t} at={film.back + 0.5} until={end + 0.4} side={1} mood="cheeky" y={1010} outAt={end - 0.15} />
       <Motes t={t} front />
       {episode.lines.map((line, i) => (
         <Caption key={i} text={line.text} start={timing.slots[i].start} length={timing.slots[i].length} t={t} first={i === 0} label={episode.label} top={CAPTION_TOP} size={62} glass />

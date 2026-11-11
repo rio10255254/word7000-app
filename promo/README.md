@@ -343,8 +343,9 @@ Out 11/16 on the App Store. Follow so you don't miss it.
 **IG 貼文（中）**
 
 還有 3 天 🐱
-老師發的單字講義，還在一個一個打？
-拍一下就好。印刷的、手寫的我都讀得懂，一行一行幫你變成單字卡，存起來馬上開始背。
+講義上的單字，還在一個一個打喔？
+拍一張就好。印刷的、手寫的我都看得懂，一個、兩個、三個，通通幫你變成單字卡。
+存好了，這下沒藉口了吧。
 （掃描是 Premium 功能；背單字永遠免費。）
 11/16 App Store 上架，追蹤我們，上架當天通知你。
 #單字貓 #WordCat #背單字 #英文單字 #讀書方法
@@ -352,8 +353,9 @@ Out 11/16 on the App Store. Follow so you don't miss it.
 **IG post (EN)**
 
 3 days to go 🐱
-A vocabulary list on paper? Don't type it.
-Snap a photo. Printed or handwritten, I read it line by line and turn it into flashcards.
+Still typing out that word list? Seriously?
+Just snap it. Printed or handwritten, I read every line and turn it into flashcards.
+Saved. No more excuses.
 (Scanning is a Premium feature. Studying words is always free.)
 Out 11/16 on the App Store. Follow so you don't miss it.
 #WordCat #LearnChinese #Mandarin #Flashcards #StudyTips

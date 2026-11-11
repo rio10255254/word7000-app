@@ -206,13 +206,16 @@ const Stage = ({ id }: { id: string }) => {
               {film.saved < 0.5 ? (
                 <>
                   {/* Nothing found yet: the rows are bare until a line lands in them. */}
-                  {film.found === 0 ? patch(s.header, maps.page, 'header') : null}
+                  {film.found < s.rows.length ? patch(s.header, maps.page, 'header') : null}
                   {film.rows.map((r, i) => (r.arrived ? null : patch(r.crop, maps.blank, `row${i}`, 4)))}
                   {film.rows.map((r, i) => (
                     <Lift key={i} map={maps.review} crop={r.crop} lift={Math.max(r.lift, r.arrived ? film.lifts.all * (1 + i * 0.12) : 0)} ground={maps.around[i]} radius={20} />
                   ))}
                   <Lift map={maps.review} crop={s.save} lift={film.lifts.save} ground={maps.saveGround} radius={60} />
                   <Tap3D t={t} at={film.tap} x={(s.save[0] + s.save[2]) / 2} y={(s.save[1] + s.save[3]) / 2} />
+                  {film.rows.map((r, i) => (
+                    <Tap3D key={`land${i}`} t={t} at={r.land - 0.02} x={r.crop[0] + 100} y={(r.crop[1] + r.crop[3]) / 2 - 20} />
+                  ))}
                 </>
               ) : maps.saved && s.savedLift ? (
                 <Lift map={maps.saved} crop={s.savedLift} lift={film.lifts.saved} ground={maps.savedGround} radius={24} />
@@ -276,12 +279,13 @@ const Sheet = ({ film }: { film: ReturnType<typeof useFilm> }) => {
           const marked = ramp(t, r.read, r.read + 0.28, out);
           const gone = r.fly > 0 ? 1 : 0;
           return (
-            <div key={i} style={{ position: 'absolute', left: 100, top: r.y - 40 }}>
+            <div key={i} style={{ position: 'absolute', left: 100 + [0, 8, -4, 6][i % 4], top: r.y - 40, transform: `rotate(${[-1.6, 1.1, -0.7, 1.4][i % 4]}deg)`, transformOrigin: '0% 50%' }}>
               {/* The marker's stroke as the line is read. */}
               <div style={{ position: 'absolute', left: -10, top: 18, height: 46, width: 400 * marked, background: 'rgba(255,200,97,0.5)', borderRadius: '8px 22px 12px 18px', mixBlendMode: 'multiply' }} />
               <div style={{ position: 'relative', opacity: gone ? 0.2 : 1 }}>
                 <Written a={s.sheet.rows[i][0]} b={s.sheet.rows[i][1]} />
               </div>
+              {r.arrived ? <div style={{ position: 'absolute', left: -62, top: -6, fontFamily: HAND, fontWeight: 600, fontSize: 84, lineHeight: 1, color: '#C4452C', transform: `rotate(-8deg) scale(${1 + Math.exp(-(t - r.land) * 12) * 0.8})`, opacity: ramp(t, r.land, r.land + 0.08, (n) => n) }}>✓</div> : null}
             </div>
           );
         })}
@@ -291,6 +295,25 @@ const Sheet = ({ film }: { film: ReturnType<typeof useFilm> }) => {
           <div style={{ position: 'absolute', left: 0, right: 0, top: light * SHEET.height - 130, height: 150, background: 'linear-gradient(to bottom, rgba(255,214,120,0) 0%, rgba(255,214,120,0.34) 70%, rgba(255,246,214,0.95) 96%, rgba(255,214,120,0) 100%)', opacity: 1 - ramp(t, sweep[1], sweep[1] + 0.15, (n) => n) }} />
         ) : null}
       </div>
+      {/* The camera's frame around what it is reading. */}
+      {t > film.flash - 0.25 && t < sweep[1] + 0.35
+        ? [
+            [0, 0],
+            [1, 0],
+            [0, 1],
+            [1, 1],
+          ].map(([cx, cy]) => {
+            const on = ramp(t, film.flash - 0.25, film.flash, out) * (1 - ramp(t, sweep[1] + 0.1, sweep[1] + 0.35, (n) => n));
+            // Inside the sheet's edge: the sheet's own box is all that is drawn of it.
+            const gap = -(16 + (1 - on) * 36 + Math.sin(t * 6) * 2);
+            return (
+              <div
+                key={`${cx}${cy}`}
+                style={{ position: 'absolute', [cx ? 'right' : 'left']: -gap, [cy ? 'bottom' : 'top']: -gap, width: 74, height: 74, opacity: on, [cx ? 'borderRight' : 'borderLeft']: '7px solid #E39B2B', [cy ? 'borderBottom' : 'borderTop']: '7px solid #E39B2B', borderRadius: 6, filter: 'drop-shadow(0 0 8px rgba(255,200,97,0.95))' }}
+              />
+            );
+          })
+        : null}
       {/* Tape at the top. */}
       <div style={{ position: 'absolute', left: 190, top: -22, width: 150, height: 44, background: 'rgba(238,226,190,0.8)', transform: 'rotate(-3deg)', boxShadow: '0 1px 3px rgba(0,0,0,0.14)' }} />
     </div>
@@ -307,11 +330,22 @@ const Crossing = ({ film }: { film: ReturnType<typeof useFilm> }) => (
       const x = from.x + (r.target.x - 170 - from.x) * u;
       const y = from.y + (r.target.y - 30 - from.y) * u - Math.sin(PI * r.fly) * 150;
       const lift = Math.sin(PI * r.fly);
+      const at2 = (f: number) => {
+        const v = inOut(Math.max(0, f));
+        return { x: from.x + (r.target.x - 170 - from.x) * v, y: from.y + (r.target.y - 30 - from.y) * v - Math.sin(PI * Math.max(0, f)) * 150 };
+      };
       return (
-        <div key={i} style={{ position: 'absolute', left: x, top: y, transform: `rotate(${SHEET.tilt * (1 - u) - lift * 5}deg) scale(${1 + lift * 0.35 - u * 0.42})`, transformOrigin: '0% 50%', opacity: 1 - ramp(r.fly, 0.82, 1, (n) => n), filter: `drop-shadow(0 ${10 + lift * 26}px ${8 + lift * 16}px rgba(26,30,10,${0.25 + lift * 0.2})) blur(${Math.sin(PI * r.fly) * 1.2}px)` }}>
+        <div key={i}>
+          {[1, 2, 3, 4, 5, 6].map((k) => {
+            const p = at2(r.fly - k * 0.045);
+            const size = 16 - k * 2;
+            return <div key={k} style={{ position: 'absolute', left: p.x + 60 + Math.sin(k * 2.3 + i) * 26, top: p.y + 26 + Math.cos(k * 1.7 + i) * 16, width: size, height: size, borderRadius: size, background: '#FFD678', boxShadow: '0 0 12px 3px rgba(255,214,120,0.75)', opacity: (1 - k / 7) * Math.sin(PI * r.fly) }} />;
+          })}
+        <div style={{ position: 'absolute', left: x, top: y, transform: `rotate(${SHEET.tilt * (1 - u) - lift * 5}deg) scale(${1 + lift * 0.35 - u * 0.42})`, transformOrigin: '0% 50%', opacity: 1 - ramp(r.fly, 0.82, 1, (n) => n), filter: `drop-shadow(0 ${10 + lift * 26}px ${8 + lift * 16}px rgba(26,30,10,${0.25 + lift * 0.2})) blur(${Math.sin(PI * r.fly) * 1.2}px)` }}>
           <div style={{ padding: '6px 18px 10px', background: 'rgba(255,200,97,0.42)', borderRadius: '10px 24px 14px 20px' }}>
             <Written a={film.s.sheet.rows[i][0]} b={film.s.sheet.rows[i][1]} />
           </div>
+        </div>
         </div>
       );
     })}
@@ -376,6 +410,16 @@ export const Day3 = ({ id }: { id: string }) => {
       ) : null}
       <Peek t={t} at={0} until={film.sheetIn + 0.3} side={1} mood="smug" y={760} outAt={film.sheetIn - 0.14} />
 
+      {/* The pencil it was written with. */}
+      {t >= film.sheetIn + 0.1 && film.sheetOut < 1 ? (
+        <div style={{ position: 'absolute', left: 150 - film.sheetOut * 700, top: 252 + (1 - ramp(t, film.sheetIn + 0.1, film.sheetIn + 0.32, (n) => n * n)) * -700, width: 400, height: 26, transform: 'rotate(5deg)', filter: `drop-shadow(0 10px 8px rgba(26,30,10,0.4))${film.sheetOut > 0 ? ` blur(${film.sheetOut * 8}px)` : ''}`, ...ABOVE_CAPTIONS }}>
+          <div style={{ position: 'absolute', left: 0, top: 0, width: 34, height: 26, borderRadius: '8px 2px 2px 8px', background: 'linear-gradient(to bottom, #E79A8E, #C96A5E)' }} />
+          <div style={{ position: 'absolute', left: 34, top: 0, width: 22, height: 26, background: 'linear-gradient(to bottom, #D9D4C8, #9C968A)' }} />
+          <div style={{ position: 'absolute', left: 56, top: 0, width: 290, height: 26, background: 'linear-gradient(to bottom, #F2C24E 0%, #E6AE2E 48%, #C98F1C 100%)' }} />
+          <div style={{ position: 'absolute', left: 346, top: 0, width: 0, height: 0, borderTop: '13px solid transparent', borderBottom: '13px solid transparent', borderLeft: '42px solid #E8D2A6' }} />
+          <div style={{ position: 'absolute', left: 376, top: 8, width: 0, height: 0, borderTop: '5px solid transparent', borderBottom: '5px solid transparent', borderLeft: '14px solid #3A3A3A' }} />
+        </div>
+      ) : null}
       <Sheet film={film} />
 
       {/* The phone's shadow on the backdrop. */}

@@ -3044,8 +3044,8 @@
    "outroAt": 1.0,
    "lines": [
     {
-     "text": "老師發的講義，\n**要一個一個打**？",
-     "say": "[teasing] 老師發的講義，要一個一個打？",
+     "text": "講義上的單字，\n**還在一個一個打喔**？",
+     "say": "[teasing] 講義上的單字，還在一個一個打喔？",
      "beats": 9,
      "cues": [
       [
@@ -3059,8 +3059,8 @@
      ]
     },
     {
-     "text": "拍一下。\n**手寫的也讀得懂**。",
-     "say": "拍一下。手寫的也讀得懂。",
+     "text": "拍一張就好。\n**手寫的我也看得懂**。",
+     "say": "拍一張就好。手寫的我也看得懂。",
      "beats": 8,
      "cues": [
       [
@@ -3082,39 +3082,39 @@
      ]
     },
     {
-     "text": "一個一個，\n**變成單字卡**。",
-     "say": "一個一個，變成單字卡。",
-     "beats": 8,
+     "text": "一個、兩個、三個，\n**通通變成單字卡**。",
+     "say": "一個、兩個、三個，通通變成單字卡。",
+     "beats": 10,
      "cues": [
       [
-       1.6,
+       0.64,
        "pop"
       ],
       [
-       3.2,
+       1.76,
        "pop"
       ],
       [
-       4.8,
+       3.28,
        "pop"
       ],
       [
-       1.75,
+       0.79,
        "tick"
       ],
       [
-       3.35,
+       1.91,
        "tick"
       ],
       [
-       4.95,
+       3.43,
        "tick"
       ]
      ]
     },
     {
-     "text": "存起來，\n**馬上開始背**。",
-     "say": "存起來，馬上開始背。",
+     "text": "存好了。\n**這下沒藉口了吧**？",
+     "say": "[smug] 存好了。這下沒藉口了吧？",
      "beats": 10,
      "cues": [
       [
@@ -3165,9 +3165,9 @@
      ]
     ],
     "land": [
-     1.6,
-     3.2,
-     4.8
+     0.64,
+     1.76,
+     3.28
     ],
     "save": [
      50,
@@ -3276,8 +3276,8 @@
    "outroAt": 1.0,
    "lines": [
     {
-     "text": "A word list on paper?\n**Don't type it.**",
-     "say": "[teasing] A word list on paper? Don't type it.",
+     "text": "Still typing out\nthat word list? **Seriously?**",
+     "say": "[teasing] Still typing out that word list? Seriously?",
      "beats": 9,
      "cues": [
       [
@@ -3291,8 +3291,8 @@
      ]
     },
     {
-     "text": "Snap it.\n**Even handwriting.**",
-     "say": "Snap it. Even handwriting.",
+     "text": "Just snap it.\n**Handwriting's fine.**",
+     "say": "Just snap it. Handwriting's fine.",
      "beats": 8,
      "cues": [
       [
@@ -3314,47 +3314,47 @@
      ]
     },
     {
-     "text": "Line by line,\n**into flashcards.**",
-     "say": "Line by line, into flashcards.",
-     "beats": 8,
+     "text": "One, two, three, four.\n**All flashcards now.**",
+     "say": "One, two, three, four. All flashcards now.",
+     "beats": 10,
      "cues": [
       [
-       1.2,
+       0.64,
        "pop"
       ],
       [
-       2.6,
+       1.76,
        "pop"
       ],
       [
-       4.0,
+       3.4,
        "pop"
       ],
       [
-       5.4,
+       4.88,
        "pop"
       ],
       [
-       1.35,
+       0.79,
        "tick"
       ],
       [
-       2.75,
+       1.91,
        "tick"
       ],
       [
-       4.15,
+       3.55,
        "tick"
       ],
       [
-       5.55,
+       5.03,
        "tick"
       ]
      ]
     },
     {
-     "text": "Saved.\n**Not a word typed.**",
-     "say": "Saved. Not a word typed.",
+     "text": "Saved.\n**No more excuses.**",
+     "say": "[smug] Saved. No more excuses.",
      "beats": 10,
      "cues": [
       [
@@ -3407,10 +3407,10 @@
      ]
     ],
     "land": [
-     1.2,
-     2.6,
-     4.0,
-     5.4
+     0.64,
+     1.76,
+     3.4,
+     4.88
     ],
     "save": [
      50,

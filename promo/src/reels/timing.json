@@ -516,62 +516,62 @@
     ]
   },
   "d3": {
-    "total": 21.0,
-    "end": 17.5,
+    "total": 22.0,
+    "end": 18.5,
     "slots": [
       {
         "start": 0.0,
         "length": 4.5,
         "voiceStart": 0.12,
-        "voiceLength": 2.942
+        "voiceLength": 3.145
       },
       {
         "start": 4.5,
         "length": 4.0,
         "voiceStart": 4.62,
-        "voiceLength": 2.786
+        "voiceLength": 2.893
       },
       {
         "start": 8.5,
-        "length": 4.0,
+        "length": 5.0,
         "voiceStart": 8.62,
-        "voiceLength": 2.122
+        "voiceLength": 3.722
       },
       {
-        "start": 12.5,
+        "start": 13.5,
         "length": 5.0,
-        "voiceStart": 12.62,
-        "voiceLength": 1.959
+        "voiceStart": 13.62,
+        "voiceLength": 2.926
       }
     ]
   },
   "d3-en": {
-    "total": 21.0,
-    "end": 17.5,
+    "total": 22.0,
+    "end": 18.5,
     "slots": [
       {
         "start": 0.0,
         "length": 4.5,
         "voiceStart": 0.12,
-        "voiceLength": 3.25
+        "voiceLength": 3.291
       },
       {
         "start": 4.5,
         "length": 4.0,
         "voiceStart": 4.62,
-        "voiceLength": 2.266
+        "voiceLength": 2.468
       },
       {
         "start": 8.5,
-        "length": 4.0,
+        "length": 5.0,
         "voiceStart": 8.62,
-        "voiceLength": 2.833
+        "voiceLength": 4.428
       },
       {
-        "start": 12.5,
+        "start": 13.5,
         "length": 5.0,
-        "voiceStart": 12.62,
-        "voiceLength": 2.617
+        "voiceStart": 13.62,
+        "voiceLength": 2.614
       }
     ]
   }

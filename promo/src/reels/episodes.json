@@ -3813,7 +3813,7 @@
      ]
     },
     {
-     "text": "I remember what you tell me.\n**Till you can't stand it.**",
+     "text": "I remember everything.\n**Till you can't stand it.**",
      "say": "[smug] I remember what you tell me. Till you can't stand it.",
      "beats": 10,
      "cues": [
@@ -3894,7 +3894,7 @@
      2135
     ],
     "user": [
-     580,
+     280,
      1888,
      1160,
      2002

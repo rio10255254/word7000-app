@@ -289,7 +289,7 @@ const CardFaces = ({ geo, h, map, back, badges, right, wash, badge, glint, dim =
       </mesh>
     ) : null}
     <mesh geometry={geo.front} renderOrder={5}>
-      <meshBasicMaterial map={map} toneMapped={false} transparent opacity={opacity} color={new THREE.Color().setScalar(dim)} />
+      <meshBasicMaterial map={map} toneMapped={false} transparent opacity={opacity} depthWrite={opacity >= 1} color={new THREE.Color().setScalar(dim)} />
     </mesh>
     {wash > 0.003 ? (
       <mesh geometry={geo.plain} position={[0, 0, 0.0006]} renderOrder={6}>
@@ -308,7 +308,7 @@ const CardFaces = ({ geo, h, map, back, badges, right, wash, badge, glint, dim =
       </mesh>
     ) : null}
     <mesh geometry={geo.plain} rotation={[0, PI, 0]} position={[0, 0, -0.0016]} renderOrder={5}>
-      <meshBasicMaterial map={back} toneMapped={false} transparent opacity={opacity} />
+      <meshBasicMaterial map={back} toneMapped={false} transparent opacity={opacity} depthWrite={opacity >= 1} />
     </mesh>
   </>
 );
@@ -384,11 +384,13 @@ const FlyingCard = ({ map, back, badges, top, rect, flight, t, ghost = 0 }: Shar
   const p1 = pileAt(flight.dir).add(new THREE.Vector3(LEAN[flight.nth % 5] * 0.25, -flight.nth * 0.012, flight.nth * 0.006));
   const q1 = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, flight.dir < 0 ? PI : 0, LEAN[flight.nth % 5] * (flight.dir < 0 ? -1 : 1)));
   const pos = p0.clone().lerp(p1, e);
-  pos.z += Math.sin(PI * u) * 0.55;
+  // It comes out to the piles' depth straight away and stays nearer the lens than they are until it
+  // lands, so a card in the air is always in front of the cards already down.
+  pos.z = p0.z + (p1.z - p0.z) * out(Math.min(1, u * 1.8)) + Math.sin(PI * u) * 0.42;
   pos.y += Math.sin(PI * u) * 0.12;
   const quat = q0.clone().slerp(q1, e);
   const size = 1 + (PILE_SCALE - 1) * e;
-  const opacity = ghost > 0 ? 0.2 * Math.sin(PI * u) : 1;
+  const opacity = ghost > 0 ? 0.13 * Math.sin(PI * u) : 1;
   return (
     <group position={pos} quaternion={quat} scale={size}>
       {ghost === 0 ? (
@@ -460,8 +462,8 @@ const Stage = ({ id }: { id: string }) => {
         const shared = { map: maps.cards[i], back: maps.back, badges: maps.badges, top: s.cards[i][1], rect: s.rect };
         return (
           <group key={i}>
-            <FlyingCard {...shared} flight={f} t={t} ghost={0.05} />
-            <FlyingCard {...shared} flight={f} t={t} ghost={0.025} />
+            <FlyingCard {...shared} flight={f} t={t} ghost={0.034} />
+            <FlyingCard {...shared} flight={f} t={t} ghost={0.017} />
             <FlyingCard {...shared} flight={f} t={t} />
           </group>
         );

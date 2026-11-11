@@ -394,5 +394,65 @@
         "voiceLength": 4.027
       }
     ]
+  },
+  "d5": {
+    "total": 19.5,
+    "end": 16.0,
+    "slots": [
+      {
+        "start": 0.0,
+        "length": 4.0,
+        "voiceStart": 0.12,
+        "voiceLength": 2.146
+      },
+      {
+        "start": 4.0,
+        "length": 4.0,
+        "voiceStart": 4.12,
+        "voiceLength": 2.407
+      },
+      {
+        "start": 8.0,
+        "length": 4.0,
+        "voiceStart": 8.12,
+        "voiceLength": 2.688
+      },
+      {
+        "start": 12.0,
+        "length": 4.0,
+        "voiceStart": 12.12,
+        "voiceLength": 2.828
+      }
+    ]
+  },
+  "d5-en": {
+    "total": 19.5,
+    "end": 16.0,
+    "slots": [
+      {
+        "start": 0.0,
+        "length": 4.0,
+        "voiceStart": 0.12,
+        "voiceLength": 2.052
+      },
+      {
+        "start": 4.0,
+        "length": 4.0,
+        "voiceStart": 4.12,
+        "voiceLength": 2.548
+      },
+      {
+        "start": 8.0,
+        "length": 4.0,
+        "voiceStart": 8.12,
+        "voiceLength": 2.701
+      },
+      {
+        "start": 12.0,
+        "length": 4.0,
+        "voiceStart": 12.12,
+        "voiceLength": 3.319
+      }
+    ]
   }
 }

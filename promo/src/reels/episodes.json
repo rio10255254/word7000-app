@@ -1,2134 +1,2500 @@
 {
-  "voice": "zf_017",
-  "speed": 1.08,
-  "outro": "追蹤小笨貓，明天繼續被罵。",
-  "outroNote": "下載連結在個人簡介",
-  "episodes": [
+ "voice": "zf_017",
+ "speed": 1.08,
+ "outro": "追蹤小笨貓，明天繼續被罵。",
+ "outroNote": "下載連結在個人簡介",
+ "episodes": [
+  {
+   "id": "teaser",
+   "series": "11.16 上架",
+   "app": "WordCat 單字貓",
+   "launch": "11.16",
+   "voice": {
+    "engine": "elevenlabs",
+    "voiceId": "fQj4gJSexpu8RDE2Ii5m",
+    "model": "eleven_v4",
+    "language": "zh"
+   },
+   "outro": "追蹤我們，上架當天通知你",
+   "outroNote": "App Store 上架",
+   "hook": [
+    "欸，你。"
+   ],
+   "lines": [
     {
-      "id": "teaser",
-      "series": "11.16 上架",
-      "app": "WordCat 單字貓",
-      "launch": "11.16",
-      "voice": {
-        "engine": "elevenlabs",
-        "voiceId": "fQj4gJSexpu8RDE2Ii5m",
-        "model": "eleven_v4",
-        "language": "zh"
-      },
-      "outro": "追蹤我們，上架當天通知你",
-      "outroNote": "App Store 上架",
-      "hook": [
-        "欸，你。"
-      ],
-      "lines": [
-        {
-          "text": "欸，你。",
-          "say": "[smug] 欸，你。",
-          "beats": 4,
-          "cues": [
-            [
-              0.3,
-              "pop"
-            ]
-          ]
-        },
-        {
-          "text": "**11/16**，我要搬進你的手機。",
-          "say": "[smug] 十一月十六號，我要搬進你的手機。",
-          "beats": 8,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ],
-            [
-              2,
-              "pop"
-            ]
-          ]
-        },
-        {
-          "text": "每天一條路，走完就收工。",
-          "say": "每天一條路，走完就收工。",
-          "beats": 12,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ],
-            [
-              3,
-              "whoosh"
-            ],
-            [
-              4.6,
-              "tap"
-            ],
-            [
-              6,
-              "whoosh"
-            ],
-            [
-              7.6,
-              "wrong"
-            ],
-            [
-              9,
-              "whoosh"
-            ]
-          ]
-        },
-        {
-          "text": "開口說，**真人**陪你練。",
-          "beats": 10,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ]
-          ],
-          "clips": [
-            [
-              0.4,
-              "next/restaurant-0-0-partner-en.mp3",
-              1.0
-            ],
-            [
-              6.2,
-              "next/restaurant-0-0-reply-en.mp3",
-              1.15
-            ]
-          ]
-        },
-        {
-          "text": "蓋章那一下，會**上癮**。",
-          "say": "[satisfied] 蓋章那一下……會上癮。",
-          "beats": 6,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ],
-            [
-              0.9,
-              "stamp"
-            ],
-            [
-              1.2,
-              "ding"
-            ]
-          ]
-        },
-        {
-          "text": "背不起來？我會**笑你**。",
-          "say": "[mischievously] 背不起來？我會笑你喔。",
-          "beats": 6,
-          "cues": [
-            [
-              0,
-              "pop"
-            ]
-          ]
-        }
-      ],
-      "outroSay": "追蹤我們，上架當天通知你。",
-      "outroAt": 1.6,
-      "endBeats": 9,
-      "endStamp": true,
-      "grooveFrom": 1,
-      "endStampAt": 0.75
-    },
-    {
-      "id": "teaser-en",
-      "series": "Out 11.16",
-      "app": "WordCat",
-      "launch": "11.16",
-      "voice": {
-        "engine": "elevenlabs",
-        "voiceId": "N2lVS1w4EtoT3dr4eOWO",
-        "model": "eleven_v4",
-        "language": "en"
-      },
-      "outro": "Follow us. We'll tell you when it's out.",
-      "outroNote": "On the App Store",
-      "hook": [
-        "Hey. You."
-      ],
-      "lines": [
-        {
-          "text": "Hey. You.",
-          "say": "[smug] Hey. You.",
-          "beats": 4,
-          "cues": [
-            [
-              0.3,
-              "pop"
-            ]
-          ]
-        },
-        {
-          "text": "**11/16**. I'm moving into your phone.",
-          "say": "[smug] November sixteenth. I'm moving into your phone.",
-          "beats": 8,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ],
-            [
-              2,
-              "pop"
-            ]
-          ]
-        },
-        {
-          "text": "One short path a day. Then you're done.",
-          "say": "One short path a day. Then you're done.",
-          "beats": 12,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ],
-            [
-              3,
-              "whoosh"
-            ],
-            [
-              4.6,
-              "tap"
-            ],
-            [
-              6,
-              "whoosh"
-            ],
-            [
-              7.6,
-              "wrong"
-            ],
-            [
-              9,
-              "whoosh"
-            ]
-          ]
-        },
-        {
-          "text": "Real voices. **Real** conversations.",
-          "beats": 10,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ]
-          ],
-          "clips": [
-            [
-              0.4,
-              "next/restaurant-0-0-partner-zh.mp3",
-              1.0
-            ],
-            [
-              6.2,
-              "next/restaurant-0-0-reply-zh.mp3",
-              1.15
-            ]
-          ]
-        },
-        {
-          "text": "That stamp? **Addictive.**",
-          "say": "[satisfied] That stamp? ...Addictive.",
-          "beats": 6,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ],
-            [
-              0.9,
-              "stamp"
-            ],
-            [
-              1.2,
-              "ding"
-            ]
-          ]
-        },
-        {
-          "text": "Forget a word? I'll **laugh**.",
-          "say": "[mischievously] Forget a word? I'll laugh at you.",
-          "beats": 6,
-          "cues": [
-            [
-              0,
-              "pop"
-            ]
-          ]
-        }
-      ],
-      "outroSay": "Follow us. We'll tell you when it's out.",
-      "outroAt": 1.6,
-      "endBeats": 9,
-      "endStamp": true,
-      "grooveFrom": 1,
-      "label": "SillyCat",
-      "screens": {
-        "today": "en-n1-today",
-        "card": "en-n2-card",
-        "write": "en-n3-write-solved",
-        "exam": "en-3-quiz",
-        "shadow": "en-n8-shadow",
-        "stamp": "en-n11-stamp",
-        "mock": "en-n3-write"
-      },
-      "shadowCam": {
-        "x": 603,
-        "y": 1560,
-        "z": 0.9
-      },
-      "patches": [
-        [
-          600,
-          1110,
-          280
-        ],
-        [
-          560,
-          1395,
-          450
-        ]
-      ],
-      "ringY": 1080,
-      "endStampAt": 0.75
-    },
-    {
-      "id": "cd6",
-      "kind": "countdown",
-      "days": 6,
-      "series": "倒數 6 天",
-      "app": "WordCat 單字貓",
-      "launch": "11.16",
-      "label": "傻貓 SillyCat",
-      "voice": {
-        "engine": "elevenlabs",
-        "voiceId": "fQj4gJSexpu8RDE2Ii5m",
-        "model": "eleven_v4",
-        "language": "zh"
-      },
-      "screen": "n6-plan",
-      "dayWords": [
-        "還有",
-        "天"
-      ],
-      "note": "11.16 App Store 上架",
-      "outro": "追蹤我們，上架當天通知你",
-      "outroSay": "還有六天。別忘了追蹤。",
-      "outroAt": 1.0,
-      "endBeats": 7,
-      "endStamp": true,
-      "endStampAt": 0.75,
-      "grooveFrom": 1,
-      "cams": [
-        [
-          1,
-          0,
-          {
-            "x": 603,
-            "y": 1990,
-            "z": 0.74
-          }
-        ],
-        [
-          1,
-          5.5,
-          {
-            "x": 603,
-            "y": 2010,
-            "z": 0.76
-          }
-        ],
-        [
-          2,
-          0.4,
-          {
-            "x": 603,
-            "y": 676,
-            "z": 0.7
-          }
-        ],
-        [
-          2,
-          7,
-          {
-            "x": 603,
-            "y": 700,
-            "z": 0.72
-          }
-        ]
-      ],
-      "marks": [
-        [
-          1,
-          1.6,
-          "ring",
-          620,
-          1860,
-          842,
-          1972
-        ],
-        [
-          2,
-          0.8,
-          "marker",
-          210,
-          812,
-          520,
-          866
-        ],
-        [
-          2,
-          3.8,
-          "marker",
-          210,
-          1328,
-          630,
-          1386
-        ]
-      ],
-      "taps": [
-        [
-          1,
-          3.0,
-          835,
-          2262
-        ]
-      ],
-      "lines": [
-        {
-          "text": "考試哪天，**你記得嗎**？",
-          "say": "[smug] 你考試哪天，你記得嗎？",
-          "beats": 6,
-          "cues": [
-            [
-              0.3,
-              "pop"
-            ]
-          ]
-        },
-        {
-          "text": "跟我說哪天考，\n**我幫你排計畫**。",
-          "say": "跟我說你哪天考，我幫你排好計畫。",
-          "beats": 8,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ],
-            [
-              1.6,
-              "pop"
-            ],
-            [
-              3.0,
-              "tap"
-            ],
-            [
-              3.2,
-              "pop"
-            ],
-            [
-              3.85,
-              "tap"
-            ],
-            [
-              4.15,
-              "tap"
-            ],
-            [
-              4.45,
-              "tap"
-            ],
-            [
-              4.75,
-              "tap"
-            ],
-            [
-              5.05,
-              "tap"
-            ],
-            [
-              5.35,
-              "ding"
-            ]
-          ]
-        },
-        {
-          "text": "每天背幾個、讀到哪，\n**我算好了**。",
-          "say": "每天背幾個、考前讀到哪，我都算好了。",
-          "beats": 8,
-          "cues": [
-            [
-              0.2,
-              "whoosh"
-            ],
-            [
-              0.8,
-              "tap"
-            ],
-            [
-              1.4,
-              "pop"
-            ],
-            [
-              1.9,
-              "tap"
-            ],
-            [
-              2.1,
-              "tap"
-            ],
-            [
-              2.3,
-              "tap"
-            ],
-            [
-              2.6,
-              "ding"
-            ],
-            [
-              3.8,
-              "tap"
-            ],
-            [
-              4.4,
-              "pop"
-            ],
-            [
-              5.4,
-              "tap"
-            ],
-            [
-              5.85,
-              "tap"
-            ],
-            [
-              6.3,
-              "tap"
-            ],
-            [
-              6.75,
-              "pop"
-            ]
-          ]
-        },
-        {
-          "text": "你負責背，**我負責唸**。",
-          "say": "[mischievously] 你負責背，我負責唸。",
-          "beats": 5,
-          "cues": [
-            [
-              0,
-              "pop"
-            ]
-          ]
-        }
-      ],
-      "props": [
-        {
-          "kind": "calendar",
-          "slot": 1,
-          "beat": 3.1,
-          "until": [
-            2,
-            0.2
-          ],
-          "from": [
-            835,
-            2262
-          ],
-          "pages": [
-            [
-              "2026",
-              "11",
-              "9",
-              "星期一"
-            ],
-            [
-              "2026",
-              "12",
-              "25",
-              "星期五"
-            ],
-            [
-              "2027",
-              "1",
-              "1",
-              "星期五"
-            ],
-            [
-              "2027",
-              "2",
-              "6",
-              "星期六"
-            ],
-            [
-              "2027",
-              "4",
-              "1",
-              "星期四"
-            ]
-          ],
-          "final": [
-            "2027",
-            "5",
-            "15",
-            "星期六"
-          ],
-          "tag": "會考"
-        },
-        {
-          "kind": "counter",
-          "slot": 2,
-          "beat": 1.3,
-          "from": [
-            360,
-            835
-          ],
-          "at": [
-            70,
-            250
-          ],
-          "tilt": -3,
-          "label": "每天",
-          "unit": "個字",
-          "to": 20
-        },
-        {
-          "kind": "track",
-          "slot": 2,
-          "beat": 4.3,
-          "from": [
-            420,
-            1355
-          ],
-          "at": [
-            500,
-            300
-          ],
-          "tilt": 2.5,
-          "title": "考前讀到",
-          "steps": [
-            "1",
-            "2",
-            "3",
-            "4"
-          ],
-          "stepWord": "第 {n} 章",
-          "flag": "會考"
-        }
+     "text": "欸，你。",
+     "say": "[smug] 欸，你。",
+     "beats": 4,
+     "cues": [
+      [
+       0.3,
+       "pop"
       ]
+     ]
     },
     {
-      "id": "cd6-en",
-      "kind": "countdown",
-      "days": 6,
-      "series": "6 days to go",
-      "app": "WordCat",
-      "launch": "11.16",
-      "label": "SillyCat",
-      "voice": {
-        "engine": "elevenlabs",
-        "voiceId": "N2lVS1w4EtoT3dr4eOWO",
-        "model": "eleven_v4",
-        "language": "en"
-      },
-      "screen": "en-n6-plan",
-      "dayWords": [
-        "",
-        "days to go"
+     "text": "**11/16**，我要搬進你的手機。",
+     "say": "[smug] 十一月十六號，我要搬進你的手機。",
+     "beats": 8,
+     "cues": [
+      [
+       0,
+       "whoosh"
       ],
-      "note": "Out 11.16 on the App Store",
-      "outro": "Follow us. We'll tell you when it's out.",
-      "outroSay": "Six days. Don't forget to follow.",
-      "outroAt": 1.0,
-      "endBeats": 7,
-      "endStamp": true,
-      "endStampAt": 0.75,
-      "grooveFrom": 1,
-      "cams": [
-        [
-          1,
-          0,
-          {
-            "x": 603,
-            "y": 1830,
-            "z": 0.74
-          }
-        ],
-        [
-          1,
-          5.5,
-          {
-            "x": 603,
-            "y": 1860,
-            "z": 0.78
-          }
-        ],
-        [
-          2,
-          0.4,
-          {
-            "x": 603,
-            "y": 590,
-            "z": 0.72
-          }
-        ],
-        [
-          2,
-          7,
-          {
-            "x": 603,
-            "y": 610,
-            "z": 0.74
-          }
-        ]
-      ],
-      "marks": [
-        [
-          1,
-          2.2,
-          "ring",
-          360,
-          1712,
-          592,
-          1820
-        ],
-        [
-          2,
-          1.2,
-          "marker",
-          210,
-          812,
-          590,
-          866
-        ],
-        [
-          2,
-          4.4,
-          "marker",
-          210,
-          1016,
-          850,
-          1072
-        ]
-      ],
-      "taps": [
-        [
-          1,
-          2.0,
-          476,
-          1766
-        ]
-      ],
-      "lines": [
-        {
-          "text": "How many words today? **Be honest.**",
-          "say": "[smug] How many words did you learn today? Be honest.",
-          "beats": 8,
-          "cues": [
-            [
-              0.3,
-              "pop"
-            ]
-          ]
-        },
-        {
-          "text": "Pick a daily goal.\n**I'll plan the path.**",
-          "say": "Pick a daily goal. I'll plan the path.",
-          "beats": 8,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ],
-            [
-              2.0,
-              "tap"
-            ],
-            [
-              2.4,
-              "pop"
-            ],
-            [
-              3.2,
-              "tap"
-            ],
-            [
-              3.5,
-              "tap"
-            ],
-            [
-              3.8,
-              "tap"
-            ],
-            [
-              4.3,
-              "ding"
-            ]
-          ]
-        },
-        {
-          "text": "Cards. Writing. A quick quiz.\n**All mapped out.**",
-          "say": "Cards, then writing, then a quick quiz. All mapped out.",
-          "beats": 10,
-          "cues": [
-            [
-              0.2,
-              "whoosh"
-            ],
-            [
-              0.7,
-              "pop"
-            ],
-            [
-              1.0,
-              "tap"
-            ],
-            [
-              2.4,
-              "tap"
-            ],
-            [
-              3.6,
-              "tap"
-            ],
-            [
-              6.2,
-              "stamp"
-            ]
-          ]
-        },
-        {
-          "text": "You study. **I nag.**",
-          "say": "[mischievously] You study. I nag.",
-          "beats": 6,
-          "cues": [
-            [
-              0,
-              "pop"
-            ]
-          ]
-        }
-      ],
-      "props": [
-        {
-          "kind": "counter",
-          "slot": 1,
-          "beat": 2.3,
-          "from": [
-            476,
-            1766
-          ],
-          "at": [
-            320,
-            250
-          ],
-          "tilt": -3,
-          "label": "Daily goal",
-          "unit": "words a day",
-          "to": 20
-        },
-        {
-          "kind": "route",
-          "slot": 2,
-          "beat": 0.6,
-          "from": [
-            400,
-            1040
-          ],
-          "at": [
-            150,
-            260
-          ],
-          "tilt": -2,
-          "stops": [
-            "Cards",
-            "Writing",
-            "Quiz"
-          ],
-          "stopBeats": [
-            1.0,
-            2.4,
-            3.6
-          ],
-          "doneBeat": 6.2,
-          "doneText": "All mapped out"
-        }
+      [
+       2,
+       "pop"
       ]
+     ]
     },
     {
-      "kind": "path",
-      "days": 5,
-      "launch": "11.16",
-      "endBeats": 7,
-      "endStamp": true,
-      "endStampAt": 0.75,
-      "grooveFrom": 1,
-      "outroAt": 1.0,
-      "id": "cd5",
-      "series": "倒數 5 天",
-      "app": "WordCat 單字貓",
-      "label": "傻貓 SillyCat",
-      "voice": {
-        "engine": "elevenlabs",
-        "voiceId": "fQj4gJSexpu8RDE2Ii5m",
-        "model": "eleven_v4",
-        "language": "zh"
-      },
-      "dayWords": [
-        "還有",
-        "天"
+     "text": "每天一條路，走完就收工。",
+     "say": "每天一條路，走完就收工。",
+     "beats": 12,
+     "cues": [
+      [
+       0,
+       "whoosh"
       ],
-      "note": "11.16 App Store 上架",
-      "outro": "追蹤我們，上架當天通知你",
-      "outroSay": "還有五天。別忘了追蹤。",
-      "stops": [
-        [
-          "n2-card",
-          "翻卡",
-          280
-        ],
-        [
-          "n3-write-solved",
-          "拼字",
-          250
-        ],
-        [
-          "n4-exam-answered",
-          "考考看",
-          300
-        ],
-        [
-          "n8-shadow",
-          "口說",
-          1150
-        ]
+      [
+       3,
+       "whoosh"
       ],
-      "done": "今天的份完成！",
-      "lines": [
-        {
-          "text": "每次打開，\n**都不知道要背什麼**？",
-          "say": "[smug] 每次打開，都不知道要背什麼？",
-          "beats": 8,
-          "cues": [
-            [
-              0.3,
-              "pop"
-            ]
-          ]
-        },
-        {
-          "text": "我幫你排好一條路：\n**先翻卡，再拼字**，",
-          "say": "我幫你排好一條路。先翻卡，再拼字，",
-          "beats": 8,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ],
-            [
-              3.2,
-              "tap"
-            ],
-            [
-              3.9,
-              "pop"
-            ],
-            [
-              5.1,
-              "tap"
-            ],
-            [
-              5.8,
-              "pop"
-            ]
-          ]
-        },
-        {
-          "text": "然後**考考看**，\n最後**開口說**。",
-          "say": "然後考考看，最後開口說。",
-          "beats": 6,
-          "cues": [
-            [
-              0.10000000000000009,
-              "tap"
-            ],
-            [
-              0.8,
-              "pop"
-            ],
-            [
-              2.8,
-              "tap"
-            ],
-            [
-              3.5,
-              "pop"
-            ]
-          ]
-        },
-        {
-          "text": "走完蓋章，**今天就收工**。",
-          "say": "[satisfied] 走完蓋章，今天就收工。",
-          "beats": 6,
-          "cues": [
-            [
-              0,
-              "tap"
-            ],
-            [
-              1.2,
-              "stamp"
-            ],
-            [
-              1.5,
-              "ding"
-            ]
-          ]
-        }
+      [
+       4.6,
+       "tap"
       ],
-      "draw": [
-        1,
-        0.2,
-        2.4
+      [
+       6,
+       "whoosh"
       ],
-      "hops": [
-        [
-          1,
-          3.9
-        ],
-        [
-          1,
-          5.8
-        ],
-        [
-          2,
-          0.8
-        ],
-        [
-          2,
-          3.5
-        ]
+      [
+       7.6,
+       "wrong"
       ],
-      "finish": [
-        3,
-        0.6
-      ],
-      "stampAt": [
-        3,
-        1.2
-      ],
-      "cheekyAt": [
-        3,
-        3.1
+      [
+       9,
+       "whoosh"
       ]
+     ]
     },
     {
-      "kind": "path",
-      "days": 5,
-      "launch": "11.16",
-      "endBeats": 7,
-      "endStamp": true,
-      "endStampAt": 0.75,
-      "grooveFrom": 1,
-      "outroAt": 1.0,
-      "id": "cd5-en",
-      "series": "5 days to go",
-      "app": "WordCat",
-      "label": "SillyCat",
-      "voice": {
-        "engine": "elevenlabs",
-        "voiceId": "N2lVS1w4EtoT3dr4eOWO",
-        "model": "eleven_v4",
-        "language": "en"
-      },
-      "dayWords": [
-        "",
-        "days to go"
-      ],
-      "note": "Out 11.16 on the App Store",
-      "outro": "Follow us. We'll tell you when it's out.",
-      "outroSay": "Five days. Don't forget to follow.",
-      "stops": [
-        [
-          "en-n2-card",
-          "Cards",
-          280
-        ],
-        [
-          "en-n3-write-solved",
-          "Write",
-          250
-        ],
-        [
-          "en-3-quiz",
-          "Quiz",
-          250
-        ],
-        [
-          "en-n8-shadow",
-          "Speak",
-          1050
-        ]
-      ],
-      "done": "Today's done!",
-      "lines": [
-        {
-          "text": "Open the app and\n**no idea what to study?**",
-          "say": "[smug] Open the app, and no idea what to study?",
-          "beats": 8,
-          "cues": [
-            [
-              0.3,
-              "pop"
-            ]
-          ]
-        },
-        {
-          "text": "I lay out the path:\n**cards, then writing,**",
-          "say": "I lay out the path. Cards first, then writing,",
-          "beats": 8,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ],
-            [
-              2.9000000000000004,
-              "tap"
-            ],
-            [
-              3.6,
-              "pop"
-            ],
-            [
-              5.8,
-              "tap"
-            ],
-            [
-              6.5,
-              "pop"
-            ]
-          ]
-        },
-        {
-          "text": "**a quick quiz**,\nthen **speaking**.",
-          "say": "then a quick quiz, then speaking.",
-          "beats": 6,
-          "cues": [
-            [
-              0.6000000000000001,
-              "tap"
-            ],
-            [
-              1.3,
-              "pop"
-            ],
-            [
-              3.0,
-              "tap"
-            ],
-            [
-              3.7,
-              "pop"
-            ]
-          ]
-        },
-        {
-          "text": "Finish it, stamp it.\n**Done for today.**",
-          "say": "[satisfied] Finish it, stamp it. Done for today.",
-          "beats": 7,
-          "cues": [
-            [
-              0.5,
-              "tap"
-            ],
-            [
-              1.9,
-              "stamp"
-            ],
-            [
-              2.1999999999999997,
-              "ding"
-            ]
-          ]
-        }
-      ],
-      "draw": [
-        1,
-        0.2,
-        2.4
-      ],
-      "hops": [
-        [
-          1,
-          3.6
-        ],
-        [
-          1,
-          6.5
-        ],
-        [
-          2,
-          1.3
-        ],
-        [
-          2,
-          3.7
-        ]
-      ],
-      "finish": [
-        3,
-        1.2
-      ],
-      "stampAt": [
-        3,
-        1.9
-      ],
-      "cheekyAt": [
-        3,
-        3.7
+     "text": "開口說，**真人**陪你練。",
+     "beats": 10,
+     "cues": [
+      [
+       0,
+       "whoosh"
       ]
-    },
-    {
-      "id": "ep01",
-      "series": "小笨貓日記 #1",
-      "voice": false,
-      "hook": [
-        "欸，又在滑手機喔？"
+     ],
+     "clips": [
+      [
+       0.4,
+       "next/restaurant-0-0-partner-en.mp3",
+       1.0
       ],
-      "lines": [
-        {
-          "text": "欸，又在**滑手機**喔？",
-          "beats": 4,
-          "cues": [
-            [
-              0,
-              "pop"
-            ]
-          ]
-        },
-        {
-          "text": "我是 **SillyCat**，專門盯你背單字。",
-          "beats": 6,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ],
-            [
-              2,
-              "stamp"
-            ]
-          ]
-        },
-        {
-          "text": "對，App 裡真的會這樣**嗆你**。",
-          "beats": 5,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ]
-          ]
-        },
-        {
-          "text": "**7000 單字**，我陪你背完。",
-          "beats": 6,
-          "cues": [
-            [
-              0.8,
-              "tap"
-            ],
-            [
-              1,
-              "whoosh"
-            ],
-            [
-              3,
-              "tap"
-            ],
-            [
-              4.4,
-              "tap"
-            ],
-            [
-              4.5,
-              "ding"
-            ]
-          ]
-        },
-        {
-          "text": "明天見，敢放我**鴿子**試試看。",
-          "beats": 5,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ],
-            [
-              1,
-              "pop"
-            ]
-          ]
-        }
-      ],
-      "app": "單字貓",
-      "tagline": "背 7000 單字的 App",
-      "shots": {
-        "today": "today",
-        "study": "study",
-        "answer": "study-answer"
-      }
-    },
-    {
-      "id": "ep01-en",
-      "series": "SillyCat Diaries #1",
-      "voice": false,
-      "hook": [
-        "Hey. Scrolling again?"
-      ],
-      "lines": [
-        {
-          "text": "Hey. **Scrolling** again?",
-          "beats": 4,
-          "cues": [
-            [
-              0,
-              "pop"
-            ]
-          ]
-        },
-        {
-          "text": "I'm **SillyCat**. I make sure you study.",
-          "beats": 6,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ],
-            [
-              2,
-              "stamp"
-            ]
-          ]
-        },
-        {
-          "text": "Yep. The app really **roasts** you.",
-          "beats": 5,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ]
-          ]
-        },
-        {
-          "text": "**Taiwan Mandarin**, one word at a time.",
-          "beats": 6,
-          "cues": [
-            [
-              0.8,
-              "tap"
-            ],
-            [
-              1,
-              "whoosh"
-            ],
-            [
-              3,
-              "tap"
-            ],
-            [
-              4.4,
-              "tap"
-            ],
-            [
-              4.5,
-              "ding"
-            ]
-          ]
-        },
-        {
-          "text": "See you tomorrow. Don't you dare **ghost** me.",
-          "beats": 5,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ],
-            [
-              1,
-              "pop"
-            ]
-          ]
-        }
-      ],
-      "app": "WordCat",
-      "tagline": "Learn Taiwan Mandarin",
-      "shots": {
-        "today": "today-en",
-        "study": "study-en",
-        "answer": "study-answer-en"
-      },
-      "lang": "en",
-      "outro": "Follow SillyCat. Get roasted daily.",
-      "outroNote": "Download link in bio",
-      "catTop": 365
-    },
-    {
-      "id": "ep02",
-      "series": "小笨貓日記 #2",
-      "hook": [
-        "一天只背 7 個",
-        "就想睡？"
-      ],
-      "lines": [
-        {
-          "text": "才 7 個？笑死。",
-          "say": "才七個？笑死。",
-          "shot": "today",
-          "crop": [
-            420,
-            360,
-            1170,
-            620
-          ],
-          "mood": "smug"
-        },
-        {
-          "text": "每天背幾個，是你自己訂的。",
-          "shot": "goal",
-          "crop": [
-            30,
-            600,
-            1176,
-            1720
-          ],
-          "mood": "idle"
-        },
-        {
-          "text": "說好 20 個，還差 13 個。",
-          "say": "說好二十個，還差十三個。",
-          "shot": "today",
-          "crop": [
-            60,
-            540,
-            940,
-            900
-          ],
-          "mood": "annoyed"
-        },
-        {
-          "text": "別看我。去按「繼續學習」。",
-          "say": "別看我。去按繼續學習。",
-          "shot": "today",
-          "crop": [
-            40,
-            900,
-            1166,
-            1170
-          ],
-          "tap": [
-            650,
-            1032
-          ],
-          "mood": "smug"
-        }
+      [
+       6.2,
+       "next/restaurant-0-0-reply-en.mp3",
+       1.15
       ]
+     ]
     },
     {
-      "id": "ep03",
-      "series": "小笨貓日記 #3",
-      "hook": [
-        "all 是什麼意思？",
-        "答錯會被貓念"
+     "text": "蓋章那一下，會**上癮**。",
+     "say": "[satisfied] 蓋章那一下……會上癮。",
+     "beats": 6,
+     "cues": [
+      [
+       0,
+       "whoosh"
       ],
-      "lines": [
-        {
-          "text": "考你一題：all 是什麼意思？",
-          "say": "考你一題。all，是什麼意思？",
-          "shot": "quiz",
-          "crop": [
-            20,
-            470,
-            1186,
-            1530
-          ],
-          "mood": "smug"
-        },
-        {
-          "text": "你選了「金屬的」？",
-          "say": "你選了，金屬的？",
-          "shot": "quiz-answered",
-          "crop": [
-            20,
-            470,
-            1186,
-            1530
-          ],
-          "tap": [
-            287,
-            870
-          ],
-          "sfx": "wrong",
-          "mood": "annoyed"
-        },
-        {
-          "text": "那是 metallic 的意思。",
-          "shot": "quiz-answered",
-          "crop": [
-            20,
-            1500,
-            1186,
-            1780
-          ],
-          "mood": "annoyed"
-        },
-        {
-          "text": "all 是「所有的」。記好，我不想說第二次。",
-          "say": "all 是，所有的。記好，我不想說第二次。",
-          "shot": "quiz-answered",
-          "crop": [
-            20,
-            470,
-            1186,
-            1530
-          ],
-          "mood": "smug"
-        }
+      [
+       0.9,
+       "stamp"
+      ],
+      [
+       1.2,
+       "ding"
       ]
+     ]
     },
     {
-      "id": "d6",
-      "series": "倒數 6 天",
-      "app": "WordCat 單字貓",
-      "label": "傻貓 SillyCat",
-      "voice": {
-        "engine": "elevenlabs",
-        "voiceId": "fQj4gJSexpu8RDE2Ii5m",
-        "model": "eleven_v4",
-        "language": "zh"
-      },
-      "dayWords": [
-        "還有",
-        "天"
-      ],
-      "note": "11.16 App Store 上架",
-      "outro": "追蹤我們，上架當天通知你",
-      "outroSay": "還有六天。",
-      "kind": "day3d",
-      "days": 6,
-      "launch": "11.16",
-      "endBeats": 7,
-      "endStamp": true,
-      "endStampAt": 0.75,
-      "grooveFrom": 1,
-      "outroAt": 1.0,
-      "lines": [
-        {
-          "text": "離考試還有幾天，**你算過嗎**？",
-          "say": "[teasing] 離考試還有幾天，你算過嗎？",
-          "beats": 8,
-          "cues": [
-            [
-              0.3,
-              "pop"
-            ]
-          ]
-        },
-        {
-          "text": "先考你兩分鐘，**看你在哪**。",
-          "say": "先考你兩分鐘，看你在哪。",
-          "beats": 8,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ],
-            [
-              2,
-              "tap"
-            ],
-            [
-              2.4,
-              "wrong"
-            ],
-            [
-              3,
-              "pop"
-            ],
-            [
-              3.2,
-              "pop"
-            ],
-            [
-              3.4,
-              "pop"
-            ],
-            [
-              6,
-              "whoosh"
-            ],
-            [
-              7,
-              "ding"
-            ]
-          ]
-        },
-        {
-          "text": "選好考試跟日期，**我幫你排**。",
-          "say": "選好考試跟日期，我幫你排。",
-          "beats": 8,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ],
-            [
-              1,
-              "tap"
-            ],
-            [
-              2,
-              "tap"
-            ],
-            [
-              2.1,
-              "pop"
-            ],
-            [
-              2.9,
-              "flip"
-            ],
-            [
-              3.2,
-              "flip"
-            ],
-            [
-              3.5,
-              "flip"
-            ],
-            [
-              3.8,
-              "flip"
-            ],
-            [
-              4.1,
-              "flip"
-            ],
-            [
-              4.4,
-              "stamp"
-            ],
-            [
-              4.9,
-              "ding"
-            ]
-          ]
-        },
-        {
-          "text": "每天幾個字、讀到第幾章，\n**都算好了**。",
-          "say": "每天幾個字、考前讀到第幾章，都算好了。",
-          "beats": 8,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ],
-            [
-              1.3,
-              "pop"
-            ],
-            [
-              1.5,
-              "pop"
-            ],
-            [
-              2.2,
-              "tick"
-            ],
-            [
-              2.4,
-              "tick"
-            ],
-            [
-              2.6,
-              "tick"
-            ],
-            [
-              2.8,
-              "tick"
-            ],
-            [
-              3.5,
-              "pop"
-            ],
-            [
-              4.3,
-              "pop"
-            ],
-            [
-              5.4,
-              "tap"
-            ],
-            [
-              5.85,
-              "tap"
-            ],
-            [
-              6.3,
-              "tap"
-            ],
-            [
-              6.75,
-              "ding"
-            ]
-          ]
-        }
-      ],
-      "scene": {
-        "quiz": [
-          "v210/quiz",
-          "v210/quiz-answered"
-        ],
-        "quizTap": [
-          603,
-          1055
-        ],
-        "quizLook": 1150,
-        "quizLifts": [
-          [
-            40,
-            440,
-            1166,
-            590,
-            0.5,
-            3.0
-          ],
-          [
-            44,
-            1070,
-            1162,
-            1270,
-            0.3,
-            3.2
-          ],
-          [
-            44,
-            1292,
-            1162,
-            1492,
-            0.42,
-            3.4
-          ]
-        ],
-        "plan": "next/n6-plan",
-        "planTaps": [
-          [
-            1.0,
-            731,
-            1916
-          ],
-          [
-            2.0,
-            835,
-            2262
-          ]
-        ],
-        "planLook": 2050,
-        "planLifts": [
-          [
-            70,
-            775,
-            1150,
-            985,
-            0.45,
-            1.3
-          ],
-          [
-            70,
-            1310,
-            1150,
-            1450,
-            0.5,
-            3.5
-          ]
-        ],
-        "props": [
-          {
-            "kind": "calendar",
-            "slot": 2,
-            "beat": 2.05,
-            "until": [
-              3,
-              0.1
-            ],
-            "from": [
-              835,
-              2262
-            ],
-            "pages": [
-              [
-                "2026",
-                "11",
-                "10",
-                "星期二"
-              ],
-              [
-                "2026",
-                "12",
-                "25",
-                "星期五"
-              ],
-              [
-                "2027",
-                "1",
-                "1",
-                "星期五"
-              ],
-              [
-                "2027",
-                "2",
-                "6",
-                "星期六"
-              ],
-              [
-                "2027",
-                "4",
-                "1",
-                "星期四"
-              ]
-            ],
-            "final": [
-              "2027",
-              "5",
-              "15",
-              "星期六"
-            ],
-            "tag": "會考"
-          },
-          {
-            "kind": "counter",
-            "slot": 3,
-            "beat": 1.5,
-            "from": [
-              360,
-              880
-            ],
-            "at": [
-              70,
-              250
-            ],
-            "tilt": -3,
-            "label": "每天",
-            "unit": "個字",
-            "to": 20
-          },
-          {
-            "kind": "track",
-            "slot": 3,
-            "beat": 4.3,
-            "from": [
-              420,
-              1380
-            ],
-            "at": [
-              500,
-              300
-            ],
-            "tilt": 2.5,
-            "title": "考前讀到",
-            "steps": [
-              "1",
-              "2",
-              "3",
-              "4"
-            ],
-            "stepWord": "第 {n} 章",
-            "flag": "會考"
-          }
-        ]
-      }
-    },
-    {
-      "id": "d6-en",
-      "series": "6 days to go",
-      "app": "WordCat",
-      "label": "SillyCat",
-      "voice": {
-        "engine": "elevenlabs",
-        "voiceId": "N2lVS1w4EtoT3dr4eOWO",
-        "model": "eleven_v4",
-        "language": "en"
-      },
-      "dayWords": [
-        "",
-        "days to go"
-      ],
-      "note": "Out 11.16 on the App Store",
-      "outro": "Follow us. We'll tell you when it's out.",
-      "outroSay": "Six days.",
-      "kind": "day3d",
-      "days": 6,
-      "launch": "11.16",
-      "endBeats": 7,
-      "endStamp": true,
-      "endStampAt": 0.75,
-      "grooveFrom": 1,
-      "outroAt": 1.0,
-      "lines": [
-        {
-          "text": "Learning Mandarin **with no plan?**",
-          "say": "[smug] Learning Mandarin... with no plan?",
-          "beats": 8,
-          "cues": [
-            [
-              0.3,
-              "pop"
-            ]
-          ]
-        },
-        {
-          "text": "A two-minute check\n**finds your level.**",
-          "say": "A two-minute check finds your level.",
-          "beats": 8,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ],
-            [
-              2,
-              "tap"
-            ],
-            [
-              2.4,
-              "wrong"
-            ],
-            [
-              3,
-              "pop"
-            ],
-            [
-              3.2,
-              "pop"
-            ],
-            [
-              3.4,
-              "pop"
-            ],
-            [
-              6,
-              "whoosh"
-            ],
-            [
-              7,
-              "ding"
-            ]
-          ]
-        },
-        {
-          "text": "Pick a daily goal.\n**I'll plan each day.**",
-          "say": "Pick a daily goal. I'll plan each day.",
-          "beats": 8,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ],
-            [
-              1,
-              "tap"
-            ],
-            [
-              2.1,
-              "pop"
-            ],
-            [
-              2.8,
-              "tick"
-            ],
-            [
-              3.0,
-              "tick"
-            ],
-            [
-              3.2,
-              "tick"
-            ],
-            [
-              3.4,
-              "tick"
-            ],
-            [
-              4.1,
-              "ding"
-            ]
-          ]
-        },
-        {
-          "text": "What to study, every day.\n**All worked out.**",
-          "say": "What to study, every single day. All worked out.",
-          "beats": 9,
-          "cues": [
-            [
-              0,
-              "whoosh"
-            ],
-            [
-              1.3,
-              "pop"
-            ],
-            [
-              1.5,
-              "pop"
-            ],
-            [
-              2,
-              "tap"
-            ],
-            [
-              3,
-              "tap"
-            ],
-            [
-              3.5,
-              "pop"
-            ],
-            [
-              4,
-              "tap"
-            ],
-            [
-              6,
-              "stamp"
-            ]
-          ]
-        }
-      ],
-      "scene": {
-        "quiz": [
-          "next/en-3-quiz",
-          "next/en-3-quiz"
-        ],
-        "quizTap": [
-          603,
-          952
-        ],
-        "quizLook": 1150,
-        "quizLifts": [
-          [
-            40,
-            1640,
-            1166,
-            1880,
-            0.5,
-            3.0
-          ],
-          [
-            44,
-            870,
-            1166,
-            1035,
-            0.3,
-            3.2
-          ],
-          [
-            44,
-            1064,
-            1166,
-            1222,
-            0.42,
-            3.4
-          ]
-        ],
-        "plan": "next/en-n6-plan",
-        "planTaps": [
-          [
-            1.0,
-            476,
-            1766
-          ]
-        ],
-        "planLook": 1800,
-        "planLifts": [
-          [
-            70,
-            775,
-            1150,
-            985,
-            0.45,
-            1.3
-          ],
-          [
-            70,
-            1150,
-            1150,
-            1290,
-            0.5,
-            3.5
-          ]
-        ],
-        "props": [
-          {
-            "kind": "counter",
-            "slot": 2,
-            "beat": 2.05,
-            "until": [
-              3,
-              0.1
-            ],
-            "from": [
-              476,
-              1766
-            ],
-            "at": [
-              320,
-              250
-            ],
-            "tilt": -3,
-            "label": "Daily goal",
-            "unit": "words a day",
-            "to": 20
-          },
-          {
-            "kind": "route",
-            "slot": 3,
-            "beat": 1.5,
-            "from": [
-              400,
-              1040
-            ],
-            "at": [
-              150,
-              260
-            ],
-            "tilt": -2,
-            "stops": [
-              "Cards",
-              "Writing",
-              "Quiz"
-            ],
-            "stopBeats": [
-              2,
-              3,
-              4
-            ],
-            "doneBeat": 6,
-            "doneText": "All worked out"
-          }
-        ]
-      }
+     "text": "背不起來？我會**笑你**。",
+     "say": "[mischievously] 背不起來？我會笑你喔。",
+     "beats": 6,
+     "cues": [
+      [
+       0,
+       "pop"
+      ]
+     ]
     }
-  ]
+   ],
+   "outroSay": "追蹤我們，上架當天通知你。",
+   "outroAt": 1.6,
+   "endBeats": 9,
+   "endStamp": true,
+   "grooveFrom": 1,
+   "endStampAt": 0.75
+  },
+  {
+   "id": "teaser-en",
+   "series": "Out 11.16",
+   "app": "WordCat",
+   "launch": "11.16",
+   "voice": {
+    "engine": "elevenlabs",
+    "voiceId": "N2lVS1w4EtoT3dr4eOWO",
+    "model": "eleven_v4",
+    "language": "en"
+   },
+   "outro": "Follow us. We'll tell you when it's out.",
+   "outroNote": "On the App Store",
+   "hook": [
+    "Hey. You."
+   ],
+   "lines": [
+    {
+     "text": "Hey. You.",
+     "say": "[smug] Hey. You.",
+     "beats": 4,
+     "cues": [
+      [
+       0.3,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "**11/16**. I'm moving into your phone.",
+     "say": "[smug] November sixteenth. I'm moving into your phone.",
+     "beats": 8,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       2,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "One short path a day. Then you're done.",
+     "say": "One short path a day. Then you're done.",
+     "beats": 12,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       3,
+       "whoosh"
+      ],
+      [
+       4.6,
+       "tap"
+      ],
+      [
+       6,
+       "whoosh"
+      ],
+      [
+       7.6,
+       "wrong"
+      ],
+      [
+       9,
+       "whoosh"
+      ]
+     ]
+    },
+    {
+     "text": "Real voices. **Real** conversations.",
+     "beats": 10,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ]
+     ],
+     "clips": [
+      [
+       0.4,
+       "next/restaurant-0-0-partner-zh.mp3",
+       1.0
+      ],
+      [
+       6.2,
+       "next/restaurant-0-0-reply-zh.mp3",
+       1.15
+      ]
+     ]
+    },
+    {
+     "text": "That stamp? **Addictive.**",
+     "say": "[satisfied] That stamp? ...Addictive.",
+     "beats": 6,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       0.9,
+       "stamp"
+      ],
+      [
+       1.2,
+       "ding"
+      ]
+     ]
+    },
+    {
+     "text": "Forget a word? I'll **laugh**.",
+     "say": "[mischievously] Forget a word? I'll laugh at you.",
+     "beats": 6,
+     "cues": [
+      [
+       0,
+       "pop"
+      ]
+     ]
+    }
+   ],
+   "outroSay": "Follow us. We'll tell you when it's out.",
+   "outroAt": 1.6,
+   "endBeats": 9,
+   "endStamp": true,
+   "grooveFrom": 1,
+   "label": "SillyCat",
+   "screens": {
+    "today": "en-n1-today",
+    "card": "en-n2-card",
+    "write": "en-n3-write-solved",
+    "exam": "en-3-quiz",
+    "shadow": "en-n8-shadow",
+    "stamp": "en-n11-stamp",
+    "mock": "en-n3-write"
+   },
+   "shadowCam": {
+    "x": 603,
+    "y": 1560,
+    "z": 0.9
+   },
+   "patches": [
+    [
+     600,
+     1110,
+     280
+    ],
+    [
+     560,
+     1395,
+     450
+    ]
+   ],
+   "ringY": 1080,
+   "endStampAt": 0.75
+  },
+  {
+   "id": "cd6",
+   "kind": "countdown",
+   "days": 6,
+   "series": "倒數 6 天",
+   "app": "WordCat 單字貓",
+   "launch": "11.16",
+   "label": "傻貓 SillyCat",
+   "voice": {
+    "engine": "elevenlabs",
+    "voiceId": "fQj4gJSexpu8RDE2Ii5m",
+    "model": "eleven_v4",
+    "language": "zh"
+   },
+   "screen": "n6-plan",
+   "dayWords": [
+    "還有",
+    "天"
+   ],
+   "note": "11.16 App Store 上架",
+   "outro": "追蹤我們，上架當天通知你",
+   "outroSay": "還有六天。別忘了追蹤。",
+   "outroAt": 1.0,
+   "endBeats": 7,
+   "endStamp": true,
+   "endStampAt": 0.75,
+   "grooveFrom": 1,
+   "cams": [
+    [
+     1,
+     0,
+     {
+      "x": 603,
+      "y": 1990,
+      "z": 0.74
+     }
+    ],
+    [
+     1,
+     5.5,
+     {
+      "x": 603,
+      "y": 2010,
+      "z": 0.76
+     }
+    ],
+    [
+     2,
+     0.4,
+     {
+      "x": 603,
+      "y": 676,
+      "z": 0.7
+     }
+    ],
+    [
+     2,
+     7,
+     {
+      "x": 603,
+      "y": 700,
+      "z": 0.72
+     }
+    ]
+   ],
+   "marks": [
+    [
+     1,
+     1.6,
+     "ring",
+     620,
+     1860,
+     842,
+     1972
+    ],
+    [
+     2,
+     0.8,
+     "marker",
+     210,
+     812,
+     520,
+     866
+    ],
+    [
+     2,
+     3.8,
+     "marker",
+     210,
+     1328,
+     630,
+     1386
+    ]
+   ],
+   "taps": [
+    [
+     1,
+     3.0,
+     835,
+     2262
+    ]
+   ],
+   "lines": [
+    {
+     "text": "考試哪天，**你記得嗎**？",
+     "say": "[smug] 你考試哪天，你記得嗎？",
+     "beats": 6,
+     "cues": [
+      [
+       0.3,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "跟我說哪天考，\n**我幫你排計畫**。",
+     "say": "跟我說你哪天考，我幫你排好計畫。",
+     "beats": 8,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       1.6,
+       "pop"
+      ],
+      [
+       3.0,
+       "tap"
+      ],
+      [
+       3.2,
+       "pop"
+      ],
+      [
+       3.85,
+       "tap"
+      ],
+      [
+       4.15,
+       "tap"
+      ],
+      [
+       4.45,
+       "tap"
+      ],
+      [
+       4.75,
+       "tap"
+      ],
+      [
+       5.05,
+       "tap"
+      ],
+      [
+       5.35,
+       "ding"
+      ]
+     ]
+    },
+    {
+     "text": "每天背幾個、讀到哪，\n**我算好了**。",
+     "say": "每天背幾個、考前讀到哪，我都算好了。",
+     "beats": 8,
+     "cues": [
+      [
+       0.2,
+       "whoosh"
+      ],
+      [
+       0.8,
+       "tap"
+      ],
+      [
+       1.4,
+       "pop"
+      ],
+      [
+       1.9,
+       "tap"
+      ],
+      [
+       2.1,
+       "tap"
+      ],
+      [
+       2.3,
+       "tap"
+      ],
+      [
+       2.6,
+       "ding"
+      ],
+      [
+       3.8,
+       "tap"
+      ],
+      [
+       4.4,
+       "pop"
+      ],
+      [
+       5.4,
+       "tap"
+      ],
+      [
+       5.85,
+       "tap"
+      ],
+      [
+       6.3,
+       "tap"
+      ],
+      [
+       6.75,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "你負責背，**我負責唸**。",
+     "say": "[mischievously] 你負責背，我負責唸。",
+     "beats": 5,
+     "cues": [
+      [
+       0,
+       "pop"
+      ]
+     ]
+    }
+   ],
+   "props": [
+    {
+     "kind": "calendar",
+     "slot": 1,
+     "beat": 3.1,
+     "until": [
+      2,
+      0.2
+     ],
+     "from": [
+      835,
+      2262
+     ],
+     "pages": [
+      [
+       "2026",
+       "11",
+       "9",
+       "星期一"
+      ],
+      [
+       "2026",
+       "12",
+       "25",
+       "星期五"
+      ],
+      [
+       "2027",
+       "1",
+       "1",
+       "星期五"
+      ],
+      [
+       "2027",
+       "2",
+       "6",
+       "星期六"
+      ],
+      [
+       "2027",
+       "4",
+       "1",
+       "星期四"
+      ]
+     ],
+     "final": [
+      "2027",
+      "5",
+      "15",
+      "星期六"
+     ],
+     "tag": "會考"
+    },
+    {
+     "kind": "counter",
+     "slot": 2,
+     "beat": 1.3,
+     "from": [
+      360,
+      835
+     ],
+     "at": [
+      70,
+      250
+     ],
+     "tilt": -3,
+     "label": "每天",
+     "unit": "個字",
+     "to": 20
+    },
+    {
+     "kind": "track",
+     "slot": 2,
+     "beat": 4.3,
+     "from": [
+      420,
+      1355
+     ],
+     "at": [
+      500,
+      300
+     ],
+     "tilt": 2.5,
+     "title": "考前讀到",
+     "steps": [
+      "1",
+      "2",
+      "3",
+      "4"
+     ],
+     "stepWord": "第 {n} 章",
+     "flag": "會考"
+    }
+   ]
+  },
+  {
+   "id": "cd6-en",
+   "kind": "countdown",
+   "days": 6,
+   "series": "6 days to go",
+   "app": "WordCat",
+   "launch": "11.16",
+   "label": "SillyCat",
+   "voice": {
+    "engine": "elevenlabs",
+    "voiceId": "N2lVS1w4EtoT3dr4eOWO",
+    "model": "eleven_v4",
+    "language": "en"
+   },
+   "screen": "en-n6-plan",
+   "dayWords": [
+    "",
+    "days to go"
+   ],
+   "note": "Out 11.16 on the App Store",
+   "outro": "Follow us. We'll tell you when it's out.",
+   "outroSay": "Six days. Don't forget to follow.",
+   "outroAt": 1.0,
+   "endBeats": 7,
+   "endStamp": true,
+   "endStampAt": 0.75,
+   "grooveFrom": 1,
+   "cams": [
+    [
+     1,
+     0,
+     {
+      "x": 603,
+      "y": 1830,
+      "z": 0.74
+     }
+    ],
+    [
+     1,
+     5.5,
+     {
+      "x": 603,
+      "y": 1860,
+      "z": 0.78
+     }
+    ],
+    [
+     2,
+     0.4,
+     {
+      "x": 603,
+      "y": 590,
+      "z": 0.72
+     }
+    ],
+    [
+     2,
+     7,
+     {
+      "x": 603,
+      "y": 610,
+      "z": 0.74
+     }
+    ]
+   ],
+   "marks": [
+    [
+     1,
+     2.2,
+     "ring",
+     360,
+     1712,
+     592,
+     1820
+    ],
+    [
+     2,
+     1.2,
+     "marker",
+     210,
+     812,
+     590,
+     866
+    ],
+    [
+     2,
+     4.4,
+     "marker",
+     210,
+     1016,
+     850,
+     1072
+    ]
+   ],
+   "taps": [
+    [
+     1,
+     2.0,
+     476,
+     1766
+    ]
+   ],
+   "lines": [
+    {
+     "text": "How many words today? **Be honest.**",
+     "say": "[smug] How many words did you learn today? Be honest.",
+     "beats": 8,
+     "cues": [
+      [
+       0.3,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "Pick a daily goal.\n**I'll plan the path.**",
+     "say": "Pick a daily goal. I'll plan the path.",
+     "beats": 8,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       2.0,
+       "tap"
+      ],
+      [
+       2.4,
+       "pop"
+      ],
+      [
+       3.2,
+       "tap"
+      ],
+      [
+       3.5,
+       "tap"
+      ],
+      [
+       3.8,
+       "tap"
+      ],
+      [
+       4.3,
+       "ding"
+      ]
+     ]
+    },
+    {
+     "text": "Cards. Writing. A quick quiz.\n**All mapped out.**",
+     "say": "Cards, then writing, then a quick quiz. All mapped out.",
+     "beats": 10,
+     "cues": [
+      [
+       0.2,
+       "whoosh"
+      ],
+      [
+       0.7,
+       "pop"
+      ],
+      [
+       1.0,
+       "tap"
+      ],
+      [
+       2.4,
+       "tap"
+      ],
+      [
+       3.6,
+       "tap"
+      ],
+      [
+       6.2,
+       "stamp"
+      ]
+     ]
+    },
+    {
+     "text": "You study. **I nag.**",
+     "say": "[mischievously] You study. I nag.",
+     "beats": 6,
+     "cues": [
+      [
+       0,
+       "pop"
+      ]
+     ]
+    }
+   ],
+   "props": [
+    {
+     "kind": "counter",
+     "slot": 1,
+     "beat": 2.3,
+     "from": [
+      476,
+      1766
+     ],
+     "at": [
+      320,
+      250
+     ],
+     "tilt": -3,
+     "label": "Daily goal",
+     "unit": "words a day",
+     "to": 20
+    },
+    {
+     "kind": "route",
+     "slot": 2,
+     "beat": 0.6,
+     "from": [
+      400,
+      1040
+     ],
+     "at": [
+      150,
+      260
+     ],
+     "tilt": -2,
+     "stops": [
+      "Cards",
+      "Writing",
+      "Quiz"
+     ],
+     "stopBeats": [
+      1.0,
+      2.4,
+      3.6
+     ],
+     "doneBeat": 6.2,
+     "doneText": "All mapped out"
+    }
+   ]
+  },
+  {
+   "kind": "path",
+   "days": 5,
+   "launch": "11.16",
+   "endBeats": 7,
+   "endStamp": true,
+   "endStampAt": 0.75,
+   "grooveFrom": 1,
+   "outroAt": 1.0,
+   "id": "cd5",
+   "series": "倒數 5 天",
+   "app": "WordCat 單字貓",
+   "label": "傻貓 SillyCat",
+   "voice": {
+    "engine": "elevenlabs",
+    "voiceId": "fQj4gJSexpu8RDE2Ii5m",
+    "model": "eleven_v4",
+    "language": "zh"
+   },
+   "dayWords": [
+    "還有",
+    "天"
+   ],
+   "note": "11.16 App Store 上架",
+   "outro": "追蹤我們，上架當天通知你",
+   "outroSay": "還有五天。別忘了追蹤。",
+   "stops": [
+    [
+     "n2-card",
+     "翻卡",
+     280
+    ],
+    [
+     "n3-write-solved",
+     "拼字",
+     250
+    ],
+    [
+     "n4-exam-answered",
+     "考考看",
+     300
+    ],
+    [
+     "n8-shadow",
+     "口說",
+     1150
+    ]
+   ],
+   "done": "今天的份完成！",
+   "lines": [
+    {
+     "text": "每次打開，\n**都不知道要背什麼**？",
+     "say": "[smug] 每次打開，都不知道要背什麼？",
+     "beats": 8,
+     "cues": [
+      [
+       0.3,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "我幫你排好一條路：\n**先翻卡，再拼字**，",
+     "say": "我幫你排好一條路。先翻卡，再拼字，",
+     "beats": 8,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       3.2,
+       "tap"
+      ],
+      [
+       3.9,
+       "pop"
+      ],
+      [
+       5.1,
+       "tap"
+      ],
+      [
+       5.8,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "然後**考考看**，\n最後**開口說**。",
+     "say": "然後考考看，最後開口說。",
+     "beats": 6,
+     "cues": [
+      [
+       0.10000000000000009,
+       "tap"
+      ],
+      [
+       0.8,
+       "pop"
+      ],
+      [
+       2.8,
+       "tap"
+      ],
+      [
+       3.5,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "走完蓋章，**今天就收工**。",
+     "say": "[satisfied] 走完蓋章，今天就收工。",
+     "beats": 6,
+     "cues": [
+      [
+       0,
+       "tap"
+      ],
+      [
+       1.2,
+       "stamp"
+      ],
+      [
+       1.5,
+       "ding"
+      ]
+     ]
+    }
+   ],
+   "draw": [
+    1,
+    0.2,
+    2.4
+   ],
+   "hops": [
+    [
+     1,
+     3.9
+    ],
+    [
+     1,
+     5.8
+    ],
+    [
+     2,
+     0.8
+    ],
+    [
+     2,
+     3.5
+    ]
+   ],
+   "finish": [
+    3,
+    0.6
+   ],
+   "stampAt": [
+    3,
+    1.2
+   ],
+   "cheekyAt": [
+    3,
+    3.1
+   ]
+  },
+  {
+   "kind": "path",
+   "days": 5,
+   "launch": "11.16",
+   "endBeats": 7,
+   "endStamp": true,
+   "endStampAt": 0.75,
+   "grooveFrom": 1,
+   "outroAt": 1.0,
+   "id": "cd5-en",
+   "series": "5 days to go",
+   "app": "WordCat",
+   "label": "SillyCat",
+   "voice": {
+    "engine": "elevenlabs",
+    "voiceId": "N2lVS1w4EtoT3dr4eOWO",
+    "model": "eleven_v4",
+    "language": "en"
+   },
+   "dayWords": [
+    "",
+    "days to go"
+   ],
+   "note": "Out 11.16 on the App Store",
+   "outro": "Follow us. We'll tell you when it's out.",
+   "outroSay": "Five days. Don't forget to follow.",
+   "stops": [
+    [
+     "en-n2-card",
+     "Cards",
+     280
+    ],
+    [
+     "en-n3-write-solved",
+     "Write",
+     250
+    ],
+    [
+     "en-3-quiz",
+     "Quiz",
+     250
+    ],
+    [
+     "en-n8-shadow",
+     "Speak",
+     1050
+    ]
+   ],
+   "done": "Today's done!",
+   "lines": [
+    {
+     "text": "Open the app and\n**no idea what to study?**",
+     "say": "[smug] Open the app, and no idea what to study?",
+     "beats": 8,
+     "cues": [
+      [
+       0.3,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "I lay out the path:\n**cards, then writing,**",
+     "say": "I lay out the path. Cards first, then writing,",
+     "beats": 8,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       2.9000000000000004,
+       "tap"
+      ],
+      [
+       3.6,
+       "pop"
+      ],
+      [
+       5.8,
+       "tap"
+      ],
+      [
+       6.5,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "**a quick quiz**,\nthen **speaking**.",
+     "say": "then a quick quiz, then speaking.",
+     "beats": 6,
+     "cues": [
+      [
+       0.6000000000000001,
+       "tap"
+      ],
+      [
+       1.3,
+       "pop"
+      ],
+      [
+       3.0,
+       "tap"
+      ],
+      [
+       3.7,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "Finish it, stamp it.\n**Done for today.**",
+     "say": "[satisfied] Finish it, stamp it. Done for today.",
+     "beats": 7,
+     "cues": [
+      [
+       0.5,
+       "tap"
+      ],
+      [
+       1.9,
+       "stamp"
+      ],
+      [
+       2.1999999999999997,
+       "ding"
+      ]
+     ]
+    }
+   ],
+   "draw": [
+    1,
+    0.2,
+    2.4
+   ],
+   "hops": [
+    [
+     1,
+     3.6
+    ],
+    [
+     1,
+     6.5
+    ],
+    [
+     2,
+     1.3
+    ],
+    [
+     2,
+     3.7
+    ]
+   ],
+   "finish": [
+    3,
+    1.2
+   ],
+   "stampAt": [
+    3,
+    1.9
+   ],
+   "cheekyAt": [
+    3,
+    3.7
+   ]
+  },
+  {
+   "id": "ep01",
+   "series": "小笨貓日記 #1",
+   "voice": false,
+   "hook": [
+    "欸，又在滑手機喔？"
+   ],
+   "lines": [
+    {
+     "text": "欸，又在**滑手機**喔？",
+     "beats": 4,
+     "cues": [
+      [
+       0,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "我是 **SillyCat**，專門盯你背單字。",
+     "beats": 6,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       2,
+       "stamp"
+      ]
+     ]
+    },
+    {
+     "text": "對，App 裡真的會這樣**嗆你**。",
+     "beats": 5,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ]
+     ]
+    },
+    {
+     "text": "**7000 單字**，我陪你背完。",
+     "beats": 6,
+     "cues": [
+      [
+       0.8,
+       "tap"
+      ],
+      [
+       1,
+       "whoosh"
+      ],
+      [
+       3,
+       "tap"
+      ],
+      [
+       4.4,
+       "tap"
+      ],
+      [
+       4.5,
+       "ding"
+      ]
+     ]
+    },
+    {
+     "text": "明天見，敢放我**鴿子**試試看。",
+     "beats": 5,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       1,
+       "pop"
+      ]
+     ]
+    }
+   ],
+   "app": "單字貓",
+   "tagline": "背 7000 單字的 App",
+   "shots": {
+    "today": "today",
+    "study": "study",
+    "answer": "study-answer"
+   }
+  },
+  {
+   "id": "ep01-en",
+   "series": "SillyCat Diaries #1",
+   "voice": false,
+   "hook": [
+    "Hey. Scrolling again?"
+   ],
+   "lines": [
+    {
+     "text": "Hey. **Scrolling** again?",
+     "beats": 4,
+     "cues": [
+      [
+       0,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "I'm **SillyCat**. I make sure you study.",
+     "beats": 6,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       2,
+       "stamp"
+      ]
+     ]
+    },
+    {
+     "text": "Yep. The app really **roasts** you.",
+     "beats": 5,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ]
+     ]
+    },
+    {
+     "text": "**Taiwan Mandarin**, one word at a time.",
+     "beats": 6,
+     "cues": [
+      [
+       0.8,
+       "tap"
+      ],
+      [
+       1,
+       "whoosh"
+      ],
+      [
+       3,
+       "tap"
+      ],
+      [
+       4.4,
+       "tap"
+      ],
+      [
+       4.5,
+       "ding"
+      ]
+     ]
+    },
+    {
+     "text": "See you tomorrow. Don't you dare **ghost** me.",
+     "beats": 5,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       1,
+       "pop"
+      ]
+     ]
+    }
+   ],
+   "app": "WordCat",
+   "tagline": "Learn Taiwan Mandarin",
+   "shots": {
+    "today": "today-en",
+    "study": "study-en",
+    "answer": "study-answer-en"
+   },
+   "lang": "en",
+   "outro": "Follow SillyCat. Get roasted daily.",
+   "outroNote": "Download link in bio",
+   "catTop": 365
+  },
+  {
+   "id": "ep02",
+   "series": "小笨貓日記 #2",
+   "hook": [
+    "一天只背 7 個",
+    "就想睡？"
+   ],
+   "lines": [
+    {
+     "text": "才 7 個？笑死。",
+     "say": "才七個？笑死。",
+     "shot": "today",
+     "crop": [
+      420,
+      360,
+      1170,
+      620
+     ],
+     "mood": "smug"
+    },
+    {
+     "text": "每天背幾個，是你自己訂的。",
+     "shot": "goal",
+     "crop": [
+      30,
+      600,
+      1176,
+      1720
+     ],
+     "mood": "idle"
+    },
+    {
+     "text": "說好 20 個，還差 13 個。",
+     "say": "說好二十個，還差十三個。",
+     "shot": "today",
+     "crop": [
+      60,
+      540,
+      940,
+      900
+     ],
+     "mood": "annoyed"
+    },
+    {
+     "text": "別看我。去按「繼續學習」。",
+     "say": "別看我。去按繼續學習。",
+     "shot": "today",
+     "crop": [
+      40,
+      900,
+      1166,
+      1170
+     ],
+     "tap": [
+      650,
+      1032
+     ],
+     "mood": "smug"
+    }
+   ]
+  },
+  {
+   "id": "ep03",
+   "series": "小笨貓日記 #3",
+   "hook": [
+    "all 是什麼意思？",
+    "答錯會被貓念"
+   ],
+   "lines": [
+    {
+     "text": "考你一題：all 是什麼意思？",
+     "say": "考你一題。all，是什麼意思？",
+     "shot": "quiz",
+     "crop": [
+      20,
+      470,
+      1186,
+      1530
+     ],
+     "mood": "smug"
+    },
+    {
+     "text": "你選了「金屬的」？",
+     "say": "你選了，金屬的？",
+     "shot": "quiz-answered",
+     "crop": [
+      20,
+      470,
+      1186,
+      1530
+     ],
+     "tap": [
+      287,
+      870
+     ],
+     "sfx": "wrong",
+     "mood": "annoyed"
+    },
+    {
+     "text": "那是 metallic 的意思。",
+     "shot": "quiz-answered",
+     "crop": [
+      20,
+      1500,
+      1186,
+      1780
+     ],
+     "mood": "annoyed"
+    },
+    {
+     "text": "all 是「所有的」。記好，我不想說第二次。",
+     "say": "all 是，所有的。記好，我不想說第二次。",
+     "shot": "quiz-answered",
+     "crop": [
+      20,
+      470,
+      1186,
+      1530
+     ],
+     "mood": "smug"
+    }
+   ]
+  },
+  {
+   "id": "d6",
+   "series": "倒數 6 天",
+   "app": "WordCat 單字貓",
+   "label": "傻貓 SillyCat",
+   "voice": {
+    "engine": "elevenlabs",
+    "voiceId": "fQj4gJSexpu8RDE2Ii5m",
+    "model": "eleven_v4",
+    "language": "zh"
+   },
+   "dayWords": [
+    "還有",
+    "天"
+   ],
+   "note": "11.16 App Store 上架",
+   "outro": "追蹤我們，上架當天通知你",
+   "outroSay": "還有六天。",
+   "kind": "day3d",
+   "days": 6,
+   "launch": "11.16",
+   "endBeats": 7,
+   "endStamp": true,
+   "endStampAt": 0.75,
+   "grooveFrom": 1,
+   "outroAt": 1.0,
+   "lines": [
+    {
+     "text": "離考試還有幾天，**你算過嗎**？",
+     "say": "[teasing] 離考試還有幾天，你算過嗎？",
+     "beats": 8,
+     "cues": [
+      [
+       0.3,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "先考你兩分鐘，**看你在哪**。",
+     "say": "先考你兩分鐘，看你在哪。",
+     "beats": 8,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       2,
+       "tap"
+      ],
+      [
+       2.4,
+       "wrong"
+      ],
+      [
+       3,
+       "pop"
+      ],
+      [
+       3.2,
+       "pop"
+      ],
+      [
+       3.4,
+       "pop"
+      ],
+      [
+       6,
+       "whoosh"
+      ],
+      [
+       7,
+       "ding"
+      ]
+     ]
+    },
+    {
+     "text": "選好考試跟日期，**我幫你排**。",
+     "say": "選好考試跟日期，我幫你排。",
+     "beats": 8,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       1,
+       "tap"
+      ],
+      [
+       2,
+       "tap"
+      ],
+      [
+       2.1,
+       "pop"
+      ],
+      [
+       2.9,
+       "flip"
+      ],
+      [
+       3.2,
+       "flip"
+      ],
+      [
+       3.5,
+       "flip"
+      ],
+      [
+       3.8,
+       "flip"
+      ],
+      [
+       4.1,
+       "flip"
+      ],
+      [
+       4.4,
+       "stamp"
+      ],
+      [
+       4.9,
+       "ding"
+      ]
+     ]
+    },
+    {
+     "text": "每天幾個字、讀到第幾章，\n**都算好了**。",
+     "say": "每天幾個字、考前讀到第幾章，都算好了。",
+     "beats": 8,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       1.3,
+       "pop"
+      ],
+      [
+       1.5,
+       "pop"
+      ],
+      [
+       2.2,
+       "tick"
+      ],
+      [
+       2.4,
+       "tick"
+      ],
+      [
+       2.6,
+       "tick"
+      ],
+      [
+       2.8,
+       "tick"
+      ],
+      [
+       3.5,
+       "pop"
+      ],
+      [
+       4.3,
+       "pop"
+      ],
+      [
+       5.4,
+       "tap"
+      ],
+      [
+       5.85,
+       "tap"
+      ],
+      [
+       6.3,
+       "tap"
+      ],
+      [
+       6.75,
+       "ding"
+      ]
+     ]
+    }
+   ],
+   "scene": {
+    "quiz": [
+     "v210/quiz",
+     "v210/quiz-answered"
+    ],
+    "quizTap": [
+     603,
+     1055
+    ],
+    "quizLook": 1150,
+    "quizLifts": [
+     [
+      40,
+      440,
+      1166,
+      590,
+      0.5,
+      3.0
+     ],
+     [
+      44,
+      1070,
+      1162,
+      1270,
+      0.3,
+      3.2
+     ],
+     [
+      44,
+      1292,
+      1162,
+      1492,
+      0.42,
+      3.4
+     ]
+    ],
+    "plan": "next/n6-plan",
+    "planTaps": [
+     [
+      1.0,
+      731,
+      1916
+     ],
+     [
+      2.0,
+      835,
+      2262
+     ]
+    ],
+    "planLook": 2050,
+    "planLifts": [
+     [
+      70,
+      775,
+      1150,
+      985,
+      0.45,
+      1.3
+     ],
+     [
+      70,
+      1310,
+      1150,
+      1450,
+      0.5,
+      3.5
+     ]
+    ],
+    "props": [
+     {
+      "kind": "calendar",
+      "slot": 2,
+      "beat": 2.05,
+      "until": [
+       3,
+       0.1
+      ],
+      "from": [
+       835,
+       2262
+      ],
+      "pages": [
+       [
+        "2026",
+        "11",
+        "10",
+        "星期二"
+       ],
+       [
+        "2026",
+        "12",
+        "25",
+        "星期五"
+       ],
+       [
+        "2027",
+        "1",
+        "1",
+        "星期五"
+       ],
+       [
+        "2027",
+        "2",
+        "6",
+        "星期六"
+       ],
+       [
+        "2027",
+        "4",
+        "1",
+        "星期四"
+       ]
+      ],
+      "final": [
+       "2027",
+       "5",
+       "15",
+       "星期六"
+      ],
+      "tag": "會考"
+     },
+     {
+      "kind": "counter",
+      "slot": 3,
+      "beat": 1.5,
+      "from": [
+       360,
+       880
+      ],
+      "at": [
+       70,
+       250
+      ],
+      "tilt": -3,
+      "label": "每天",
+      "unit": "個字",
+      "to": 20
+     },
+     {
+      "kind": "track",
+      "slot": 3,
+      "beat": 4.3,
+      "from": [
+       420,
+       1380
+      ],
+      "at": [
+       500,
+       300
+      ],
+      "tilt": 2.5,
+      "title": "考前讀到",
+      "steps": [
+       "1",
+       "2",
+       "3",
+       "4"
+      ],
+      "stepWord": "第 {n} 章",
+      "flag": "會考"
+     }
+    ]
+   }
+  },
+  {
+   "id": "d6-en",
+   "series": "6 days to go",
+   "app": "WordCat",
+   "label": "SillyCat",
+   "voice": {
+    "engine": "elevenlabs",
+    "voiceId": "N2lVS1w4EtoT3dr4eOWO",
+    "model": "eleven_v4",
+    "language": "en"
+   },
+   "dayWords": [
+    "",
+    "days to go"
+   ],
+   "note": "Out 11.16 on the App Store",
+   "outro": "Follow us. We'll tell you when it's out.",
+   "outroSay": "Six days.",
+   "kind": "day3d",
+   "days": 6,
+   "launch": "11.16",
+   "endBeats": 7,
+   "endStamp": true,
+   "endStampAt": 0.75,
+   "grooveFrom": 1,
+   "outroAt": 1.0,
+   "lines": [
+    {
+     "text": "Learning Mandarin **with no plan?**",
+     "say": "[smug] Learning Mandarin... with no plan?",
+     "beats": 8,
+     "cues": [
+      [
+       0.3,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "A two-minute check\n**finds your level.**",
+     "say": "A two-minute check finds your level.",
+     "beats": 8,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       2,
+       "tap"
+      ],
+      [
+       2.4,
+       "wrong"
+      ],
+      [
+       3,
+       "pop"
+      ],
+      [
+       3.2,
+       "pop"
+      ],
+      [
+       3.4,
+       "pop"
+      ],
+      [
+       6,
+       "whoosh"
+      ],
+      [
+       7,
+       "ding"
+      ]
+     ]
+    },
+    {
+     "text": "Pick a daily goal.\n**I'll plan each day.**",
+     "say": "Pick a daily goal. I'll plan each day.",
+     "beats": 8,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       1,
+       "tap"
+      ],
+      [
+       2.1,
+       "pop"
+      ],
+      [
+       2.8,
+       "tick"
+      ],
+      [
+       3.0,
+       "tick"
+      ],
+      [
+       3.2,
+       "tick"
+      ],
+      [
+       3.4,
+       "tick"
+      ],
+      [
+       4.1,
+       "ding"
+      ]
+     ]
+    },
+    {
+     "text": "What to study, every day.\n**All worked out.**",
+     "say": "What to study, every single day. All worked out.",
+     "beats": 9,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       1.3,
+       "pop"
+      ],
+      [
+       1.5,
+       "pop"
+      ],
+      [
+       2,
+       "tap"
+      ],
+      [
+       3,
+       "tap"
+      ],
+      [
+       3.5,
+       "pop"
+      ],
+      [
+       4,
+       "tap"
+      ],
+      [
+       6,
+       "stamp"
+      ]
+     ]
+    }
+   ],
+   "scene": {
+    "quiz": [
+     "next/en-3-quiz",
+     "next/en-3-quiz"
+    ],
+    "quizTap": [
+     603,
+     952
+    ],
+    "quizLook": 1150,
+    "quizLifts": [
+     [
+      40,
+      1640,
+      1166,
+      1880,
+      0.5,
+      3.0
+     ],
+     [
+      44,
+      870,
+      1166,
+      1035,
+      0.3,
+      3.2
+     ],
+     [
+      44,
+      1064,
+      1166,
+      1222,
+      0.42,
+      3.4
+     ]
+    ],
+    "plan": "next/en-n6-plan",
+    "planTaps": [
+     [
+      1.0,
+      476,
+      1766
+     ]
+    ],
+    "planLook": 1800,
+    "planLifts": [
+     [
+      70,
+      775,
+      1150,
+      985,
+      0.45,
+      1.3
+     ],
+     [
+      70,
+      1150,
+      1150,
+      1290,
+      0.5,
+      3.5
+     ]
+    ],
+    "props": [
+     {
+      "kind": "counter",
+      "slot": 2,
+      "beat": 2.05,
+      "until": [
+       3,
+       0.1
+      ],
+      "from": [
+       476,
+       1766
+      ],
+      "at": [
+       320,
+       250
+      ],
+      "tilt": -3,
+      "label": "Daily goal",
+      "unit": "words a day",
+      "to": 20
+     },
+     {
+      "kind": "route",
+      "slot": 3,
+      "beat": 1.5,
+      "from": [
+       400,
+       1040
+      ],
+      "at": [
+       150,
+       260
+      ],
+      "tilt": -2,
+      "stops": [
+       "Cards",
+       "Writing",
+       "Quiz"
+      ],
+      "stopBeats": [
+       2,
+       3,
+       4
+      ],
+      "doneBeat": 6,
+      "doneText": "All worked out"
+     }
+    ]
+   }
+  },
+  {
+   "id": "d5",
+   "series": "倒數 5 天",
+   "app": "WordCat 單字貓",
+   "label": "傻貓 SillyCat",
+   "voice": {
+    "engine": "elevenlabs",
+    "voiceId": "fQj4gJSexpu8RDE2Ii5m",
+    "model": "eleven_v4",
+    "language": "zh"
+   },
+   "dayWords": [
+    "還有",
+    "天"
+   ],
+   "note": "11.16 App Store 上架",
+   "outro": "追蹤我們，上架當天通知你",
+   "outroSay": "還有五天。",
+   "kind": "day3d",
+   "days": 5,
+   "launch": "11.16",
+   "endBeats": 7,
+   "endStamp": true,
+   "endStampAt": 0.75,
+   "grooveFrom": 1,
+   "outroAt": 1.0,
+   "lines": [
+    {
+     "text": "背單字，**背到睡著**？",
+     "say": "[teasing] 背單字，背到睡著？",
+     "beats": 8,
+     "cues": [
+      [
+       0.3,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "用滑的。**會了，往右**。",
+     "say": "用滑的。會了，往右。",
+     "beats": 8,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       2,
+       "tap"
+      ],
+      [
+       2.2,
+       "whoosh"
+      ],
+      [
+       3,
+       "ding"
+      ],
+      [
+       5.5,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "不會，**往左**。\n我會再來煩你。",
+     "say": "不會，往左。我會再來煩你。",
+     "beats": 8,
+     "cues": [
+      [
+       1.5,
+       "tap"
+      ],
+      [
+       1.7,
+       "whoosh"
+      ],
+      [
+       2.5,
+       "wrong"
+      ],
+      [
+       4,
+       "whoosh"
+      ],
+      [
+       4.6,
+       "flip"
+      ],
+      [
+       6,
+       "whoosh"
+      ]
+     ]
+    },
+    {
+     "text": "一張兩秒，\n**等車就能背十個**。",
+     "say": "一張兩秒，等車就能背十個。",
+     "beats": 8,
+     "cues": [
+      [
+       1.3,
+       "pop"
+      ],
+      [
+       1.6,
+       "pop"
+      ],
+      [
+       2.2,
+       "tick"
+      ],
+      [
+       2.4,
+       "tick"
+      ],
+      [
+       2.6,
+       "tick"
+      ],
+      [
+       2.8,
+       "tick"
+      ],
+      [
+       3.5,
+       "pop"
+      ],
+      [
+       5,
+       "ding"
+      ]
+     ]
+    }
+   ],
+   "scene": {
+    "card": "next/n2-card",
+    "cardCrop": [
+     56,
+     540,
+     1164,
+     2300
+    ],
+    "look": 1420,
+    "badges": [
+     "認識",
+     "不熟"
+    ],
+    "back": "會再回來",
+    "today": "next/n1-today",
+    "todayLook": 1150,
+    "todayLifts": [
+     [
+      50,
+      520,
+      1160,
+      2005,
+      0.3,
+      1.2
+     ]
+    ],
+    "props": [
+     {
+      "kind": "counter",
+      "slot": 3,
+      "beat": 2.0,
+      "from": [
+       605,
+       1010
+      ],
+      "at": [
+       70,
+       250
+      ],
+      "tilt": -3,
+      "label": "等一班車",
+      "unit": "個字",
+      "to": 10
+     }
+    ]
+   }
+  },
+  {
+   "id": "d5-en",
+   "series": "5 days to go",
+   "app": "WordCat",
+   "label": "SillyCat",
+   "voice": {
+    "engine": "elevenlabs",
+    "voiceId": "N2lVS1w4EtoT3dr4eOWO",
+    "model": "eleven_v4",
+    "language": "en"
+   },
+   "dayWords": [
+    "",
+    "days to go"
+   ],
+   "note": "Out 11.16 on the App Store",
+   "outro": "Follow us. We'll tell you when it's out.",
+   "outroSay": "Five days.",
+   "kind": "day3d",
+   "days": 5,
+   "launch": "11.16",
+   "endBeats": 7,
+   "endStamp": true,
+   "endStampAt": 0.75,
+   "grooveFrom": 1,
+   "outroAt": 1.0,
+   "lines": [
+    {
+     "text": "Flashcards\n**putting you to sleep?**",
+     "say": "[teasing] Flashcards putting you to sleep?",
+     "beats": 8,
+     "cues": [
+      [
+       0.3,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "Just swipe.\n**Know it? Right.**",
+     "say": "Just swipe. Know it? Right.",
+     "beats": 8,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       2,
+       "tap"
+      ],
+      [
+       2.2,
+       "whoosh"
+      ],
+      [
+       3,
+       "ding"
+      ],
+      [
+       5.5,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "Don't? **Left.**\nI'll bring it back.",
+     "say": "Don't? Left. I'll bring it back.",
+     "beats": 8,
+     "cues": [
+      [
+       1.5,
+       "tap"
+      ],
+      [
+       1.7,
+       "whoosh"
+      ],
+      [
+       2.5,
+       "wrong"
+      ],
+      [
+       4,
+       "whoosh"
+      ],
+      [
+       4.6,
+       "flip"
+      ],
+      [
+       6,
+       "whoosh"
+      ]
+     ]
+    },
+    {
+     "text": "Two seconds a card.\n**Ten on one bus ride.**",
+     "say": "Two seconds a card. Ten on one bus ride.",
+     "beats": 8,
+     "cues": [
+      [
+       1.3,
+       "pop"
+      ],
+      [
+       1.6,
+       "pop"
+      ],
+      [
+       2.2,
+       "tick"
+      ],
+      [
+       2.4,
+       "tick"
+      ],
+      [
+       2.6,
+       "tick"
+      ],
+      [
+       2.8,
+       "tick"
+      ],
+      [
+       3.5,
+       "pop"
+      ],
+      [
+       5,
+       "ding"
+      ]
+     ]
+    }
+   ],
+   "scene": {
+    "card": "next/en-n2-card",
+    "cardCrop": [
+     56,
+     540,
+     1164,
+     2300
+    ],
+    "look": 1420,
+    "badges": [
+     "Know it",
+     "Not yet"
+    ],
+    "back": "It comes back",
+    "today": "next/en-n1-today",
+    "todayLook": 1150,
+    "todayLifts": [
+     [
+      50,
+      520,
+      1160,
+      2005,
+      0.3,
+      1.2
+     ]
+    ],
+    "props": [
+     {
+      "kind": "counter",
+      "slot": 3,
+      "beat": 2.0,
+      "from": [
+       605,
+       1010
+      ],
+      "at": [
+       70,
+       250
+      ],
+      "tilt": -3,
+      "label": "One bus ride",
+      "unit": "words",
+      "to": 10
+     }
+    ]
+   }
+  }
+ ]
 }

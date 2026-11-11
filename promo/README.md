@@ -293,3 +293,23 @@ node scripts/render-local.mjs d6 d6-en     # 輸出 out/d6.mp4、out/d6-en.mp4
 - 需要 Node 20 以上；Chromium 和 ffmpeg 由 Remotion 自己下載。
 - 預設用 `--gl=angle`（走顯卡）。畫面全黑或報 WebGL 錯誤時加 `--gl=vulkan` 試試，最後才退回 `--gl=swangle`（軟體算繪）。
 - 配音、配樂、`timing.json` 都已經在 repo 裡，本機不需要 ElevenLabs 金鑰。
+
+### 11/11｜還有 5 天：滑卡背單字（`d5`／`d5-en`，`src/reels/Day5.tsx`）
+
+右滑會了、左滑不會：真實截圖裡的單字卡被手指拖起來，染綠出現「認識」、彈回；再往左染紅「不熟」甩出去，在空中翻到背面；手機轉一圈回到今天頁，計數到 10。
+
+**IG 貼文（中）**
+
+還有 5 天 🐱
+背單字不用正襟危坐。會了往右滑，不會往左滑，不會的我會再拿回來煩你。
+一張兩秒，等一班車就能背十個。
+11/16 App Store 上架，追蹤我們，上架當天通知你。
+#單字貓 #WordCat #背單字 #學測英文 #會考英文 #英文單字
+
+**IG post (EN)**
+
+5 days to go 🐱
+Learning Mandarin shouldn't feel like homework. Know the word? Swipe right. Don't? Swipe left, and I'll bring it back.
+Two seconds a card. Ten on one bus ride.
+Out 11/16 on the App Store. Follow so you don't miss it.
+#WordCat #LearnChinese #Mandarin #Flashcards #LanguageLearning

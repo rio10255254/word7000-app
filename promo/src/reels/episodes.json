@@ -2539,6 +2539,372 @@
      }
     ]
    }
+  },
+  {
+   "id": "d4",
+   "series": "倒數 4 天",
+   "app": "WordCat 單字貓",
+   "label": "傻貓 SillyCat",
+   "voice": {
+    "engine": "elevenlabs",
+    "voiceId": "fQj4gJSexpu8RDE2Ii5m",
+    "model": "eleven_v4",
+    "language": "zh"
+   },
+   "dayWords": [
+    "還有",
+    "天"
+   ],
+   "note": "11.16 App Store 上架",
+   "outro": "追蹤我們，上架當天通知你",
+   "outroSay": "還有四天。",
+   "kind": "day3d",
+   "days": 4,
+   "launch": "11.16",
+   "endBeats": 7,
+   "endStamp": true,
+   "endStampAt": 0.75,
+   "grooveFrom": 1,
+   "outroAt": 1.0,
+   "lines": [
+    {
+     "text": "單字背了，**開口還是卡住**？",
+     "say": "[teasing] 單字背了，開口還是卡住？",
+     "beats": 8,
+     "cues": [
+      [
+       0.3,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "二十關**真實情境**，\n從點餐開始。",
+     "say": "二十關真實情境，從點餐開始。",
+     "beats": 8,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       1.5,
+       "pop"
+      ],
+      [
+       2.5,
+       "pop"
+      ],
+      [
+       3.5,
+       "pop"
+      ],
+      [
+       4.5,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "**真人錄音**，先聽一遍。",
+     "say": "真人錄音，先聽一遍。",
+     "beats": 12,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       5.6,
+       "tap"
+      ]
+     ],
+     "clips": [
+      [
+       6.0,
+       "next/restaurant-0-0-partner-en.mp3",
+       1.0
+      ]
+     ]
+    },
+    {
+     "text": "換你說。\n**念對，字會亮**。",
+     "say": "換你說。念對，字會亮。",
+     "beats": 14,
+     "cues": [
+      [
+       6.0,
+       "tap"
+      ],
+      [
+       10.0,
+       "ding"
+      ],
+      [
+       10.2,
+       "pop"
+      ]
+     ],
+     "clips": [
+      [
+       6.6,
+       "next/restaurant-0-0-reply-en.mp3",
+       1.15
+      ]
+     ]
+    }
+   ],
+   "scene": {
+    "map": "speak/zh-map",
+    "mapLook": 1500,
+    "mapLifts": [
+     [
+      47,
+      416,
+      1159,
+      947,
+      0.3,
+      1.0
+     ],
+     [
+      47,
+      1032,
+      1159,
+      1563,
+      0.45,
+      1.5
+     ],
+     [
+      47,
+      1669,
+      1159,
+      2178,
+      0.4,
+      2.5
+     ],
+     [
+      47,
+      2284,
+      1159,
+      2600,
+      0.35,
+      3.5
+     ]
+    ],
+    "talk": [
+     "speak/zh-shadow",
+     "speak/zh-result"
+    ],
+    "talkLook": 1640,
+    "server": [
+     40,
+     1340,
+     1010,
+     1640
+    ],
+    "reply": [
+     430,
+     1690,
+     1165,
+     1840
+    ],
+    "score": [
+     680,
+     1770,
+     1165,
+     1850
+    ],
+    "replyDone": [
+     420,
+     1570,
+     1165,
+     1730
+    ],
+    "doneLook": 1560
+   }
+  },
+  {
+   "id": "d4-en",
+   "series": "4 days to go",
+   "app": "WordCat",
+   "label": "SillyCat",
+   "voice": {
+    "engine": "elevenlabs",
+    "voiceId": "N2lVS1w4EtoT3dr4eOWO",
+    "model": "eleven_v4",
+    "language": "en"
+   },
+   "dayWords": [
+    "",
+    "days to go"
+   ],
+   "note": "Out 11.16 on the App Store",
+   "outro": "Follow us. We'll tell you when it's out.",
+   "outroSay": "Four days.",
+   "kind": "day3d",
+   "days": 4,
+   "launch": "11.16",
+   "endBeats": 7,
+   "endStamp": true,
+   "endStampAt": 0.75,
+   "grooveFrom": 1,
+   "outroAt": 1.0,
+   "lines": [
+    {
+     "text": "Know the words,\n**still freeze up?**",
+     "say": "[teasing] Know the words, still freeze up?",
+     "beats": 8,
+     "cues": [
+      [
+       0.3,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "Twenty **real scenes.**\nStart by ordering.",
+     "say": "Twenty real scenes. Start by ordering.",
+     "beats": 8,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       1.5,
+       "pop"
+      ],
+      [
+       2.5,
+       "pop"
+      ],
+      [
+       3.5,
+       "pop"
+      ],
+      [
+       4.5,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "**Real voices.** Listen first.",
+     "say": "Real voices. Listen first.",
+     "beats": 12,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       5.6,
+       "tap"
+      ]
+     ],
+     "clips": [
+      [
+       6.0,
+       "next/restaurant-0-0-partner-zh.mp3",
+       1.0
+      ]
+     ]
+    },
+    {
+     "text": "Your turn.\n**Say it right, it lights up.**",
+     "say": "Your turn. Say it right, it lights up.",
+     "beats": 14,
+     "cues": [
+      [
+       6.0,
+       "tap"
+      ],
+      [
+       10.0,
+       "ding"
+      ],
+      [
+       10.2,
+       "pop"
+      ]
+     ],
+     "clips": [
+      [
+       6.6,
+       "next/restaurant-0-0-reply-zh.mp3",
+       1.15
+      ]
+     ]
+    }
+   ],
+   "scene": {
+    "map": "speak/en-map",
+    "mapLook": 1500,
+    "mapLifts": [
+     [
+      47,
+      416,
+      1159,
+      968,
+      0.3,
+      1.0
+     ],
+     [
+      47,
+      1040,
+      1159,
+      1677,
+      0.45,
+      1.5
+     ],
+     [
+      47,
+      1783,
+      1159,
+      2314,
+      0.4,
+      2.5
+     ],
+     [
+      47,
+      2400,
+      1159,
+      2600,
+      0.35,
+      3.5
+     ]
+    ],
+    "talk": [
+     "speak/en-shadow",
+     "speak/en-result"
+    ],
+    "talkLook": 1560,
+    "server": [
+     40,
+     1260,
+     1010,
+     1540
+    ],
+    "reply": [
+     590,
+     1570,
+     1165,
+     1830
+    ],
+    "score": [
+     250,
+     1700,
+     1165,
+     1850
+    ],
+    "replyDone": [
+     590,
+     1400,
+     1165,
+     1660
+    ],
+    "doneLook": 1480
+   }
   }
  ]
 }

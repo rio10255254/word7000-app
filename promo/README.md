@@ -315,3 +315,23 @@ Learning Mandarin shouldn't feel like homework. Know the word? Swipe right. Don'
 Two seconds a card. Ten on one bus ride.
 Out 11/16 on the App Store. Follow so you don't miss it.
 #WordCat #LearnChinese #Mandarin #Flashcards #LanguageLearning
+
+### 11/12｜還有 4 天：真實口說情境＋真人語音（`d4`／`d4-en`，`src/reels/Day4.tsx`）
+
+情境地圖的關卡一層層浮起；轉一圈進到對話，服務生那句浮起並播 App 的真人錄音，聲波就是那段錄音的音量；換你說，再轉一圈，回來時句子變綠、分數浮起。截圖來源見 `public/speak/SOURCE.md`。
+
+**IG 貼文（中）**
+
+還有 4 天 🐱
+單字背了一堆，開口還是卡住？
+二十關真實情境，從進餐廳點餐開始。真人錄音先聽一遍，再換你說，念對了字會亮給你看。
+11/16 App Store 上架，追蹤我們，上架當天通知你。
+#單字貓 #WordCat #英文口說 #英文會話 #學英文
+
+**IG post (EN)**
+
+4 days to go 🐱
+Know the words but freeze when it's time to talk?
+Twenty real-life scenes, starting with getting a table. Real recorded voices: listen first, then say it yourself and watch it light up.
+Out 11/16 on the App Store. Follow so you don't miss it.
+#WordCat #LearnChinese #Mandarin #SpeakChinese #LanguageLearning

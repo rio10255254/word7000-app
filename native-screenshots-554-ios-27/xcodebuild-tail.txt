@@ -1,0 +1,80 @@
+    t =   248.73s     Check for interrupting elements affecting "shadow-record" Button
+    t =   248.84s     Synthesize event
+    t =   249.17s     Wait for com.rio.word7000 to idle
+    t =   249.17s Waiting 10.0s for "shadow-result" Any to exist
+    t =   250.21s     Checking `Expect predicate `existsNoRetry == 1` for object "shadow-result" Any`
+    t =   250.21s         Checking existence of `"shadow-result" Any`
+    t =   250.68s         Capturing element debug description
+    t =   251.22s     Checking `Expect predicate `existsNoRetry == 1` for object "shadow-result" Any`
+    t =   251.22s         Checking existence of `"shadow-result" Any`
+    t =   252.45s Find the Target Application 'com.rio.word7000'
+    t =   252.75s Added attachment named 'store-en-n8-shadow'
+    t =   252.76s Waiting 12.0s for "speaking-question" StaticText to exist
+    t =   253.80s     Checking `Expect predicate `existsNoRetry == 1` for object "speaking-question" StaticText`
+    t =   253.80s         Checking existence of `"speaking-question" StaticText`
+    t =   253.88s         Capturing element debug description
+    t =   254.83s     Checking `Expect predicate `existsNoRetry == 1` for object "speaking-question" StaticText`
+    t =   254.83s         Checking existence of `"speaking-question" StaticText`
+    t =   255.98s Find the Target Application 'com.rio.word7000'
+    t =   256.25s Added attachment named 'store-en-n9-answer'
+    t =   256.25s Waiting 5.0s for "speaking-scenarios" Button to exist
+    t =   257.31s     Checking `Expect predicate `existsNoRetry == 1` for object "speaking-scenarios" Button`
+    t =   257.31s         Checking existence of `"speaking-scenarios" Button`
+    t =   257.46s Tap "speaking-scenarios" Button
+    t =   257.46s     Wait for com.rio.word7000 to idle
+    t =   257.47s     Find the "speaking-scenarios" Button
+    t =   257.61s     Check for interrupting elements affecting "speaking-scenarios" Button
+    t =   257.73s     Synthesize event
+    t =   258.12s     Wait for com.rio.word7000 to idle
+    t =   260.94s Find the Target Application 'com.rio.word7000'
+    t =   261.66s Added attachment named 'store-en-n10-map'
+    t =   261.67s Terminate com.rio.word7000:68410
+    t =   262.72s Open com.rio.word7000
+    t =   262.72s     Launch com.rio.word7000
+2026-11-11 03:05:28.137 xcodebuild[23225:68381] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-11 03:05:28.137 xcodebuild[23225:68381] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =   263.19s         Setting up automation session
+    t =   267.03s         Wait for com.rio.word7000 to idle
+    t =   269.82s Waiting 10.0s for "day-complete-keep" Button to exist
+    t =   270.91s     Checking `Expect predicate `existsNoRetry == 1` for object "day-complete-keep" Button`
+    t =   270.92s         Checking existence of `"day-complete-keep" Button`
+    t =   275.74s Find the Target Application 'com.rio.word7000'
+    t =   276.51s Added attachment named 'store-en-n11-stamp'
+    t =   276.53s Tap "day-complete-keep" Button
+    t =   276.53s     Wait for com.rio.word7000 to idle
+    t =   276.56s     Find the "day-complete-keep" Button
+    t =   276.85s     Check for interrupting elements affecting "day-complete-keep" Button
+    t =   277.07s     Synthesize event
+    t =   277.69s     Wait for com.rio.word7000 to idle
+    t =   278.16s Waiting 10.0s for "today-start" Button to exist
+    t =   279.19s     Checking `Expect predicate `existsNoRetry == 1` for object "today-start" Button`
+    t =   279.19s         Checking existence of `"today-start" Button`
+    t =   279.26s Tap Button (First Match)
+    t =   279.26s     Wait for com.rio.word7000 to idle
+    t =   279.27s     Find the Button (First Match)
+    t =   279.37s     Check for interrupting elements affecting "person.crop.circle.fill" Button
+    t =   279.44s     Synthesize event
+    t =   279.80s     Wait for com.rio.word7000 to idle
+    t =   282.37s Waiting 5.0s for "me-calendar" Any to exist
+    t =   283.41s     Checking `Expect predicate `existsNoRetry == 1` for object "me-calendar" Any`
+    t =   283.41s         Checking existence of `"me-calendar" Any`
+    t =   285.83s Find the Target Application 'com.rio.word7000'
+    t =   286.31s Added attachment named 'store-en-n12-me'
+    t =   286.32s Tear Down
+Test Case '-[Word7000UITests.AppStoreScreenshotTests testStoreNextEnglish]' passed (288.685 seconds).
+Test Suite 'AppStoreScreenshotTests' passed at 2026-11-11 03:05:54.107.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 1373.359 (1373.530) seconds
+Test Suite 'Word7000UITests.xctest' passed at 2026-11-11 03:05:54.117.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 1373.359 (1373.540) seconds
+Test Suite 'Selected tests' passed at 2026-11-11 03:05:54.118.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 1373.359 (1373.542) seconds
+2026-11-11 03:05:56.974 xcodebuild[23225:68381] [MT] IDETestOperationsObserverDebug: 1392.143 elapsed -- Testing started completed.
+2026-11-11 03:05:56.974 xcodebuild[23225:68381] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-11 03:05:56.974 xcodebuild[23225:68381] [MT] IDETestOperationsObserverDebug: 1392.143 sec, +1392.143 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/runner/work/_temp/Word7000.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

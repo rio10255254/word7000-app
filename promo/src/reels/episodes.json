@@ -3480,6 +3480,476 @@
      ]
     ]
    }
+  },
+  {
+   "id": "d2",
+   "series": "倒數 2 天",
+   "app": "WordCat 單字貓",
+   "label": "傻貓 SillyCat",
+   "voice": {
+    "engine": "elevenlabs",
+    "voiceId": "fQj4gJSexpu8RDE2Ii5m",
+    "model": "eleven_v4",
+    "language": "zh"
+   },
+   "dayWords": [
+    "還有",
+    "天"
+   ],
+   "note": "11.16 App Store 上架",
+   "outro": "追蹤我們，上架當天通知你",
+   "outroSay": "還有兩天。",
+   "kind": "day3d",
+   "days": 2,
+   "launch": "11.16",
+   "endBeats": 7,
+   "endStamp": true,
+   "endStampAt": 0.75,
+   "grooveFrom": 1,
+   "outroAt": 1.0,
+   "lines": [
+    {
+     "text": "你講的英文，\n**有人幫你改嗎**？",
+     "say": "[teasing] 你講的英文，有人幫你改嗎？",
+     "beats": 9,
+     "cues": [
+      [
+       0.3,
+       "pop"
+      ],
+      [
+       2.2,
+       "thud"
+      ]
+     ]
+    },
+    {
+     "text": "我改。哪裡怪、為什麼，\n**都跟你講清楚**。",
+     "say": "我改。哪裡怪、為什麼，都跟你講清楚。",
+     "beats": 9,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       1.6,
+       "whoosh"
+      ],
+      [
+       2.2,
+       "pop"
+      ],
+      [
+       3.6,
+       "flip"
+      ],
+      [
+       5,
+       "pop"
+      ],
+      [
+       6.5,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "改完還追問，\n**逼你再多講一句**。",
+     "say": "改完還追問，逼你再多講一句。",
+     "beats": 8,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       1,
+       "pop"
+      ],
+      [
+       4,
+       "tap"
+      ],
+      [
+       4.3,
+       "ding"
+      ]
+     ]
+    },
+    {
+     "text": "你交代的事我都記得，\n**記到你受不了**。",
+     "say": "[smug] 你交代的事我都記得，記到你受不了。",
+     "beats": 10,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       1.5,
+       "pop"
+      ],
+      [
+       2.4,
+       "tick"
+      ],
+      [
+       2.8,
+       "tick"
+      ],
+      [
+       3.2,
+       "tick"
+      ],
+      [
+       3.6,
+       "pop"
+      ],
+      [
+       6,
+       "stamp"
+      ],
+      [
+       6.2,
+       "ding"
+      ]
+     ]
+    }
+   ],
+   "scene": {
+    "coach": "tutor/zh-coach",
+    "chat": "tutor/zh-chat",
+    "said": [
+     "你說",
+     "I am always hurry."
+    ],
+    "fix": [
+     70,
+     1235,
+     1010,
+     1505
+    ],
+    "ring": [
+     350,
+     1287,
+     250,
+     62
+    ],
+    "sentence": [
+     50,
+     640,
+     1158,
+     1010
+    ],
+    "tip": [
+     90,
+     1540,
+     1110,
+     1730
+    ],
+    "follow": [
+     50,
+     1820,
+     1158,
+     2290
+    ],
+    "answer": [
+     320,
+     2165
+    ],
+    "user": [
+     600,
+     1888,
+     1160,
+     2002
+    ],
+    "reply": [
+     50,
+     2012,
+     1140,
+     2206
+    ],
+    "note": [
+     50,
+     2208,
+     1000,
+     2272
+    ],
+    "premium": "Premium",
+    "desk": [
+     [
+      "tutor/zh-coach",
+      50,
+      640,
+      1108,
+      1140
+     ],
+     [
+      "",
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      "tutor/zh-chat",
+      40,
+      1500,
+      1126,
+      760
+     ],
+     [
+      "tutor/zh-coach",
+      50,
+      1820,
+      1108,
+      470
+     ],
+     [
+      "",
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   }
+  },
+  {
+   "id": "d2-en",
+   "series": "2 days to go",
+   "app": "WordCat",
+   "label": "SillyCat",
+   "voice": {
+    "engine": "elevenlabs",
+    "voiceId": "N2lVS1w4EtoT3dr4eOWO",
+    "model": "eleven_v4",
+    "language": "en"
+   },
+   "dayWords": [
+    "",
+    "days to go"
+   ],
+   "note": "Out 11.16 on the App Store",
+   "outro": "Follow us. We'll tell you when it's out.",
+   "outroSay": "Two days.",
+   "kind": "day3d",
+   "days": 2,
+   "launch": "11.16",
+   "endBeats": 7,
+   "endStamp": true,
+   "endStampAt": 0.75,
+   "grooveFrom": 1,
+   "outroAt": 1.0,
+   "lines": [
+    {
+     "text": "Who fixes your Chinese\n**when you speak?**",
+     "say": "[teasing] Who fixes your Chinese when you speak?",
+     "beats": 9,
+     "cues": [
+      [
+       0.3,
+       "pop"
+      ],
+      [
+       2.2,
+       "thud"
+      ]
+     ]
+    },
+    {
+     "text": "I do. What's off, and why.\n**Spelled out.**",
+     "say": "I do. What's off, and why. Spelled out.",
+     "beats": 9,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       1.6,
+       "whoosh"
+      ],
+      [
+       2.2,
+       "pop"
+      ],
+      [
+       3.6,
+       "flip"
+      ],
+      [
+       5,
+       "pop"
+      ],
+      [
+       6.5,
+       "pop"
+      ]
+     ]
+    },
+    {
+     "text": "Then a follow-up,\n**so you keep talking.**",
+     "say": "Then a follow-up, so you keep talking.",
+     "beats": 8,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       1,
+       "pop"
+      ],
+      [
+       4,
+       "tap"
+      ],
+      [
+       4.3,
+       "ding"
+      ]
+     ]
+    },
+    {
+     "text": "I remember what you tell me.\n**Till you can't stand it.**",
+     "say": "[smug] I remember what you tell me. Till you can't stand it.",
+     "beats": 10,
+     "cues": [
+      [
+       0,
+       "whoosh"
+      ],
+      [
+       1.5,
+       "pop"
+      ],
+      [
+       2.4,
+       "tick"
+      ],
+      [
+       2.8,
+       "tick"
+      ],
+      [
+       3.2,
+       "tick"
+      ],
+      [
+       3.6,
+       "pop"
+      ],
+      [
+       6,
+       "stamp"
+      ],
+      [
+       6.2,
+       "ding"
+      ]
+     ]
+    }
+   ],
+   "scene": {
+    "coach": "tutor/en-coach",
+    "chat": "tutor/en-chat",
+    "said": [
+     "You said",
+     "貼上到我的報告。"
+    ],
+    "fix": [
+     70,
+     1165,
+     1010,
+     1375
+    ],
+    "ring": [
+     330,
+     1215,
+     215,
+     58
+    ],
+    "sentence": [
+     50,
+     880,
+     1158,
+     1160
+    ],
+    "tip": [
+     90,
+     1400,
+     1110,
+     1598
+    ],
+    "follow": [
+     50,
+     1680,
+     1158,
+     2272
+    ],
+    "answer": [
+     400,
+     2135
+    ],
+    "user": [
+     580,
+     1888,
+     1160,
+     2002
+    ],
+    "reply": [
+     50,
+     2012,
+     1100,
+     2206
+    ],
+    "note": [
+     50,
+     2208,
+     1010,
+     2272
+    ],
+    "premium": "Premium",
+    "desk": [
+     [
+      "tutor/en-coach",
+      50,
+      840,
+      1108,
+      800
+     ],
+     [
+      "",
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      "tutor/en-chat",
+      40,
+      1440,
+      1126,
+      820
+     ],
+     [
+      "tutor/en-coach",
+      50,
+      1680,
+      1108,
+      590
+     ],
+     [
+      "",
+      0,
+      0,
+      0,
+      0
+     ]
+    ]
+   }
   }
  ]
 }

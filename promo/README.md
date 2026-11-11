@@ -359,3 +359,27 @@ Saved. No more excuses.
 (Scanning is a Premium feature. Studying words is always free.)
 Out 11/16 on the App Store. Follow so you don't miss it.
 #WordCat #LearnChinese #Mandarin #Flashcards #StudyTips
+
+### 11/14｜還有 2 天：傻貓 AI 老師（Premium）（`d2`／`d2-en`，`src/reels/Day2.tsx`）
+
+一張紙做的對話泡泡拍在桌上，寫著你說的那句有錯的話；手機從旁邊升起，紅筆在錯的地方畫波浪線，泡泡被吸進手機。鏡頭推到口說批改卡上：帶著同一個錯誤的那一行浮起，被紅筆圈起來，接著「更自然的說法」整句和黃色的提醒也一層層浮起。往下到追問那張卡，點「回答這個追問」。轉一圈到聊天：你的訊息送出、傻貓打字中、回覆落下，牠記住的事被釘在下面並迸出火花。全程右上角有 Premium 紙籤。泡泡是道具，上面的字是批改卡自己劃掉的那一句；手機畫面來源見 `public/tutor/SOURCE.md`。
+
+**IG 貼文（中）**
+
+還有 2 天 🐱
+你講的英文，有人幫你改嗎？
+我改。哪裡怪、為什麼，都跟你講清楚；改完還追問，逼你再多講一句。
+你交代的事我也都記得，記到你受不了。
+（AI 老師是 Premium 功能；背單字永遠免費。）
+11/16 App Store 上架，追蹤我們，上架當天通知你。
+#單字貓 #WordCat #英文口說 #AI家教 #學英文
+
+**IG post (EN)**
+
+2 days to go 🐱
+Who fixes your Chinese when you speak?
+I do. What's off, and why, spelled out. Then a follow-up, so you keep talking.
+And I remember what you tell me. Till you can't stand it.
+(The AI tutor is a Premium feature. Studying words is always free.)
+Out 11/16 on the App Store. Follow so you don't miss it.
+#WordCat #LearnChinese #Mandarin #SpeakChinese #AITutor

@@ -278,3 +278,18 @@ npx remotion render Reel-d6-en out/countdown-1110-en.mp4 --gl=swangle --timeout=
 > Take a two-minute level check, pick a daily goal, and every day is laid out: cards, writing, a quick quiz. Just show up.
 > WordCat lands on the App Store 11/16. Follow us and we'll tell you when it's out.
 > #WordCat #LearnChinese #LearnMandarin #TaiwanMandarin #Mandarin #StudyPlan #LanguageLearning
+
+### 在自己的電腦（有 GPU）算繪
+
+雲端容器沒有 GPU，一支要算一小時左右。有獨立顯卡的電腦上快很多：
+
+```bash
+git fetch origin claude/wonderful-babbage-50vsgl && git checkout claude/wonderful-babbage-50vsgl && git pull
+cd promo
+npm ci
+node scripts/render-local.mjs d6 d6-en     # 輸出 out/d6.mp4、out/d6-en.mp4
+```
+
+- 需要 Node 20 以上；Chromium 和 ffmpeg 由 Remotion 自己下載。
+- 預設用 `--gl=angle`（走顯卡）。畫面全黑或報 WebGL 錯誤時加 `--gl=vulkan` 試試，最後才退回 `--gl=swangle`（軟體算繪）。
+- 配音、配樂、`timing.json` 都已經在 repo 裡，本機不需要 ElevenLabs 金鑰。

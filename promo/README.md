@@ -383,3 +383,49 @@ And I remember what you tell me. Till you can't stand it.
 (The AI tutor is a Premium feature. Studying words is always free.)
 Out 11/16 on the App Store. Follow so you don't miss it.
 #WordCat #LearnChinese #Mandarin #SpeakChinese #AITutor
+
+### 11/15｜還有 1 天：蓋章、連續天數、貓罐頭（`d1`／`d1-en`，`src/reels/Day1.tsx`）
+
+一張三分鐘熱度的打卡表拍在桌上（前三格打勾，第四格寫著「明天再說…」），手機從旁邊升起。推近到今天的總結，三個數字一個個浮起，接著是傻貓那句「好啦，准你休息。」手機往後躺平，一顆木柄橡皮章從上方砸下來：這一下把整個螢幕印成「今天的份完成！」，手機被壓得一沉再彈回，金色印章浮起，「+1 天」紙條拍在旁邊。再推近到一週那一排：紅筆在漏掉的那天畫叉，貓罐頭從它的圖示裡蹦出來、在空中轉三圈、落在叉上把它蓋住；「只有 1 罐」。最後打卡表回來，第二顆章蓋在「明天再說」那一格上。橡皮章和罐頭是用基本幾何做的 3D 物件（`src/reels/three/objects.tsx`）；截圖來源見 `public/streak/SOURCE.md`。完整分鏡在 `docs/launch-countdown-v3.md`。
+
+**IG 貼文（中）**
+
+還有 1 天 🐱
+每次都三分鐘熱度，說的就是你吧？
+今天的份走完，我才准你休息。蓋章，連續天數加一。
+漏一天？有貓罐頭幫你擋，但只有一罐。
+明天上架。第一天，不准缺席。
+#單字貓 #WordCat #背單字 #學測英文 #會考英文 #讀書習慣
+
+**IG post (EN)**
+
+1 day to go 🐱
+Always quit by day three?
+Finish today's set and I'll let you rest. Stamp. Streak, plus one.
+Miss a day? A Cat Can covers it. You get one.
+Out tomorrow on the App Store. Day one. Be there.
+#WordCat #LearnChinese #Mandarin #StudyHabits #LanguageLearning
+
+### 11/16｜上架（`launch`／`launch-en`，`src/reels/Launch.tsx`）
+
+封面的印章換成「上架了」，傻貓整隻站在紙卡前面。手機升起，每說一個功能就轉一整圈、落在那個功能的畫面上，一塊介面跳起來、名稱的紙條拍下：計畫、滑卡、口說、掃描（Premium）、AI 老師（Premium）、蓋章；「全都在這」時手機退後，六張紙條落在它周圍。接著是兩種模式：手機推近經典模式，第二支手機從它背後滑出來是懶人模式，兩支像攤開的書一樣並排，各自蓋上名稱。最後兩支手機飛走，App 圖示變成一塊有厚度的亮面磚翻著跟斗飛進來：背單字永遠免費，App Store 現在下載。片尾接在同一個畫面上：「上架了」印章在聲音 logo 的和弦那一拍蓋下，「下載連結在個人簡介」。完整分鏡在 `docs/launch-countdown-v3.md`；截圖來源見 `public/launch/SOURCE.md`。
+
+**IG 貼文（中）**
+
+上架了 🐱
+欸，我來了。
+計畫、滑卡、口說、掃描、AI 老師、蓋章，全都在這。
+想自己挑？經典模式。懶得想？懶人模式。
+背單字永遠免費，下載連結在個人簡介。今天開始，不准偷懶。
+（掃描和 AI 老師是 Premium 功能。）
+#單字貓 #WordCat #背單字 #學測英文 #會考英文 #英文單字 #英文口說
+
+**IG post (EN)**
+
+Out now 🐱
+Hey. I'm here.
+Plans, swiping, speaking, scanning, a tutor, streaks. All in here.
+Pick your own? Classic. Rather not think? Easy mode.
+Flashcards are always free. Link in bio. Starting today, no slacking.
+(Scanning and the AI tutor are Premium features.)
+#WordCat #LearnChinese #LearnMandarin #TaiwanMandarin #Flashcards #LanguageLearning

@@ -634,5 +634,137 @@
         "voiceLength": 3.885
       }
     ]
+  },
+  "d1": {
+    "total": 23.5,
+    "end": 20.0,
+    "slots": [
+      {
+        "start": 0.0,
+        "length": 4.5,
+        "voiceStart": 0.12,
+        "voiceLength": 3.372
+      },
+      {
+        "start": 4.5,
+        "length": 3.5,
+        "voiceStart": 4.62,
+        "voiceLength": 2.553
+      },
+      {
+        "start": 8.0,
+        "length": 3.5,
+        "voiceStart": 8.12,
+        "voiceLength": 2.566
+      },
+      {
+        "start": 11.5,
+        "length": 4.5,
+        "voiceStart": 11.62,
+        "voiceLength": 4.172
+      },
+      {
+        "start": 16.0,
+        "length": 4.0,
+        "voiceStart": 16.12,
+        "voiceLength": 3.095
+      }
+    ]
+  },
+  "d1-en": {
+    "total": 23.5,
+    "end": 20.0,
+    "slots": [
+      {
+        "start": 0.0,
+        "length": 3.5,
+        "voiceStart": 0.12,
+        "voiceLength": 1.934
+      },
+      {
+        "start": 3.5,
+        "length": 4.0,
+        "voiceStart": 3.62,
+        "voiceLength": 3.199
+      },
+      {
+        "start": 7.5,
+        "length": 3.5,
+        "voiceStart": 7.62,
+        "voiceLength": 3.072
+      },
+      {
+        "start": 11.0,
+        "length": 5.0,
+        "voiceStart": 11.12,
+        "voiceLength": 4.571
+      },
+      {
+        "start": 16.0,
+        "length": 4.0,
+        "voiceStart": 16.12,
+        "voiceLength": 3.167
+      }
+    ]
+  },
+  "launch": {
+    "total": 24.0,
+    "end": 19.5,
+    "slots": [
+      {
+        "start": 0.0,
+        "length": 3.0,
+        "voiceStart": 0.12,
+        "voiceLength": 1.202
+      },
+      {
+        "start": 3.0,
+        "length": 6.5,
+        "voiceStart": 3.12,
+        "voiceLength": 5.979
+      },
+      {
+        "start": 9.5,
+        "length": 5.5,
+        "voiceStart": 9.62,
+        "voiceLength": 4.747
+      },
+      {
+        "start": 15.0,
+        "length": 4.5,
+        "voiceStart": 15.12,
+        "voiceLength": 3.838
+      }
+    ]
+  },
+  "launch-en": {
+    "total": 24.5,
+    "end": 20.0,
+    "slots": [
+      {
+        "start": 0.0,
+        "length": 3.0,
+        "voiceStart": 0.12,
+        "voiceLength": 1.515
+      },
+      {
+        "start": 3.0,
+        "length": 7.0,
+        "voiceStart": 3.12,
+        "voiceLength": 6.239
+      },
+      {
+        "start": 10.0,
+        "length": 5.5,
+        "voiceStart": 10.12,
+        "voiceLength": 4.609
+      },
+      {
+        "start": 15.5,
+        "length": 4.5,
+        "voiceStart": 15.62,
+        "voiceLength": 3.963
+      }
+    ]
   }
 }

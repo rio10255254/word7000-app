@@ -355,7 +355,7 @@ const Tracker = ({ film }: { film: Film }) => {
     >
       <div style={{ position: 'absolute', inset: 0, borderRadius: 8, backgroundColor: '#FBF7EC', backgroundImage: `url(${staticFile('paper-grain.png')})`, backgroundBlendMode: 'multiply', backgroundSize: '320px', border: '2px solid rgba(90,80,50,0.14)' }} />
       <div style={{ position: 'absolute', left: 210, top: -20, width: 140, height: 40, background: 'rgba(238,226,190,0.8)', transform: 'rotate(-3deg)', boxShadow: '0 1px 2px rgba(0,0,0,0.12)' }} />
-      <div style={{ position: 'absolute', left: 40, top: 40, color: '#2B3A55', lineHeight: 1, ...hand, fontSize: cjk ? 64 : 78 }}>
+      <div style={{ position: 'absolute', left: 40, top: 40, color: '#2B3A55', lineHeight: 1, whiteSpace: 'nowrap', ...hand, fontSize: cjk ? 64 : 72 }}>
         {s.tracker.title}
         <svg width={cjk ? 380 : 440} height={16} viewBox="0 0 440 16" preserveAspectRatio="none" style={{ display: 'block', marginTop: 6 }}>
           <path d="M2 9 C 90 2, 180 14, 270 7 S 400 4, 438 9" fill="none" stroke="#2B3A55" strokeWidth={4} strokeLinecap="round" opacity={0.7} />

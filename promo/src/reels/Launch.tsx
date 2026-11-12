@@ -86,12 +86,12 @@ const upright = (y: number, row: number, z: number) => ((960 - row) / FOCAL) * (
 const ICON = { row: 440, size: 0.82 };
 /** Where the six names land round the phone. */
 const ROUND: [number, number, number][] = [
-  [150, 500, -5],
-  [138, 800, 4],
-  [156, 1100, -3],
-  [930, 480, 5],
-  [942, 780, -4],
-  [926, 1080, 3],
+  [150, 452, -5],
+  [138, 716, 4],
+  [156, 980, -3],
+  [930, 436, 5],
+  [942, 700, -4],
+  [926, 964, 3],
 ];
 
 const useFilm = (id: string) => {

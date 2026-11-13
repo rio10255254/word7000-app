@@ -34,8 +34,13 @@ struct RoutineStepStrip: View {
             HStack(spacing: 6) {
                 Text(L.t("第 \(current + 1) 步，共 \(parts.count) 步", "Step \(current + 1) of \(parts.count)"))
                     .foregroundStyle(Palette.secondaryLabel)
+                    .contentTransition(.numericText(value: Double(current)))
+                    .animation(reduceMotion ? nil : Motion.swap, value: current)
                 Text("·").foregroundStyle(Palette.tertiaryLabel)
+                // The count rolls on with each card or answer.
                 Text(label).foregroundStyle(Palette.accent)
+                    .contentTransition(.numericText())
+                    .animation(reduceMotion ? nil : Motion.swap, value: label)
             }
             .font(.subheadline.weight(.bold))
             .monospacedDigit()
@@ -102,19 +107,27 @@ struct RoutineStepStrip: View {
 struct RoutineChecksView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var routine: WordRoutine
     /// The step whose hand-off was tapped through.
     @State private var begun: WordRoutine.Step?
 
     var body: some View {
+        // One on top of the other, so a hand-off and its step can cross
+        // over without sharing the height between them.
+        ZStack { stage }
+    }
+
+    @ViewBuilder
+    private var stage: some View {
         switch routine.step {
         case .flip:
-            ProgressView()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            DelayedProgress()
                 .onAppear { model.planRoutineChecks() }
         case .spell:
             if begun == .spell || !routine.spellResults.isEmpty {
                 RoutineSpellView(routine: routine)
+                    .transition(.questionSwap(reduceMotion))
             } else {
                 handOff(title: L.t("翻卡完成！", "Cards done!"),
                         line: model.learnsChinese
@@ -123,15 +136,18 @@ struct RoutineChecksView: View {
                             : L.t("你說認識 \(routine.knownIds.count) 個字。\n我抽 \(routine.spellIds.count) 個，寫給我看。",
                                   "You said you know \(routine.knownIds.count).\nI'll pick \(routine.spellIds.count). Spell them for me."),
                         action: model.learnsChinese ? L.t("開始寫字", "Start writing") : L.t("開始拼字", "Start spelling"), step: .spell)
+                    .transition(.questionSwap(reduceMotion))
             }
         case .exam:
             if begun == .exam || !routine.examResults.isEmpty {
                 RoutineExamView(routine: routine)
+                    .transition(.questionSwap(reduceMotion))
             } else {
                 handOff(title: routine.spellIds.isEmpty ? L.t("翻卡完成！", "Cards done!") : L.t("拼字完成！", "Spelling done!"),
                         line: L.t("這 \(routine.examIds.count) 個字你學過一陣子了。\n用\(model.examStyleName)考考看。",
                                   "You learned these \(routine.examIds.count) a while ago.\nTry them exam style."),
                         action: L.t("開始考考看", "Start the quiz"), step: .exam)
+                    .transition(.questionSwap(reduceMotion))
             }
         case .done:
             EmptyView()
@@ -156,7 +172,7 @@ struct RoutineChecksView: View {
             Spacer(minLength: 0)
             VStack(spacing: 12) {
                 Button {
-                    begun = step
+                    withAnimation(reduceMotion ? nil : Motion.swap) { begun = step }
                 } label: {
                     Text(action).font(.title3.weight(.bold)).frame(maxWidth: .infinity).padding(.vertical, 4)
                 }
@@ -183,7 +199,7 @@ struct RoutineChecksView: View {
         .task(id: step) {
             guard autoStarts else { return }
             do { try await Task.sleep(for: .seconds(Self.handOffSeconds)) } catch { return }
-            if begun != step { begun = step }
+            if begun != step { withAnimation(reduceMotion ? nil : Motion.swap) { begun = step } }
         }
     }
 
@@ -218,7 +234,7 @@ struct RoutineSpellView: View {
             if let wordId, let word = model.word(id: wordId), let sentence = Cloze.sentence(for: word, chinese: model.learnsChinese), let attempt {
                 question(word, sentence, attempt)
             } else {
-                ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
+                DelayedProgress()
             }
         }
         .onAppear {
@@ -501,6 +517,7 @@ struct RoutineExamView: View {
                 .padding(.vertical, 8)
                 .background { PaperBarBackground() }
                 .accessibilityIdentifier("routine-next")
+                .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
             }
         }
     }
@@ -532,7 +549,8 @@ struct RoutineExamView: View {
     private func next() {
         advancing = false
         Speaker.shared.stop()
-        wordId = model.activeRoutine?.examLeft.first ?? ""
+        // The answered question fades out as the next one is on its way.
+        withAnimation(reduceMotion ? nil : Motion.swap) { wordId = model.activeRoutine?.examLeft.first ?? "" }
     }
 }
 
@@ -689,7 +707,10 @@ struct ExamQuestionBody: View {
             .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .stroke(chosen != nil && (isAnswer || index == chosen) ? tint : Palette.separator, lineWidth: 2))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(SoftPressStyle())
+        // A wrong pick gives a small shake; the right answer swells a little either way.
+        .shake(trigger: chosen == index && !isAnswer, enabled: !reduceMotion)
+        .pulse(trigger: chosen != nil && isAnswer, scale: 1.03, enabled: !reduceMotion)
         .disabled(chosen != nil)
         .accessibilityLabel("\(letter). \(option)")
         .accessibilityIdentifier("routine-option-\(index)")
@@ -794,6 +815,7 @@ struct RoutineSummaryView: View {
         .sheet(isPresented: $signInOpen) { SignInSheet(reason: .general) }
         .onAppear { appeared = true }
         .soundEffect(trigger: appeared) { (_: Bool, now: Bool) -> SoundEffect? in now ? .complete : nil }
+        .sensoryFeedback(.success, trigger: appeared) { _, now in now && (model.settings.hapticsEnabled ?? true) }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("routine-summary")
     }
@@ -868,6 +890,7 @@ extension AppModel {
 /// ask about notifications (master asks as the app opens).
 struct ReminderAskCard: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// Minutes after midnight.
     @State private var minute = 20 * 60
     @State private var timeOpen = false
@@ -900,7 +923,7 @@ struct ReminderAskCard: View {
                 .accessibilityIdentifier("reminder-set")
                 Button(L.t("先不用", "Not now")) {
                     model.settings.reminderAskDeclinedOn = model.today
-                    withAnimation { answered = true }
+                    withAnimation(reduceMotion ? nil : Motion.reveal) { answered = true }
                 }
                 .font(.subheadline.weight(.semibold))
                 .frame(maxWidth: .infinity, minHeight: 36)
@@ -917,7 +940,7 @@ struct ReminderAskCard: View {
         model.settings.reminderMinute = minute
         model.setReminderEnabled(true)
         Usage.log("reminder_time", "\(minute)")
-        withAnimation { answered = true }
+        withAnimation(reduceMotion ? nil : Motion.reveal) { answered = true }
         Task { await PushRegistration.shared.askOnce(model) }
     }
 }

@@ -37,6 +37,7 @@ struct LearningPathView: View {
                 }
                 ForEach(chapters.indices, id: \.self) { index in
                     row(index, chapter: chapters[index], stop: stop(index, chapters[index], current: current))
+                        .entrance(1 + min(index, 6), distance: 10)
                 }
             }
             .padding(.horizontal, Metrics.gutter)
@@ -172,6 +173,7 @@ struct LearningPathView: View {
                 }
                 ProgressView(value: chapter.fraction)
                     .tint(stop == .read ? Palette.known : Self.olive)
+                    .animation(reduceMotion ? nil : Motion.fill, value: chapter.fraction)
                 Text(L.t("已會 \(chapter.mastered) / \(chapter.total) 個字", "\(chapter.mastered) of \(chapter.total) known"))
                     .font(.caption)
                     .foregroundStyle(Palette.secondaryLabel)

@@ -140,7 +140,7 @@ struct ShadowStepView: View {
                     guard !earlier.isEmpty else { return }
                     // Once the other person's line and the reply have come in.
                     do { try await Task.sleep(for: reduceMotion ? .milliseconds(50) : Self.typingPause + .milliseconds(420)) } catch { return }
-                    withAnimation(reduceMotion ? nil : .easeOut(duration: 0.35)) {
+                    withAnimation(reduceMotion ? nil : Motion.reveal) {
                         proxy.scrollTo(Self.recorderID, anchor: .bottom)
                     }
                 }
@@ -148,13 +148,13 @@ struct ShadowStepView: View {
                 // line under it stay in full view above the buttons.
                 .onChange(of: live) { _, now in
                     guard now else { return }
-                    withAnimation(reduceMotion ? nil : .easeOut(duration: 0.25)) {
+                    withAnimation(reduceMotion ? nil : Motion.reveal) {
                         proxy.scrollTo(Self.recorderID, anchor: .bottom)
                     }
                 }
                 .onChange(of: listener.isFinal) { _, final in
                     guard final else { return }
-                    withAnimation(reduceMotion ? nil : .easeOut(duration: 0.3)) {
+                    withAnimation(reduceMotion ? nil : Motion.reveal) {
                         proxy.scrollTo(Self.recorderID, anchor: .bottom)
                     }
                 }
@@ -174,7 +174,7 @@ struct ShadowStepView: View {
         .task(id: sentence) {
             guard !arrived else { return }
             do { try await Task.sleep(for: Self.typingPause) } catch { return }
-            withAnimation(.spring(response: 0.42, dampingFraction: 0.86)) { partnerArrived = true }
+            withAnimation(reduceMotion ? nil : Motion.card) { partnerArrived = true }
         }
         .sensoryFeedback(trigger: partnerArrived) { _, now in
             now && (model.settings.hapticsEnabled ?? true) ? .impact(weight: .light) : nil
@@ -204,7 +204,7 @@ struct ShadowStepView: View {
                     check = ShadowingCheck(target: sentence, heard: listener.text, chinese: chinese)
                 }
             } else if listener.support != .recordOnly {
-                withAnimation { check = ShadowingCheck(target: sentence, heard: "", chinese: chinese) }
+                withAnimation(reduceMotion ? nil : Motion.reveal) { check = ShadowingCheck(target: sentence, heard: "", chinese: chinese) }
             }
             Task {
                 if chinese { await measureTones() }
@@ -265,6 +265,10 @@ struct ShadowStepView: View {
             guard model.settings.hapticsEnabled ?? true, let passed else { return nil }
             return passed ? .success : .warning
         }
+        // The chime of a right answer for a sentence that came across whole.
+        .soundEffect(trigger: listener.isFinal ? check?.allRecognized : nil) { (_: Bool?, whole: Bool?) -> SoundEffect? in
+            whole == true ? .correct : nil
+        }
         .sensoryFeedback(trigger: live) { _, new in
             guard model.settings.hapticsEnabled ?? true else { return nil }
             return .impact(weight: new ? .medium : .light)
@@ -304,7 +308,7 @@ struct ShadowStepView: View {
                 Button { finish() } label: {
                     Text(L.t("跳過", "Skip")).font(.headline).frame(maxWidth: .infinity, minHeight: 50)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(SoftPressStyle())
                 .foregroundStyle(Palette.secondaryLabel)
                 .accessibilityIdentifier("shadow-skip")
                 // The same big key as everywhere else: it is where the eye goes.
@@ -346,9 +350,11 @@ struct ShadowStepView: View {
                 Text(message).font(.footnote).foregroundStyle(Palette.miss)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
+                    .transition(.opacity)
             }
         }
         .padding(.top, 6)
+        .animation(reduceMotion ? nil : Motion.reveal, value: listener.message)
     }
 
     /// The Next key filling up while it counts down.
@@ -560,7 +566,7 @@ struct ShadowStepView: View {
                     Button { withAnimation(reduceMotion ? nil : Motion.reveal) { legendShown.toggle() } } label: {
                         Image(systemName: "questionmark.circle").font(.subheadline)
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(SoftPressStyle())
                     .foregroundStyle(Palette.secondaryLabel)
                     .accessibilityLabel(L.t("顏色的意思", "What the colours mean"))
                 }
@@ -669,6 +675,7 @@ struct ShadowStepView: View {
         VStack(spacing: 8) {
             HStack(spacing: 28) {
                 playKey.opacity(listener.hasRecording && !live ? 1 : 0)
+                    .animation(reduceMotion ? nil : Motion.reveal, value: listener.hasRecording && !live)
                 ZStack {
                     if live && !reduceMotion {
                         Circle()
@@ -697,6 +704,7 @@ struct ShadowStepView: View {
                 Text(message).font(.footnote).foregroundStyle(Palette.miss)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
+                    .transition(.opacity)
             } else if uncheckable, listener.hasRecording {
                 Text(L.t("這支手機無法自動比對，聽聽自己的錄音，和示範比較看看。", "This iPhone can't check it. Play your take back and compare it with the model."))
                     .font(.footnote).foregroundStyle(.secondary)
@@ -704,6 +712,7 @@ struct ShadowStepView: View {
             }
         }
         .frame(maxWidth: .infinity)
+        .animation(reduceMotion ? nil : Motion.reveal, value: listener.message)
     }
 
     private func micButton(size: CGFloat, symbol: CGFloat) -> some View {
@@ -758,7 +767,7 @@ struct ShadowStepView: View {
                 .frame(width: 48, height: 48)
                 .background(Palette.accent.opacity(0.12), in: Circle())
         }
-        .buttonStyle(.plain)
+        .buttonStyle(SoftPressStyle())
         .disabled(!listener.hasRecording || live)
         .accessibilityLabel(listener.state == .playing ? L.t("停止播放", "Stop playback") : L.t("聽自己的錄音", "Hear yourself"))
         .accessibilityIdentifier("shadow-play")

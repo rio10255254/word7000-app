@@ -44,6 +44,7 @@ struct QuizSessionView: View {
                     }
                 } else if questions.isEmpty {
                     ContentUnavailableView { MascotLabel(mood: .encourage, title: L.noQuizWords) }
+                        .popIn()
                 } else if finished {
                     results
                 } else if questions.indices.contains(index) {

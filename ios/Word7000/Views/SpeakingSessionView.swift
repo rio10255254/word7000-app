@@ -159,7 +159,7 @@ struct SpeakingSessionView: View {
                 if curtain, let ref = scenarioRef {
                     StageCurtain(ref: ref) {
                         bannerShown = true
-                        curtain = false
+                        withAnimation(reduceMotion ? nil : Motion.reveal) { curtain = false }
                     }
                     .id(runID)
                     .transition(.opacity)
@@ -635,7 +635,7 @@ struct SpeakingSessionView: View {
                 .accessibilityIdentifier("speaking-show-reference")
                 Button {
                     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                    withAnimation(reduceMotion ? nil : .spring(response: 0.5, dampingFraction: 0.88)) { next() }
+                    withAnimation(reduceMotion ? nil : Motion.swap) { next() }
                 } label: {
                     HStack(spacing: 6) {
                         Text(attempted ? (index + 1 >= count ? L.seeResults : L.t("繼續對話", "Carry on")) : L.t("跳過", "Skip"))
@@ -778,7 +778,9 @@ struct SpeakingSessionView: View {
                 .secondaryAction()
                 .disabled(card.referenceAnswer.isEmpty)
                 .accessibilityIdentifier("speaking-show-reference")
-                Button(action: next) {
+                Button {
+                    withAnimation(reduceMotion ? nil : Motion.swap) { next() }
+                } label: {
                     Text(attempted ? (index + 1 >= count ? L.seeResults : L.nextQuestion) : L.t("跳過", "Skip"))
                         .font(.headline).frame(maxWidth: .infinity)
                 }
@@ -954,7 +956,7 @@ struct SpeakingSessionView: View {
                     // Next on the path; the same stage again when not cleared;
                     // another set of words in word practice.
                     let again: Source? = ref == nil ? .words : result.cleared ? nil : source
-                    start(again)
+                    withAnimation(reduceMotion ? nil : Motion.reveal) { start(again) }
                 } label: {
                     Text(ref == nil ? L.nextSession
                          : result.cleared ? (wrapsUpTheDay ? L.t("再一關", "One more stage") : L.t("下一關", "Next stage"))
@@ -984,7 +986,9 @@ struct SpeakingSessionView: View {
         }
         .soundEffect(trigger: starsLanded) { (_: Bool, landed: Bool) -> SoundEffect? in landed && result.cleared ? .complete : nil }
         .sensoryFeedback(trigger: starsLanded) { (_: Bool, landed: Bool) -> SensoryFeedback? in
-            landed && result.cleared && (model.settings.hapticsEnabled ?? true) ? SensoryFeedback.success : nil
+            // A stage not cleared lands with a duller knock than a cleared one.
+            guard landed, model.settings.hapticsEnabled ?? true else { return nil }
+            return result.cleared ? SensoryFeedback.success : SensoryFeedback.warning
         }
         .task {
             try? await Task.sleep(for: .milliseconds(450))
@@ -1027,7 +1031,7 @@ private struct PromptArrival: ViewModifier {
             .offset(x: settled ? 0 : 28)
             .onAppear {
                 guard !arrived, !reduceMotion else { return }
-                withAnimation(.spring(response: 0.45, dampingFraction: 0.85).delay(delay)) { arrived = true }
+                withAnimation(Motion.swap.delay(delay)) { arrived = true }
             }
     }
 }
@@ -1127,7 +1131,7 @@ private struct TranslatableQuestion: View {
                     }
                 }
         }
-        .buttonStyle(.plain)
+        .buttonStyle(SoftPressStyle())
         .accessibilityLabel(translated ? L.t("看原文", "Show the original") : L.t("看中文翻譯", "Show in English"))
         .accessibilityIdentifier("speaking-translate")
     }

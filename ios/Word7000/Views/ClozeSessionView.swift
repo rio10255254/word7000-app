@@ -32,22 +32,25 @@ struct ClozeSessionView: View {
 
     private var currentWord: WordEntry? { round.currentWordId.flatMap { words[$0] } }
     private var haptics: Bool { model.settings.hapticsEnabled ?? true }
+    /// The last word is solved and the results are up.
+    private var roundOver: Bool { started && round.initialCount > 0 && round.isComplete }
 
     var body: some View {
         NavigationStack {
             Group {
                 if !started {
-                    ProgressView()
+                    DelayedProgress()
                 } else if round.initialCount == 0 {
                     ContentUnavailableView {
                         MascotLabel(mood: .encourage, title: L.t("今天沒有可以挖空的單字", "No fill-in words for today"))
                     }
+                    .popIn()
                 } else if round.isComplete {
                     results
                 } else if let word = currentWord, let sentence = Cloze.sentence(for: word), let attempt {
                     question(word, sentence, attempt)
                 } else {
-                    ProgressView()
+                    DelayedProgress()
                 }
             }
             .padding(.horizontal, Metrics.gutter)
@@ -66,6 +69,8 @@ struct ClozeSessionView: View {
                         Text("\(round.done + 1) / \(round.total)")
                             .font(.display(.subheadline, weight: .semibold))
                             .monospacedDigit()
+                            .contentTransition(.numericText(value: Double(round.done)))
+                            .animation(reduceMotion ? nil : Motion.swap, value: round.done)
                             .accessibilityIdentifier("cloze-position")
                     }
                 }
@@ -74,6 +79,9 @@ struct ClozeSessionView: View {
         .onAppear { if !started { start() }; catLines = model.catLines }
         .onDisappear { Speaker.shared.stop() }
         .modifier(AnswerFeedback(solves: solves, misses: misses, haptics: haptics))
+        // A round with nothing missed ends on a success tap and a chime.
+        .sensoryFeedback(.success, trigger: roundOver) { _, new in new && round.summary.missed == 0 && haptics }
+        .soundEffect(trigger: roundOver) { (_: Bool, new: Bool) -> SoundEffect? in new && round.summary.missed == 0 ? .complete : nil }
     }
 
     // MARK: Question
@@ -239,8 +247,11 @@ struct ClozeSessionView: View {
     private func next() {
         guard let current = attempt, current.solved, let outcome = current.outcome else { return }
         Speaker.shared.stop()
-        round.record(outcome)
-        prepareCurrent()
+        // The solved card gives way to the next one instead of being cut.
+        withAnimation(reduceMotion ? nil : Motion.swap) {
+            round.record(outcome)
+            prepareCurrent()
+        }
         if round.isComplete { focused = false }
     }
 
@@ -298,9 +309,8 @@ struct ClozeSessionView: View {
 
     private func stat(_ title: String, _ value: Int, _ tint: Color) -> some View {
         VStack(spacing: 4) {
-            Text("\(value)")
+            CountUpText(value: value, delay: 0.35)
                 .font(.displaySize(30, weight: .bold))
-                .monospacedDigit()
                 .foregroundStyle(tint)
             Text(title)
                 .font(.caption.weight(.semibold))

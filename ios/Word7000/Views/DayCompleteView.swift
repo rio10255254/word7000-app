@@ -49,7 +49,7 @@ struct DayCompleteView: View {
                 try await Task.sleep(for: .milliseconds(480))
                 withAnimation(.snappy(duration: 0.5)) { rolled = true }
                 try await Task.sleep(for: .milliseconds(520))
-                withAnimation(.spring(response: 0.35, dampingFraction: 0.5)) { todayStamped = true }
+                withAnimation(Motion.pop) { todayStamped = true }
                 // The cat keeps dancing while the screen is up.
                 while !Task.isCancelled {
                     danceStart = Date().timeIntervalSinceReferenceDate

@@ -53,6 +53,7 @@ struct ChapterPageView: View {
     private func page(_ m: ClassicMetrics, fill: Bool) -> some View {
         let nodes = model.todayNodes
         let current = model.currentTodayNode
+        let doneCount = nodes.filter(model.isDone).count
         return VStack(alignment: .leading, spacing: m.spacing) {
             cover(m, current: current)
                 .entrance(0, distance: 10)
@@ -60,10 +61,12 @@ struct ChapterPageView: View {
                 Text(L.t("今天的路線", "Today's route"))
                     .font(.display(m.compact ? .headline : .title3, weight: .bold))
                 Spacer()
-                Text(L.t("完成 \(nodes.filter(model.isDone).count) / \(nodes.count)", "\(nodes.filter(model.isDone).count) of \(nodes.count) done"))
+                Text(L.t("完成 \(doneCount) / \(nodes.count)", "\(doneCount) of \(nodes.count) done"))
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.secondary)
                     .monospacedDigit()
+                    .contentTransition(.numericText(value: Double(doneCount)))
+                    .animation(reduceMotion ? nil : Motion.fill, value: doneCount)
                     .accessibilityIdentifier("chapter-steps-done")
             }
             .padding(.horizontal, 4)
@@ -98,6 +101,7 @@ struct ChapterPageView: View {
                         ZStack(alignment: .leading) {
                             Capsule().fill(cream.opacity(0.2))
                             Capsule().fill(cream).frame(width: max(8, bar.size.width * known.fraction))
+                                .animation(reduceMotion ? nil : Motion.fill, value: known.fraction)
                         }
                     }
                     .frame(height: 8)

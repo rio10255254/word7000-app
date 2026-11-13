@@ -166,7 +166,7 @@ struct SpeakingListenView: View {
                 .onChange(of: typing) { _, _ in scrollToEnd(proxy) }
                 .onChange(of: playing) { _, now in
                     guard let now else { return }
-                    withAnimation(reduceMotion ? nil : .easeOut(duration: 0.3)) { proxy.scrollTo(now, anchor: .center) }
+                    withAnimation(reduceMotion ? nil : Motion.reveal) { proxy.scrollTo(now, anchor: .center) }
                 }
             }
             inputBar
@@ -315,7 +315,7 @@ struct SpeakingListenView: View {
 
     private func scrollToEnd(_ proxy: ScrollViewProxy) {
         let last: AnyHashable = typing ? AnyHashable("typing") : AnyHashable(lines.prefix(shown).last?.id ?? 0)
-        withAnimation(reduceMotion ? nil : .easeOut(duration: 0.3)) { proxy.scrollTo(last, anchor: .bottom) }
+        withAnimation(reduceMotion ? nil : Motion.reveal) { proxy.scrollTo(last, anchor: .bottom) }
     }
 
     private func togglePlayback() {
@@ -452,6 +452,15 @@ struct UseTodaysWordView: View {
             guard model.settings.hapticsEnabled ?? true, let new else { return nil }
             return new.counts ? .success : .warning
         }
+        // The chime of a right answer when the word was used.
+        .soundEffect(trigger: verdict) { (_: TodaysWordUse.Verdict?, new: TodaysWordUse.Verdict?) -> SoundEffect? in
+            new?.counts == true ? .correct : nil
+        }
+        // A knock as listening starts, a lighter one as it stops.
+        .sensoryFeedback(trigger: live) { _, new in
+            guard model.settings.hapticsEnabled ?? true else { return nil }
+            return .impact(weight: new ? .medium : .light)
+        }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("speaking-word-step")
     }
@@ -470,8 +479,10 @@ struct UseTodaysWordView: View {
     private func choose(_ id: String?) {
         guard let id, id != chosen else { return }
         listener.clear()
-        verdict = nil
-        withAnimation(reduceMotion ? nil : Motion.reveal) { chosen = id }
+        withAnimation(reduceMotion ? nil : Motion.reveal) {
+            verdict = nil
+            chosen = id
+        }
         #if DEBUG
         // A simulated take says the example sentence, which has the word in it.
         listener.simulatedText = model.word(id: id)?.example
@@ -546,7 +557,7 @@ struct UseTodaysWordView: View {
                         listener.stop()
                     } else {
                         Speaker.shared.stop()
-                        verdict = nil
+                        withAnimation(reduceMotion ? nil : Motion.reveal) { verdict = nil }
                         listener.start(hints: [word.word])
                     }
                 } label: {
@@ -577,8 +588,10 @@ struct UseTodaysWordView: View {
             if let message = listener.message {
                 Text(message).font(.footnote).foregroundStyle(Palette.miss)
                     .multilineTextAlignment(.center)
+                    .transition(.opacity)
             }
         }
+        .animation(reduceMotion ? nil : Motion.reveal, value: listener.message)
     }
 
     /// What was heard, with the word marked when it was.
@@ -587,6 +600,7 @@ struct UseTodaysWordView: View {
             Image(systemName: verdict.counts ? "checkmark.seal.fill" : "arrow.counterclockwise.circle.fill")
                 .font(.title2)
                 .foregroundStyle(verdict.counts ? Palette.known : Palette.review)
+                .popIn(delay: 0.1)
             VStack(alignment: .leading, spacing: 4) {
                 Text(listener.text.isEmpty ? L.t("沒聽清楚，靠近一點再說一次？", "Didn't catch that. Closer, and once more?") : "「\(listener.text)」")
                     .font(.title3.weight(.semibold))

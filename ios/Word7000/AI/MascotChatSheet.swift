@@ -91,47 +91,52 @@ struct MascotChatSheet: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 10) {
-                    HStack(alignment: .bottom, spacing: 10) {
-                        Mascot(mood: mood, size: 60, hop: shown)
-                        ChatLine(text: insights == nil
-                                 ? L.t("讓我看看你最近有多混……", "Let's see how much you've been slacking…")
-                                 : L.t("看完了。嗯……我們需要談談。", "Done. Hmm… we need to talk."))
-                    }
-                    .padding(.bottom, 4)
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack(alignment: .bottom, spacing: 10) {
+                            Mascot(mood: mood, size: 60, hop: shown)
+                            ChatLine(text: insights == nil
+                                     ? L.t("讓我看看你最近有多混……", "Let's see how much you've been slacking…")
+                                     : L.t("看完了。嗯……我們需要談談。", "Done. Hmm… we need to talk."))
+                        }
+                        .padding(.bottom, 4)
 
-                    if let insights {
-                        let lines = messages(insights)
-                        ForEach(Array(lines.prefix(shown).enumerated()), id: \.offset) { _, line in
-                            line.view
-                                .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
+                        if let insights {
+                            let lines = messages(insights)
+                            ForEach(Array(lines.prefix(shown).enumerated()), id: \.offset) { _, line in
+                                line.view
+                                    .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
+                            }
+                            if shown < lines.count { TypingDots() }
+                            if shown >= lines.count {
+                                practiceButton(insights)
+                                Text(L.t("由 Claude 線上 AI 根據最近 14 天的紀錄產生，可能有誤。明天會再更新。",
+                                         "Written by Anthropic's Claude from the last 14 days, and may contain mistakes. Refreshes tomorrow."))
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                    .padding(.top, 6)
+                                PlusAIUpsell()
+                            }
+                        } else if loading {
+                            TypingDots()
+                        } else if let failure {
+                            AIFailureNote(failure: failure)
+                            Button(L.t("再試一次", "Try again"), action: start)
+                                .secondaryAction()
                         }
-                        if shown < lines.count { TypingDots() }
-                        if shown >= lines.count {
-                            practiceButton(insights)
-                            Text(L.t("由 Claude 線上 AI 根據最近 14 天的紀錄產生，可能有誤。明天會再更新。",
-                                     "Written by Anthropic's Claude from the last 14 days, and may contain mistakes. Refreshes tomorrow."))
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                                .padding(.top, 6)
-                            PlusAIUpsell()
-                        }
-                    } else if loading {
-                        TypingDots()
-                    } else if let failure {
-                        AIFailureNote(failure: failure)
-                        Button(L.t("再試一次", "Try again"), action: start)
-                            .secondaryAction()
+                        if chatReady { conversation }
+                        Color.clear.frame(height: 1).id("chat-bottom")
                     }
-                    if chatReady { conversation }
+                    .padding(Metrics.gutter)
+                    .animation(reduceMotion ? nil : Motion.reveal, value: shown)
                 }
-                .padding(Metrics.gutter)
-                .animation(reduceMotion ? nil : Motion.reveal, value: shown)
+                .defaultScrollAnchor(.bottom)
+                .scrollDismissesKeyboard(.interactively)
+                .softTopScrollEdge()
+                .onChange(of: turns.count) { _, _ in scrollToEnd(proxy) }
+                .onChange(of: replying) { _, _ in scrollToEnd(proxy) }
             }
-            .defaultScrollAnchor(.bottom)
-            .scrollDismissesKeyboard(.interactively)
-            .softTopScrollEdge()
             .safeAreaInset(edge: .bottom) {
                 if chatReady && (CloudAssistant.shared.offered || AppRuntime.catShowcase) { inputBar }
             }
@@ -167,6 +172,17 @@ struct MascotChatSheet: View {
         .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.5), trigger: shown) { _, new in
             new > 0 && (model.settings.hapticsEnabled ?? true)
         }
+        // One new message (not a saved chat loading in) gives a soft tap; a failed reply, a buzz.
+        .sensoryFeedback(.impact(flexibility: .soft), trigger: turns.count) { old, new in
+            new == old + 1 && (model.settings.hapticsEnabled ?? true)
+        }
+        .sensoryFeedback(.error, trigger: chatFailure) { _, new in
+            new != nil && (model.settings.hapticsEnabled ?? true)
+        }
+    }
+
+    private func scrollToEnd(_ proxy: ScrollViewProxy) {
+        withAnimation(reduceMotion ? nil : Motion.reveal) { proxy.scrollTo("chat-bottom", anchor: .bottom) }
     }
 
     private var mood: Mascot.Mood {
@@ -180,17 +196,19 @@ struct MascotChatSheet: View {
         if CloudAssistant.shared.needsConsent { askCloud = true; return }
         let mode = model.studyMode.rawValue
         let input = model.insightsInput()
-        loading = true
-        failure = nil
+        withAnimation(reduceMotion ? nil : Motion.reveal) {
+            loading = true
+            failure = nil
+        }
         Task {
-            defer { loading = false }
+            defer { withAnimation(reduceMotion ? nil : Motion.reveal) { loading = false } }
             do {
                 let value = try await CloudAssistant.shared.run(.insights, input, as: CloudAI.Insights.self).cleaned()
                 InsightsStore.save(value, mode: mode)
                 present(value)
             } catch is CancellationError {
             } catch {
-                failure = (error as? CloudAI.Failure) ?? .unavailable
+                withAnimation(reduceMotion ? nil : Motion.reveal) { failure = (error as? CloudAI.Failure) ?? .unavailable }
             }
         }
     }
@@ -268,10 +286,13 @@ struct MascotChatSheet: View {
 
     @ViewBuilder
     private var conversation: some View {
+        // New turns rise in the way the analysis lines do.
+        let rise: AnyTransition = reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity)
         ForEach(turns) { turn in
             switch turn.role {
             case .learner:
                 LearnerSays(text: turn.text)
+                    .transition(rise)
             case .cat:
                 VStack(alignment: .leading, spacing: 6) {
                     ChatLine(text: turn.text)
@@ -290,9 +311,10 @@ struct MascotChatSheet: View {
                         .accessibilityIdentifier("mascot-chat-turn-practice")
                     }
                 }
+                .transition(rise)
             }
         }
-        if replying { TypingDots() }
+        if replying { TypingDots().transition(.opacity) }
         if let chatFailure { AIFailureNote(failure: chatFailure) }
         if chatFailure == .quota { PlusAIUpsell() }
         if !CloudAssistant.shared.offered, !AppRuntime.catShowcase, turns.isEmpty {
@@ -341,7 +363,7 @@ struct MascotChatSheet: View {
                                     .padding(.horizontal, 12).padding(.vertical, 8)
                                     .background(Palette.accent.opacity(0.12), in: Capsule())
                             }
-                            .buttonStyle(.plain)
+                            .buttonStyle(SoftPressStyle())
                             .foregroundStyle(Palette.accent)
                             .disabled(replying)
                             .accessibilityIdentifier("mascot-chat-chip-\(index)")
@@ -361,6 +383,7 @@ struct MascotChatSheet: View {
                     .accessibilityIdentifier("mascot-chat-input")
                 Button { send(draft) } label: {
                     Image(systemName: "arrow.up.circle.fill").font(.title)
+                        .symbolEffect(.bounce, value: reduceMotion ? 0 : turns.count)
                 }
                 .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || replying)
                 .accessibilityLabel(L.t("送出", "Send"))
@@ -377,9 +400,11 @@ struct MascotChatSheet: View {
         guard !text.isEmpty, !replying else { return }
         if CloudAssistant.shared.needsConsent { pendingMessage = text; askCloud = true; return }
         draft = ""
-        chatFailure = nil
         let mode = model.studyMode
-        withAnimation(reduceMotion ? nil : Motion.reveal) { turns.append(ChatTurn(role: .learner, text: text)) }
+        withAnimation(reduceMotion ? nil : Motion.reveal) {
+            chatFailure = nil
+            turns.append(ChatTurn(role: .learner, text: text))
+        }
         ChatStore.save(turns, mode: mode)
         // The cat sees the last few turns, with its analysis as context when there is one.
         var history: [JSONValue] = []
@@ -403,9 +428,9 @@ struct MascotChatSheet: View {
             "words": words,
             "messages": .array(Array(history.suffix(12))),
         ]
-        replying = true
+        withAnimation(reduceMotion ? nil : Motion.reveal) { replying = true }
         Task {
-            defer { replying = false }
+            defer { withAnimation(reduceMotion ? nil : Motion.reveal) { replying = false } }
             do {
                 let reply = try await CloudAssistant.shared.run(.chat, input, as: CloudAI.ChatReply.self).cleaned(allowedIds: allowed)
                 let remembered = CatMemory.shared.apply(reply.memory)
@@ -415,7 +440,7 @@ struct MascotChatSheet: View {
                 ChatStore.save(turns, mode: mode)
             } catch is CancellationError {
             } catch {
-                chatFailure = (error as? CloudAI.Failure) ?? .unavailable
+                withAnimation(reduceMotion ? nil : Motion.reveal) { chatFailure = (error as? CloudAI.Failure) ?? .unavailable }
             }
         }
     }

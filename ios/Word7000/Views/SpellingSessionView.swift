@@ -27,6 +27,8 @@ struct SpellingSessionView: View {
     @FocusState private var focused: Bool
 
     private var chinese: Bool { model.studyMode == .chinese }
+    /// The last word is answered and the results are up.
+    private var roundOver: Bool { started && !words.isEmpty && index >= words.count }
 
     /// The sense a learner of Chinese writes, and its syllables.
     private func target(_ word: WordEntry) -> (text: String, syllables: [String]) {
@@ -42,9 +44,10 @@ struct SpellingSessionView: View {
         NavigationStack {
             Group {
                 if !started {
-                    ProgressView()
+                    DelayedProgress()
                 } else if words.isEmpty {
                     ContentUnavailableView { MascotLabel(mood: .encourage, title: L.noQuizWords) }
+                        .popIn()
                 } else if index >= words.count {
                     results
                 } else {
@@ -67,6 +70,8 @@ struct SpellingSessionView: View {
                         Text("\(index + 1) / \(words.count)")
                             .font(.display(.subheadline, weight: .semibold))
                             .monospacedDigit()
+                            .contentTransition(.numericText(value: Double(index)))
+                            .animation(reduceMotion ? nil : Motion.swap, value: index)
                             .accessibilityIdentifier("spelling-position")
                     }
                 }
@@ -76,13 +81,23 @@ struct SpellingSessionView: View {
         .onDisappear { Speaker.shared.stop() }
         .sensoryFeedback(trigger: result) { _, new in
             guard let new, model.settings.hapticsEnabled ?? true else { return nil }
-            return new == .correct ? .success : .error
+            // Nearly right is a nudge, not a miss.
+            switch new {
+            case .correct: return .success
+            case .almost: return .warning
+            case .wrong: return .error
+            }
         }
         .soundEffect(trigger: result) { _, new -> SoundEffect? in
             guard let new else { return nil }
             return new == .correct ? SoundEffect.correct : SoundEffect.wrong
         }
         .sensoryFeedback(.selection, trigger: hints) { _, new in new > 0 && (model.settings.hapticsEnabled ?? true) }
+        // A clean round ends on a success tap and a chime, as the quiz does.
+        .sensoryFeedback(.success, trigger: roundOver) { _, new in
+            new && missedIds.isEmpty && (model.settings.hapticsEnabled ?? true)
+        }
+        .soundEffect(trigger: roundOver) { (_: Bool, new: Bool) -> SoundEffect? in new && missedIds.isEmpty ? .complete : nil }
         .catTip(.spelling)
     }
 
@@ -325,10 +340,13 @@ struct SpellingSessionView: View {
     private func next() {
         guard result != nil else { return }
         Speaker.shared.stop()
-        input = ""
-        hints = 0
-        result = nil
-        index += 1
+        // The answer card and the old word fade as the next one settles in.
+        withAnimation(reduceMotion ? nil : Motion.swap) {
+            input = ""
+            hints = 0
+            result = nil
+            index += 1
+        }
         if index >= words.count { focused = false }
     }
 
@@ -372,7 +390,7 @@ struct SpellingSessionView: View {
         }
         .task {
             try? await Task.sleep(for: .milliseconds(350))
-            withAnimation(.spring(response: 0.8, dampingFraction: 0.85)) { shownScore = correctCount }
+            withAnimation(reduceMotion ? nil : Motion.fill) { shownScore = correctCount }
         }
     }
 }

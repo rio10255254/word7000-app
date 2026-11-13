@@ -38,8 +38,8 @@ struct PaywallView: View {
                     .transition(.opacity)
             }
         }
-        .animation(.smooth(duration: 0.45), value: purchased)
-        .sensoryFeedback(.success, trigger: purchased)
+        .animation(reduceMotion ? nil : Motion.reveal, value: purchased)
+        .sensoryFeedback(.success, trigger: purchased) { _, now in now && (model.settings.hapticsEnabled ?? true) }
         .sensoryFeedback(.error, trigger: failures) { _, _ in model.settings.hapticsEnabled ?? true }
         .interactiveDismissDisabled(busy)
         .task {
@@ -47,7 +47,7 @@ struct PaywallView: View {
             if selectedID == nil { selectedID = plus.plans.first(where: \.yearly)?.id ?? plus.plans.first?.id }
         }
         .onAppear {
-            withAnimation(.smooth(duration: 0.6)) { appeared = true }
+            withAnimation(reduceMotion ? nil : Animation.smooth(duration: 0.6)) { appeared = true }
             Usage.log("paywall_view", reason.usageSource)
         }
         .onChange(of: plus.subscribed) { _, subscribed in
@@ -195,7 +195,7 @@ struct PaywallView: View {
                 PlusBenefitRow(benefit: benefit, highlighted: benefit.feature == reason.feature)
                     .opacity(appeared ? 1 : 0)
                     .offset(y: appeared || reduceMotion ? 0 : 14)
-                    .animation(.smooth(duration: 0.5).delay(reduceMotion ? 0 : 0.12 + Double(index) * 0.07), value: appeared)
+                    .animation(reduceMotion ? nil : Animation.smooth(duration: 0.5).delay(0.12 + Double(index) * 0.07), value: appeared)
             }
         }
         .padding(.vertical, 4)
@@ -214,7 +214,7 @@ struct PaywallView: View {
                     .entrance(offset + 1, distance: 12)
                 }
             }
-            .sensoryFeedback(.selection, trigger: selectedID)
+            .sensoryFeedback(.selection, trigger: selectedID) { _, _ in model.settings.hapticsEnabled ?? true }
         case .loading:
             VStack(spacing: 10) {
                 ForEach(PlusPlan.samples) { plan in
@@ -222,7 +222,7 @@ struct PaywallView: View {
                 }
             }
             .redacted(reason: .placeholder)
-            .phaseAnimator([0.45, 1]) { content, opacity in content.opacity(opacity) } animation: { _ in .easeInOut(duration: 0.8) }
+            .phaseAnimator(reduceMotion ? [1.0] : [0.45, 1.0]) { content, opacity in content.opacity(opacity) } animation: { _ in .easeInOut(duration: 0.8) }
             .allowsHitTesting(false)
         case .unavailable:
             VStack(spacing: 10) {
@@ -259,6 +259,7 @@ struct PaywallView: View {
                     if busy { ProgressView().tint(.white) }
                 }
                 .frame(maxWidth: .infinity)
+                .animation(reduceMotion ? nil : Motion.reveal, value: busy)
             }
             .prominentAction()
             .disabled((selected == nil && !plus.needsSignIn) || busy)
@@ -280,7 +281,7 @@ struct PaywallView: View {
         .padding(.top, 12)
         .padding(.bottom, 8)
         .background { PaperBarBackground() }
-        .animation(.smooth, value: notice)
+        .animation(reduceMotion ? nil : Motion.reveal, value: notice)
     }
 
     /// A guest signs in with Apple first, so the subscription belongs to an

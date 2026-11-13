@@ -33,7 +33,7 @@ struct ExamRoundView: View {
         NavigationStack {
             Group {
                 if !started {
-                    ProgressView()
+                    DelayedProgress()
                 } else if ids.count < ExamRound.minimumWords {
                     empty
                 } else if finished {
@@ -59,6 +59,8 @@ struct ExamRoundView: View {
                         Text("\(min(index + 1, ids.count)) / \(ids.count)")
                             .font(.display(.subheadline, weight: .semibold))
                             .monospacedDigit()
+                            .contentTransition(.numericText(value: Double(index)))
+                            .animation(reduceMotion ? nil : Motion.swap, value: index)
                             .accessibilityIdentifier("exam-round-position")
                     }
                 }
@@ -129,6 +131,7 @@ struct ExamRoundView: View {
                 .padding(.vertical, 8)
                 .background { PaperBarBackground() }
                 .accessibilityIdentifier("routine-next")
+                .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
             }
         }
     }
@@ -146,9 +149,13 @@ struct ExamRoundView: View {
     private func next() {
         advancing = false
         Speaker.shared.stop()
-        chosen = nil
-        question = nil
-        index += 1
+        // The answered question fades out and the Next key slides away,
+        // rather than both being cut.
+        withAnimation(reduceMotion ? nil : Motion.swap) {
+            chosen = nil
+            question = nil
+            index += 1
+        }
     }
 
     private func load() async {
@@ -182,6 +189,7 @@ struct ExamRoundView: View {
         VStack(spacing: 20) {
             Spacer(minLength: 0)
             Mascot(mood: .encourage, size: 120)
+                .popIn()
             Text(L.t("先翻幾張卡，我才有字考你。", "Flip a few cards first; then I'll have words to quiz you on."))
                 .font(.title3.weight(.semibold))
                 .multilineTextAlignment(.center)
@@ -216,6 +224,7 @@ struct ExamRoundView: View {
                 }
             Text(L.t("\(title)完成！", "\(title) done!"))
                 .font(.display(.largeTitle, weight: .bold))
+                .entrance(1)
             HStack(alignment: .firstTextBaseline, spacing: 4) {
                 CountUpText(value: right, delay: 0.3)
                     .font(.displaySize(64, weight: .bold))
@@ -227,6 +236,7 @@ struct ExamRoundView: View {
             .monospacedDigit()
             .accessibilityElement(children: .combine)
             .accessibilityLabel(L.t("答對 \(right) 題，共 \(asked) 題", "\(right) of \(asked) right"))
+            .entrance(2)
             if !missed.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(L.t("被抓包的字", "Caught out"))
@@ -248,9 +258,11 @@ struct ExamRoundView: View {
                 .padding(16)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background { PremiumSurface(radius: 20) }
+                .entrance(3)
             } else {
                 Text(L.t("全對。我沒話說了。", "All right. I have nothing to say."))
                     .font(.title3.weight(.semibold))
+                    .entrance(3)
             }
             Spacer(minLength: 0)
             RoundEndActions(missed: missed.count, reviewMissed: { studyMissed(missed) },

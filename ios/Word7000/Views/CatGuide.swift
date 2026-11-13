@@ -321,9 +321,9 @@ private struct CatCoachMark: View {
         }
         .accessibilityElement(children: .contain)
         .accessibilityAddTraits(.isModal)
-        .sensoryFeedback(.impact(weight: .light), trigger: up)
+        .sensoryFeedback(.impact(weight: .light), trigger: up) { _, _ in Feel.enabled }
         .onAppear {
-            withAnimation(reduceMotion ? nil : .spring(response: 0.45, dampingFraction: 0.72)) { up = true }
+            withAnimation(reduceMotion ? nil : Motion.card) { up = true }
             if !reduceMotion { hop += 1 }
         }
     }

@@ -82,22 +82,34 @@ struct ScanView: View {
         NavigationStack {
             Group {
                 switch phase {
-                case .choose: chooser
+                case .choose: chooser.transition(.opacity)
                 case .loadingPhoto:
                     ScanWorkingView(symbol: "photo.on.rectangle", text: S.loadingPhoto, sweeps: false)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .accessibilityIdentifier("scan-loading-photo")
+                        .transition(.opacity)
                 case .reading:
                     ScanWorkingView(symbol: "doc.text.viewfinder", text: SmartScan.canOrganize ? S.readingSmart : S.reading, sweeps: true)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                case .review: review
-                case let .saved(count, name): saved(count: count, name: name)
+                        .transition(.opacity)
+                case .review: review.transition(.opacity)
+                case let .saved(count, name): saved(count: count, name: name).transition(.opacity)
                 }
             }
+            .animation(reduceMotion ? nil : Motion.reveal, value: phase)
             .background { AmbientBackground() }
             .sensoryFeedback(.success, trigger: phase) { _, new in
                 if case .saved = new { return model.settings.hapticsEnabled ?? true }
                 return false
+            }
+            // The page has been read: a nod when words were found, a nudge when none were.
+            .sensoryFeedback(trigger: phase) { (_: Phase, new: Phase) -> SensoryFeedback? in
+                guard new == .review, model.settings.hapticsEnabled ?? true else { return nil }
+                return rows.isEmpty ? .warning : .success
+            }
+            .soundEffect(trigger: phase) { (_: Phase, new: Phase) -> SoundEffect? in
+                if case let .saved(count, _) = new, count > 0 { return .complete }
+                return nil
             }
             .sensoryFeedback(.error, trigger: message) { _, new in new != nil && (model.settings.hapticsEnabled ?? true) }
             .navigationTitle(S.title)
@@ -418,20 +430,24 @@ struct ScanView: View {
                             }
                             if let original = row.originalWord {
                                 Button {
-                                    row.word = original
-                                    row.originalWord = nil
+                                    withAnimation(reduceMotion ? nil : Motion.reveal) {
+                                        row.word = original
+                                        row.originalWord = nil
+                                    }
                                 } label: {
                                     Label(S.corrected(original), systemImage: "wand.and.stars")
                                         .font(.caption)
                                         .foregroundStyle(Palette.review)
                                 }
-                                .buttonStyle(.plain)
+                                .buttonStyle(SoftPressStyle())
                             }
                             if let suggestion = row.suggestedWord, suggestion != row.word {
                                 Button {
-                                    row.originalWord = row.word
-                                    row.word = suggestion
-                                    row.suggestedWord = nil
+                                    withAnimation(reduceMotion ? nil : Motion.reveal) {
+                                        row.originalWord = row.word
+                                        row.word = suggestion
+                                        row.suggestedWord = nil
+                                    }
                                 } label: {
                                     Label(L.t("改用建議拼字「\(suggestion)」", "Use suggested spelling: \(suggestion)"), systemImage: "text.badge.checkmark")
                                         .font(.caption)
@@ -446,7 +462,9 @@ struct ScanView: View {
                 }
                 .onDelete { rows.remove(atOffsets: $0) }
                 Button {
-                    rows.append(Row(id: "manual-\(UUID().uuidString)", word: "", partOfSpeech: "", meaning: ""))
+                    withAnimation(reduceMotion ? nil : Motion.reveal) {
+                        rows.append(Row(id: "manual-\(UUID().uuidString)", word: "", partOfSpeech: "", meaning: ""))
+                    }
                 } label: {
                     Label(S.addRow, systemImage: "plus")
                 }

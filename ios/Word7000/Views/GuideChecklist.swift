@@ -27,6 +27,8 @@ struct GuideChecklist: View {
                     .font(.subheadline.weight(.bold))
                     .monospacedDigit()
                     .foregroundStyle(Palette.accent)
+                    .contentTransition(.numericText(value: Double(doneCount)))
+                    .animation(reduceMotion ? nil : Motion.fill, value: doneCount)
                 Spacer(minLength: 4)
                 Button(action: hide) {
                     Image(systemName: "xmark")
@@ -94,6 +96,8 @@ struct GuideChecklist: View {
                 Image(systemName: stop.done ? "checkmark" : stop.icon)
                     .font(.system(size: 15, weight: .bold))
                     .foregroundStyle(tint)
+                    .contentTransition(.symbolEffect(.replace))
+                    .animation(reduceMotion ? nil : Motion.reveal, value: stop.done)
             }
             .frame(width: 38, height: 38)
             .scaleEffect(isCurrent && pulse ? 1.1 : 1)

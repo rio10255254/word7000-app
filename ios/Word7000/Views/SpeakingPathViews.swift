@@ -255,9 +255,12 @@ struct StagePathView: View {
 /// on its own card in its own colour, the stage up next marked.
 struct ScenarioPickerView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let progress: SpeakingPath.Progress
     let current: SpeakingScenarios.StageRef?
     let onPick: (SpeakingScenarios.StageRef) -> Void
+    /// The path's bar fills up to where the learner is once the sheet is up.
+    @State private var filled = false
 
     private static let tints: [Color] = [Palette.accent, TodayView.speakingTint, Palette.chinese, Palette.review, Palette.known, Palette.miss]
 
@@ -291,6 +294,7 @@ struct ScenarioPickerView: View {
     private func hero(next: SpeakingScenarios.StageRef?) -> some View {
         let total = SpeakingScenarios.path.count
         let cleared = progress.cleared
+        let share: Double = filled || reduceMotion ? Double(cleared) / Double(max(1, total)) : 0
         return VStack(alignment: .leading, spacing: 14) {
             HStack(spacing: 12) {
                 Mascot(mood: cleared == 0 ? .smug : .happy, size: 60)
@@ -310,10 +314,13 @@ struct ScenarioPickerView: View {
                 Capsule().fill(TodayView.cream.opacity(0.2))
                     .overlay(alignment: .leading) {
                         Capsule().fill(TodayView.cream)
-                            .frame(width: max(cleared > 0 ? 8 : 0, proxy.size.width * Double(cleared) / Double(max(1, total))))
+                            .frame(width: max(cleared > 0 ? 8 : 0, proxy.size.width * share))
                     }
             }
             .frame(height: 8)
+            .onAppear {
+                withAnimation(reduceMotion ? nil : Motion.fill.delay(0.25)) { filled = true }
+            }
             if let next, let scenario = SpeakingScenarios.scenario(next) {
                 Button { onPick(next) } label: {
                     HStack(spacing: 10) {

@@ -72,6 +72,8 @@ struct StatTile: View {
                 .monospacedDigit()
                 .foregroundStyle(color)
                 .contentTransition(.numericText(value: Double(shown ?? 0)))
+                // Later changes roll too, not only the first roll-up.
+                .animation(reduceMotion ? nil : Motion.fill, value: value)
                 .accessibilityLabel(value.map { String($0) } ?? L.t("尚無資料", "No data"))
             Text(label)
                 .font(.caption)
@@ -150,7 +152,7 @@ struct SessionBar: View {
                     .fill(LinearGradient(colors: [tint.opacity(0.65), tint], startPoint: .leading, endPoint: .trailing))
                     .frame(width: max(6, proxy.size.width * min(1, fraction)))
                     .shadow(color: tint.opacity(0.35), radius: 4)
-                    .animation(reduceMotion ? nil : .spring(response: 0.45, dampingFraction: 0.78), value: fraction)
+                    .animation(reduceMotion ? nil : Motion.fill, value: fraction)
                     .animation(reduceMotion ? nil : Motion.reveal, value: tint)
             }
         }
@@ -226,14 +228,15 @@ struct BuddyProgressBar: View {
                         // Its feet on the bar, just behind the filled end.
                         .position(x: min(max(size / 2, x - size * 0.2), proxy.size.width - size / 2),
                                   y: proxy.size.height / 2 - size * 0.42)
-                        .animation(reduceMotion ? nil : .spring(response: 0.55, dampingFraction: 0.68), value: fraction)
+                        // The same spring as the bar under it, so the cat stays on its end.
+                        .animation(reduceMotion ? nil : Motion.fill, value: fraction)
                 }
             }
             .onChange(of: fraction) { old, new in
                 guard let mark = [0.5, 1.0].first(where: { old < $0 - 0.001 && new >= $0 - 0.001 }) else { return }
                 Task { @MainActor in
                     // Once the fill has got there.
-                    try? await Task.sleep(for: .milliseconds(280))
+                    try? await Task.sleep(for: .milliseconds(450))
                     milestoneAt = mark
                     milestone += 1
                 }
@@ -254,12 +257,15 @@ struct BuddyProgressBar: View {
 /// A small burst of sparks flying out from a point and fading, e.g. from the
 /// check mark of a right answer. Purely decorative.
 struct SparkleBurst: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var color: Color = Palette.known
     var radius: CGFloat = 34
     @State private var spread = false
 
     var body: some View {
         ZStack {
+            // Decoration only: nothing at all with Reduce Motion.
+            if !reduceMotion {
             ForEach(0..<8, id: \.self) { index in
                 let angle = Double(index) / 8 * 2 * Double.pi
                 Image(systemName: index % 2 == 0 ? "sparkle" : "circle.fill")
@@ -268,6 +274,7 @@ struct SparkleBurst: View {
                     .offset(x: spread ? CGFloat(cos(angle)) * radius : 0, y: spread ? CGFloat(sin(angle)) * radius : 0)
                     .scaleEffect(spread ? 0.4 : 1)
                     .opacity(spread ? 0 : 1)
+            }
             }
         }
         .onAppear { withAnimation(.easeOut(duration: 0.7)) { spread = true } }

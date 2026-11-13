@@ -166,6 +166,8 @@ struct StudySessionView: View {
                                 Text(L.cardCount(done: session.done, total: session.total))
                                     .font(.display(.subheadline, weight: .semibold))
                                     .monospacedDigit()
+                                    .contentTransition(.numericText(value: Double(session.done)))
+                                    .animation(reduceMotion ? nil : Motion.swap, value: session.done)
                                     .accessibilityIdentifier("study-position")
                             }
                             // A guest is reminded, quietly, that none of this is kept.
@@ -443,7 +445,9 @@ struct StudySessionView: View {
         guard !committing, let wordId = model.studySession?.currentCardId else { return }
         let token = lifetime
         let source = model.studySession?.sourceKey
-        if !armed { feedback += 1 }
+        // A quick flick that never armed gets its tap here; an armed swipe
+        // had one as it armed, and the keys give their own.
+        if phase == .dragging, !armed { feedback += 1 }
         buddyMood = grade == .known ? .happy : .encourage
         let entry = model.word(id: wordId)
         let misses = model.progress(for: wordId).reviewCount + (grade == .review ? 1 : 0)
@@ -734,7 +738,7 @@ private struct SummaryChip: View {
         .task {
             guard !rolled else { return }
             try? await Task.sleep(for: .milliseconds(450))
-            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) { rolled = true }
+            withAnimation(Motion.entrance(0)) { rolled = true }
         }
     }
 }

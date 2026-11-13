@@ -22,6 +22,9 @@ struct WordsView: View {
     @State private var addMenuOpen = false
     /// Bumped by the swipe action so starring a word gives a light tap.
     @State private var favoriteToggles = 0
+    /// Bumped when a bank is renamed, for the success haptic. (Creating or
+    /// restoring one selects it, and the shelf already ticks for that.)
+    @State private var bankRenames = 0
 
     var body: some View {
         let filter = model.settings.libraryFilter
@@ -49,7 +52,8 @@ struct WordsView: View {
                 }
                 if results.isEmpty {
                     if searching {
-                        HStack { Spacer(); ProgressView(); Spacer() }.padding(.vertical, 30)
+                        // Only when the search takes a moment, so a quick one does not flash it.
+                        DelayedProgress().frame(height: 20).padding(.vertical, 30)
                     } else {
                         ContentUnavailableView {
                             MascotLabel(mood: .thinking, title: L.noLibraryWords)
@@ -178,8 +182,10 @@ struct WordsView: View {
                 model.selectBank(id)
             case let .rename(id):
                 model.renameSet(id, to: newName)
+                bankRenames += 1
             }
         }
+        .sensoryFeedback(.success, trigger: bankRenames) { _, _ in model.settings.hapticsEnabled ?? true }
     }
 
     /// What the "+" offers: scan a sheet, a new bank, a word typed in.

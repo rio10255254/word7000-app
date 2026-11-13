@@ -159,9 +159,13 @@ struct WelcomeView: View {
             .safeAreaInset(edge: .bottom, spacing: 0) { spellBar }
         }
         .background { AmbientBackground() }
-        .sensoryFeedback(.selection, trigger: target)
-        .sensoryFeedback(.selection, trigger: known)
-        .sensoryFeedback(.impact(weight: .light), trigger: step)
+        .sensoryFeedback(.selection, trigger: target) { _, _ in model.settings.hapticsEnabled ?? true }
+        .sensoryFeedback(.selection, trigger: known) { _, _ in model.settings.hapticsEnabled ?? true }
+        // A light tap for each scene; the result lands with a success.
+        .sensoryFeedback(trigger: step) { _, new in
+            guard model.settings.hapticsEnabled ?? true else { return nil }
+            return new == .result ? SensoryFeedback.success : SensoryFeedback.impact(weight: .light)
+        }
         .onAppear {
             if retest, !retestLoaded {
                 // The learner as they are: their language, goal, profile and exam.
@@ -196,7 +200,7 @@ struct WelcomeView: View {
 
     private func go(_ next: Step) {
         forward = (flow.firstIndex(of: next) ?? 0) > position
-        withAnimation(reduceMotion ? nil : .snappy(duration: 0.4)) { step = next }
+        withAnimation(reduceMotion ? nil : Motion.swap) { step = next }
         if !reduceMotion { hop += 1 }
     }
 
@@ -293,9 +297,9 @@ struct WelcomeView: View {
             }
         }
         .frame(maxWidth: 260)
-        .animation(reduceMotion ? nil : .snappy, value: step)
-        .animation(reduceMotion ? nil : .snappy, value: test.asked)
-        .animation(reduceMotion ? nil : .snappy, value: spellIndex)
+        .animation(reduceMotion ? nil : Motion.fill, value: step)
+        .animation(reduceMotion ? nil : Motion.fill, value: test.asked)
+        .animation(reduceMotion ? nil : Motion.fill, value: spellIndex)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(phaseTitle(current))
         .accessibilityValue("\(Int((phaseFill(current) * 100).rounded()))%")
@@ -516,7 +520,7 @@ struct WelcomeView: View {
             .prominentAction()
             .accessibilityIdentifier("welcome-focus-next")
         }
-        .sensoryFeedback(.selection, trigger: profile.focus)
+        .sensoryFeedback(.selection, trigger: profile.focus) { _, _ in model.settings.hapticsEnabled ?? true }
     }
 
     // MARK: WordCat Next: before the test
@@ -725,6 +729,7 @@ struct WelcomeView: View {
         }
         .onAppear { if question == nil, !test.isFinished { nextQuestion() } }
         .sensoryFeedback(trigger: picked) { _, new in
+            guard model.settings.hapticsEnabled ?? true else { return nil }
             guard let new, let question else { return nil }
             return new == question.answerIndex ? .success : .error
         }
@@ -842,8 +847,10 @@ struct WelcomeView: View {
             spellOutcomes = [:]
             loadSpelling(0)
         }
-        .sensoryFeedback(trigger: spellAttempt?.solved) { _, solved in solved == true ? .success : nil }
-        .sensoryFeedback(.error, trigger: spellMisses)
+        .sensoryFeedback(trigger: spellAttempt?.solved) { _, solved in
+            solved == true && (model.settings.hapticsEnabled ?? true) ? .success : nil
+        }
+        .sensoryFeedback(.error, trigger: spellMisses) { _, _ in model.settings.hapticsEnabled ?? true }
     }
 
     /// The answer box and its keys, pinned right above the keyboard (as in
@@ -1694,7 +1701,7 @@ private struct ResultShelf: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(L.t("十四章的書架，從第 \(current + 1) 章開始", "Fourteen chapters; starting at chapter \(current + 1)"))
         .onAppear {
-            withAnimation(reduceMotion ? nil : .easeOut(duration: 0.9).delay(0.2)) { filled = true }
+            withAnimation(reduceMotion ? nil : Motion.fill.delay(0.2)) { filled = true }
         }
     }
 }

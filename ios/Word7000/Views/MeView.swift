@@ -257,7 +257,7 @@ struct SettingsView: View {
                                         ChoiceOption(value: StudyMode.chinese, title: "Learn Chinese", detail: "English", icon: "character")],
                               selection: model.studyMode, identifier: "settings-study-mode") { mode in
                         // The app is rebuilt in the other language: a soft cross-fade, Settings stays open.
-                        withAnimation(.easeInOut(duration: 0.3)) { model.setStudyMode(mode) }
+                        withAnimation(reduceMotion ? nil : Motion.reveal) { model.setStudyMode(mode) }
                     }
                     ChoiceRow(title: L.dailyTargetTitle, icon: "target", tint: Palette.accent,
                               options: dailyTargetOptions.map { ChoiceOption(value: $0, title: L.t("\($0) 個", "\($0)")) },
@@ -365,7 +365,7 @@ struct SettingsView: View {
                               options: [ChoiceOption(value: true, title: L.t("經典模式", "Classic"), detail: L.t("自己挑練習", "Pick your practice"), icon: "square.grid.2x2.fill"),
                                         ChoiceOption(value: false, title: L.t("懶人模式", "Easy mode"), detail: L.t("每天幫你排好", "Planned for you"), icon: "wand.and.stars")],
                               selection: model.classicLayout, identifier: "settings-layout") { classic in
-                        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.3)) { model.setClassicLayout(classic) }
+                        withAnimation(reduceMotion ? nil : Motion.reveal) { model.setClassicLayout(classic) }
                     }
                     if model.classicLayout {
                         Toggle(isOn: Binding(
@@ -602,12 +602,14 @@ private struct ProfileCard: View {
             // The symbol on the first line, not centred beside two lines.
             HStack(alignment: .firstTextBaseline, spacing: 4) {
                 Image(systemName: syncSymbol)
+                    .contentTransition(.symbolEffect(.replace))
                 Text(account.message)
                     .lineLimit(2)
                     .contentTransition(.opacity)
             }
             .font(.caption)
             .foregroundStyle(.secondary)
+            .animation(reduceMotion ? nil : Motion.reveal, value: syncSymbol)
         }
     }
 
@@ -818,6 +820,7 @@ private struct PlusManageSheet: ViewModifier {
 /// WordCat Next: the last weeks as a grid of squares, one column a week
 /// (Monday on top), darker the more was practised that day.
 struct ActivityCalendarView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var weeks: [[Int?]]
     var today: String
     @State private var width: CGFloat = 300
@@ -858,7 +861,7 @@ struct ActivityCalendarView: View {
                     .onChange(of: proxy.size.width) { _, new in width = new }
             }
         }
-        .sensoryFeedback(.selection, trigger: selected)
+        .sensoryFeedback(.selection, trigger: selected) { _, _ in Feel.enabled }
     }
 
     private var grid: some View {
@@ -906,7 +909,7 @@ struct ActivityCalendarView: View {
             .contentShape(Rectangle().inset(by: -gap / 2))
             .onTapGesture {
                 guard actions != nil else { return }
-                withAnimation(.snappy(duration: 0.2)) { selected = selected == cell ? nil : cell }
+                withAnimation(reduceMotion ? nil : Animation.snappy(duration: 0.2)) { selected = selected == cell ? nil : cell }
             }
     }
 
@@ -928,7 +931,7 @@ struct ActivityCalendarView: View {
             .background(Palette.ink, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
             .fixedSize()
             .position(x: min(max(x, 56), max(56, gridWidth - 56)), y: y)
-            .onTapGesture { withAnimation(.snappy(duration: 0.2)) { self.selected = nil } }
+            .onTapGesture { withAnimation(reduceMotion ? nil : Animation.snappy(duration: 0.2)) { self.selected = nil } }
             .transition(.opacity.combined(with: .scale(scale: 0.9)))
             .accessibilityElement(children: .combine)
             .accessibilityIdentifier("me-calendar-detail")

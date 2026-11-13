@@ -93,9 +93,24 @@ struct SpeakingAnswerPanel: View {
         return session.failure.map(failureMessage)
     }
 
+    /// The panel, with the feedback that would crowd its own long list of
+    /// modifiers: the checking row and a microphone problem fade in, and a
+    /// failed check gives the error buzz.
     var body: some View {
+        panel
+            .animation(reduceMotion ? nil : Motion.reveal, value: session.isWorking || pendingSubmission)
+            .animation(reduceMotion ? nil : Motion.reveal, value: recording.message)
+            .sensoryFeedback(.error, trigger: visibleFailure) { _, new in
+                new != nil && (model.settings.hapticsEnabled ?? true)
+            }
+    }
+
+    private var panel: some View {
         VStack(spacing: 16) {
-            if let followUpQuestion { followUpBanner(followUpQuestion) }
+            if let followUpQuestion {
+                followUpBanner(followUpQuestion)
+                    .transition(reduceMotion ? .opacity : .opacity.combined(with: .offset(y: -8)))
+            }
             if showsPad { if chat { chatPad } else { pad } } else { recorderKey }
             if provider.availability == .ready, let message = visibleFailure {
                 HStack(alignment: .top) {
@@ -337,6 +352,7 @@ struct SpeakingAnswerPanel: View {
             Text(message).font(.footnote).foregroundStyle(Palette.miss)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
+                .transition(.opacity)
             if recording.messageNeedsSettings {
                 Button(L.t("系統設定", "System Settings")) {
                     if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
@@ -911,8 +927,10 @@ struct SpeakingAnswerPanel: View {
         inputCommitFailed = false
         answer = ""
         typing = false
-        followUpQuestion = followUp
-        followUpTranslation = followUp == nil ? nil : translation
+        withAnimation(reduceMotion ? nil : Motion.reveal) {
+            followUpQuestion = followUp
+            followUpTranslation = followUp == nil ? nil : translation
+        }
         scrollTo(followUp == nil ? Self.padAnchor : Self.topAnchor)
         if let followUp, model.settings.speech?.autoReadQuestions ?? true {
             Speaker.shared.speak(followUp, language: answerLanguage, preferences: model.settings.speech ?? SpeechPreferences())

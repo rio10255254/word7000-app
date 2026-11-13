@@ -208,20 +208,22 @@ struct AskAISection: View {
             "question": .string(String(asking.prefix(200))),
             "mode": .string(model.studyMode.rawValue),
         ]
-        loading = true
-        failure = nil
+        withAnimation(reduceMotion ? nil : Motion.reveal) {
+            loading = true
+            failure = nil
+        }
         question = ""
         focused = false
         Task {
-            defer { loading = false }
+            defer { withAnimation(reduceMotion ? nil : Motion.reveal) { loading = false } }
             do {
                 let reply = try await CloudAssistant.shared.run(.ask, input, as: CloudAI.Answer.self).cleaned()
                 let saved = Array(((CloudAnswerCache.questions[key] ?? []) + [AskedQuestion(question: asking, reply: reply)]).suffix(5))
                 CloudAnswerCache.questions[key] = saved
-                if key == cacheKey { withAnimation(Motion.reveal) { asked = saved } }
+                if key == cacheKey { withAnimation(reduceMotion ? nil : Motion.reveal) { asked = saved } }
             } catch is CancellationError {
             } catch {
-                failure = (error as? CloudAI.Failure) ?? .unavailable
+                withAnimation(reduceMotion ? nil : Motion.reveal) { failure = (error as? CloudAI.Failure) ?? .unavailable }
                 failures += 1
                 // Give the learner their question back to try again.
                 if question.isEmpty { question = asking }
@@ -238,6 +240,7 @@ struct AIExplanationSection: View {
     @State private var loading = false
     @State private var failure: CloudAI.Failure?
     @State private var askCloud = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var cacheKey: String { "\(model.studyMode.rawValue):\(word.id):\(word.meaningZh)" }
 
@@ -276,6 +279,7 @@ struct AIExplanationSection: View {
                 if explanation != nil { Text(L.t("背後是 Claude 線上 AI，可能有誤。", "Powered by Claude, Anthropic's online AI, and may contain mistakes.")) }
             }
             .onAppear { explanation = CloudAnswerCache.explanations[cacheKey] }
+            .sensoryFeedback(.error, trigger: failure) { _, new in new != nil && (model.settings.hapticsEnabled ?? true) }
             .cloudConsentAlert(isPresented: $askCloud) { if IntelligenceSettings.shared.cloudConsent == true { start() } }
         } else if !AppRuntime.uiTesting || ProcessInfo.processInfo.arguments.contains("-uiTestingUpsell") {
             // Without Plus: what the explanation would give, and the way to it.
@@ -355,17 +359,19 @@ struct AIExplanationSection: View {
             "example": .string(String(example.prefix(240))),
             "mode": .string(model.studyMode.rawValue),
         ]
-        loading = true
-        failure = nil
+        withAnimation(reduceMotion ? nil : Motion.reveal) {
+            loading = true
+            failure = nil
+        }
         Task {
-            defer { loading = false }
+            defer { withAnimation(reduceMotion ? nil : Motion.reveal) { loading = false } }
             do {
                 let value = try await CloudAssistant.shared.run(.explain, input, as: CloudAI.Explanation.self).cleaned()
                 CloudAnswerCache.explanations[key] = value
-                if key == cacheKey { withAnimation(Motion.reveal) { explanation = value } }
+                if key == cacheKey { withAnimation(reduceMotion ? nil : Motion.reveal) { explanation = value } }
             } catch is CancellationError {
             } catch {
-                failure = (error as? CloudAI.Failure) ?? .unavailable
+                withAnimation(reduceMotion ? nil : Motion.reveal) { failure = (error as? CloudAI.Failure) ?? .unavailable }
             }
         }
     }
@@ -382,6 +388,7 @@ struct QuizWhyView: View {
     @State private var loading = false
     @State private var failure: CloudAI.Failure?
     @State private var askCloud = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var cacheKey: String { "\(model.studyMode.rawValue):\(word.id):\(chosenAnswer)" }
 
@@ -420,6 +427,7 @@ struct QuizWhyView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Palette.surface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
             .onAppear { reply = CloudAnswerCache.quiz[cacheKey] }
+            .sensoryFeedback(.error, trigger: failure) { _, new in new != nil && (model.settings.hapticsEnabled ?? true) }
             .cloudConsentAlert(isPresented: $askCloud) { if IntelligenceSettings.shared.cloudConsent == true { start() } }
         }
     }
@@ -435,17 +443,19 @@ struct QuizWhyView: View {
             "word": .string(String(word.word.prefix(80))),
             "mode": .string(model.studyMode.rawValue),
         ]
-        loading = true
-        failure = nil
+        withAnimation(reduceMotion ? nil : Motion.reveal) {
+            loading = true
+            failure = nil
+        }
         Task {
-            defer { loading = false }
+            defer { withAnimation(reduceMotion ? nil : Motion.reveal) { loading = false } }
             do {
                 let value = try await CloudAssistant.shared.run(.quizWhy, input, as: CloudAI.QuizExplanation.self).cleaned()
                 CloudAnswerCache.quiz[key] = value
-                if key == cacheKey { withAnimation(Motion.reveal) { reply = value } }
+                if key == cacheKey { withAnimation(reduceMotion ? nil : Motion.reveal) { reply = value } }
             } catch is CancellationError {
             } catch {
-                failure = (error as? CloudAI.Failure) ?? .unavailable
+                withAnimation(reduceMotion ? nil : Motion.reveal) { failure = (error as? CloudAI.Failure) ?? .unavailable }
             }
         }
     }
@@ -459,6 +469,7 @@ struct AIInsightsSection: View {
     @State private var loading = false
     @State private var failure: CloudAI.Failure?
     @State private var askCloud = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         if CloudAssistant.shared.offered || insights != nil {
@@ -486,6 +497,7 @@ struct AIInsightsSection: View {
                 }
             }
             .onAppear(perform: restore)
+            .sensoryFeedback(.error, trigger: failure) { _, new in new != nil && (model.settings.hapticsEnabled ?? true) }
             .onChange(of: model.studyMode) { _, _ in insights = nil; restore() }
             .cloudConsentAlert(isPresented: $askCloud) { if IntelligenceSettings.shared.cloudConsent == true { start() } }
         }
@@ -571,19 +583,21 @@ struct AIInsightsSection: View {
         if CloudAssistant.shared.needsConsent { askCloud = true; return }
         let mode = model.studyMode.rawValue
         let input = model.insightsInput()
-        loading = true
-        failure = nil
+        withAnimation(reduceMotion ? nil : Motion.reveal) {
+            loading = true
+            failure = nil
+        }
         Task {
-            defer { loading = false }
+            defer { withAnimation(reduceMotion ? nil : Motion.reveal) { loading = false } }
             do {
                 let value = try await CloudAssistant.shared.run(.insights, input, as: CloudAI.Insights.self).cleaned()
                 InsightsStore.save(value, mode: mode)
                 if mode == model.studyMode.rawValue {
-                    withAnimation(Motion.reveal) { insights = value }
+                    withAnimation(reduceMotion ? nil : Motion.reveal) { insights = value }
                 }
             } catch is CancellationError {
             } catch {
-                failure = (error as? CloudAI.Failure) ?? .unavailable
+                withAnimation(reduceMotion ? nil : Motion.reveal) { failure = (error as? CloudAI.Failure) ?? .unavailable }
             }
         }
     }
@@ -618,7 +632,7 @@ struct PlusAIUpsell: View {
                 }
                 .contentShape(Rectangle())
             }
-            .buttonStyle(.plain)
+            .buttonStyle(SoftPressStyle())
             .accessibilityIdentifier("ai-plus-upsell")
             .sheet(item: $paywall) { reason in PaywallView(reason: reason) }
         }

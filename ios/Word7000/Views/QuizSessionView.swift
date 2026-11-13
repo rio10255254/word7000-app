@@ -40,10 +40,11 @@ struct QuizSessionView: View {
                     if skipSetup {
                         Color.clear.onAppear { start(); configured = true; catLines = model.catLines }
                     } else {
-                        QuizConfiguration(start: { start(); configured = true })
+                        QuizConfiguration(start: { start(); withAnimation(reduceMotion ? nil : Motion.card) { configured = true } })
                     }
                 } else if questions.isEmpty {
                     ContentUnavailableView { MascotLabel(mood: .encourage, title: L.noQuizWords) }
+                        .popIn()
                 } else if finished {
                     results
                 } else if questions.indices.contains(index) {
@@ -66,6 +67,7 @@ struct QuizSessionView: View {
                         Text("\(min(index + 1, questions.count)) / \(questions.count)")
                             .font(.display(.subheadline, weight: .semibold))
                             .monospacedDigit()
+                            .contentTransition(.numericText(value: Double(index)))
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
@@ -339,10 +341,14 @@ struct QuizSessionView: View {
         guard chosen != nil else { return }
         Speaker.shared.stop()
         if index + 1 >= questions.count {
-            withAnimation { finished = true }
+            withAnimation(reduceMotion ? nil : Motion.card) { finished = true }
         } else {
-            index += 1
-            loadOptions()
+            // The old question fades as the new one's parts settle in, and
+            // the Next key slides away instead of vanishing.
+            withAnimation(reduceMotion ? nil : Motion.swap) {
+                index += 1
+                loadOptions()
+            }
         }
     }
 
@@ -400,7 +406,7 @@ struct QuizSessionView: View {
         }
         .task {
             try? await Task.sleep(for: .milliseconds(350))
-            withAnimation(.spring(response: 0.8, dampingFraction: 0.85)) { shownScore = correctCount }
+            withAnimation(reduceMotion ? nil : Motion.fill) { shownScore = correctCount }
         }
         .sheet(item: $aiWord) { word in AIWordSheet(word: word).compactSheet() }
     }
@@ -422,7 +428,7 @@ struct QuizSessionView: View {
                                     .padding(.vertical, 8)
                                     .background(Palette.surface, in: Capsule())
                             }
-                            .buttonStyle(.plain)
+                            .buttonStyle(SoftPressStyle())
                             .accessibilityHint(L.t("開啟 AI 解說", "Opens the AI explanation"))
                         }
                     }

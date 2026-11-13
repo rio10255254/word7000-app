@@ -55,7 +55,7 @@ struct RoundEndActions: View {
                         .frame(minHeight: 44)
                         .contentShape(Rectangle())
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(SoftPressStyle())
                 .foregroundStyle(Palette.accent)
                 .accessibilityIdentifier(againId)
             }

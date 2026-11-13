@@ -105,7 +105,7 @@ struct TodayView: View {
         .onChange(of: model.progress.streak) { old, new in
             if new > old, !reduceMotion { flameBounce += 1 }
         }
-        .sensoryFeedback(.impact(weight: .light), trigger: taps) { _, _ in model.settings.hapticsEnabled ?? true }
+        // No haptic for `taps` here: every control that bumps it is a SoftPressStyle button, which already ticks.
         .sheet(item: $sheet, onDismiss: {
             let next = afterSheet
             afterSheet = nil
@@ -231,10 +231,14 @@ struct TodayView: View {
                                                         startPoint: .top, endPoint: .bottom))
                         .symbolEffect(.bounce, value: flameBounce)
                     Text("\(model.progress.streak)")
+                        .contentTransition(.numericText(value: Double(model.progress.streak)))
+                        .animation(reduceMotion ? nil : Motion.fill, value: model.progress.streak)
                 }
                 chip(id: "today-shelf", label: L.t("已會 \(model.stats.mastered) 個字", "\(model.stats.mastered) words known"), action: { open(.shelf) }) {
                     Image(systemName: "books.vertical.fill").foregroundStyle(Palette.known)
                     Text(model.stats.mastered.formatted()).monospacedDigit()
+                        .contentTransition(.numericText(value: Double(model.stats.mastered)))
+                        .animation(reduceMotion ? nil : Motion.fill, value: model.stats.mastered)
                 }
             }
         }

@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 import Word7000Core
 
 struct BankManagementView: View {
@@ -15,6 +16,8 @@ struct BankManagementView: View {
     @State private var deletingBank = false
     @State private var transferOpen = false
     @State private var notice: String?
+    /// Bumped by each copy or move, so a repeat with the same notice still taps.
+    @State private var transfers = 0
 
     private var bank: CustomVocabSet? { model.customSets.sets.first { $0.id == setId } }
     private var words: [WordEntry] { WordBanks.words(of: bank, in: model.allWords) }
@@ -99,6 +102,8 @@ struct BankManagementView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button(L.save) {
                     model.renameSet(setId, to: name.trimmed)
+                    // The page closes at once, so the tap is given here rather than by a modifier on it.
+                    if Feel.enabled { UINotificationFeedbackGenerator().notificationOccurred(.success) }
                     dismiss()
                 }
                 .disabled(name.trimmed.isEmpty)
@@ -125,7 +130,7 @@ struct BankManagementView: View {
         }
         .onAppear { if !loaded { name = bank?.name ?? ""; loaded = true } }
         .sensoryFeedback(.selection, trigger: selected) { _, _ in model.settings.hapticsEnabled ?? true }
-        .sensoryFeedback(.success, trigger: notice) { _, new in new != nil && (model.settings.hapticsEnabled ?? true) }
+        .sensoryFeedback(.success, trigger: transfers) { _, _ in model.settings.hapticsEnabled ?? true }
         .sheet(item: $editingWord) { WordEditorSheet(word: $0, setId: setId) }
         .sheet(isPresented: $addingWord) { WordEditorSheet(setId: setId) }
         .warmActions(isPresented: $transferOpen, title: L.t("已選 \(selected.count) 個單字", "\(selected.count) words selected"),
@@ -169,6 +174,7 @@ struct BankManagementView: View {
             selected = []
             notice = L.t("已將 \(count) 個單字加入「\(target.name)」", "Added \(count) words to \(target.name)")
         }
+        transfers += 1
     }
 }
 
@@ -189,6 +195,8 @@ struct WordEditorSheet: View {
     @State private var askCloud = false
     /// Bumped when the AI fills the form, for a success tap.
     @State private var filled = 0
+    /// Bumped when the AI could not fill it, for an error tap.
+    @State private var fillFailures = 0
 
     init(word: WordEntry? = nil, setId: String) {
         self.word = word
@@ -224,7 +232,10 @@ struct WordEditorSheet: View {
                             }
                             .disabled(english.trimmed.isEmpty || filling)
                             .accessibilityIdentifier("word-editor-ai-fill")
-                            if let fillFailure { Text(fillFailure.message).font(.footnote).foregroundStyle(.secondary) }
+                            if let fillFailure {
+                                Text(fillFailure.message).font(.footnote).foregroundStyle(.secondary)
+                                    .transition(.opacity)
+                            }
                         }
                     } footer: {
                         if CloudAssistant.shared.offered {
@@ -242,6 +253,7 @@ struct WordEditorSheet: View {
             .scrollDismissesKeyboard(.interactively)
             .cloudConsentAlert(isPresented: $askCloud) { if IntelligenceSettings.shared.cloudConsent == true { fill() } }
             .sensoryFeedback(.success, trigger: filled) { _, _ in model.settings.hapticsEnabled ?? true }
+            .sensoryFeedback(.error, trigger: fillFailures) { _, _ in model.settings.hapticsEnabled ?? true }
             .navigationTitle(word == nil ? L.addWord : L.t("編輯單字", "Edit word"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -267,7 +279,11 @@ struct WordEditorSheet: View {
             do {
                 let suggestion = try await CloudAssistant.shared.run(.fillWord, ["word": .string(String(text.prefix(80)))], as: CloudAI.WordSuggestion.self).cleaned()
                 guard english.trimmed == text else { return }
-                guard !suggestion.meaning.isEmpty else { fillFailure = .invalidInput; return }
+                guard !suggestion.meaning.isEmpty else {
+                    withAnimation(reduceMotion ? nil : Motion.reveal) { fillFailure = .invalidInput }
+                    fillFailures += 1
+                    return
+                }
                 withAnimation(reduceMotion ? nil : Motion.reveal) {
                     // Chinese typed in the English field: the English word
                     // comes back, and the Chinese becomes the meaning.
@@ -285,7 +301,9 @@ struct WordEditorSheet: View {
                 filled += 1
             } catch is CancellationError {
             } catch {
-                fillFailure = (error as? CloudAI.Failure) ?? .unavailable
+                let failure = (error as? CloudAI.Failure) ?? .unavailable
+                withAnimation(reduceMotion ? nil : Motion.reveal) { fillFailure = failure }
+                fillFailures += 1
             }
         }
     }
@@ -300,6 +318,8 @@ struct WordEditorSheet: View {
         entry.example = example.trimmed
         entry.exampleZh = translation.trimmed
         model.editCustomWord(entry)
+        // The sheet closes at once, so the tap is given here rather than by a modifier on it.
+        if Feel.enabled { UINotificationFeedbackGenerator().notificationOccurred(.success) }
         dismiss()
     }
 }

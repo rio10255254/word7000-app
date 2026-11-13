@@ -118,6 +118,7 @@ struct ClassicTodayView: View {
         }
         .background { AmbientBackground(tint: model.goalDone ? Palette.known : Palette.accent) }
         .animation(reduceMotion ? nil : Motion.reveal, value: plus.nudge)
+        .animation(reduceMotion ? nil : Motion.reveal, value: model.streakProtectionJustUsed)
         .task {
             // A little hello from the flame and the mascot each time Today comes into view.
             try? await Task.sleep(for: .milliseconds(500))
@@ -330,6 +331,8 @@ struct ClassicTodayView: View {
                 .accessibilityLabel(model.goalDone ? L.t("目標達成", "Goal reached") : L.t("還差 \(left) 個", "\(left) to go"))
             }
         }
+        // The numbers roll rather than jump when a word is learned.
+        .animation(reduceMotion ? nil : Motion.fill, value: progress.studiedToday)
         let ring = ProgressRing(fraction: model.dailyFraction, color: Self.cream, lineWidth: m.compact ? 9 : m.tall ? 12 : 11, track: Self.cream.opacity(0.22)) {
             VStack(spacing: 0) {
                 Text("\(progress.studiedToday)")
@@ -344,6 +347,7 @@ struct ClassicTodayView: View {
             .lineLimit(1)
             .minimumScaleFactor(0.4)
             .padding(.horizontal, 12)
+            .animation(reduceMotion ? nil : Motion.fill, value: progress.studiedToday)
         }
         .frame(width: m.ring, height: m.ring)
 
@@ -476,6 +480,7 @@ struct ClassicTodayView: View {
                 .card(padding: 12)
             }
             .buttonStyle(SoftPressStyle())
+            .transition(.move(edge: .top).combined(with: .opacity))
             .accessibilityIdentifier("today-guest")
         }
         if model.streakProtectionJustUsed {
@@ -487,6 +492,7 @@ struct ClassicTodayView: View {
                 Image(systemName: "shield.lefthalf.filled").foregroundStyle(Palette.review)
             }
             .card(padding: 12)
+            .transition(.move(edge: .top).combined(with: .opacity))
             .accessibilityIdentifier("today-streak-protected")
         }
         if let nudge = plus.nudge {
@@ -1015,7 +1021,8 @@ private struct ClassicTileRipple: View {
                 .overlay(Circle().strokeBorder(color.opacity(0.35), lineWidth: 1.5))
                 .frame(width: iconSize, height: iconSize)
                 .scaleEffect(spread ? proxy.size.width * 2.2 / iconSize : 1)
-                .opacity(spread ? 0 : 1)
+                // With Reduce Motion it never spreads, so it is not drawn at all.
+                .opacity(spread || reduceMotion ? 0 : 1)
                 .position(origin)
         }
         .allowsHitTesting(false)

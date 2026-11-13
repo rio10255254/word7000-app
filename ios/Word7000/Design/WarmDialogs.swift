@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 // WordCat Next: the questions the app asks ("Delete this bank?"), the lists
 // of things to do ("Copy / Move / Rename…") and the one-line prompts ("Name
@@ -81,6 +82,10 @@ private struct WarmConfirmModifier: ViewModifier {
             WarmConfirmSheet(title: title, message: message, confirmTitle: confirmTitle, destructive: destructive,
                              confirmIdentifier: confirmIdentifier, cancelTitle: cancelTitle, mood: mood,
                              confirm: {
+                                 // Something that cannot be taken back is felt as a warning.
+                                 if destructive, Feel.enabled {
+                                     UINotificationFeedbackGenerator().notificationOccurred(.warning)
+                                 }
                                  pending = action
                                  isPresented = false
                              },
@@ -324,6 +329,7 @@ private struct WarmTextPromptSheet: View {
     let saveIdentifier: String
     let save: () -> Void
     let cancel: () -> Void
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @FocusState private var focused: Bool
 
     init(title: String, text: Binding<String>, placeholder: String, fieldIdentifier: String, saveTitle: String,
@@ -364,6 +370,7 @@ private struct WarmTextPromptSheet: View {
                     .overlay {
                         RoundedRectangle(cornerRadius: 14, style: .continuous)
                             .strokeBorder(focused ? Palette.accent.opacity(0.7) : Palette.khaki, lineWidth: focused ? 1.5 : 1)
+                            .animation(reduceMotion ? nil : Motion.press, value: focused)
                     }
                     .accessibilityIdentifier(fieldIdentifier)
                 ButtonRow {

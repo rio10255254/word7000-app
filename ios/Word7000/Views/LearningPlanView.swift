@@ -17,6 +17,8 @@ struct LearningPlanView: View {
     @State private var examNew: Int?
     /// What a focus just picked suggests, offered once, applied only on a tap.
     @State private var suggestion: Suggestion?
+    /// Bumped when a suggestion is applied, for the success haptic.
+    @State private var applied = 0
 
     enum Suggestion: Equatable {
         case target(Int)
@@ -64,6 +66,7 @@ struct LearningPlanView: View {
             .listRowBackground(StyledRowBackground())
         }
         .warmList()
+        .sensoryFeedback(.success, trigger: applied) { _, _ in model.settings.hapticsEnabled ?? true }
         .onAppear(perform: project)
         .onChange(of: model.progress.dailyTarget) { _, _ in project() }
         .onChange(of: startChapter) { _, _ in project() }
@@ -119,6 +122,8 @@ struct LearningPlanView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background { PremiumSurface(radius: 22) }
         .contentTransition(.numericText())
+        .animation(reduceMotion ? nil : Motion.fill, value: model.progress.dailyTarget)
+        .animation(reduceMotion ? nil : Motion.fill, value: examNew)
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("plan-card")
     }
@@ -229,7 +234,8 @@ struct LearningPlanView: View {
                     }
                     .contentShape(Rectangle())
                 }
-                .buttonStyle(.plain)
+                // The press sinks and ticks: that tick is the row's one haptic.
+                .buttonStyle(SoftPressStyle())
                 .accessibilityValue(on ? L.t("已選", "Selected") : "")
                 .accessibilityHint(item.detail)
                 .accessibilityIdentifier("plan-focus-\(item.focus.rawValue)")
@@ -285,6 +291,7 @@ struct LearningPlanView: View {
                 case .lead(let lead): model.settings.homeLead = lead
                 }
                 model.scheduleSave()
+                applied += 1
                 withAnimation(reduceMotion ? nil : Motion.reveal) { self.suggestion = nil }
             }
             .buttonStyle(.borderless)

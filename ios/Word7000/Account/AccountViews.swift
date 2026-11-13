@@ -236,6 +236,8 @@ struct AccountSection: View {
             Text(L.account)
         }
         .animation(reduceMotion ? nil : Motion.reveal, value: account.isPermanent)
+        // Signing out, or deleting the account, lands with a success tap.
+        .sensoryFeedback(.success, trigger: account.isPermanent) { old, new in old && !new && Feel.enabled }
         .sheet(isPresented: $signInOpen) { SignInSheet() }
         .warmConfirm(isPresented: $confirmSignOut, title: L.t("要登出嗎？", "Sign out?"),
                      message: L.t("會先保留這個帳號在本機的紀錄，再切換到訪客。跨裝置備份請確認同步狀態。", "Your account's records will be kept on this iPhone before switching to a guest. Check sync status for backup on other devices."),

@@ -115,7 +115,7 @@ struct FilterControls: View {
         .buttonStyle(SoftPressStyle())
         .accessibilityAddTraits(on ? .isSelected : [])
         .accessibilityIdentifier(identifier)
-        .sensoryFeedback(.selection, trigger: on) { _, _ in model.settings.hapticsEnabled ?? true }
+        // No haptic here: SoftPressStyle already ticks under the finger.
     }
 }
 

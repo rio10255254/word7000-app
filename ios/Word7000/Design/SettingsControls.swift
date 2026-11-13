@@ -100,7 +100,7 @@ struct ChoiceChips<Value: Hashable>: View {
             }
         }
         .animation(reduceMotion ? nil : Motion.pop, value: selection)
-        .sensoryFeedback(.selection, trigger: selection) { _, _ in model.settings.hapticsEnabled ?? true }
+        // No haptic here: each chip is a SoftPressStyle button, which already ticks under the finger.
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier(identifier)
     }
@@ -202,6 +202,7 @@ struct ValueChip: View {
 /// "+" and "−" in clay circles, the number between: what a Stepper was.
 struct WarmStepper: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let value: Int
     let range: ClosedRange<Int>
     let onChange: (Int) -> Void
@@ -216,8 +217,8 @@ struct WarmStepper: View {
                 .frame(minWidth: 26)
             key("plus", enabled: value < range.upperBound) { onChange(value + 1) }
         }
-        .animation(Motion.pop, value: value)
-        .sensoryFeedback(.selection, trigger: value) { _, _ in model.settings.hapticsEnabled ?? true }
+        .animation(reduceMotion ? nil : Motion.pop, value: value)
+        // No haptic here: the keys are SoftPressStyle buttons, which already tick under the finger.
     }
 
     private func key(_ symbol: String, enabled: Bool, action: @escaping () -> Void) -> some View {

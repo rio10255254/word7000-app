@@ -14,6 +14,7 @@ struct ReportProblemView: View {
     @Environment(AccountModel.self) private var account
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var kind: Kind = .bug
     @State private var text = ""
     @State private var picked: [PhotosPickerItem] = []
@@ -118,12 +119,13 @@ struct ReportProblemView: View {
                     .accessibilityIdentifier("report-send-bottom")
                     Button {
                         UIPasteboard.general.string = message
-                        copied = true
+                        withAnimation(reduceMotion ? nil : Motion.pop) { copied = true }
                     } label: {
                         Label(copied ? L.t("已複製，貼到信裡寄給 \(Self.address)", "Copied. Paste it into an email to \(Self.address)")
                                      : L.t("複製內容（不用信箱 App 時）", "Copy instead (no mail app)"),
                               systemImage: copied ? "checkmark" : "doc.on.doc")
                             .font(.subheadline)
+                            .contentTransition(.symbolEffect(.replace))
                     }
                     .disabled(!ready)
                     .accessibilityIdentifier("report-copy")
@@ -149,10 +151,15 @@ struct ReportProblemView: View {
                 }
             }
             .task(id: picked) { await loadImages() }
+            .sensoryFeedback(.success, trigger: sent) { _, now in now && (model.settings.hapticsEnabled ?? true) }
+            .sensoryFeedback(.success, trigger: copied) { _, now in now && (model.settings.hapticsEnabled ?? true) }
             .sheet(isPresented: $mailOpen) {
                 MailComposer(to: Self.address, subject: subject, body: message, images: images) { didSend in
                     mailOpen = false
-                    if didSend { sent = true; text = ""; picked = []; images = [] }
+                    if didSend {
+                        withAnimation(reduceMotion ? nil : Motion.pop) { sent = true }
+                        text = ""; picked = []; images = []
+                    }
                 }
                 .ignoresSafeArea()
             }

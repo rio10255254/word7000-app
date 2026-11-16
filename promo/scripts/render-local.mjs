@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Render countdown reels on a machine with a GPU.
 //   node scripts/render-local.mjs d6 d6-en
-// Output goes to out/<id>.mp4. Pass --gl=<backend> to override (default: angle).
+// Output goes to out/<id>-<HHMM>.mp4. Pass --gl=<backend> to override (default: angle).
 // On a laptop with two GPUs Windows gives headless Chrome the integrated one
 // unless told otherwise: see "在自己的電腦算繪" in README.md.
 import { spawnSync } from 'node:child_process';
@@ -17,9 +17,12 @@ if (!ids.length) {
   process.exit(1);
 }
 mkdirSync('out', { recursive: true });
+const stamp = new Date().toTimeString().slice(0, 5).replace(':', '');
 for (const id of ids) {
   const started = Date.now();
-  const r = spawnSync('npx', ['remotion', 'render', `Reel-${id}`, `out/${id}.mp4`, `--gl=${gl}`, '--timeout=300000', ...extra], { stdio: 'inherit', shell: true });
+  // The time is in the name: a file still open in a player cannot be replaced on Windows.
+  const file = `out/${id}-${stamp}.mp4`;
+  const r = spawnSync('npx', ['remotion', 'render', `Reel-${id}`, file, `--gl=${gl}`, '--timeout=300000', ...extra], { stdio: 'inherit', shell: true });
   if (r.status !== 0) process.exit(r.status ?? 1);
-  console.log(`${id}: ${Math.round((Date.now() - started) / 1000)} s -> out/${id}.mp4`);
+  console.log(`${id}: ${Math.round((Date.now() - started) / 1000)} s -> ${file}`);
 }

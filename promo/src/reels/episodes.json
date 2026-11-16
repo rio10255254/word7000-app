@@ -3018,7 +3018,7 @@
     },
     {
       "id": "d3",
-      "series": "倒數 3 天",
+      "series": "即將上架",
       "app": "WordCat 單字貓",
       "label": "傻貓 SillyCat",
       "voice": {
@@ -3031,9 +3031,9 @@
         "還有",
         "天"
       ],
-      "note": "11.16 App Store 上架",
-      "outro": "追蹤我們，上架當天通知你",
-      "outroSay": "還有三天。",
+      "note": "App Store 審核中",
+      "outro": "追蹤我們，上架第一時間通知你",
+      "outroSay": "快了，再等我一下。",
       "kind": "day3d",
       "days": 3,
       "launch": "11.16",
@@ -3246,11 +3246,12 @@
             0
           ]
         ]
-      }
+      },
+      "soon": "即將上架"
     },
     {
       "id": "d3-en",
-      "series": "3 days to go",
+      "series": "Coming soon",
       "app": "WordCat",
       "label": "SillyCat",
       "voice": {
@@ -3263,9 +3264,9 @@
         "",
         "days to go"
       ],
-      "note": "Out 11.16 on the App Store",
-      "outro": "Follow us. We'll tell you when it's out.",
-      "outroSay": "Three days.",
+      "note": "On the App Store soon",
+      "outro": "Follow us. We'll tell you the moment it's out.",
+      "outroSay": "Almost there. Hang tight.",
       "kind": "day3d",
       "days": 3,
       "launch": "11.16",
@@ -3479,11 +3480,12 @@
             0
           ]
         ]
-      }
+      },
+      "soon": "Coming soon"
     },
     {
       "id": "d2",
-      "series": "倒數 2 天",
+      "series": "即將上架",
       "app": "WordCat 單字貓",
       "label": "傻貓 SillyCat",
       "voice": {
@@ -3496,9 +3498,9 @@
         "還有",
         "天"
       ],
-      "note": "11.16 App Store 上架",
-      "outro": "追蹤我們，上架當天通知你",
-      "outroSay": "還有兩天。",
+      "note": "App Store 審核中",
+      "outro": "追蹤我們，上架第一時間通知你",
+      "outroSay": "快了，再等我一下。",
       "kind": "day3d",
       "days": 2,
       "launch": "11.16",
@@ -3714,11 +3716,12 @@
             0
           ]
         ]
-      }
+      },
+      "soon": "即將上架"
     },
     {
       "id": "d2-en",
-      "series": "2 days to go",
+      "series": "Coming soon",
       "app": "WordCat",
       "label": "SillyCat",
       "voice": {
@@ -3731,9 +3734,9 @@
         "",
         "days to go"
       ],
-      "note": "Out 11.16 on the App Store",
-      "outro": "Follow us. We'll tell you when it's out.",
-      "outroSay": "Two days.",
+      "note": "On the App Store soon",
+      "outro": "Follow us. We'll tell you the moment it's out.",
+      "outroSay": "Almost there. Hang tight.",
       "kind": "day3d",
       "days": 2,
       "launch": "11.16",
@@ -3949,7 +3952,8 @@
             0
           ]
         ]
-      }
+      },
+      "soon": "Coming soon"
     },
     {
       "kind": "day3d",
@@ -3959,7 +3963,7 @@
       "grooveFrom": 1,
       "outroAt": 1.0,
       "id": "d1",
-      "series": "倒數 1 天",
+      "series": "即將上架",
       "app": "WordCat 單字貓",
       "label": "傻貓 SillyCat",
       "voice": {
@@ -3973,9 +3977,9 @@
         "還有",
         "天"
       ],
-      "note": "11.16 App Store 上架",
-      "outro": "明天上架，追蹤我們別錯過",
-      "outroSay": "明天見。",
+      "note": "App Store 審核中",
+      "outro": "追蹤我們，上架第一時間通知你",
+      "outroSay": "快了，再等我一下。",
       "endBeats": 7,
       "lines": [
         {
@@ -4099,8 +4103,8 @@
           ]
         },
         {
-          "text": "明天上架。\n**第一天，不准缺席**。",
-          "say": "明天上架。第一天，不准缺席。",
+          "text": "等我上架。\n**第一天，不准缺席**。",
+          "say": "等我上架。第一天，不准缺席。",
           "beats": 8,
           "cues": [
             [
@@ -4238,7 +4242,8 @@
             0
           ]
         ]
-      }
+      },
+      "soon": "即將上架"
     },
     {
       "kind": "day3d",
@@ -4248,7 +4253,7 @@
       "grooveFrom": 1,
       "outroAt": 1.0,
       "id": "d1-en",
-      "series": "1 day to go",
+      "series": "Coming soon",
       "app": "WordCat",
       "label": "SillyCat",
       "voice": {
@@ -4262,9 +4267,9 @@
         "",
         "day to go"
       ],
-      "note": "Out 11.16 on the App Store",
-      "outro": "Out tomorrow. Follow so you don't miss it.",
-      "outroSay": "See you tomorrow.",
+      "note": "On the App Store soon",
+      "outro": "Follow us. We'll tell you the moment it's out.",
+      "outroSay": "Almost there. Hang tight.",
       "endBeats": 7,
       "lines": [
         {
@@ -4388,8 +4393,8 @@
           ]
         },
         {
-          "text": "Out tomorrow.\n**Day one. Be there.**",
-          "say": "Out tomorrow. Day one. Be there.",
+          "text": "When I'm out:\n**Day one. Be there.**",
+          "say": "When I'm out: day one. Be there.",
           "beats": 8,
           "cues": [
             [
@@ -4527,7 +4532,8 @@
             0
           ]
         ]
-      }
+      },
+      "soon": "Coming soon"
     },
     {
       "kind": "day3d",

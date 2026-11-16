@@ -9,7 +9,7 @@ import timings from './timing.json';
 import { REEL_FPS } from './Reel';
 import { Caption } from './Intro';
 import { ABOVE_CAPTIONS, CAPTION_TOP, Peek } from './Teaser';
-import { CountdownEnd, DaysStamp, StampCard } from './Countdown';
+import { CountdownEnd, DaysStamp, SoonStamp, StampCard } from './Countdown';
 import { Burst, DeepBackdrop, Foreground, Grade, InkFilters, Motes } from './finish';
 import { Mascot, type Mood } from '../Mascot';
 import { Lift, PHONE, colorAt, Phone3D, ScreenLayer, StudioLight, imageTexture, inOut, loadPhone, loadStudio, onScreen, out, ramp, usePrepared } from './three/kit';
@@ -57,7 +57,7 @@ type Scene = {
   tracker: { title: string; day: string; excuse: string; plus: string; one: string; label: string };
   desk: [string, number, number, number, number][];
 };
-type Episode = { id: string; days: number; app: string; label: string; dayWords: [string, string]; note: string; outro: string; lines: { text: string }[]; scene: Scene };
+type Episode = { id: string; soon?: string; days: number; app: string; label: string; dayWords: [string, string]; note: string; outro: string; lines: { text: string }[]; scene: Scene };
 type Pose = { x: number; y: number; z: number; rx: number; ry: number; rz: number };
 type Key = { at: number; pose: Pose; ease?: (n: number) => number };
 
@@ -426,7 +426,8 @@ export const Day1 = ({ id }: { id: string }) => {
   const film = useFilm(id);
   const { t, episode, s, timing, end, rise } = film;
 
-  const stamp = <DaysStamp days={episode.days} words={episode.dayWords} note={episode.note} />;
+  // No date on it while the day is not known.
+  const stamp = episode.soon ? <SoonStamp words={episode.soon} note={episode.note} /> : <DaysStamp days={episode.days} words={episode.dayWords} note={episode.note} />;
   const tip = ramp(t, film.trackIn - 0.12, film.trackIn + 0.38, inOut);
   const leave = ramp(t, end - 0.15, end + 0.35, inOut);
   const smear = Math.min(26, Math.max(0, film.turning - 2.5) * 2.4);

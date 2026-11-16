@@ -336,70 +336,70 @@ Twenty real-life scenes, starting with getting a table. Real recorded voices: li
 Out 11/16 on the App Store. Follow so you don't miss it.
 #WordCat #LearnChinese #Mandarin #SpeakChinese #LanguageLearning
 
-### 11/13｜還有 3 天：智慧掃描（Premium）（`d3`／`d3-en`，`src/reels/Day3.tsx`）
+### 即將上架（原 11/13）：智慧掃描（Premium）（`d3`／`d3-en`，`src/reels/Day3.tsx`）
 
 一張手寫的單字紙拍在桌上，手機從旁邊升起、朝著它。閃一下，一道光從上往下讀過紙面，讀到的每一行被螢光筆劃過；接著每一行離開紙面飛到手機上，落進 App 複查頁真實的那一列，那一列從玻璃上彈起。紙滑走，手機回到中間，點「存入字庫」，進到已存入的畫面並迸出金色火花；中文版再轉一圈，回來是剛掃進來的第一張單字卡。全程右上角有 Premium 紙籤。紙是為這支片做的道具，上面的字和截圖一致；手機上的畫面來源見 `public/scan/SOURCE.md`。
 
 **IG 貼文（中）**
 
-還有 3 天 🐱
+即將上架 🐱
 講義上的單字，還在一個一個打喔？
 拍一張就好。印刷的、手寫的我都看得懂，一個、兩個、三個，通通幫你變成單字卡。
 存好了，這下沒藉口了吧。
 （掃描是 Premium 功能；背單字永遠免費。）
-11/16 App Store 上架，追蹤我們，上架當天通知你。
+App Store 審核中，追蹤我們，上架第一時間通知你。
 #單字貓 #WordCat #背單字 #英文單字 #讀書方法
 
 **IG post (EN)**
 
-3 days to go 🐱
+Coming soon 🐱
 Still typing out that word list? Seriously?
 Just snap it. Printed or handwritten, I read every line and turn it into flashcards.
 Saved. No more excuses.
 (Scanning is a Premium feature. Studying words is always free.)
-Out 11/16 on the App Store. Follow so you don't miss it.
+On the App Store soon. Follow and we'll tell you the moment it's out.
 #WordCat #LearnChinese #Mandarin #Flashcards #StudyTips
 
-### 11/14｜還有 2 天：傻貓 AI 老師（Premium）（`d2`／`d2-en`，`src/reels/Day2.tsx`）
+### 即將上架（原 11/14）：傻貓 AI 老師（Premium）（`d2`／`d2-en`，`src/reels/Day2.tsx`）
 
 一張紙做的對話泡泡拍在桌上，寫著你說的那句有錯的話；手機從旁邊升起，紅筆在錯的地方畫波浪線，泡泡被吸進手機。鏡頭推到口說批改卡上：帶著同一個錯誤的那一行浮起，被紅筆圈起來，接著「更自然的說法」整句和黃色的提醒也一層層浮起。往下到追問那張卡，點「回答這個追問」。轉一圈到聊天：你的訊息送出、傻貓打字中、回覆落下，牠記住的事被釘在下面並迸出火花。全程右上角有 Premium 紙籤。泡泡是道具，上面的字是批改卡自己劃掉的那一句；手機畫面來源見 `public/tutor/SOURCE.md`。
 
 **IG 貼文（中）**
 
-還有 2 天 🐱
+即將上架 🐱
 你講的英文，有人幫你改嗎？
 我改。哪裡怪、為什麼，都跟你講清楚；改完還追問，逼你再多講一句。
 你交代的事我也都記得，記到你受不了。
 （AI 老師是 Premium 功能；背單字永遠免費。）
-11/16 App Store 上架，追蹤我們，上架當天通知你。
+App Store 審核中，追蹤我們，上架第一時間通知你。
 #單字貓 #WordCat #英文口說 #AI家教 #學英文
 
 **IG post (EN)**
 
-2 days to go 🐱
+Coming soon 🐱
 Who fixes your Chinese when you speak?
 I do. What's off, and why, spelled out. Then a follow-up, so you keep talking.
 And I remember what you tell me. Till you can't stand it.
 (The AI tutor is a Premium feature. Studying words is always free.)
-Out 11/16 on the App Store. Follow so you don't miss it.
+On the App Store soon. Follow and we'll tell you the moment it's out.
 #WordCat #LearnChinese #Mandarin #SpeakChinese #AITutor
 
-### 11/15｜還有 1 天：蓋章、連續天數、貓罐頭（`d1`／`d1-en`，`src/reels/Day1.tsx`）
+### 即將上架（原 11/15）：蓋章、連續天數、貓罐頭（`d1`／`d1-en`，`src/reels/Day1.tsx`）
 
 一張三分鐘熱度的打卡表拍在桌上（前三格打勾，第四格寫著「明天再說…」），手機從旁邊升起。推近到今天的總結，三個數字一個個浮起，接著是傻貓那句「好啦，准你休息。」手機往後躺平，一顆木柄橡皮章從上方砸下來：這一下把整個螢幕印成「今天的份完成！」，手機被壓得一沉再彈回，金色印章浮起，「+1 天」紙條拍在旁邊。再推近到一週那一排：紅筆在漏掉的那天畫叉，貓罐頭從它的圖示裡蹦出來、在空中轉三圈、落在叉上把它蓋住；「只有 1 罐」。最後打卡表回來，第二顆章蓋在「明天再說」那一格上。橡皮章和罐頭是用基本幾何做的 3D 物件（`src/reels/three/objects.tsx`）；截圖來源見 `public/streak/SOURCE.md`。完整分鏡在 `docs/launch-countdown-v3.md`。
 
 **IG 貼文（中）**
 
-還有 1 天 🐱
+即將上架 🐱
 每次都三分鐘熱度，說的就是你吧？
 今天的份走完，我才准你休息。蓋章，連續天數加一。
 漏一天？有貓罐頭幫你擋，但只有一罐。
-明天上架。第一天，不准缺席。
+等我上架。第一天，不准缺席。
 #單字貓 #WordCat #背單字 #學測英文 #會考英文 #讀書習慣
 
 **IG post (EN)**
 
-1 day to go 🐱
+Coming soon 🐱
 Always quit by day three?
 Finish today's set and I'll let you rest. Stamp. Streak, plus one.
 Miss a day? A Cat Can covers it. You get one.
@@ -429,3 +429,7 @@ Pick your own? Classic. Rather not think? Easy mode.
 Flashcards are always free. Link in bio. Starting today, no slacking.
 (Scanning and the AI tutor are Premium features.)
 #WordCat #LearnChinese #LearnMandarin #TaiwanMandarin #Flashcards #LanguageLearning
+
+### 上架日延後之後
+
+審核沒有趕上 11/16，所以還沒發的集數（`d3`、`d2`、`d1`）不再印日期：`episodes.json` 裡該集有 `soon`（「即將上架」／"Coming soon"）時，封面和片尾的印章改用沒有數字的 `SoonStamp`，`note` 是「App Store 審核中」，片尾台詞是「快了，再等我一下。」`d1` 原本的「明天上架」改成「等我上架」。已經發出去的 `d6`～`d4` 不動；`launch` 留到真的上架那天。本機算繪的檔名帶時間（`out/d3-1432.mp4`），不會因為舊檔還開著而失敗。

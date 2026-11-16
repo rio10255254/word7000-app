@@ -73,6 +73,18 @@ export const DaysStamp = ({ days, words, note, scale = 1 }: { days: number; word
   </div>
 );
 
+/** The same stamp with no date on it, for when the day is not known: "即將上架" / "Coming soon", and where, under a rule. */
+export const SoonStamp = ({ words, note, scale = 1 }: { words: string; note: string; scale?: number }) => {
+  const cjk = /[\u3400-\u9fff]/.test(words);
+  return (
+    <div style={{ filter: 'url(#ink)', border: `${9 * scale}px solid ${CLAY}`, borderRadius: 30 * scale, padding: `${22 * scale}px ${46 * scale}px ${16 * scale}px`, color: CLAY, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ fontFamily: cjk ? SERIF_TC : SERIF, fontWeight: cjk ? 900 : 800, fontSize: (cjk ? 128 : 84) * scale, lineHeight: 1.1, letterSpacing: cjk ? '0.06em' : '0', whiteSpace: 'nowrap' }}>{words}</div>
+      <div style={{ alignSelf: 'stretch', height: 4 * scale, background: CLAY, margin: `${14 * scale}px ${4 * scale}px ${12 * scale}px`, borderRadius: 2 }} />
+      <div style={{ fontWeight: 900, fontSize: 32 * scale, letterSpacing: '0.2em', lineHeight: 1, paddingLeft: '0.2em', whiteSpace: 'nowrap' }}>{note}</div>
+    </div>
+  );
+};
+
 /** The card the stamp sits on, slapped down at `at`, stamped at `stampAt`. */
 export const StampCard = ({ t, at, stampAt, top, children }: { t: number; at: number; stampAt: number; top: number; children: ReactNode }) => {
   const p = at <= 0 ? 1 : interpolate(t, [at, at + 0.16], [0, 1], { ...clamp, easing: Easing.in(Easing.quad) });

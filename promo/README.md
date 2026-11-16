@@ -403,7 +403,7 @@ Coming soon 🐱
 Always quit by day three?
 Finish today's set and I'll let you rest. Stamp. Streak, plus one.
 Miss a day? A Cat Can covers it. You get one.
-Out tomorrow on the App Store. Day one. Be there.
+When I'm out: day one. Be there.
 #WordCat #LearnChinese #Mandarin #StudyHabits #LanguageLearning
 
 ### 11/16｜上架（`launch`／`launch-en`，`src/reels/Launch.tsx`）

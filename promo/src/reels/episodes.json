@@ -5247,6 +5247,248 @@
         ]
       },
       "captionSize": 56
+    },
+    {
+      "id": "soon",
+      "series": "延後公告",
+      "app": "WordCat 單字貓",
+      "label": "傻貓 SillyCat",
+      "voice": {
+        "engine": "elevenlabs",
+        "voiceId": "fQj4gJSexpu8RDE2Ii5m",
+        "model": "eleven_v4",
+        "language": "zh"
+      },
+      "dayWords": [
+        "還有",
+        "天"
+      ],
+      "note": "即將上架 App Store",
+      "outro": "追蹤我們，上架第一時間通知你",
+      "outroSay": "敬請期待。",
+      "kind": "day3d",
+      "days": 2,
+      "launch": "11.16",
+      "endBeats": 7,
+      "endStamp": true,
+      "endStampAt": 0.75,
+      "grooveFrom": 1,
+      "outroAt": 1.0,
+      "lines": [
+        {
+          "text": "說好十一月十六，\n**要請你再等我一下**。",
+          "say": "[sincere] 說好十一月十六，要請你再等我一下。",
+          "beats": 10,
+          "cues": [
+            [
+              0.3,
+              "pop"
+            ],
+            [
+              5.0,
+              "thud"
+            ],
+            [
+              5.2,
+              "pop"
+            ]
+          ]
+        },
+        {
+          "text": "不是偷懶。每個細節都顧好，\n**我才敢交到你手上**。",
+          "say": "不是偷懶。每個細節都顧好，我才敢交到你手上。",
+          "beats": 12,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              1.6,
+              "thud"
+            ],
+            [
+              3,
+              "tick"
+            ],
+            [
+              4,
+              "tick"
+            ],
+            [
+              5,
+              "tick"
+            ],
+            [
+              6,
+              "tick"
+            ],
+            [
+              7.6,
+              "pop"
+            ]
+          ]
+        },
+        {
+          "text": "快好了。上架那天，\n**你會第一個知道**。",
+          "say": "[warm] 快好了。上架那天，你會第一個知道。",
+          "beats": 9,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              2,
+              "pop"
+            ],
+            [
+              5,
+              "ding"
+            ]
+          ]
+        }
+      ],
+      "scene": {
+        "screen": "launch/zh-classic",
+        "was": [
+          "11.16",
+          "App Store 上架"
+        ],
+        "sticky": "再等我一下",
+        "list": {
+          "title": "上架前檢查",
+          "done": [
+            "滑卡背單字",
+            "真人口說情境",
+            "智慧掃描",
+            "AI 老師"
+          ],
+          "doing": "最後把關中"
+        }
+      },
+      "soon": "敬請期待"
+    },
+    {
+      "id": "soon-en",
+      "series": "Launch update",
+      "app": "WordCat",
+      "label": "SillyCat",
+      "voice": {
+        "engine": "elevenlabs",
+        "voiceId": "N2lVS1w4EtoT3dr4eOWO",
+        "model": "eleven_v4",
+        "language": "en"
+      },
+      "dayWords": [
+        "",
+        "days to go"
+      ],
+      "note": "On the App Store soon",
+      "outro": "Follow us. We'll tell you the moment it's out.",
+      "outroSay": "Stay tuned.",
+      "kind": "day3d",
+      "days": 2,
+      "launch": "11.16",
+      "endBeats": 7,
+      "endStamp": true,
+      "endStampAt": 0.75,
+      "grooveFrom": 1,
+      "outroAt": 1.0,
+      "lines": [
+        {
+          "text": "I said November 16.\n**I need a little longer.**",
+          "say": "[sincere] I said November sixteenth. I need a little longer.",
+          "beats": 10,
+          "cues": [
+            [
+              0.3,
+              "pop"
+            ],
+            [
+              5.0,
+              "thud"
+            ],
+            [
+              5.2,
+              "pop"
+            ]
+          ]
+        },
+        {
+          "text": "Every detail right,\n**then it's yours.**",
+          "say": "Not slacking. Every detail right, then it's yours.",
+          "beats": 12,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              1.6,
+              "thud"
+            ],
+            [
+              3,
+              "tick"
+            ],
+            [
+              4,
+              "tick"
+            ],
+            [
+              5,
+              "tick"
+            ],
+            [
+              6,
+              "tick"
+            ],
+            [
+              7.6,
+              "pop"
+            ]
+          ]
+        },
+        {
+          "text": "Almost there. The day I'm out,\n**you'll know first.**",
+          "say": "[warm] Almost there. The day I'm out, you'll know first.",
+          "beats": 9,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              2,
+              "pop"
+            ],
+            [
+              5,
+              "ding"
+            ]
+          ]
+        }
+      ],
+      "scene": {
+        "screen": "launch/en-classic",
+        "was": [
+          "11.16",
+          "On the App Store"
+        ],
+        "sticky": "a little longer",
+        "list": {
+          "title": "Before launch",
+          "done": [
+            "Swipe cards",
+            "Real voices",
+            "Smart scan",
+            "AI tutor"
+          ],
+          "doing": "Final checks"
+        }
+      },
+      "soon": "Stay tuned"
     }
   ]
 }

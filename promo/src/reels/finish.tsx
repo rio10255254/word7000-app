@@ -143,6 +143,68 @@ export const Foreground = ({ t, drift = 0, show = 1 }: { t: number; drift?: numb
     </AbsoluteFill>
   );
 
+/**
+ * The desk at night, for the one reel that is not a countdown: almost
+ * dark, in the deep end of the same olive, with one desk lamp. `lamp`
+ * (0–1) is how far it is on. Its light falls in a cone from the top left
+ * onto a warm pool on the desk; far lights are soft discs behind; the
+ * frame's edge goes to black.
+ */
+export const NightBackdrop = ({ t, frame, lamp = 1, drift = 0 }: { t: number; frame: number; lamp?: number; drift?: number }) => {
+  const breathe = 1 + Math.sin(t * 1.7) * 0.015 + Math.sin(t * 5.3) * 0.006;
+  const on = lamp * breathe;
+  return (
+    <AbsoluteFill style={{ overflow: 'hidden', background: '#0D100A' }}>
+      <AbsoluteFill style={{ background: 'radial-gradient(120% 80% at 42% 46%, #2A3320 0%, #1B2114 46%, #0C0F09 100%)' }} />
+      {/* Paper left out on the desk, barely there until the lamp finds it. */}
+      <div style={{ position: 'absolute', left: -150 - drift * 0.05, top: 980, width: 560, height: 700, transform: 'rotate(-13deg)', background: '#E9E2CF', opacity: 0.05 + 0.07 * on, filter: 'blur(5px)', borderRadius: 6 }} />
+      <div style={{ position: 'absolute', right: -190 + drift * 0.04, top: 420, width: 520, height: 640, transform: 'rotate(11deg)', background: '#E9E2CF', opacity: 0.04 + 0.05 * on, filter: 'blur(7px)', borderRadius: 6 }} />
+      {/* Lights a long way off, out of focus. */}
+      {Array.from({ length: 9 }, (_, i) => {
+        const size = 70 + hash(i + 40) * 150;
+        return (
+          <div
+            key={i}
+            style={{
+              position: 'absolute',
+              left: hash(i + 41) * 1180 - 60 - drift * 0.03 * (1 + hash(i + 44)),
+              top: 240 + hash(i + 42) * 900 + Math.sin(t * 0.3 + i) * 10,
+              width: size,
+              height: size,
+              borderRadius: '50%',
+              background: i % 3 === 0 ? 'rgba(255,196,120,0.9)' : i % 3 === 1 ? 'rgba(174,186,136,0.9)' : 'rgba(255,236,196,0.9)',
+              filter: `blur(${22 + hash(i + 43) * 16}px)`,
+              opacity: (0.06 + hash(i + 45) * 0.09) * (0.7 + 0.3 * Math.sin(t * (0.5 + hash(i + 46)) + i * 2)),
+            }}
+          />
+        );
+      })}
+      {/* The lamp's cone, and the pool it makes on the desk. */}
+      <AbsoluteFill style={{ clipPath: 'polygon(6% 15%, 24% 12%, 100% 78%, 62% 100%, 0% 100%, 0% 46%)', background: 'linear-gradient(140deg, rgba(255,214,140,0.5) 0%, rgba(255,214,140,0.16) 45%, rgba(255,214,140,0) 85%)', filter: 'blur(46px)', opacity: 0.55 * on }} />
+      <AbsoluteFill style={{ background: `radial-gradient(60% 40% at 44% 50%, rgba(255,210,130,${0.34 * on}) 0%, rgba(255,196,110,${0.12 * on}) 45%, rgba(255,196,110,0) 75%)` }} />
+      <Grain frame={frame} opacity={0.12} />
+      <AbsoluteFill style={{ background: `radial-gradient(105% 80% at 46% 46%, rgba(0,0,0,0) 42%, rgba(4,6,2,${0.72 - 0.14 * on}) 100%)` }} />
+    </AbsoluteFill>
+  );
+};
+
+/** The lamp itself, leaning in from the top left: arm, shade, and the glow under the shade. */
+export const DeskLamp = ({ t, lamp = 1 }: { t: number; lamp?: number }) => {
+  const sway = Math.sin(t * 0.6) * 0.4;
+  return (
+    <div style={{ position: 'absolute', left: -96, top: 44, width: 420, height: 320, transform: `rotate(${sway}deg)`, transformOrigin: '0% 0%', pointerEvents: 'none' }}>
+      <div style={{ position: 'absolute', left: -30, top: 60, width: 250, height: 22, borderRadius: 11, background: 'linear-gradient(to bottom, #4A5338, #20261A)', transform: 'rotate(18deg)', transformOrigin: '0% 50%', boxShadow: '0 10px 18px rgba(0,0,0,0.5)' }} />
+      <div style={{ position: 'absolute', left: 196, top: 118, width: 34, height: 34, borderRadius: 17, background: 'radial-gradient(circle at 35% 30%, #6E7A52, #252B1C)' }} />
+      <div style={{ position: 'absolute', left: 150, top: 120, width: 240, height: 140, transform: 'rotate(24deg)', transformOrigin: '30% 20%' }}>
+        {/* The glow inside the shade, seen from underneath. */}
+        <div style={{ position: 'absolute', left: 6, right: 6, bottom: -26, height: 60, borderRadius: '50%', background: `radial-gradient(ellipse at 50% 30%, rgba(255,240,200,${0.98 * lamp}) 0%, rgba(255,208,120,${0.75 * lamp}) 40%, rgba(255,190,90,0) 75%)`, filter: 'blur(6px)' }} />
+        <div style={{ position: 'absolute', inset: 0, clipPath: 'polygon(28% 0%, 72% 0%, 100% 100%, 0% 100%)', background: 'linear-gradient(100deg, #58633F 0%, #3A432B 45%, #1C2115 100%)' }} />
+        <div style={{ position: 'absolute', inset: 0, clipPath: 'polygon(28% 0%, 72% 0%, 100% 100%, 0% 100%)', background: `linear-gradient(to top, rgba(255,214,140,${0.5 * lamp}) 0%, rgba(255,214,140,0) 40%)` }} />
+      </div>
+    </div>
+  );
+};
+
 /** The lens and the vignette over everything, for one look across the whole piece. */
 export const Grade = ({ frame }: { frame: number }) => (
   <>

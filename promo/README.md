@@ -433,3 +433,23 @@ Flashcards are always free. Link in bio. Starting today, no slacking.
 ### 上架日延後之後
 
 審核沒有趕上 11/16，所以還沒發的集數（`d3`、`d2`、`d1`）不再印日期：`episodes.json` 裡該集有 `soon`（「即將上架」／"Coming soon"）時，封面和片尾的印章改用沒有數字的 `SoonStamp`，`note` 是「App Store 審核中」，片尾台詞是「快了，再等我一下。」`d1` 原本的「明天上架」改成「等我上架」。已經發出去的 `d6`～`d4` 不動；`launch` 留到真的上架那天。本機算繪的檔名帶時間（`out/d3-1432.mp4`），不會因為舊檔還開著而失敗。
+
+### 延後公告（`soon`／`soon-en`，`src/reels/Soon.tsx`）
+
+唯一一支不是倒數的片，樣子也不一樣：深夜的書桌，一盞檯燈閃兩下亮起，照著每支倒數都用過的那張印著「11.16 App Store 上架」的紙卡；一張黃色便利貼「再等我一下」啪地貼在日期上。手機升進燈光裡，旁邊一張夾板上的「上架前檢查」，紅筆一拍勾一項（滑卡、口說、掃描、AI 老師），最後一項「最後把關中」被圈起來，筆還在繞。清單滑走，手機回到中間在燈下慢慢轉，片尾蓋上「敬請期待／即將上架 App Store」。台詞只說真的事：比說好的晚、還在把關、上架那天第一個通知你。夜景背景和檯燈在 `finish.tsx` 的 `NightBackdrop`、`DeskLamp`。
+
+**IG 貼文（中）**
+
+說好 11/16，要請你再等我一下 🐱
+不是偷懶。每個細節都顧好，我才敢交到你手上。
+快好了。上架那天，你會第一個知道。
+追蹤我們，敬請期待。
+#單字貓 #WordCat #即將上架 #背單字 #學英文
+
+**IG post (EN)**
+
+I said November 16. I need a little longer 🐱
+Not slacking. Every detail right, then it's yours.
+Almost there. The day I'm out, you'll know first.
+Follow us and stay tuned.
+#WordCat #ComingSoon #LearnChinese #Mandarin #LanguageLearning

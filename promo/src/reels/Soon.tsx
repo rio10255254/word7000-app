@@ -239,14 +239,16 @@ const Buddy = ({ film }: { film: ReturnType<typeof useFilm> }) => {
   const { t, end } = film;
   const arrive = film.rise + 0.4;
   if (t < arrive) return null;
-  const inP = ramp(t, arrive, arrive + 0.5, out) * (1 - ramp(t, end - 0.25, end + 0.1, inOut));
-  const events: { at: number; mood: Mood; stay: boolean }[] = [...film.ticks.map((at) => ({ at, mood: 'happy' as Mood, stay: false })), { at: film.doing, mood: 'smug', stay: false }, { at: film.soon + 1.0, mood: 'happy', stay: true }];
+  const inP = ramp(t, arrive, arrive + 0.5, out);
+  // It does not leave: when the phone goes, it walks to the middle and sits under the end card.
+  const go = ramp(t, end - 0.2, end + 0.55, inOut);
+  const events: { at: number; mood: Mood; stay: boolean }[] = [...film.ticks.map((at) => ({ at, mood: 'happy' as Mood, stay: false })), { at: film.doing, mood: 'smug', stay: false }, { at: film.soon + 1.0, mood: 'happy', stay: true }, { at: end + 0.75, mood: 'happy', stay: true }];
   const now = [...events].reverse().find((e) => t >= e.at);
   const age = now ? t - now.at : 9;
   const mood: Mood = now && (now.stay || age < 0.7) ? now.mood : 'idle';
   const hop = age < 0.6 ? Math.exp(-age * 7) * Math.sin(age * 17) : 0;
   return (
-    <div style={{ position: 'absolute', left: -96 - (1 - inP) * 360, top: 1068 - hop * 26, transform: `rotate(${13 + hop * 3}deg)`, transformOrigin: '30% 100%', filter: 'drop-shadow(0 18px 22px rgba(0,0,0,0.55)) brightness(0.94)' }}>
+    <div style={{ position: 'absolute', left: -96 - (1 - inP) * 360 + go * 436, top: 1068 + go * 204 - hop * 26 - Math.sin(PI * go) * 40, transform: `rotate(${13 * (1 - go) + hop * 3}deg)`, transformOrigin: '30% 100%', filter: 'drop-shadow(0 18px 22px rgba(0,0,0,0.55)) brightness(0.94)' }}>
       <Mascot mood={mood} size={400} next />
     </div>
   );
@@ -279,7 +281,7 @@ export const Soon = ({ id }: { id: string }) => {
 
       {/* What every countdown opened with: the date, stamped. Then the note over it. */}
       {tip < 1 ? (
-        <div style={{ position: 'absolute', inset: 0, opacity: (1 - tip * tip) * (0.25 + 0.75 * film.lamp), transform: `translateY(${film.knock}px) perspective(1400px) translateY(${-tip * 420}px) translateZ(${-tip * 500}px) rotateX(${tip * 70}deg)`, transformOrigin: '50% 22%' }}>
+        <div style={{ position: 'absolute', inset: 0, opacity: (1 - tip * tip) * (0.25 + 0.75 * film.lamp), transform: `translateY(${film.knock}px) perspective(1400px) translateY(${-tip * 420}px) translateZ(${-tip * 500}px) rotateX(${tip * 70}deg) scale(${1 + 0.05 * ramp(t, 0, rise, (n) => n)})`, transformOrigin: '50% 22%' }}>
           <StampCard t={t} at={0} stampAt={0} top={300}>
             <SoonStamp words={s.was[0]} note={s.was[1]} />
           </StampCard>

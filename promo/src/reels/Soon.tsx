@@ -6,8 +6,7 @@ import { FONT, HAND, HAND_TC, SERIF, SERIF_TC } from '../fonts';
 import script from './episodes.json';
 import timings from './timing.json';
 import { REEL_FPS } from './Reel';
-import { Caption } from './Intro';
-import { ABOVE_CAPTIONS, CAPTION_TOP } from './Teaser';
+import { ABOVE_CAPTIONS } from './Teaser';
 import { CountdownEnd, SoonStamp, StampCard } from './Countdown';
 import { Burst, DeskLamp, Grade, InkFilters, Motes, NightBackdrop } from './finish';
 import { Mascot, type Mood } from '../Mascot';
@@ -36,7 +35,7 @@ const MID = ((960 - 825) / FOCAL) * CAM_Z;
 
 type Slot = { start: number; length: number };
 type Scene = { screen: string; was: [string, string]; sticky: string; list: { title: string; done: string[]; doing: string } };
-type Episode = { id: string; soon: string; app: string; label: string; note: string; outro: string; lines: { text: string }[]; scene: Scene };
+type Episode = { id: string; soon: string; series: string; app: string; label: string; note: string; outro: string; lines: { text: string }[]; scene: Scene };
 type Pose = { x: number; y: number; z: number; rx: number; ry: number; rz: number };
 type Key = { at: number; pose: Pose; ease?: (n: number) => number };
 
@@ -65,7 +64,8 @@ const useFilm = (id: string) => {
   const at = (slot: number, beat: number) => starts[slot] + beat * BEAT;
 
   // The lamp flickers on in the first half-second.
-  const lamp = t < 0.12 ? 0 : t < 0.2 ? 0.7 : t < 0.28 ? 0.15 : t < 0.4 ? 0.9 : t < 0.46 ? 0.5 : 1;
+  // The first frame is the cover, so it is lit; the lamp falters just after and steadies.
+  const lamp = t < 0.14 ? 1 : t < 0.22 ? 0.25 : t < 0.3 ? 0.85 : t < 0.38 ? 0.12 : t < 0.5 ? 0.9 : t < 0.56 ? 0.55 : 1;
   const stickyAt = at(0, 5);
   const rise = care - 0.25;
   const listIn = at(1, 1.6);
@@ -196,6 +196,44 @@ const Checklist = ({ film }: { film: ReturnType<typeof useFilm> }) => {
   );
 };
 
+/**
+ * This reel's own captions: no box. The line is set in serif straight on
+ * the dark, under a hairline of gold that draws itself, and comes into
+ * focus a character at a time; what is stressed is gold.
+ */
+const NightCaption = ({ text, start, length, t, first, label }: { text: string; start: number; length: number; t: number; first: boolean; label: string }) => {
+  if (t < start || t > start + length) return null;
+  const age = first ? t + 0.6 : t - start;
+  const leave = 1 - ramp(t, start + length - 0.2, start + length, (n) => n);
+  const lines = text.split('\n').map((line) => line.split('**').map((part, i) => ({ part, strong: i % 2 === 1 })));
+  let seen = 0;
+  const serif = cjk(text) ? { fontFamily: SERIF_TC, fontWeight: 900, fontSize: 64, letterSpacing: '0.06em' } : { fontFamily: SERIF, fontWeight: 800, fontSize: 58, letterSpacing: '0.01em' };
+  return (
+    <div style={{ position: 'absolute', left: 60, right: 60, top: 1424, display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: leave }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 18, marginBottom: 18, opacity: ramp(age, 0, 0.3, out) }}>
+        <div style={{ width: 150 * ramp(age, 0, 0.5, out), height: 2, background: 'linear-gradient(to left, #FFC861, rgba(255,200,97,0))' }} />
+        <span style={{ fontWeight: 900, fontSize: 26, letterSpacing: '0.3em', color: '#FFC861', paddingLeft: '0.3em', whiteSpace: 'nowrap' }}>{label}</span>
+        <div style={{ width: 150 * ramp(age, 0, 0.5, out), height: 2, background: 'linear-gradient(to right, #FFC861, rgba(255,200,97,0))' }} />
+      </div>
+      {lines.map((parts, li) => (
+        <div key={li} style={{ ...serif, lineHeight: 1.34, whiteSpace: 'nowrap', textAlign: 'center' }}>
+          {parts.map(({ part, strong }, pi) =>
+            [...part].map((ch, ci) => {
+              const at = seen++ * 0.028;
+              const on = ramp(age, at, at + 0.26, out);
+              return (
+                <span key={`${pi}-${ci}`} style={{ display: 'inline-block', whiteSpace: 'pre', color: strong ? '#FFC861' : '#FFF6E4', opacity: on, transform: `translateY(${(1 - on) * 16}px)`, filter: on < 1 ? `blur(${(1 - on) * 6}px)` : undefined, textShadow: strong ? '0 0 26px rgba(255,190,90,0.55), 0 3px 10px rgba(0,0,0,0.8)' : '0 3px 12px rgba(0,0,0,0.85)' }}>
+                  {ch}
+                </span>
+              );
+            }),
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
 /** 傻貓 at the corner of the desk, up late: pleased with each tick, and not letting go of the last line. */
 const Buddy = ({ film }: { film: ReturnType<typeof useFilm> }) => {
   const { t, end } = film;
@@ -275,11 +313,33 @@ export const Soon = ({ id }: { id: string }) => {
       <Burst t={t} at={film.soon + 1.0} x={540} y={760} scale={1.5} count={22} />
       <Buddy film={film} />
       <Motes t={t} front />
+      {/* A darker floor for the words to stand on, in place of a box. */}
+      <AbsoluteFill style={{ background: 'linear-gradient(to bottom, rgba(6,8,4,0) 66%, rgba(6,8,4,0.78) 80%, rgba(6,8,4,0.9) 100%)', opacity: 1 - ramp(t, end - 0.2, end + 0.2, (n) => n) }} />
       {episode.lines.map((line, i) => (
-        <Caption key={i} text={line.text} start={timing.slots[i].start} length={timing.slots[i].length} t={t} first={i === 0} label={episode.label} top={CAPTION_TOP} size={62} glass />
+        <NightCaption key={i} text={line.text} start={timing.slots[i].start} length={timing.slots[i].length} t={t} first={i === 0} label={episode.label} />
       ))}
+      {/* What this is, said once at the top like a slate. */}
+      {(() => {
+        const on = ramp(t, 0.5, 0.9, out) * (1 - ramp(t, rise - 0.3, rise + 0.1, (n) => n));
+        if (on <= 0) return null;
+        return (
+          <div style={{ position: 'absolute', left: 0, right: 0, top: 178, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 20, opacity: on }}>
+            <div style={{ width: 120 * on, height: 2, background: 'linear-gradient(to left, rgba(255,246,228,0.8), rgba(255,246,228,0))' }} />
+            <span style={{ fontFamily: cjk(episode.series) ? SERIF_TC : SERIF, fontWeight: cjk(episode.series) ? 900 : 800, fontSize: 34, letterSpacing: '0.42em', paddingLeft: '0.42em', color: '#FFF6E4', whiteSpace: 'nowrap', textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}>{episode.series}</span>
+            <div style={{ width: 120 * on, height: 2, background: 'linear-gradient(to right, rgba(255,246,228,0.8), rgba(255,246,228,0))' }} />
+          </div>
+        );
+      })()}
+      {/* A warm leak of light across the lens each time the shot changes. */}
+      {[rise + 0.1, film.soon + 0.2].map((when) => {
+        const p = (t - when) / 0.7;
+        return p > 0 && p < 1 ? <AbsoluteFill key={when} style={{ background: `linear-gradient(105deg, rgba(255,190,90,0) ${p * 130 - 40}%, rgba(255,206,130,0.5) ${p * 130 - 15}%, rgba(255,190,90,0) ${p * 130 + 10}%)`, mixBlendMode: 'screen', opacity: Math.sin(PI * p) }} /> : null;
+      })}
       <CountdownEnd t={t} end={end} episode={episode} stamp={stamp} />
       <Grade frame={frameNo} />
+      {/* Cinema bars close in at the start: this one is a different kind of film. */}
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 0, height: 150 * ramp(t, 0, 0.7, inOut), background: '#050604' }} />
+      <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 150 * ramp(t, 0, 0.7, inOut), background: '#050604' }} />
     </AbsoluteFill>
   );
 };

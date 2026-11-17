@@ -203,7 +203,7 @@ const Checklist = ({ film }: { film: ReturnType<typeof useFilm> }) => {
  */
 const NightCaption = ({ text, start, length, t, first, label }: { text: string; start: number; length: number; t: number; first: boolean; label: string }) => {
   if (t < start || t > start + length) return null;
-  const age = first ? t + 0.6 : t - start;
+  const age = first ? t + 1.4 : t - start;
   const leave = 1 - ramp(t, start + length - 0.2, start + length, (n) => n);
   const lines = text.split('\n').map((line) => line.split('**').map((part, i) => ({ part, strong: i % 2 === 1 })));
   let seen = 0;
@@ -248,7 +248,7 @@ const Buddy = ({ film }: { film: ReturnType<typeof useFilm> }) => {
   const mood: Mood = now && (now.stay || age < 0.7) ? now.mood : 'idle';
   const hop = age < 0.6 ? Math.exp(-age * 7) * Math.sin(age * 17) : 0;
   return (
-    <div style={{ position: 'absolute', left: -96 - (1 - inP) * 360 + go * 436, top: 1068 + go * 204 - hop * 26 - Math.sin(PI * go) * 40, transform: `rotate(${13 * (1 - go) + hop * 3}deg)`, transformOrigin: '30% 100%', filter: 'drop-shadow(0 18px 22px rgba(0,0,0,0.55)) brightness(0.94)' }}>
+    <div style={{ position: 'absolute', left: -96 - (1 - inP) * 360 + go * 436, top: 1068 + go * (cjk(film.episode.outro) ? 204 : 262) - hop * 26 - Math.sin(PI * go) * 40, transform: `rotate(${13 * (1 - go) + hop * 3}deg)`, transformOrigin: '30% 100%', filter: 'drop-shadow(0 18px 22px rgba(0,0,0,0.55)) brightness(0.94)' }}>
       <Mascot mood={mood} size={400} next />
     </div>
   );

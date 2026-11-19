@@ -273,7 +273,7 @@ const Curtain = ({ film }: { film: Film }) => {
   const { t, s, open } = film;
   const p = ramp(t, open, open + 0.5, out);
   if (p >= 1) return null;
-  const gap = 5 + t * 9 + p * 640;
+  const gap = 5 + t * t * 30 + p * 640;
   const words = (
     <div style={{ position: 'absolute', left: 0, width: 1080, top: 760, textAlign: 'center', fontFamily: cjk(s.wait) ? SERIF_TC : SERIF, fontWeight: cjk(s.wait) ? 900 : 800, fontSize: cjk(s.wait) ? 150 : 98, letterSpacing: cjk(s.wait) ? '0.08em' : '0', color: '#FFC861', textShadow: '0 0 40px rgba(255,190,90,0.45)', whiteSpace: 'nowrap' }}>
       {s.wait}
@@ -445,6 +445,10 @@ const Search = ({ film }: { film: Film }) => {
   return (
     <>
       <Dots color="#1D2317" t={t} />
+      {/* What is being looked for, hollow and huge, drifting past until it is found. */}
+      {[0, 1].map((row) => (
+        <div key={row} style={{ position: 'absolute', left: -700, top: 600 + row * 330, width: 2480, textAlign: 'center', fontFamily: cjk(s.search.query) ? FONT : SERIF, fontWeight: cjk(s.search.query) ? 900 : 800, fontSize: 300, lineHeight: 1, whiteSpace: 'nowrap', color: 'transparent', WebkitTextStroke: '5px #3D4732', transform: `translateX(${(t - search) * (row ? 90 : -90)}px)`, opacity: ramp(t, search + 0.15, search + 0.5) * (1 - ramp(t, result - 0.1, result + 0.25)) }}>{`${s.search.query}　${s.search.query}　${s.search.query}`}</div>
+      ))}
       {/* Light behind the result. */}
       <div style={{ position: 'absolute', left: 540 - 1300, top: 880 - 1300, width: 2600, height: 2600, borderRadius: '50%', background: 'repeating-conic-gradient(rgba(233,190,85,0.2) 0deg 7deg, rgba(233,190,85,0) 7deg 14deg)', maskImage: 'radial-gradient(closest-side, #000 20%, transparent 62%)', WebkitMaskImage: 'radial-gradient(closest-side, #000 20%, transparent 62%)', transform: `rotate(${t * 8}deg) scale(${ray})`, opacity: ray }} />
       <div style={{ position: 'absolute', left: 0, right: 0, top: 250, textAlign: 'center', fontFamily: SERIF, fontWeight: 800, fontSize: 60, color: '#FFE7B0', letterSpacing: '0.04em', opacity: ramp(t, search + 0.1, search + 0.4) }}>{s.search.store}</div>

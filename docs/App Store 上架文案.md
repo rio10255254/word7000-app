@@ -68,15 +68,13 @@ AI 家教（口說批改、單字解說與提問、AI 拍照掃描、學習分�
 使用條款：https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 
 **這個版本的新功能**（4000 字內）
-全新的單字貓！
-・兩種模式隨你選：經典模式回到熟悉的首頁、自己挑練習；懶人模式每天幫你排好一條路
-・新的「語言學習」頁：章節依序解鎖，每章一條路線
-・AI 拍照掃描：照片交給 AI 讀，手寫筆記也能變成單字卡
-・先測兩分鐘程度，照你的考試和日期排好每天的量
-・口說 20 關生活情境，每個角色都是真人語音，跟讀時念對的字會亮起來
-・傻貓變得更嘴賤了，會從畫面邊邊探頭出來嗆你
-・「我」頁可以直接回報問題
-・介面、配色和版面全面重新打磨，不同大小的手機都剛好填滿
+用起來更順手了：
+・換題、翻頁、結算都有順暢的過場，不再硬切
+・答對、答錯、完成一輪，都有對應的觸覺和音效
+・進度、連續天數和分數會滾動更新
+・傻貓聊天室：新訊息滑進來，自動捲到最新一則
+・拍照掃描每一步之間有過場，讀完和存檔都有回饋
+・「觸覺回饋」和「減少動態效果」的設定，全 App 都會遵守
 
 ## English (U.S.)
 
@@ -140,15 +138,13 @@ Privacy Policy: https://word7000-app.rio10255254.workers.dev/privacy.html
 Terms of Use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 
 **What's New** (4000)
-A whole new WordCat!
-• Two ways to practise: Classic mode, a home where you pick, or Easy mode, one short path a day
-• A new Language learning tab: chapters unlock in order, each with its own route
-• AI photo scanning: the AI reads your word list, handwriting included, into flashcards
-• A two-minute level check and a plan made for your goal
-• 20 speaking stages in real Taiwanese Mandarin voices; each character lights up as you say it, tones included
-• Silly Cat now pops in from the edge of the screen, with opinions
-• Report a problem right from the Me tab
-• A polished look that fits every iPhone size
+Smoother all round:
+• Questions, pages and results flow into each other instead of cutting
+• Right answers, misses and finished rounds each have their own haptic and sound
+• Progress, streaks and scores roll as they change
+• Silly Cat chat: new messages slide in and the chat follows along
+• Photo scanning moves step by step, with feedback when it has read and saved
+• Your haptics and Reduce Motion settings are respected everywhere
 
 ## 給審查人員的說明（App Review Notes）
 

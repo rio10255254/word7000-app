@@ -814,5 +814,65 @@
         "voiceLength": 3.689
       }
     ]
+  },
+  "debut": {
+    "total": 22.5,
+    "end": 18.0,
+    "slots": [
+      {
+        "start": 0.0,
+        "length": 3.5,
+        "voiceStart": 0.12,
+        "voiceLength": 2.774
+      },
+      {
+        "start": 3.5,
+        "length": 7.0,
+        "voiceStart": 3.62,
+        "voiceLength": 5.506
+      },
+      {
+        "start": 10.5,
+        "length": 3.0,
+        "voiceStart": 10.62,
+        "voiceLength": 2.07
+      },
+      {
+        "start": 13.5,
+        "length": 4.5,
+        "voiceStart": 13.62,
+        "voiceLength": 3.404
+      }
+    ]
+  },
+  "debut-en": {
+    "total": 23.0,
+    "end": 18.5,
+    "slots": [
+      {
+        "start": 0.0,
+        "length": 3.5,
+        "voiceStart": 0.12,
+        "voiceLength": 2.933
+      },
+      {
+        "start": 3.5,
+        "length": 7.0,
+        "voiceStart": 3.62,
+        "voiceLength": 5.73
+      },
+      {
+        "start": 10.5,
+        "length": 3.5,
+        "voiceStart": 10.62,
+        "voiceLength": 2.7
+      },
+      {
+        "start": 14.0,
+        "length": 4.5,
+        "voiceStart": 14.12,
+        "voiceLength": 3.215
+      }
+    ]
   }
 }

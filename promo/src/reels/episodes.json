@@ -5489,6 +5489,530 @@
         }
       },
       "soon": "Stay tuned"
+    },
+    {
+      "id": "debut",
+      "kind": "day3d",
+      "series": "正式上架",
+      "app": "WordCat 單字貓",
+      "label": "傻貓 SillyCat",
+      "voice": {
+        "engine": "elevenlabs",
+        "voiceId": "fQj4gJSexpu8RDE2Ii5m",
+        "model": "eleven_v4",
+        "language": "zh"
+      },
+      "outro": "下載連結在個人簡介",
+      "outroSay": "今天開始，不准偷懶。",
+      "endBeats": 9,
+      "endStamp": true,
+      "endStampAt": 0.75,
+      "outroAt": 1.6,
+      "lines": [
+        {
+          "text": "久等了。**單字貓，正式上架**。",
+          "say": "[excited] 久等了！單字貓，正式上架！",
+          "beats": 7,
+          "cues": [
+            [
+              1.7000000000000002,
+              "whoosh"
+            ],
+            [
+              3.3,
+              "thud"
+            ],
+            [
+              4.6,
+              "stamp"
+            ],
+            [
+              5.5,
+              "ding"
+            ]
+          ]
+        },
+        {
+          "text": "滑卡背單字、真人口說、\n智慧掃描、AI 老師，**一次到齊**。",
+          "say": "滑卡背單字、真人口說、智慧掃描、AI 老師，一次到齊。",
+          "beats": 14,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              0.95,
+              "pop"
+            ],
+            [
+              2.45,
+              "whoosh"
+            ],
+            [
+              3.55,
+              "pop"
+            ],
+            [
+              4.55,
+              "whoosh"
+            ],
+            [
+              5.65,
+              "pop"
+            ],
+            [
+              6.6,
+              "whoosh"
+            ],
+            [
+              7.7,
+              "pop"
+            ],
+            [
+              9.2,
+              "shuffle"
+            ],
+            [
+              9.5,
+              "thud"
+            ],
+            [
+              10.3,
+              "ding"
+            ]
+          ]
+        },
+        {
+          "text": "背單字，**永遠免費**。",
+          "say": "背單字，永遠免費。",
+          "beats": 6,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              2.3,
+              "thud"
+            ],
+            [
+              3.1,
+              "stamp"
+            ]
+          ]
+        },
+        {
+          "text": "App Store 搜尋「單字貓」，\n**現在就下載**。",
+          "say": "App Store 搜尋單字貓，現在就下載！",
+          "beats": 9,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              2.15,
+              "tick"
+            ],
+            [
+              2.45,
+              "tick"
+            ],
+            [
+              2.95,
+              "tick"
+            ],
+            [
+              3.85,
+              "pop"
+            ],
+            [
+              4.9,
+              "thud"
+            ],
+            [
+              6.0,
+              "tap"
+            ],
+            [
+              6.3,
+              "ding"
+            ]
+          ]
+        }
+      ],
+      "scene": {
+        "wait": "久等了。",
+        "open": 2.1,
+        "w1": {
+          "text": "正式",
+          "beat": 3.3
+        },
+        "w2": {
+          "text": "上架",
+          "beat": 4.6
+        },
+        "features": [
+          {
+            "word": "滑卡",
+            "sub": "右滑會了，左滑再來",
+            "screen": "cards/zh-ticket",
+            "lift": [
+              52,
+              478,
+              1154,
+              1450
+            ],
+            "beat": 0.25
+          },
+          {
+            "word": "口說",
+            "sub": "真人錄音，真實情境",
+            "screen": "speak/zh-result",
+            "lift": [
+              420,
+              1570,
+              1165,
+              1850
+            ],
+            "beat": 2.85
+          },
+          {
+            "word": "掃描",
+            "sub": "拍講義，變單字卡",
+            "screen": "scan/zh-review",
+            "lift": [
+              50,
+              790,
+              1158,
+              1470
+            ],
+            "beat": 4.95,
+            "premium": true
+          },
+          {
+            "word": "AI 老師",
+            "sub": "說錯的句子，幫你改道地",
+            "screen": "tutor/zh-coach",
+            "lift": [
+              50,
+              640,
+              1158,
+              1010
+            ],
+            "beat": 7.0,
+            "premium": true
+          }
+        ],
+        "all": {
+          "beat": 9.5,
+          "text": "一次到齊"
+        },
+        "free": {
+          "head": "背單字",
+          "sticker": {
+            "text": "永遠",
+            "beat": 2.3
+          },
+          "giant": {
+            "text": "免費",
+            "beat": 3.1
+          },
+          "foot": "智慧掃描、AI 老師為 Premium 功能"
+        },
+        "search": {
+          "store": "App Store",
+          "query": "單字貓",
+          "chars": [
+            2.15,
+            2.45,
+            2.95
+          ],
+          "now": {
+            "text": "現在就下載",
+            "beat": 4.9
+          },
+          "get": {
+            "text": "下載",
+            "beat": 6.0
+          }
+        },
+        "badge": "App Store 現已上架",
+        "premium": "Premium"
+      }
+    },
+    {
+      "id": "debut-en",
+      "kind": "day3d",
+      "series": "Out now",
+      "app": "WordCat",
+      "label": "SillyCat",
+      "voice": {
+        "engine": "elevenlabs",
+        "voiceId": "N2lVS1w4EtoT3dr4eOWO",
+        "model": "eleven_v4",
+        "language": "en"
+      },
+      "outro": "Link in bio",
+      "outroSay": "Starting today. No slacking.",
+      "endBeats": 9,
+      "endStamp": true,
+      "endStampAt": 0.75,
+      "outroAt": 1.6,
+      "lines": [
+        {
+          "text": "Thanks for waiting.\n**WordCat is out.**",
+          "say": "[excited] Thanks for waiting! WordCat is out!",
+          "beats": 7,
+          "cues": [
+            [
+              2.0,
+              "whoosh"
+            ],
+            [
+              3.0,
+              "thud"
+            ],
+            [
+              4.6,
+              "stamp"
+            ],
+            [
+              5.5,
+              "ding"
+            ]
+          ]
+        },
+        {
+          "text": "Swipe cards, real voices,\nsmart scan, an AI tutor. **All here.**",
+          "say": "Swipe cards, real voices, smart scan, an AI tutor. All here.",
+          "beats": 14,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              0.95,
+              "pop"
+            ],
+            [
+              2.25,
+              "whoosh"
+            ],
+            [
+              3.3499999999999996,
+              "pop"
+            ],
+            [
+              4.449999999999999,
+              "whoosh"
+            ],
+            [
+              5.55,
+              "pop"
+            ],
+            [
+              6.8999999999999995,
+              "whoosh"
+            ],
+            [
+              8.0,
+              "pop"
+            ],
+            [
+              9.649999999999999,
+              "shuffle"
+            ],
+            [
+              9.95,
+              "thud"
+            ],
+            [
+              10.75,
+              "ding"
+            ]
+          ]
+        },
+        {
+          "text": "Flashcards: **free, forever.**",
+          "say": "Flashcards: free, forever.",
+          "beats": 7,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              2.6,
+              "thud"
+            ],
+            [
+              3.45,
+              "stamp"
+            ]
+          ]
+        },
+        {
+          "text": "Search WordCat on the App Store.\n**Get it now.**",
+          "say": "Search WordCat on the App Store. Get it now!",
+          "beats": 9,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              0.85,
+              "tick"
+            ],
+            [
+              1.05,
+              "tick"
+            ],
+            [
+              1.25,
+              "tick"
+            ],
+            [
+              1.45,
+              "tick"
+            ],
+            [
+              1.65,
+              "tick"
+            ],
+            [
+              1.85,
+              "tick"
+            ],
+            [
+              2.05,
+              "tick"
+            ],
+            [
+              2.9499999999999997,
+              "pop"
+            ],
+            [
+              4.7,
+              "thud"
+            ],
+            [
+              5.5,
+              "tap"
+            ],
+            [
+              5.8,
+              "ding"
+            ]
+          ]
+        }
+      ],
+      "scene": {
+        "wait": "Thanks for waiting.",
+        "open": 2.4,
+        "w1": {
+          "text": "WordCat",
+          "beat": 3.0
+        },
+        "w2": {
+          "text": "is out.",
+          "beat": 4.6
+        },
+        "features": [
+          {
+            "word": "Swipe",
+            "sub": "Right: know it. Left: again.",
+            "screen": "cards/en-zhege",
+            "lift": [
+              52,
+              478,
+              1154,
+              1450
+            ],
+            "beat": 0.25
+          },
+          {
+            "word": "Speak",
+            "sub": "Real voices, real scenes",
+            "screen": "speak/en-result",
+            "lift": [
+              250,
+              1400,
+              1165,
+              1850
+            ],
+            "beat": 2.65
+          },
+          {
+            "word": "Scan",
+            "sub": "Paper into flashcards",
+            "screen": "scan/en-review",
+            "lift": [
+              50,
+              481,
+              1158,
+              1395
+            ],
+            "beat": 4.85,
+            "premium": true
+          },
+          {
+            "word": "AI tutor",
+            "sub": "Your sentence, made natural",
+            "screen": "tutor/en-coach",
+            "lift": [
+              50,
+              880,
+              1158,
+              1160
+            ],
+            "beat": 7.3,
+            "premium": true
+          }
+        ],
+        "all": {
+          "beat": 9.95,
+          "text": "All here."
+        },
+        "free": {
+          "head": "Flashcards",
+          "giant": {
+            "text": "FREE",
+            "beat": 2.6
+          },
+          "sticker": {
+            "text": "forever",
+            "beat": 3.45
+          },
+          "foot": "Smart scan and the AI tutor are Premium"
+        },
+        "search": {
+          "store": "App Store",
+          "query": "WordCat",
+          "chars": [
+            0.85,
+            1.05,
+            1.25,
+            1.45,
+            1.65,
+            1.85,
+            2.05
+          ],
+          "now": {
+            "text": "Get it now",
+            "beat": 4.7
+          },
+          "get": {
+            "text": "Get",
+            "beat": 5.5
+          }
+        },
+        "badge": "Out now on the App Store",
+        "premium": "Premium"
+      }
     }
   ]
 }

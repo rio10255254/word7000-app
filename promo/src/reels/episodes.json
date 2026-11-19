@@ -5533,72 +5533,228 @@
           ]
         },
         {
-          "text": "滑卡背單字、真人口說、\n智慧掃描、AI 老師，**一次到齊**。",
-          "say": "滑卡背單字、真人口說、智慧掃描、AI 老師，一次到齊。",
-          "beats": 14,
+          "text": "背單字，用滑的。\n**認識往右，不熟往左**。",
+          "say": "背單字，用滑的。認識往右，不熟往左。",
+          "beats": 11,
           "cues": [
             [
               0,
               "whoosh"
             ],
             [
-              0.95,
+              0.6,
               "pop"
             ],
             [
-              2.45,
+              5.3,
               "whoosh"
             ],
             [
-              3.55,
-              "pop"
+              5.6,
+              "stamp"
             ],
             [
-              4.55,
+              7.8,
               "whoosh"
             ],
             [
-              5.65,
-              "pop"
+              8.1,
+              "stamp"
             ],
             [
-              6.6,
+              9.3,
+              "pop"
+            ]
+          ]
+        },
+        {
+          "text": "真人錄音的情境對話，\n**聽完換你開口**。",
+          "say": "真人錄音的情境對話，聽完換你開口。",
+          "beats": 10,
+          "cues": [
+            [
+              0,
               "whoosh"
             ],
             [
-              7.7,
+              0.7,
               "pop"
             ],
             [
-              9.2,
-              "shuffle"
+              5.9,
+              "pop"
             ],
             [
-              9.5,
-              "thud"
+              6.6000000000000005,
+              "whoosh"
             ],
             [
-              10.3,
+              7.5,
               "ding"
             ]
           ]
         },
         {
-          "text": "背單字，**永遠免費**。",
-          "say": "背單字，永遠免費。",
-          "beats": 6,
+          "text": "紙本講義拍一下，\n**馬上變成單字卡**。",
+          "say": "紙本講義拍一下，馬上變成單字卡。",
+          "beats": 9,
           "cues": [
             [
               0,
               "whoosh"
             ],
             [
-              2.3,
+              0.6,
+              "pop"
+            ],
+            [
+              1.6,
+              "tap"
+            ],
+            [
+              1.9000000000000001,
+              "whoosh"
+            ],
+            [
+              4.2,
+              "tick"
+            ],
+            [
+              4.7,
+              "tick"
+            ],
+            [
+              5.2,
+              "tick"
+            ],
+            [
+              5.7,
+              "ding"
+            ]
+          ]
+        },
+        {
+          "text": "句子講得怪怪的？\n**AI 老師幫你改**。",
+          "say": "句子講得怪怪的？AI 老師幫你改。",
+          "beats": 9,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              0.6,
+              "pop"
+            ],
+            [
+              2.0,
+              "wrong"
+            ],
+            [
+              4.4,
+              "stamp"
+            ],
+            [
+              5.8,
+              "pop"
+            ],
+            [
+              6.2,
+              "ding"
+            ]
+          ]
+        },
+        {
+          "text": "想自己挑，有經典模式；\n懶得想，**交給懶人模式**。",
+          "say": "想自己挑，有經典模式。懶得想，交給懶人模式。",
+          "beats": 12,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              0.6,
+              "pop"
+            ],
+            [
+              1.4,
+              "tap"
+            ],
+            [
+              3.2,
+              "stamp"
+            ],
+            [
+              5.1000000000000005,
+              "whoosh"
+            ],
+            [
+              6.300000000000001,
+              "pop"
+            ],
+            [
+              6.6,
+              "tick"
+            ],
+            [
+              7.1,
+              "tick"
+            ],
+            [
+              7.6,
+              "tick"
+            ],
+            [
+              8.1,
+              "tick"
+            ],
+            [
+              8.7,
+              "stamp"
+            ]
+          ]
+        },
+        {
+          "text": "你要的，**都在這**。",
+          "say": "你要的，都在這。",
+          "beats": 6,
+          "cues": [
+            [
+              0,
+              "shuffle"
+            ],
+            [
+              0.1,
+              "tick"
+            ],
+            [
+              0.30000000000000004,
+              "tick"
+            ],
+            [
+              0.5,
+              "tick"
+            ],
+            [
+              0.7000000000000001,
+              "tick"
+            ],
+            [
+              0.9,
+              "tick"
+            ],
+            [
+              1.1,
+              "tick"
+            ],
+            [
+              1.5,
               "thud"
             ],
             [
-              3.1,
-              "stamp"
+              2.2,
+              "ding"
             ]
           ]
         },
@@ -5653,74 +5809,6 @@
           "text": "上架",
           "beat": 4.6
         },
-        "features": [
-          {
-            "word": "滑卡",
-            "sub": "右滑會了，左滑再來",
-            "screen": "cards/zh-ticket",
-            "lift": [
-              52,
-              478,
-              1154,
-              1450
-            ],
-            "beat": 0.25
-          },
-          {
-            "word": "口說",
-            "sub": "真人錄音，真實情境",
-            "screen": "speak/zh-result",
-            "lift": [
-              420,
-              1570,
-              1165,
-              1850
-            ],
-            "beat": 2.85
-          },
-          {
-            "word": "掃描",
-            "sub": "拍講義，變單字卡",
-            "screen": "scan/zh-review",
-            "lift": [
-              50,
-              790,
-              1158,
-              1470
-            ],
-            "beat": 4.95,
-            "premium": true
-          },
-          {
-            "word": "AI 老師",
-            "sub": "說錯的句子，幫你改道地",
-            "screen": "tutor/zh-coach",
-            "lift": [
-              50,
-              640,
-              1158,
-              1010
-            ],
-            "beat": 7.0,
-            "premium": true
-          }
-        ],
-        "all": {
-          "beat": 9.5,
-          "text": "一次到齊"
-        },
-        "free": {
-          "head": "背單字",
-          "sticker": {
-            "text": "永遠",
-            "beat": 2.3
-          },
-          "giant": {
-            "text": "免費",
-            "beat": 3.1
-          },
-          "foot": "智慧掃描、AI 老師為 Premium 功能"
-        },
         "search": {
           "store": "App Store",
           "query": "單字貓",
@@ -5739,7 +5827,259 @@
           }
         },
         "badge": "App Store 現已上架",
-        "premium": "Premium"
+        "premium": "Premium",
+        "fresh": "NEW",
+        "features": [
+          {
+            "kind": "swipe",
+            "word": "滑卡",
+            "slot": 1,
+            "screen": "cards/zh-ticket",
+            "lift": [
+              52,
+              478,
+              1154,
+              1450
+            ],
+            "cards": [
+              [
+                "cards/zh-ticket",
+                478
+              ],
+              [
+                "cards/zh-think",
+                478
+              ],
+              [
+                "cards/zh-extend",
+                547
+              ]
+            ],
+            "right": {
+              "text": "認識",
+              "beat": 5.5
+            },
+            "left": {
+              "text": "不熟",
+              "beat": 8.0
+            },
+            "back": {
+              "text": "不熟的，會再回來",
+              "beat": 9.3
+            }
+          },
+          {
+            "kind": "speak",
+            "word": "口說",
+            "slot": 2,
+            "screen": "speak/zh-result",
+            "lift": [
+              420,
+              1570,
+              1165,
+              1850
+            ],
+            "server": {
+              "src": "speak/zh-shadow",
+              "crop": [
+                40,
+                1340,
+                1010,
+                1640
+              ]
+            },
+            "tag": "真人錄音",
+            "say": {
+              "text": "換你說",
+              "beat": 5.9
+            },
+            "reply": [
+              420,
+              1570,
+              1165,
+              1730
+            ],
+            "score": [
+              680,
+              1770,
+              1165,
+              1850
+            ]
+          },
+          {
+            "kind": "scan",
+            "premium": true,
+            "word": "掃描",
+            "slot": 3,
+            "screen": "scan/zh-review",
+            "lift": [
+              50,
+              790,
+              1158,
+              1470
+            ],
+            "sheet": {
+              "title": "Unit 5 單字",
+              "note": "週五小考！",
+              "rows": [
+                [
+                  "objectively",
+                  "客觀地"
+                ],
+                [
+                  "objective",
+                  "目標"
+                ],
+                [
+                  "carefully",
+                  "小心地"
+                ]
+              ]
+            },
+            "snap": 1.6,
+            "land": [
+              4.2,
+              4.7,
+              5.2
+            ],
+            "rows": [
+              [
+                50,
+                790,
+                1158,
+                1000
+              ],
+              [
+                50,
+                1010,
+                1158,
+                1235
+              ],
+              [
+                50,
+                1245,
+                1158,
+                1470
+              ]
+            ]
+          },
+          {
+            "kind": "tutor",
+            "premium": true,
+            "word": "AI 老師",
+            "slot": 4,
+            "screen": "tutor/zh-coach",
+            "lift": [
+              70,
+              1235,
+              1010,
+              1505
+            ],
+            "said": [
+              "你說",
+              "I am always hurry."
+            ],
+            "odd": 1.4,
+            "fix": {
+              "beat": 4.4,
+              "crop": [
+                70,
+                1235,
+                1010,
+                1505
+              ]
+            },
+            "better": {
+              "beat": 5.8,
+              "crop": [
+                50,
+                640,
+                1158,
+                1010
+              ]
+            }
+          },
+          {
+            "kind": "classic",
+            "word": "經典模式",
+            "slot": 5,
+            "screen": "launch/zh-classic",
+            "lift": [
+              40,
+              1670,
+              1166,
+              2310
+            ],
+            "tap": {
+              "beat": 1.4,
+              "x": 0.73,
+              "y": 0.26
+            },
+            "tag": {
+              "text": "自己挑練習",
+              "beat": 3.2
+            }
+          },
+          {
+            "kind": "easy",
+            "word": "懶人模式",
+            "slot": 5,
+            "beat": 5.4,
+            "screen": "launch/zh-easy",
+            "lift": [
+              100,
+              1530,
+              1106,
+              1750
+            ],
+            "tile": [
+              100,
+              1290,
+              1106,
+              1760
+            ],
+            "piece": [
+              52,
+              720,
+              1158,
+              2010
+            ],
+            "icons": [
+              [
+                0.155,
+                0.697
+              ],
+              [
+                0.38,
+                0.697
+              ],
+              [
+                0.61,
+                0.697
+              ],
+              [
+                0.836,
+                0.697
+              ]
+            ],
+            "steps": [
+              6.6,
+              7.1,
+              7.6,
+              8.1
+            ],
+            "tag": {
+              "text": "每天幫你排好",
+              "beat": 8.7
+            }
+          }
+        ],
+        "all": {
+          "text": "都在這",
+          "beat": 1.5,
+          "from": 0.1,
+          "step": 0.2
+        }
       }
     },
     {
@@ -5785,72 +6125,232 @@
           ]
         },
         {
-          "text": "Swipe cards, real voices,\nsmart scan, an AI tutor. **All here.**",
-          "say": "Swipe cards, real voices, smart scan, an AI tutor. All here.",
-          "beats": 14,
+          "text": "Flashcards you swipe.\n**Right: know it. Left: not yet.**",
+          "say": "Flashcards you swipe. Right, you know it. Left, not yet.",
+          "beats": 12,
           "cues": [
             [
               0,
               "whoosh"
             ],
             [
-              0.95,
+              0.6,
               "pop"
             ],
             [
-              2.25,
+              3.6999999999999997,
               "whoosh"
             ],
             [
-              3.3499999999999996,
-              "pop"
+              4.0,
+              "stamp"
             ],
             [
-              4.449999999999999,
+              7.2,
               "whoosh"
             ],
             [
-              5.55,
-              "pop"
+              7.5,
+              "stamp"
             ],
             [
-              6.8999999999999995,
+              9.7,
+              "pop"
+            ]
+          ]
+        },
+        {
+          "text": "Real voices, real scenes.\n**Listen, then say it back.**",
+          "say": "Real voices, real scenes. Listen, then say it back.",
+          "beats": 11,
+          "cues": [
+            [
+              0,
               "whoosh"
             ],
             [
-              8.0,
+              0.7,
               "pop"
             ],
             [
-              9.649999999999999,
-              "shuffle"
+              7.4,
+              "pop"
             ],
             [
-              9.95,
-              "thud"
+              8.1,
+              "whoosh"
             ],
             [
-              10.75,
+              9.0,
               "ding"
             ]
           ]
         },
         {
-          "text": "Flashcards: **free, forever.**",
-          "say": "Flashcards: free, forever.",
-          "beats": 7,
+          "text": "Snap a page of notes.\n**It turns into flashcards.**",
+          "say": "Snap a page of notes. It turns into flashcards.",
+          "beats": 9,
           "cues": [
             [
               0,
               "whoosh"
             ],
             [
+              0.6,
+              "pop"
+            ],
+            [
+              1.0,
+              "tap"
+            ],
+            [
+              1.3,
+              "whoosh"
+            ],
+            [
+              4.2,
+              "tick"
+            ],
+            [
+              4.6,
+              "tick"
+            ],
+            [
+              5.0,
+              "tick"
+            ],
+            [
+              5.4,
+              "tick"
+            ],
+            [
+              5.9,
+              "ding"
+            ]
+          ]
+        },
+        {
+          "text": "Said it a little off?\n**The AI tutor fixes it.**",
+          "say": "Said it a little off? The AI tutor fixes it.",
+          "beats": 9,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              0.6,
+              "pop"
+            ],
+            [
+              2.2,
+              "wrong"
+            ],
+            [
+              5.0,
+              "stamp"
+            ],
+            [
+              6.4,
+              "pop"
+            ],
+            [
+              6.800000000000001,
+              "ding"
+            ]
+          ]
+        },
+        {
+          "text": "Pick your own in Classic.\n**Or let Easy mode plan it.**",
+          "say": "Pick your own in Classic. Or let Easy mode plan it.",
+          "beats": 11,
+          "cues": [
+            [
+              0,
+              "whoosh"
+            ],
+            [
+              0.6,
+              "pop"
+            ],
+            [
+              1.2,
+              "tap"
+            ],
+            [
               2.6,
+              "stamp"
+            ],
+            [
+              4.3,
+              "whoosh"
+            ],
+            [
+              5.5,
+              "pop"
+            ],
+            [
+              6.2,
+              "stamp"
+            ],
+            [
+              6.9,
+              "tick"
+            ],
+            [
+              7.4,
+              "tick"
+            ],
+            [
+              7.9,
+              "tick"
+            ],
+            [
+              8.4,
+              "tick"
+            ]
+          ]
+        },
+        {
+          "text": "Everything you need. **All here.**",
+          "say": "Everything you need. All here.",
+          "beats": 7,
+          "cues": [
+            [
+              0,
+              "shuffle"
+            ],
+            [
+              0.3,
+              "tick"
+            ],
+            [
+              0.7,
+              "tick"
+            ],
+            [
+              1.1,
+              "tick"
+            ],
+            [
+              1.5000000000000002,
+              "tick"
+            ],
+            [
+              1.9000000000000001,
+              "tick"
+            ],
+            [
+              2.3,
+              "tick"
+            ],
+            [
+              3.1,
               "thud"
             ],
             [
-              3.45,
-              "stamp"
+              3.8,
+              "ding"
             ]
           ]
         },
@@ -5921,74 +6421,6 @@
           "text": "is out.",
           "beat": 4.6
         },
-        "features": [
-          {
-            "word": "Swipe",
-            "sub": "Right: know it. Left: again.",
-            "screen": "cards/en-zhege",
-            "lift": [
-              52,
-              478,
-              1154,
-              1450
-            ],
-            "beat": 0.25
-          },
-          {
-            "word": "Speak",
-            "sub": "Real voices, real scenes",
-            "screen": "speak/en-result",
-            "lift": [
-              250,
-              1400,
-              1165,
-              1850
-            ],
-            "beat": 2.65
-          },
-          {
-            "word": "Scan",
-            "sub": "Paper into flashcards",
-            "screen": "scan/en-review",
-            "lift": [
-              50,
-              481,
-              1158,
-              1395
-            ],
-            "beat": 4.85,
-            "premium": true
-          },
-          {
-            "word": "AI tutor",
-            "sub": "Your sentence, made natural",
-            "screen": "tutor/en-coach",
-            "lift": [
-              50,
-              880,
-              1158,
-              1160
-            ],
-            "beat": 7.3,
-            "premium": true
-          }
-        ],
-        "all": {
-          "beat": 9.95,
-          "text": "All here."
-        },
-        "free": {
-          "head": "Flashcards",
-          "giant": {
-            "text": "FREE",
-            "beat": 2.6
-          },
-          "sticker": {
-            "text": "forever",
-            "beat": 3.45
-          },
-          "foot": "Smart scan and the AI tutor are Premium"
-        },
         "search": {
           "store": "App Store",
           "query": "WordCat",
@@ -6011,7 +6443,270 @@
           }
         },
         "badge": "Out now on the App Store",
-        "premium": "Premium"
+        "premium": "Premium",
+        "fresh": "NEW",
+        "features": [
+          {
+            "kind": "swipe",
+            "word": "Swipe",
+            "slot": 1,
+            "screen": "cards/en-zhege",
+            "lift": [
+              52,
+              478,
+              1154,
+              1450
+            ],
+            "cards": [
+              [
+                "cards/en-zhege",
+                478
+              ],
+              [
+                "cards/en-nali",
+                478
+              ],
+              [
+                "cards/en-zheli",
+                547
+              ]
+            ],
+            "right": {
+              "text": "Know it",
+              "beat": 3.9
+            },
+            "left": {
+              "text": "Not yet",
+              "beat": 7.4
+            },
+            "back": {
+              "text": "Not yet? It comes back.",
+              "beat": 9.7
+            }
+          },
+          {
+            "kind": "speak",
+            "word": "Speak",
+            "slot": 2,
+            "screen": "speak/en-result",
+            "lift": [
+              250,
+              1400,
+              1165,
+              1850
+            ],
+            "server": {
+              "src": "speak/en-shadow",
+              "crop": [
+                40,
+                1260,
+                1010,
+                1540
+              ]
+            },
+            "tag": "Real voice",
+            "say": {
+              "text": "Your turn",
+              "beat": 7.4
+            },
+            "reply": [
+              590,
+              1400,
+              1165,
+              1660
+            ],
+            "score": [
+              250,
+              1700,
+              1165,
+              1850
+            ]
+          },
+          {
+            "kind": "scan",
+            "premium": true,
+            "word": "Scan",
+            "slot": 3,
+            "screen": "scan/en-review",
+            "lift": [
+              50,
+              481,
+              1158,
+              1395
+            ],
+            "sheet": {
+              "title": "Lesson 3 生詞",
+              "note": "quiz Fri!",
+              "rows": [
+                [
+                  "醫院",
+                  "hospital"
+                ],
+                [
+                  "藥局",
+                  "pharmacy"
+                ],
+                [
+                  "發燒",
+                  "fever"
+                ],
+                [
+                  "掛號",
+                  "register"
+                ]
+              ]
+            },
+            "snap": 1.0,
+            "land": [
+              4.2,
+              4.6,
+              5.0,
+              5.4
+            ],
+            "rows": [
+              [
+                50,
+                481,
+                1158,
+                690
+              ],
+              [
+                50,
+                700,
+                1158,
+                925
+              ],
+              [
+                50,
+                935,
+                1158,
+                1160
+              ],
+              [
+                50,
+                1170,
+                1158,
+                1395
+              ]
+            ]
+          },
+          {
+            "kind": "tutor",
+            "premium": true,
+            "word": "AI tutor",
+            "slot": 4,
+            "screen": "tutor/en-coach",
+            "lift": [
+              70,
+              1165,
+              1010,
+              1375
+            ],
+            "said": [
+              "You said",
+              "貼上到我的報告。"
+            ],
+            "odd": 1.6,
+            "fix": {
+              "beat": 5.0,
+              "crop": [
+                70,
+                1165,
+                1010,
+                1375
+              ]
+            },
+            "better": {
+              "beat": 6.4,
+              "crop": [
+                50,
+                880,
+                1158,
+                1160
+              ]
+            }
+          },
+          {
+            "kind": "classic",
+            "word": "Classic",
+            "slot": 5,
+            "screen": "launch/en-classic",
+            "lift": [
+              40,
+              1670,
+              1166,
+              2310
+            ],
+            "tap": {
+              "beat": 1.2,
+              "x": 0.73,
+              "y": 0.26
+            },
+            "tag": {
+              "text": "Pick your practice",
+              "beat": 2.6
+            }
+          },
+          {
+            "kind": "easy",
+            "word": "Easy mode",
+            "slot": 5,
+            "beat": 4.6,
+            "screen": "launch/en-easy",
+            "lift": [
+              100,
+              1530,
+              1106,
+              1750
+            ],
+            "tile": [
+              100,
+              1290,
+              1106,
+              1760
+            ],
+            "piece": [
+              52,
+              720,
+              1158,
+              2010
+            ],
+            "icons": [
+              [
+                0.155,
+                0.697
+              ],
+              [
+                0.38,
+                0.697
+              ],
+              [
+                0.61,
+                0.697
+              ],
+              [
+                0.836,
+                0.697
+              ]
+            ],
+            "steps": [
+              6.9,
+              7.4,
+              7.9,
+              8.4
+            ],
+            "tag": {
+              "text": "Planned for you",
+              "beat": 6.2
+            }
+          }
+        ],
+        "all": {
+          "text": "All here.",
+          "beat": 3.1,
+          "from": 0.3,
+          "step": 0.4
+        }
       }
     }
   ]

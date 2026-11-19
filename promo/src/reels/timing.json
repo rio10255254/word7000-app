@@ -816,8 +816,8 @@
     ]
   },
   "debut": {
-    "total": 22.5,
-    "end": 18.0,
+    "total": 41.0,
+    "end": 36.5,
     "slots": [
       {
         "start": 0.0,
@@ -827,27 +827,51 @@
       },
       {
         "start": 3.5,
-        "length": 7.0,
+        "length": 5.5,
         "voiceStart": 3.62,
-        "voiceLength": 5.506
+        "voiceLength": 4.54
       },
       {
-        "start": 10.5,
-        "length": 3.0,
-        "voiceStart": 10.62,
-        "voiceLength": 2.07
+        "start": 9.0,
+        "length": 5.0,
+        "voiceStart": 9.12,
+        "voiceLength": 3.681
       },
       {
-        "start": 13.5,
+        "start": 14.0,
         "length": 4.5,
-        "voiceStart": 13.62,
+        "voiceStart": 14.12,
+        "voiceLength": 3.009
+      },
+      {
+        "start": 18.5,
+        "length": 4.5,
+        "voiceStart": 18.62,
+        "voiceLength": 2.984
+      },
+      {
+        "start": 23.0,
+        "length": 6.0,
+        "voiceStart": 23.12,
+        "voiceLength": 5.175
+      },
+      {
+        "start": 29.0,
+        "length": 3.0,
+        "voiceStart": 29.12,
+        "voiceLength": 1.595
+      },
+      {
+        "start": 32.0,
+        "length": 4.5,
+        "voiceStart": 32.12,
         "voiceLength": 3.404
       }
     ]
   },
   "debut-en": {
-    "total": 23.0,
-    "end": 18.5,
+    "total": 42.0,
+    "end": 37.5,
     "slots": [
       {
         "start": 0.0,
@@ -857,20 +881,44 @@
       },
       {
         "start": 3.5,
-        "length": 7.0,
+        "length": 6.0,
         "voiceStart": 3.62,
-        "voiceLength": 5.73
+        "voiceLength": 5.11
       },
       {
-        "start": 10.5,
-        "length": 3.5,
-        "voiceStart": 10.62,
-        "voiceLength": 2.7
+        "start": 9.5,
+        "length": 5.5,
+        "voiceStart": 9.62,
+        "voiceLength": 4.621
       },
       {
-        "start": 14.0,
+        "start": 15.0,
         "length": 4.5,
-        "voiceStart": 14.12,
+        "voiceStart": 15.12,
+        "voiceLength": 3.5
+      },
+      {
+        "start": 19.5,
+        "length": 4.5,
+        "voiceStart": 19.62,
+        "voiceLength": 3.361
+      },
+      {
+        "start": 24.0,
+        "length": 5.5,
+        "voiceStart": 24.12,
+        "voiceLength": 4.365
+      },
+      {
+        "start": 29.5,
+        "length": 3.5,
+        "voiceStart": 29.62,
+        "voiceLength": 2.447
+      },
+      {
+        "start": 33.0,
+        "length": 4.5,
+        "voiceStart": 33.12,
         "voiceLength": 3.215
       }
     ]

@@ -453,3 +453,23 @@ Not slacking. Every detail right, then it's yours.
 Almost there. The day I'm out, you'll know first.
 Follow us and stay tuned.
 #WordCat #ComingSoon #LearnChinese #Mandarin #LanguageLearning
+
+### 正式上架（`debut`／`debut-en`，`src/reels/Debut.tsx`）
+
+上架公告，不帶日期，樣子和之前都不同：一張會動的海報。延後公告的黑夜像布幕一樣往兩邊拉開（金字「久等了。」跟著裂開），後面是白天：放射光芒、粗黑描邊、硬陰影、和畫面一樣大的字，「正式」「上架」跟著配音一個字一個字砸下來，彩紙噴出。接著一個功能一個顏色一個大字（滑卡、口說、掃描、AI 老師），手機每一拍轉一圈換成下一張真實截圖，重點區塊從玻璃上浮起；四張真實畫面拼成一面牆，「一次到齊」。然後是全片最大的字「免費」蓋上「永遠」（掃描與 AI 老師標示為 Premium）；最後是搜尋列跟著配音打出「單字貓」、圖示和「現在就下載」。每個場景都以下一個顏色的圓形擴散進場；傻貓從布幕拉開到最後一格都在畫面上。字幕也換成白底黑框的貼紙樣式，重點用黃色螢光筆劃過。`launch`／`launch-en`（`Launch.tsx`）是寫死 11.16 的舊版，不再使用。
+
+**IG 貼文（中）**
+
+久等了，單字貓正式上架 🎉🐱
+滑卡背單字、真人口說、智慧掃描、AI 老師，一次到齊。
+背單字，永遠免費。
+App Store 搜尋「單字貓」，現在就下載（連結在個人簡介）。
+#單字貓 #WordCat #正式上架 #背單字 #學英文
+
+**IG post (EN)**
+
+Thanks for waiting. WordCat is out 🎉🐱
+Swipe cards, real voices, smart scan, an AI tutor. All here.
+Flashcards: free, forever.
+Search WordCat on the App Store and get it now (link in bio).
+#WordCat #OutNow #LearnChinese #Mandarin #LanguageLearning

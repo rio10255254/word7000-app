@@ -167,8 +167,12 @@ const useFilm = (id: string) => {
     if (f.kind === 'tutor') { cheers.push(on(f.fix.beat)); knocks.push([on(f.fix.beat), 12]); }
     if (f.kind === 'classic' || f.kind === 'easy') { cheers.push(on(f.tag.beat)); knocks.push([on(f.tag.beat), 12]); }
   });
+  // How many cards have been swiped away: the phone's own screen moves on with them.
+  const swipeTimes = s.features.flatMap((f) => (f.kind === 'swipe' ? [at(f.slot, f.right.beat) + 0.25, at(f.slot, f.left.beat) + 0.25] : []));
+  const swiped = swipeTimes.filter((when) => t >= when).length;
+  const tuck = swipeTimes.reduce((k, when) => Math.min(k, Math.abs(t - when) / 0.16), 1);
   const knock = knocks.reduce((k, [when, size]) => { const age = t - when; return age >= 0 && age < 0.3 ? k + Math.exp(-age * 15) * Math.cos(age * 62) * size : k; }, 0);
-  return { t, episode, s, timing, starts, at, end, open, w1, w2, fb, until, allOn, all, search, typed, result, now, get, pose, turning, shown, lifts, knock, cheers, sideOf };
+  return { t, episode, s, timing, starts, at, end, open, w1, w2, fb, until, allOn, all, search, typed, result, now, get, pose, turning, shown, lifts, knock, cheers, sideOf, swiped, tuck };
 };
 type Film = ReturnType<typeof useFilm>;
 
@@ -298,18 +302,26 @@ const Stage = ({ id }: { id: string }) => {
   const film = useFilm(id);
   const { t, s, pose } = film;
   const maps = usePrepared(async () => {
-    const [env, phone, ...screens] = await Promise.all([loadStudio(gl), loadPhone(), ...s.features.map((f) => imageTexture(`${f.screen}.jpg`))]);
-    return { env, phone, screens, ground: s.features.map((f, i) => colorAt(screens[i], Math.max(4, f.lift[0] - 16), f.lift[1] + 30)) };
+    const deck = s.features.flatMap((f) => (f.kind === 'swipe' ? f.cards : []));
+    const [env, phone, cards, ...screens] = await Promise.all([loadStudio(gl), loadPhone(), Promise.all(deck.map(([src]) => imageTexture(`${src}.jpg`))), ...s.features.map((f) => imageTexture(`${f.screen}.jpg`))]);
+    return { env, phone, screens, deck, cards, cardGround: deck.map(([, top], i) => colorAt(cards[i], 36, top + 30)), ground: s.features.map((f, i) => colorAt(screens[i], Math.max(4, f.lift[0] - 16), f.lift[1] + 30)) };
   });
   if (!maps) return null;
   const f = s.features[film.shown];
+  // While the cards are being swiped, the phone shows the card that is on top now.
+  const onDeck = f.kind === 'swipe' && maps.cards.length > 0;
+  const card = Math.min(film.swiped, maps.cards.length - 1);
+  const screen = onDeck ? maps.cards[card] : maps.screens[film.shown];
+  const crop: Crop = onDeck ? [52, maps.deck[card][1], 1154, maps.deck[card][1] + 972] : f.lift;
+  const ground = onDeck ? maps.cardGround[card] : maps.ground[film.shown];
+  const lift = film.lifts[film.shown] * (onDeck ? film.tuck : 1);
   return (
     <>
       <StudioLight env={maps.env} turn={t * 0.1 + pose.ry * 0.25 + 1.4} />
       <group position={[pose.x, pose.y + Math.sin(t * 1.7) * 0.016, pose.z]} rotation={[pose.rx + Math.sin(t * 1.1) * 0.01, pose.ry + Math.sin(t * 0.8) * 0.02, pose.rz, 'YXZ']}>
-        <Phone3D model={maps.phone} screen={maps.screens[film.shown]}>
-          <ScreenLayer color="#2a2418" opacity={Math.min(1, film.lifts[film.shown] * 9) * 0.16} over />
-          <Lift map={maps.screens[film.shown]} crop={f.lift} lift={film.lifts[film.shown]} ground={maps.ground[film.shown]} radius={40} />
+        <Phone3D model={maps.phone} screen={screen}>
+          <ScreenLayer color="#2a2418" opacity={Math.min(1, lift * 9) * 0.16} over />
+          <Lift map={screen} crop={crop} lift={lift} ground={ground} radius={40} />
         </Phone3D>
       </group>
     </>
@@ -325,7 +337,7 @@ const Curtain = ({ film }: { film: Film }) => {
   if (p >= 1) return null;
   const gap = 5 + t * t * 30 + p * 640;
   const words = (
-    <div style={{ position: 'absolute', left: 0, width: 1080, top: 760, textAlign: 'center', fontFamily: cjk(s.wait) ? SERIF_TC : SERIF, fontWeight: cjk(s.wait) ? 900 : 800, fontSize: cjk(s.wait) ? 150 : 98, letterSpacing: cjk(s.wait) ? '0.08em' : '0', color: '#FFC861', textShadow: '0 0 40px rgba(255,190,90,0.45)', whiteSpace: 'nowrap' }}>
+    <div style={{ position: 'absolute', left: 0, width: 1080, top: 760, textAlign: 'center', fontFamily: cjk(s.wait) ? SERIF_TC : SERIF, fontWeight: cjk(s.wait) ? 900 : 800, fontSize: cjk(s.wait) ? 150 : 84, letterSpacing: cjk(s.wait) ? '0.08em' : '0', color: '#FFC861', textShadow: '0 0 40px rgba(255,190,90,0.45)', whiteSpace: 'nowrap' }}>
       {s.wait}
     </div>
   );
@@ -359,16 +371,16 @@ const Headline = ({ film }: { film: Film }) => {
         <Img src={staticFile('icon-next.png')} style={{ width: 132, height: 132, borderRadius: 30, border: `5px solid ${INK}`, boxShadow: hard(8) }} />
         <Sticker bg={CREAM} size={50} shadow={8} font={cjk(episode.app) ? FONT : SERIF}>{episode.app}</Sticker>
       </div>
-      <div style={{ position: 'absolute', left: 0, right: 0, top: wide ? 420 : 520, textAlign: 'center', lineHeight: 1 }}>
-        <Chars text={s.w1.text} t={t} at={w1} style={{ ...face(s.w1.text), fontSize: wide ? 340 : 210, color: INK, letterSpacing: wide ? '0.04em' : '-0.01em' }} />
+      <div style={{ position: 'absolute', left: 0, right: 0, top: wide ? 420 : 536, textAlign: 'center', lineHeight: 1 }}>
+        <Chars text={s.w1.text} t={t} at={w1} style={{ ...face(s.w1.text), fontSize: wide ? 340 : 190, color: INK, letterSpacing: wide ? '0.04em' : '-0.01em' }} />
       </div>
       <div style={{ position: 'absolute', left: 0, right: 0, top: wide ? 770 : 790, textAlign: 'center', lineHeight: 1 }}>
         <Chars text={s.w2.text} t={t} at={w2} from={3} style={{ ...face(s.w2.text), fontSize: wide ? 340 : 270, color: CLAY, letterSpacing: wide ? '0.04em' : '-0.01em', textShadow: `${hard(12)}`, WebkitTextStroke: `5px ${INK}`, paintOrder: 'stroke fill' }} />
       </div>
       {/* A seal slapped on the corner of the headline. */}
-      <div style={{ position: 'absolute', left: 806, top: 386, transform: `scale(${seal.scale}) rotate(${12 + Math.sin(t * 2.2) * 3}deg)`, opacity: seal.opacity }}>
-        <Seal size={230} turn={t * 14}>
-          <span style={{ fontFamily: SERIF, fontWeight: 800, fontSize: 66, color: INK, letterSpacing: '0.02em' }}>{s.fresh}</span>
+      <div style={{ position: 'absolute', left: 872, top: wide ? 290 : 330, transform: `scale(${seal.scale}) rotate(${12 + Math.sin(t * 2.2) * 3}deg)`, opacity: seal.opacity }}>
+        <Seal size={180} turn={t * 14}>
+          <span style={{ fontFamily: SERIF, fontWeight: 800, fontSize: 52, color: INK, letterSpacing: '0.02em' }}>{s.fresh}</span>
         </Seal>
       </div>
       <Confetti t={t} at={w2 + 0.02} x={60} y={1500} aim={-PI / 3} seed={1} />
@@ -421,7 +433,13 @@ const SwipeDemo = ({ film, f, on, start }: Demo<Swipe>) => {
   const left = on(f.left.beat);
   const moves = [{ at: right, dir: 1, word: f.right.text, color: SAGE }, { at: left, dir: -1, word: f.left.text, color: CLAY }];
   const gone = (n: number) => (n < moves.length ? ramp(t, moves[n].at - 0.08, moves[n].at + 0.42, (v) => v * v) : 0);
-  const size = sized([52, 478, 1154, 1450], 500);
+  const size = sized([52, 478, 1154, 1450], 470);
+  // Before the first swipe, the finger takes hold of the top card and rocks it once each way.
+  const teaseFrom = start + 0.95;
+  const teaseTo = right - 0.6;
+  const teasing = teaseTo - teaseFrom > 0.3;
+  const u = teasing ? Math.min(1, Math.max(0, (t - teaseFrom) / (teaseTo - teaseFrom))) : 0;
+  const tease = Math.sin(u * PI * 2) * 38;
   const counts = [t >= left + 0.4 ? 1 : 0, t >= right + 0.4 ? 1 : 0];
   const back = pop(t, on(f.back.beat));
   return (
@@ -433,12 +451,13 @@ const SwipeDemo = ({ film, f, on, start }: Demo<Swipe>) => {
         const move = moves[n];
         // How far down the deck this card is now: the ones above it have gone.
         const depth = n - (n > 0 ? ramp(t, moves[0].at + 0.2, moves[0].at + 0.5, out) : 0) - (n > 1 ? ramp(t, moves[1].at + 0.2, moves[1].at + 0.5, out) : 0);
-        const press = move ? ramp(t, move.at - 0.5, move.at - 0.3, out) : 0;
+        const press = move ? ramp(t, n === 0 && teasing ? teaseFrom - 0.1 : move.at - 0.5, n === 0 && teasing ? teaseFrom + 0.05 : move.at - 0.3, out) : 0;
+        const rock = n === 0 ? tease : 0;
         const enter = pop(t, start + 0.28 + (2 - n) * 0.09);
         const stamp = move ? slam(t, move.at - 0.12, 2.6) : null;
         const dir = move?.dir ?? 0;
         return (
-          <div key={n} style={{ position: 'absolute', left: 50 + depth * 14 * (n % 2 ? 1 : -1), top: 96 + depth * 22, width: size.w + 10, height: size.h + 10, transform: `translate(${p * dir * 880}px, ${-p * 70}px) rotate(${[0, 3.5, -4][n] * Math.min(1, depth) + p * dir * 24}deg) scale(${enter * (1 + press * 0.04 - depth * 0.03)})`, transformOrigin: '50% 80%' }}>
+          <div key={n} style={{ position: 'absolute', left: 64 + depth * 14 * (n % 2 ? 1 : -1), top: 76 + depth * 22, width: size.w + 10, height: size.h + 10, transform: `translate(${p * dir * 880 + rock}px, ${-p * 70}px) rotate(${[0, 3.5, -4][n] * Math.min(1, depth) + p * dir * 24 + rock * 0.07}deg) scale(${enter * (1 + press * 0.04 - depth * 0.03)})`, transformOrigin: '50% 80%' }}>
             <div style={{ boxShadow: hard(12 + press * 8), borderRadius: 30 }}>
               <Piece src={src} crop={[52, top, 1154, top + 972]} w={size.w} radius={26} />
             </div>
@@ -452,24 +471,25 @@ const SwipeDemo = ({ film, f, on, start }: Demo<Swipe>) => {
         );
       })}
       {moves.map((move, n) => {
-        const show = pop(t, move.at - 0.55) * (1 - ramp(t, move.at + 0.2, move.at + 0.35, (v) => v));
+        const early = n === 0 && teasing;
+        const show = pop(t, early ? teaseFrom - 0.2 : move.at - 0.55) * (1 - ramp(t, move.at + 0.2, move.at + 0.35, (v) => v));
         const p = gone(n);
-        return <Finger key={n} x={300 + p * move.dir * 880} y={470 - p * 70} show={show} press={ramp(t, move.at - 0.5, move.at - 0.3, out)} />;
+        return <Finger key={n} x={300 + p * move.dir * 880 + (n === 0 ? tease : 0)} y={420 - p * 70} show={show} press={ramp(t, early ? teaseFrom - 0.1 : move.at - 0.5, early ? teaseFrom + 0.05 : move.at - 0.3, out)} />;
       })}
       {/* The tally, where each card went. */}
       {[{ word: f.left.text, color: CLAY, x: 20, n: counts[0], at: left + 0.4 }, { word: f.right.text, color: SAGE, x: 318, n: counts[1], at: right + 0.4 }].map((tally, n) => (
-        <div key={n} style={{ position: 'absolute', left: tally.x, top: 630, transform: `scale(${pop(t, start + 0.6 + n * 0.1) * (1 + Math.exp(-Math.max(0, t - tally.at) * 12) * (t >= tally.at ? 0.28 : 0))}) rotate(${n ? 2 : -2}deg)`, transformOrigin: '50% 50%' }}>
+        <div key={n} style={{ position: 'absolute', left: tally.x, top: 580, transform: `scale(${pop(t, start + 0.6 + n * 0.1) * (1 + Math.exp(-Math.max(0, t - tally.at) * 12) * (t >= tally.at ? 0.28 : 0))}) rotate(${n ? 2 : -2}deg)`, transformOrigin: '50% 50%' }}>
           <Sticker bg={CREAM} size={cjk(tally.word) ? 50 : 40} shadow={8}>
             <span style={{ color: tally.color }}>{tally.word}</span>
             <span style={{ display: 'inline-block', marginLeft: 16, minWidth: 44, textAlign: 'center', background: tally.color, color: CREAM, borderRadius: 14, padding: '0 10px', fontFamily: SERIF }}>{tally.n}</span>
           </Sticker>
         </div>
       ))}
-      <div style={{ position: 'absolute', left: 20, top: 742, transform: `scale(${back}) rotate(-1.5deg)`, transformOrigin: '20% 50%' }}>
+      <div style={{ position: 'absolute', left: 20, top: 688, transform: `scale(${back}) rotate(-1.5deg)`, transformOrigin: '20% 50%' }}>
         <Sticker bg={INK} fg="#FFE7B0" size={cjk(f.back.text) ? 40 : 34} shadow={0} pad="0.34em 0.8em">{`↻ ${f.back.text}`}</Sticker>
       </div>
-      <Ring t={t} at={right + 0.38} x={520} y={380} color={SAGE} />
-      <Ring t={t} at={left + 0.38} x={80} y={380} color={CREAM} />
+      <Ring t={t} at={right + 0.38} x={520} y={340} color={SAGE} />
+      <Ring t={t} at={left + 0.38} x={80} y={340} color={CREAM} />
     </>
   );
 };
@@ -487,51 +507,51 @@ const SpeakDemo = ({ film, f, on, start }: Demo<Speak>) => {
   const mic = pop(t, say - 0.1);
   const listening = t >= say && t < replyAt + 0.2;
   const hit = slam(t, scoreAt, 2.6);
-  const micY = 96 + server.h + 150;
+  const micY = server.h + 184;
   return (
     <>
-      <div style={{ position: 'absolute', left: 20, top: 70, transform: `scale(${pop(t, start + 0.32)}) rotate(-1.5deg)`, transformOrigin: '20% 50%' }}>
+      <div style={{ position: 'absolute', left: 20, top: 56, transform: `scale(${pop(t, start + 0.32)}) rotate(-1.5deg)`, transformOrigin: '20% 50%' }}>
         <div style={{ boxShadow: hard(10), borderRadius: 28 }}>
           <Piece src={f.server.src} crop={f.server.crop} w={server.w} radius={24} />
         </div>
       </div>
-      <div style={{ position: 'absolute', left: 300, top: 22, transform: `scale(${pop(t, start + 0.6)}) rotate(4deg)` }}>
+      <div style={{ position: 'absolute', left: 300, top: 8, transform: `scale(${pop(t, start + 0.6)}) rotate(4deg)` }}>
         <Sticker bg={MUSTARD} size={cjk(f.tag) ? 44 : 38} shadow={7}>{f.tag}</Sticker>
       </div>
       {/* The recording playing: a strip of level bars. */}
-      <div style={{ position: 'absolute', left: 60, top: 96 + server.h + 20, width: 430, height: 96, borderRadius: 30, background: CREAM, border: `5px solid ${INK}`, boxShadow: hard(8), transform: `scale(${pop(t, start + 0.7)})`, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9 }}>
+      <div style={{ position: 'absolute', left: 60, top: server.h + 82, width: 430, height: 84, borderRadius: 30, background: CREAM, border: `5px solid ${INK}`, boxShadow: hard(8), transform: `scale(${pop(t, start + 0.7)})`, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9 }}>
         <svg width={44} height={44} viewBox="0 0 44 44" style={{ marginRight: 8 }}>
           <path d="M6 16 h9 l11 -9 v30 l-11 -9 h-9 z" fill={CLAY} stroke={INK} strokeWidth={3} strokeLinejoin="round" />
           <path d="M32 14 q7 8 0 16" fill="none" stroke={INK} strokeWidth={4} strokeLinecap="round" opacity={0.4 + 0.6 * playing} />
         </svg>
         {Array.from({ length: 16 }, (_, i) => {
           const level = 0.16 + playing * (0.3 + 0.7 * Math.abs(Math.sin(t * (7 + (i % 5)) + i * 1.7)) * Math.abs(Math.sin(t * 2.3 + i * 0.5)));
-          return <div key={i} style={{ width: 11, height: 66 * level, borderRadius: 6, background: i / 16 < ((t - start - 0.8) / Math.max(0.1, say - start - 1)) ? CLAY : '#D9CFB8' }} />;
+          return <div key={i} style={{ width: 11, height: 56 * level, borderRadius: 6, background: i / 16 < ((t - start - 0.8) / Math.max(0.1, say - start - 1)) ? CLAY : '#D9CFB8' }} />;
         })}
       </div>
       {/* Your turn. */}
-      <Ring t={t} at={say} x={130} y={micY + 68} color={CREAM} size={260} />
-      {listening ? <Ring t={t} at={say + 0.22} x={130} y={micY + 68} color={CREAM} size={260} /> : null}
-      <div style={{ position: 'absolute', left: 62, top: micY, width: 136, height: 136, borderRadius: '50%', background: CLAY, border: `6px solid ${INK}`, boxShadow: hard(listening ? 4 : 10), transform: `scale(${mic * (1 + (listening ? Math.sin((t - say) * 26) * 0.04 : 0))})`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <svg width={70} height={70} viewBox="0 0 70 70">
+      <Ring t={t} at={say} x={122} y={micY + 60} color={CREAM} size={240} />
+      {listening ? <Ring t={t} at={say + 0.22} x={122} y={micY + 60} color={CREAM} size={240} /> : null}
+      <div style={{ position: 'absolute', left: 62, top: micY, width: 120, height: 120, borderRadius: '50%', background: CLAY, border: `6px solid ${INK}`, boxShadow: hard(listening ? 4 : 10), transform: `scale(${mic * (1 + (listening ? Math.sin((t - say) * 26) * 0.04 : 0))})`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <svg width={62} height={62} viewBox="0 0 70 70">
           <rect x={25} y={8} width={20} height={34} rx={10} fill={CREAM} stroke={INK} strokeWidth={4} />
           <path d="M16 34 a19 19 0 0 0 38 0 M35 53 v10 M24 63 h22" fill="none" stroke={CREAM} strokeWidth={5} strokeLinecap="round" />
         </svg>
       </div>
-      <div style={{ position: 'absolute', left: 222, top: micY + 34, transform: `scale(${pop(t, say + 0.05)}) rotate(-3deg)`, transformOrigin: '0% 50%' }}>
+      <div style={{ position: 'absolute', left: 206, top: micY + 26, transform: `scale(${pop(t, say + 0.05)}) rotate(-3deg)`, transformOrigin: '0% 50%' }}>
         <Sticker bg={INK} fg="#FFE7B0" size={cjk(f.say.text) ? 48 : 42} shadow={0} pad="0.26em 0.7em">{f.say.text}</Sticker>
       </div>
-      <div style={{ position: 'absolute', right: 10, top: micY + 150, transform: `translateX(${(1 - ramp(t, replyAt, replyAt + 0.3, out)) * 700}px) rotate(1.5deg)` }}>
+      <div style={{ position: 'absolute', right: 10, top: micY + 134, transform: `translateX(${(1 - ramp(t, replyAt, replyAt + 0.3, out)) * 700}px) rotate(1.5deg)` }}>
         <div style={{ boxShadow: hard(10), borderRadius: 28 }}>
           <Piece src={f.screen} crop={f.reply} w={reply.w} radius={24} />
         </div>
       </div>
-      <div style={{ position: 'absolute', right: 30, top: micY + 150 + reply.h + 22, transform: `scale(${hit.scale}) rotate(-3deg)`, opacity: hit.opacity, transformOrigin: '70% 50%' }}>
+      <div style={{ position: 'absolute', right: 30, top: micY + 134 + reply.h + 28, transform: `scale(${hit.scale}) rotate(-3deg)`, opacity: hit.opacity, transformOrigin: '70% 50%' }}>
         <div style={{ boxShadow: hard(10, MUSTARD), borderRadius: 26 }}>
           <Piece src={f.screen} crop={f.score} w={score.w} radius={22} />
         </div>
       </div>
-      <Confetti t={t} at={scoreAt + 0.03} x={380} y={micY + 170 + reply.h} spread={PI * 1.6} power={0.55} count={26} seed={11} />
+      <Confetti t={t} at={scoreAt + 0.03} x={380} y={micY + 150 + reply.h} spread={PI * 1.6} power={0.55} count={26} seed={11} />
     </>
   );
 };
@@ -545,29 +565,32 @@ const ScanDemo = ({ film, f, on, start }: Demo<Scan>) => {
   const frame = pop(t, start + 0.55);
   const flash = t >= snap ? Math.exp(-(t - snap) * 9) : 0;
   const beam = ramp(t, snap + 0.12, snap + 0.75, inOut);
-  const rowW = f.rows.length > 3 ? 440 : 520;
-  const rowTop = f.rows.length > 3 ? 478 : 500;
+  const many = f.rows.length > 3;
+  const paperH = many ? 350 : 400;
+  const pitch = many ? 50 : 70;
+  const rowW = many ? 440 : 500;
+  const rowTop = paperH + 46;
   const rowH = sized(f.rows[0], rowW).h;
-  const gap = Math.min(rowH + 12, (806 - rowTop - rowH) / (f.rows.length - 1));
-  const lineY = (i: number) => 150 + i * (270 / f.rows.length);
+  const gap = Math.min(rowH + 18, (776 - rowTop - rowH) / (f.rows.length - 1));
+  const lineY = (i: number) => 116 + i * pitch;
   return (
     <>
-      <div style={{ position: 'absolute', left: 60, top: 14, width: 400, height: 452, transform: `scale(${paper * (1 - flash * 0.03)}) rotate(-4deg)`, transformOrigin: '50% 50%' }}>
-        <div style={{ position: 'absolute', inset: 0, background: '#FFFDF4', border: `5px solid ${INK}`, borderRadius: 10, boxShadow: hard(12), overflow: 'hidden', backgroundImage: 'repeating-linear-gradient(to bottom, transparent 0, transparent 62px, rgba(60,90,150,0.22) 62px, rgba(60,90,150,0.22) 65px)', backgroundPosition: '0 62px' }}>
+      <div style={{ position: 'absolute', left: 60, top: 10, width: 400, height: paperH, transform: `scale(${paper * (1 - flash * 0.03)}) rotate(-4deg)`, transformOrigin: '50% 50%' }}>
+        <div style={{ position: 'absolute', inset: 0, background: '#FFFDF4', border: `5px solid ${INK}`, borderRadius: 10, boxShadow: hard(12), overflow: 'hidden', backgroundImage: `linear-gradient(to bottom, transparent ${pitch - 3}px, rgba(60,90,150,0.22) ${pitch - 3}px)`, backgroundSize: `100% ${pitch}px`, backgroundPosition: `0 ${lineY(0) + 28 - pitch}px` }}>
           <div style={{ position: 'absolute', left: 44, top: 0, bottom: 0, width: 3, background: 'rgba(196,69,44,0.4)' }} />
-          <div style={{ position: 'absolute', left: 64, top: 30, fontFamily: HAND_TC, fontSize: 46, color: '#2B3A55', whiteSpace: 'nowrap' }}>{f.sheet.title}</div>
-          <div style={{ position: 'absolute', right: 18, bottom: 16, fontFamily: cjk(f.sheet.note) ? HAND_TC : HAND, fontWeight: 600, fontSize: cjk(f.sheet.note) ? 30 : 38, color: RED, transform: 'rotate(-6deg)', border: `3px solid ${RED}`, borderRadius: '50%', padding: '2px 12px', whiteSpace: 'nowrap' }}>{f.sheet.note}</div>
+          <div style={{ position: 'absolute', left: 64, top: 20, fontFamily: HAND_TC, fontSize: 44, color: '#2B3A55', whiteSpace: 'nowrap' }}>{f.sheet.title}</div>
+          <div style={{ position: 'absolute', right: 16, bottom: 10, fontFamily: cjk(f.sheet.note) ? HAND_TC : HAND, fontWeight: 600, fontSize: cjk(f.sheet.note) ? 30 : 38, color: RED, transform: 'rotate(-6deg)', border: `3px solid ${RED}`, borderRadius: '50%', padding: '2px 12px', whiteSpace: 'nowrap' }}>{f.sheet.note}</div>
           {f.sheet.rows.map(([a, b], i) => {
             const taken = t >= lands[i] - 0.3;
             return (
               <div key={i} style={{ position: 'absolute', left: 64, top: lineY(i) - 26, display: 'flex', alignItems: 'baseline', gap: 22, whiteSpace: 'nowrap', opacity: taken ? 0.35 : 1 }}>
-                <span style={{ fontFamily: cjk(a) ? HAND_TC : HAND, fontWeight: 600, fontSize: cjk(a) ? 44 : 54, color: '#2B2620' }}>{a}</span>
-                <span style={{ fontFamily: cjk(b) ? HAND_TC : HAND, fontWeight: 600, fontSize: cjk(b) ? 36 : 44, color: '#4A5A7A' }}>{b}</span>
+                <span style={{ fontFamily: cjk(a) ? HAND_TC : HAND, fontWeight: 600, fontSize: (cjk(a) ? 44 : 54) * (many ? 0.84 : 1), color: '#2B2620' }}>{a}</span>
+                <span style={{ fontFamily: cjk(b) ? HAND_TC : HAND, fontWeight: 600, fontSize: (cjk(b) ? 36 : 44) * (many ? 0.84 : 1), color: '#4A5A7A' }}>{b}</span>
               </div>
             );
           })}
           {/* The pass of light that reads it. */}
-          {beam > 0 && beam < 1 ? <div style={{ position: 'absolute', left: 0, right: 0, top: beam * 452 - 70, height: 80, background: 'linear-gradient(to bottom, rgba(201,100,66,0), rgba(201,100,66,0.35) 80%, #C96442 96%, rgba(201,100,66,0))' }} /> : null}
+          {beam > 0 && beam < 1 ? <div style={{ position: 'absolute', left: 0, right: 0, top: beam * paperH - 70, height: 80, background: 'linear-gradient(to bottom, rgba(201,100,66,0), rgba(201,100,66,0.35) 80%, #C96442 96%, rgba(201,100,66,0))' }} /> : null}
           <div style={{ position: 'absolute', inset: 0, background: '#FFFFFF', opacity: flash }} />
         </div>
         {/* The viewfinder's corners. */}
@@ -593,7 +616,7 @@ const ScanDemo = ({ film, f, on, start }: Demo<Scan>) => {
       {lands.map((when, i) => (
         <Ring key={i} t={t} at={when} x={80} y={rowTop + i * gap + rowH / 2} color={CREAM} size={150} />
       ))}
-      <Confetti t={t} at={lands[lands.length - 1] + 0.05} x={300} y={640} spread={PI * 1.6} power={0.5} count={24} seed={12} />
+      <Confetti t={t} at={lands[lands.length - 1] + 0.05} x={300} y={600} spread={PI * 1.6} power={0.5} count={24} seed={12} />
     </>
   );
 };
@@ -604,7 +627,7 @@ const TutorDemo = ({ film, f, on, start }: Demo<Tutor>) => {
   const odd = on(f.odd);
   const fixAt = on(f.fix.beat);
   const betterAt = on(f.better.beat);
-  const fix = sized(f.fix.crop, 560);
+  const fix = sized(f.fix.crop, 536);
   const hit = slam(t, fixAt, 2.4);
   const mark = pop(t, odd + 0.3);
   const wide = cjk(f.said[1]);
@@ -621,7 +644,7 @@ const TutorDemo = ({ film, f, on, start }: Demo<Tutor>) => {
           <div style={{ position: 'absolute', left: 70, bottom: -27, width: 44, height: 44, background: CREAM, borderRight: `6px solid ${INK}`, borderBottom: `6px solid ${INK}`, transform: 'rotate(45deg) skew(12deg, 12deg)' }} />
         </div>
       </div>
-      <div style={{ position: 'absolute', left: 500, top: -26, width: 96, height: 96, borderRadius: '50%', background: MUSTARD, border: `6px solid ${INK}`, boxShadow: hard(8), transform: `scale(${mark}) rotate(${12 + Math.sin(t * 9) * 4 * Math.exp(-Math.max(0, t - odd - 0.3) * 2)}deg)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: SERIF, fontWeight: 800, fontSize: 68, color: INK }}>?</div>
+      <div style={{ position: 'absolute', left: 478, top: -26, width: 96, height: 96, borderRadius: '50%', background: MUSTARD, border: `6px solid ${INK}`, boxShadow: hard(8), transform: `scale(${mark}) rotate(${12 + Math.sin(t * 9) * 4 * Math.exp(-Math.max(0, t - odd - 0.3) * 2)}deg)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: SERIF, fontWeight: 800, fontSize: 68, color: INK }}>?</div>
       {/* The tutor reading it: three dots, until the correction lands. */}
       {t >= odd + 0.55 && t < fixAt + 0.05 ? (
         <div style={{ position: 'absolute', left: 40, top: 300, transform: `scale(${pop(t, odd + 0.55) * (1 - ramp(t, fixAt - 0.1, fixAt + 0.05, (n) => n))}) rotate(2deg)`, transformOrigin: '20% 50%' }}>
@@ -641,10 +664,10 @@ const TutorDemo = ({ film, f, on, start }: Demo<Tutor>) => {
       </div>
       <div style={{ position: 'absolute', left: 20, top: 290 + fix.h + 44, transform: `scale(${pop(t, betterAt)}) rotate(-1.5deg)`, transformOrigin: '50% 30%' }}>
         <div style={{ boxShadow: hard(10), borderRadius: 28 }}>
-          <Piece src={f.screen} crop={f.better.crop} w={560} radius={24} />
+          <Piece src={f.screen} crop={f.better.crop} w={536} radius={24} />
         </div>
       </div>
-      <Ring t={t} at={fixAt + 0.02} x={300} y={290 + fix.h / 2} color={MUSTARD} size={460} />
+      <Ring t={t} at={fixAt + 0.02} x={290} y={290 + fix.h / 2} color={MUSTARD} size={440} />
       <Confetti t={t} at={fixAt + 0.04} x={300} y={300 + fix.h / 2} spread={PI * 2} power={0.55} count={28} seed={13} />
     </>
   );
@@ -654,15 +677,15 @@ const TutorDemo = ({ film, f, on, start }: Demo<Tutor>) => {
 const ClassicDemo = ({ film, f, on, start }: Demo<Classic>) => {
   const { t } = film;
   const tap = on(f.tap.beat);
-  const size = sized(f.lift, 580);
-  const tx = 10 + f.tap.x * size.w;
+  const size = sized(f.lift, 552);
+  const tx = 19 + f.tap.x * size.w;
   const ty = 60 + f.tap.y * size.h;
   const travel = ramp(t, tap - 0.5, tap, out);
   const press = ramp(t, tap - 0.02, tap + 0.06, out) * (1 - ramp(t, tap + 0.12, tap + 0.3, out));
   const tag = slam(t, on(f.tag.beat), 2.6);
   return (
     <>
-      <div style={{ position: 'absolute', left: 6, top: 56, transform: `scale(${pop(t, start + 0.3) * (1 - press * 0.02)}) rotate(-1.5deg)`, transformOrigin: '50% 50%' }}>
+      <div style={{ position: 'absolute', left: 14, top: 56, transform: `scale(${pop(t, start + 0.3) * (1 - press * 0.02)}) rotate(-1.5deg)`, transformOrigin: '50% 50%' }}>
         <div style={{ boxShadow: hard(12), borderRadius: 30 }}>
           <Piece src={f.screen} crop={f.lift} w={size.w} radius={26} />
         </div>
@@ -672,7 +695,7 @@ const ClassicDemo = ({ film, f, on, start }: Demo<Classic>) => {
       <Ring t={t} at={tap} x={tx} y={ty} color={CLAY} size={280} />
       <Finger x={tx + (1 - travel) * 160} y={ty + (1 - travel) * 420} show={pop(t, tap - 0.55) * (1 - ramp(t, tap + 0.5, tap + 0.7, (v) => v))} press={press} />
       <div style={{ position: 'absolute', left: 40, top: 80 + size.h + 60, transform: `scale(${tag.scale}) rotate(-4deg)`, opacity: tag.opacity, transformOrigin: '40% 50%' }}>
-        <Sticker bg={CREAM} size={cjk(f.tag.text) ? 92 : 58} shadow={12} font={cjk(f.tag.text) ? FONT : SERIF}>{f.tag.text}</Sticker>
+        <Sticker bg={CREAM} size={cjk(f.tag.text) ? 84 : 50} shadow={12} font={cjk(f.tag.text) ? FONT : SERIF}>{f.tag.text}</Sticker>
       </div>
       <Confetti t={t} at={on(f.tag.beat) + 0.03} x={300} y={120 + size.h + 110} spread={PI * 1.6} power={0.5} count={24} seed={14} />
     </>
@@ -682,7 +705,7 @@ const ClassicDemo = ({ film, f, on, start }: Demo<Classic>) => {
 /** Easy mode: the day already laid out, its steps ticked off one after another. */
 const EasyDemo = ({ film, f, on, start }: Demo<Easy>) => {
   const { t } = film;
-  const k = Math.min(520 / (f.piece[2] - f.piece[0]), 610 / (f.piece[3] - f.piece[1]));
+  const k = Math.min(480 / (f.piece[2] - f.piece[0]), 564 / (f.piece[3] - f.piece[1]));
   const w = (f.piece[2] - f.piece[0]) * k;
   const h = (f.piece[3] - f.piece[1]) * k;
   const left = (600 - w) / 2;
@@ -691,23 +714,23 @@ const EasyDemo = ({ film, f, on, start }: Demo<Easy>) => {
     <>
       <div style={{ position: 'absolute', left, top: 0, transform: `scale(${pop(t, start + 0.42)}) rotate(1.5deg)`, transformOrigin: '50% 50%' }}>
         <div style={{ boxShadow: hard(12), borderRadius: 30 }}>
-          <Piece src={f.screen} crop={f.piece} w={520} h={610} radius={26} />
+          <Piece src={f.screen} crop={f.piece} w={480} h={564} radius={26} />
         </div>
         {f.icons.map(([x, y], i) => {
           const when = on(f.steps[i]);
           const hit = slam(t, when, 2.8);
           return (
-            <div key={i} style={{ position: 'absolute', left: x * w - 34 + 5, top: y * h - 62 + 5, width: 68, height: 68, borderRadius: '50%', background: SAGE, border: `5px solid ${INK}`, boxShadow: hard(5), transform: `scale(${hit.scale}) rotate(-8deg)`, opacity: hit.opacity, display: 'flex', alignItems: 'center', justifyContent: 'center', color: CREAM, fontWeight: 900, fontSize: 44, lineHeight: 1 }}>✓</div>
+            <div key={i} style={{ position: 'absolute', left: x * w - 34 + 5, top: y * h - 40 + 5, width: 68, height: 68, borderRadius: '50%', background: SAGE, border: `5px solid ${INK}`, boxShadow: hard(5), transform: `scale(${hit.scale}) rotate(-8deg)`, opacity: hit.opacity, display: 'flex', alignItems: 'center', justifyContent: 'center', color: CREAM, fontWeight: 900, fontSize: 44, lineHeight: 1 }}>✓</div>
           );
         })}
         {f.steps.map((b, i) => (
-          <Ring key={i} t={t} at={on(b)} x={f.icons[i][0] * w + 5} y={f.icons[i][1] * h - 22} color={CREAM} size={150} />
+          <Ring key={i} t={t} at={on(b)} x={f.icons[i][0] * w + 5} y={f.icons[i][1] * h} color={CREAM} size={150} />
         ))}
       </div>
-      <div style={{ position: 'absolute', left: 30, top: 640, transform: `scale(${tag.scale}) rotate(-4deg)`, opacity: tag.opacity, transformOrigin: '40% 50%' }}>
+      <div style={{ position: 'absolute', left: 44, top: 596, transform: `scale(${tag.scale}) rotate(-4deg)`, opacity: tag.opacity, transformOrigin: '40% 50%' }}>
         <Sticker bg={MUSTARD} size={cjk(f.tag.text) ? 70 : 56} shadow={12} font={cjk(f.tag.text) ? FONT : SERIF}>{f.tag.text}</Sticker>
       </div>
-      <Confetti t={t} at={on(f.tag.beat) + 0.03} x={300} y={700} spread={PI * 1.6} power={0.5} count={24} seed={15} />
+      <Confetti t={t} at={on(f.tag.beat) + 0.03} x={300} y={650} spread={PI * 1.6} power={0.5} count={24} seed={15} />
     </>
   );
 };
@@ -748,19 +771,19 @@ const AllHere = ({ film }: { film: Film }) => {
         const col = i % 2;
         const row = Math.floor(i / 2);
         return (
-          <div key={i} style={{ position: 'absolute', left: 70 + col * 484, top: 246 + row * 322, width: 456, height: 300, borderRadius: 34, background: tint.bg, border: `6px solid ${INK}`, boxShadow: hard(10), transform: `scale(${hit.scale}) rotate(${[-2, 1.6, 1.4, -1.8, -1.2, 2][i % 6]}deg)`, opacity: hit.opacity, overflow: 'hidden' }}>
+          <div key={i} style={{ position: 'absolute', left: 70 + col * 484, top: 240 + row * 304, width: 456, height: 284, borderRadius: 34, background: tint.bg, border: `6px solid ${INK}`, boxShadow: hard(10), transform: `scale(${hit.scale}) rotate(${[-2, 1.6, 1.4, -1.8, -1.2, 2][i % 6]}deg)`, opacity: hit.opacity, overflow: 'hidden' }}>
             <Dots color={tint.dot} t={t} size={28} />
-            <div style={{ position: 'absolute', left: 0, right: 0, top: 16, height: 196, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Piece src={f.screen} crop={f.tile ?? f.lift} w={404} h={186} radius={18} border={4} />
+            <div style={{ position: 'absolute', left: 0, right: 0, top: 14, height: 184, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Piece src={f.screen} crop={f.tile ?? f.lift} w={404} h={174} radius={18} border={4} />
             </div>
-            <div style={{ position: 'absolute', left: 0, right: 0, bottom: 10, textAlign: 'center', ...face(f.word), fontSize: cjk(f.word) ? 58 : 54, lineHeight: 1.1, color: tint.fg, whiteSpace: 'nowrap', textShadow: hard(4, tint.edge) }}>{f.word}</div>
+            <div style={{ position: 'absolute', left: 0, right: 0, bottom: 10, textAlign: 'center', ...face(f.word), fontSize: cjk(f.word) ? 54 : 50, lineHeight: 1.1, color: tint.fg, whiteSpace: 'nowrap', textShadow: hard(4, tint.edge) }}>{f.word}</div>
           </div>
         );
       })}
-      <div style={{ position: 'absolute', left: 240, right: 0, top: 1226, display: 'flex', justifyContent: 'center', transform: `scale(${badge.scale})`, opacity: badge.opacity }}>
-        <Sticker bg={CLAY} fg={CREAM} size={cjk(s.all.text) ? 136 : 116} rotate={-4} shadow={14} font={cjk(s.all.text) ? FONT : SERIF}>{s.all.text}</Sticker>
+      <div style={{ position: 'absolute', left: 240, right: 0, top: 1158, display: 'flex', justifyContent: 'center', transform: `scale(${badge.scale})`, opacity: badge.opacity }}>
+        <Sticker bg={CLAY} fg={CREAM} size={cjk(s.all.text) ? 124 : 112} rotate={-4} shadow={14} font={cjk(s.all.text) ? FONT : SERIF}>{s.all.text}</Sticker>
       </div>
-      <Confetti t={t} at={all + 0.03} x={660} y={1300} spread={PI * 1.2} power={1} count={50} seed={3} />
+      <Confetti t={t} at={all + 0.03} x={660} y={1250} spread={PI * 1.2} power={1} count={50} seed={3} />
     </>
   );
 };
@@ -883,8 +906,8 @@ const Buddy = ({ film }: { film: Film }) => {
   const spots: { at: number; left: number; top: number; turn: number; size: number }[] = [
     { at: open + 0.1, left: 350, top: 1150, turn: 0, size: 1 },
     ...s.features.map((_, i) => ({ at: fb[i] - 0.1, left: film.sideOf(i) > 0 ? 712 : -12, top: 1074, turn: film.sideOf(i) * -6, size: 0.66 })),
-    { at: allOn - 0.05, left: -70, top: 1196, turn: 10, size: 0.86 },
-    { at: search - 0.1, left: 748, top: 1216, turn: -10, size: 1 },
+    { at: allOn - 0.05, left: -22, top: 1150, turn: 8, size: 0.86 },
+    { at: search - 0.1, left: 696, top: 1176, turn: -8, size: 0.8 },
     { at: end - 0.1, left: 350, top: 1140, turn: 0, size: 1 },
   ];
   let i = 0;

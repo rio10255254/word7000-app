@@ -5510,7 +5510,7 @@
       "outroAt": 1.6,
       "lines": [
         {
-          "text": "久等了。**單字貓，正式上架**。",
+          "text": "久等了！**單字貓，正式上架**",
           "say": "[excited] 久等了！單字貓，正式上架！",
           "beats": 7,
           "cues": [
@@ -5533,7 +5533,7 @@
           ]
         },
         {
-          "text": "背單字，用滑的。\n**認識往右，不熟往左**。",
+          "text": "背單字，用滑的\n**認識往右，不熟往左**",
           "say": "背單字，用滑的。認識往右，不熟往左。",
           "beats": 11,
           "cues": [
@@ -5568,7 +5568,7 @@
           ]
         },
         {
-          "text": "真人錄音的情境對話，\n**聽完換你開口**。",
+          "text": "真人錄音的情境對話\n**聽完換你開口**",
           "say": "真人錄音的情境對話，聽完換你開口。",
           "beats": 10,
           "cues": [
@@ -5595,7 +5595,7 @@
           ]
         },
         {
-          "text": "紙本講義拍一下，\n**馬上變成單字卡**。",
+          "text": "紙本講義拍一下\n**馬上變成單字卡**",
           "say": "紙本講義拍一下，馬上變成單字卡。",
           "beats": 9,
           "cues": [
@@ -5634,7 +5634,7 @@
           ]
         },
         {
-          "text": "句子講得怪怪的？\n**AI 老師幫你改**。",
+          "text": "句子講得怪怪的？\n**AI 老師幫你改**",
           "say": "句子講得怪怪的？AI 老師幫你改。",
           "beats": 9,
           "cues": [
@@ -5665,7 +5665,7 @@
           ]
         },
         {
-          "text": "想自己挑，有經典模式；\n懶得想，**交給懶人模式**。",
+          "text": "想自己挑，有經典模式\n懶得想，**交給懶人模式**",
           "say": "想自己挑，有經典模式。懶得想，交給懶人模式。",
           "beats": 12,
           "cues": [
@@ -5716,7 +5716,7 @@
           ]
         },
         {
-          "text": "你要的，**都在這**。",
+          "text": "你要的，**都在這**",
           "say": "你要的，都在這。",
           "beats": 6,
           "cues": [
@@ -5759,7 +5759,7 @@
           ]
         },
         {
-          "text": "App Store 搜尋「單字貓」，\n**現在就下載**。",
+          "text": "App Store 搜尋「單字貓」\n**現在就下載**",
           "say": "App Store 搜尋單字貓，現在就下載！",
           "beats": 9,
           "cues": [
@@ -5799,7 +5799,7 @@
         }
       ],
       "scene": {
-        "wait": "久等了。",
+        "wait": "久等了！",
         "open": 2.1,
         "w1": {
           "text": "正式",
@@ -5977,7 +5977,7 @@
             ],
             "said": [
               "你說",
-              "I am always hurry."
+              "I am always hurry"
             ],
             "odd": 1.4,
             "fix": {
@@ -6102,7 +6102,7 @@
       "outroAt": 1.6,
       "lines": [
         {
-          "text": "Thanks for waiting.\n**WordCat is out.**",
+          "text": "Thanks for waiting\n**WordCat is out**",
           "say": "[excited] Thanks for waiting! WordCat is out!",
           "beats": 7,
           "cues": [
@@ -6125,7 +6125,7 @@
           ]
         },
         {
-          "text": "Flashcards you swipe.\n**Right: know it. Left: not yet.**",
+          "text": "Flashcards you swipe\n**Right: know it. Left: not yet**",
           "say": "Flashcards you swipe. Right, you know it. Left, not yet.",
           "beats": 12,
           "cues": [
@@ -6160,7 +6160,7 @@
           ]
         },
         {
-          "text": "Real voices, real scenes.\n**Listen, then say it back.**",
+          "text": "Real voices, real scenes\n**Listen, then say it back**",
           "say": "Real voices, real scenes. Listen, then say it back.",
           "beats": 11,
           "cues": [
@@ -6187,7 +6187,7 @@
           ]
         },
         {
-          "text": "Snap a page of notes.\n**It turns into flashcards.**",
+          "text": "Snap a page of notes\n**It turns into flashcards**",
           "say": "Snap a page of notes. It turns into flashcards.",
           "beats": 9,
           "cues": [
@@ -6230,7 +6230,7 @@
           ]
         },
         {
-          "text": "Said it a little off?\n**The AI tutor fixes it.**",
+          "text": "Said it a little off?\n**The AI tutor fixes it**",
           "say": "Said it a little off? The AI tutor fixes it.",
           "beats": 9,
           "cues": [
@@ -6261,7 +6261,7 @@
           ]
         },
         {
-          "text": "Pick your own in Classic.\n**Or let Easy mode plan it.**",
+          "text": "Pick your own in Classic\n**Or let Easy mode plan it**",
           "say": "Pick your own in Classic. Or let Easy mode plan it.",
           "beats": 11,
           "cues": [
@@ -6312,7 +6312,7 @@
           ]
         },
         {
-          "text": "Everything you need. **All here.**",
+          "text": "Everything you need, **all here**",
           "say": "Everything you need. All here.",
           "beats": 7,
           "cues": [
@@ -6355,7 +6355,7 @@
           ]
         },
         {
-          "text": "Search WordCat on the App Store.\n**Get it now.**",
+          "text": "Search WordCat on the App Store\n**Get it now**",
           "say": "Search WordCat on the App Store. Get it now!",
           "beats": 9,
           "cues": [
@@ -6411,14 +6411,14 @@
         }
       ],
       "scene": {
-        "wait": "Thanks for waiting.",
+        "wait": "Thanks for waiting!",
         "open": 2.4,
         "w1": {
           "text": "WordCat",
           "beat": 3.0
         },
         "w2": {
-          "text": "is out.",
+          "text": "is out",
           "beat": 4.6
         },
         "search": {
@@ -6480,7 +6480,7 @@
               "beat": 7.4
             },
             "back": {
-              "text": "Not yet? It comes back.",
+              "text": "Not yet? It comes back",
               "beat": 9.7
             }
           },
@@ -6604,7 +6604,7 @@
             ],
             "said": [
               "You said",
-              "貼上到我的報告。"
+              "貼上到我的報告"
             ],
             "odd": 1.6,
             "fix": {
@@ -6702,7 +6702,7 @@
           }
         ],
         "all": {
-          "text": "All here.",
+          "text": "All here",
           "beat": 3.1,
           "from": 0.3,
           "step": 0.4
